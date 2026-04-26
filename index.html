@@ -10,63 +10,35 @@
 <style>
 body{font-family:Calibri;margin:0;background:#eef2f7}
 .header{background:#0f172a;color:#fff;padding:10px;font-weight:600}
-
 .container{padding:8px}
 
-/* compact inputs */
 input{
-  height:24px;
-  padding:2px 6px;
-  margin:2px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  text-transform:uppercase;
-  font-size:11px;
+height:26px;padding:2px 6px;margin:2px;
+border-radius:6px;border:1px solid #ccc;
+text-transform:uppercase;font-size:12px;
 }
 
-/* buttons */
 button{
-  padding:4px 8px;
-  margin:2px;
-  border:none;
-  border-radius:6px;
-  background:#e5e7eb;
-  cursor:pointer;
+height:26px;margin:2px;padding:0 8px;
+border:none;border-radius:6px;
+background:#e2e8f0;cursor:pointer;
 }
 .primary{background:#2563eb;color:#fff}
 
-/* table */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:5px;
-}
-
+table{width:100%;border-collapse:collapse}
 th,td{
-  border:1px solid #d1d5db;
-  padding:3px 5px;
-  font-size:11px;
-  white-space:nowrap;
+border:1px solid #d1d5db;
+padding:3px 5px;
+font-size:11px;
+white-space:nowrap;
 }
+th{background:#e5e7eb;cursor:pointer}
 
-th{
-  background:#e5e7eb;
-  cursor:pointer;
-}
-
-th span{
-  font-size:9px;
-  margin-left:3px;
-}
-
-.actions button{
-  font-size:12px;
-}
+.actions button{font-size:12px}
 </style>
 </head>
 
 <body>
-
 <div class="header">FR8X CRM</div>
 
 <div class="container">
@@ -78,35 +50,31 @@ th span{
 <input id="pol" placeholder="POL">
 <input id="pod" placeholder="POD">
 <input id="fpod" placeholder="FPOD">
-
 <input id="dv20" placeholder="20DV USD">
 <input id="hc40" placeholder="40HC USD">
-
 <input id="validity" type="date">
 <input id="ft" placeholder="F/T">
 <input id="tt" placeholder="TT">
 <input id="via" placeholder="Routing">
-<input id="remarks" placeholder="Remarks">
 
 <button class="primary" id="save"><i class="bi bi-save"></i></button>
 <button id="update"><i class="bi bi-arrow-repeat"></i></button>
 <button id="clear"><i class="bi bi-x"></i></button>
 </div>
 
-<!-- TABLE -->
 <table>
 <thead>
 <tr>
-<th onclick="sortData('carrier')">Carrier <span id="carrierSort"></span><br><input data-col="carrier"></th>
-<th onclick="sortData('por')">POR <span id="porSort"></span><br><input data-col="por"></th>
-<th onclick="sortData('pol')">POL <span id="polSort"></span><br><input data-col="pol"></th>
-<th onclick="sortData('pod')">POD <span id="podSort"></span><br><input data-col="pod"></th>
-<th onclick="sortData('fpod')">FPOD <span id="fpodSort"></span><br><input data-col="fpod"></th>
-<th onclick="sortData('dv20')">20DV <span id="dv20Sort"></span><br><input data-col="dv20"></th>
-<th onclick="sortData('hc40')">40HC <span id="hc40Sort"></span><br><input data-col="hc40"></th>
-<th onclick="sortData('validity')">Validity <span id="validitySort"></span><br><input data-col="validity"></th>
-<th onclick="sortData('tt')">TT <span id="ttSort"></span><br><input data-col="tt"></th>
-<th onclick="sortData('via')">Routing <span id="viaSort"></span><br><input data-col="via"></th>
+<th>Carrier<br><input data-col="carrier"></th>
+<th>POR<br><input data-col="por"></th>
+<th>POL<br><input data-col="pol"></th>
+<th>POD<br><input data-col="pod"></th>
+<th>FPOD<br><input data-col="fpod"></th>
+<th>20DV<br><input data-col="dv20"></th>
+<th>40HC<br><input data-col="hc40"></th>
+<th>Validity<br><input data-col="validity"></th>
+<th>TT<br><input data-col="tt"></th>
+<th>Routing<br><input data-col="via"></th>
 <th>Action</th>
 </tr>
 </thead>
@@ -120,112 +88,110 @@ th span{
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* FIREBASE */
 const firebaseConfig = {
-  apiKey: "AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
-  authDomain: "swifty-52e05.firebaseapp.com",
-  projectId: "swifty-52e05",
-  storageBucket: "swifty-52e05.firebasestorage.app",
-  messagingSenderId: "230029744245",
-  appId: "1:230029744245:web:1e6335ddb8d116ad9a003c"
+apiKey:"AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
+authDomain:"swifty-52e05.firebaseapp.com",
+projectId:"swifty-52e05",
+storageBucket:"swifty-52e05.firebasestorage.app",
+messagingSenderId:"230029744245",
+appId:"1:230029744245:web:1e6335ddb8d116ad9a003c"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-let data=[],view=[],editId=null,sortDir=1;
+let data=[],view=[],editId=null;
 
 const $=id=>document.getElementById(id);
 const upper=v=>(v||"").toUpperCase();
 
-/* 🔥 AUTO CALC */
+/* 🔥 AUTO SUM FUNCTION */
 function calc(val){
-  if(val.includes("+")){
-    try{
-      return val.split("+").reduce((a,b)=>a+Number(b||0),0);
-    }catch{return val;}
-  }
-  return val;
+if(!val) return "";
+if(val.includes("+")){
+try{
+return val.split("+").map(Number).reduce((a,b)=>a+b,0);
+}catch{return val;}
+}
+return val;
 }
 
-/* attach auto calc */
+/* INPUT AUTO CALC */
 ["dv20","hc40"].forEach(id=>{
-  $(id).addEventListener("input",(e)=>{
-    e.target.value = calc(e.target.value);
-  });
+$(id).addEventListener("blur",()=>{
+$(id).value=calc($(id).value);
+});
 });
 
 /* LOAD */
 async function load(){
-  const snap=await getDocs(collection(db,"rates"));
-  data=[];
-  snap.forEach(d=>data.push({id:d.id,...d.data()}));
-  view=[...data];
-  render();
+const snap=await getDocs(collection(db,"rates"));
+data=[];
+snap.forEach(d=>data.push({id:d.id,...d.data()}));
+view=[...data];
+render();
 }
 
 /* RENDER */
 function render(){
-  let html="";
-  view.forEach(r=>{
-    html+=`
-    <tr>
-      <td>${r.carrier||""}</td>
-      <td>${r.por||""}</td>
-      <td>${r.pol||""}</td>
-      <td>${r.pod||""}</td>
-      <td>${r.fpod||""}</td>
-      <td>${r.dv20||""}</td>
-      <td>${r.hc40||""}</td>
-      <td>${r.validity||""}</td>
-      <td>${r.tt||""}</td>
-      <td>${r.via||""}</td>
-      <td class="actions">
-        <button onclick="copyRate('${r.id}')"><i class="bi bi-copy"></i></button>
-        <button onclick="editRate('${r.id}')"><i class="bi bi-pencil"></i></button>
-        <button onclick="delRate('${r.id}')"><i class="bi bi-trash"></i></button>
-      </td>
-    </tr>`;
-  });
-  $("tbody").innerHTML=html;
+let html="";
+view.forEach(r=>{
+html+=`
+<tr>
+<td>${r.carrier||""}</td>
+<td>${r.por||""}</td>
+<td>${r.pol||""}</td>
+<td>${r.pod||""}</td>
+<td>${r.fpod||""}</td>
+<td>${r.dv20||""}</td>
+<td>${r.hc40||""}</td>
+<td>${r.validity||""}</td>
+<td>${r.tt||""}</td>
+<td>${r.via||""}</td>
+<td class="actions">
+<button onclick="copyRate('${r.id}')"><i class="bi bi-copy"></i></button>
+<button onclick="editRate('${r.id}')"><i class="bi bi-pencil"></i></button>
+<button onclick="delRate('${r.id}')"><i class="bi bi-trash"></i></button>
+</td>
+</tr>`;
+});
+$("tbody").innerHTML=html;
 }
 
 /* SAVE */
 $("save").onclick=async()=>{
-  const d=getForm();
-  await addDoc(collection(db,"rates"),d);
-  clearForm();load();
+await addDoc(collection(db,"rates"),getForm());
+clearForm();load();
 };
 
 /* UPDATE */
 $("update").onclick=async()=>{
-  if(!editId)return;
-  await updateDoc(doc(db,"rates",editId),getForm());
-  clearForm();load();
+if(!editId)return;
+await updateDoc(doc(db,"rates",editId),getForm());
+clearForm();load();
 };
 
 /* DELETE */
 window.delRate=async(id)=>{
-  await deleteDoc(doc(db,"rates",id));load();
+await deleteDoc(doc(db,"rates",id));load();
 };
 
 /* EDIT */
 window.editRate=id=>{
-  const r=data.find(x=>x.id===id);
-  editId=id;
-  Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
+const r=data.find(x=>x.id===id);
+editId=id;
+Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
 };
 
 /* COPY */
 window.copyRate=id=>{
-  const r=data.find(x=>x.id===id);
-  navigator.clipboard.writeText(
+const r=data.find(x=>x.id===id);
+navigator.clipboard.writeText(
 `O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
 VALIDITY: ${r.validity}
-F/T: ${r.ft} DAYS
-TT: ${r.tt} DAYS
+TT: ${r.tt}
 ROUTING: ${r.via}`
-  );
+);
 };
 
 /* FORM */
@@ -236,13 +202,11 @@ por:upper($("por").value),
 pol:upper($("pol").value),
 pod:upper($("pod").value),
 fpod:upper($("fpod").value),
-dv20:$("dv20").value,
-hc40:$("hc40").value,
+dv20:calc($("dv20").value),
+hc40:calc($("hc40").value),
 validity:$("validity").value,
-ft:$("ft").value,
 tt:$("tt").value,
-via:upper($("via").value),
-remarks:$("remarks").value
+via:upper($("via").value)
 };
 }
 
@@ -251,7 +215,7 @@ document.querySelectorAll("input").forEach(i=>i.value="");
 editId=null;
 }
 
-/* FILTER */
+/* COLUMN FILTER */
 document.querySelectorAll("thead input").forEach(inp=>{
 inp.oninput=()=>{
 let f={};
@@ -259,25 +223,15 @@ document.querySelectorAll("thead input").forEach(i=>{
 if(i.value)f[i.dataset.col]=i.value.toLowerCase();
 });
 view=data.filter(r=>{
-return Object.keys(f).every(k=>(r[k]||"").toLowerCase().includes(f[k]));
+return Object.keys(f).every(k=>
+(r[k]||"").toLowerCase().includes(f[k])
+);
 });
 render();
 };
 });
 
-/* SORT */
-window.sortData=key=>{
-sortDir*=-1;
-document.querySelectorAll("th span").forEach(s=>s.textContent="");
-document.getElementById(key+"Sort").textContent=sortDir===1?"▲":"▼";
-
-view.sort((a,b)=>{
-let A=a[key]||"",B=b[key]||"";
-if(!isNaN(A)&&!isNaN(B))return (A-B)*sortDir;
-return A.localeCompare(B)*sortDir;
-});
-render();
-};
+$("clear").onclick=clearForm;
 
 load();
 
