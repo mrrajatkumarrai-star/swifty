@@ -3,28 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Freight Rate CRM</title>
+<title>Swifty - Freight Rate CRM</title>
 
 <style>
 body{font-family:Calibri;background:#f4f6f9;margin:0}
 .header{background:#1f2937;color:#fff;padding:10px;font-weight:600}
 .container{padding:12px}
-
 input{height:26px;padding:4px;margin:3px;border:1px solid #ccc;border-radius:6px}
 button{height:28px;margin:3px;border:none;border-radius:6px;padding:0 10px;cursor:pointer}
 .primary{background:#2563eb;color:#fff}
 .secondary{background:#9ca3af}
-
 table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{border:1px solid #ddd;padding:5px;font-size:12px}
 th{background:#e5e7eb}
-
 .actions button{margin:2px}
 </style>
 </head>
 
 <body>
-<div class="header">Freight Rate CRM</div>
+<div class="header">Swifty - Freight Rate CRM</div>
 
 <div class="container">
 
@@ -68,11 +65,14 @@ th{background:#e5e7eb}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* 🔥 REPLACE WITH YOUR FIREBASE */
+/* 🔥 YOUR FIREBASE CONFIG (ALREADY FILLED) */
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT",
+  apiKey: "AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
+  authDomain: "swifty-52e05.firebaseapp.com",
+  projectId: "swifty-52e05",
+  storageBucket: "swifty-52e05.firebasestorage.app",
+  messagingSenderId: "230029744245",
+  appId: "1:230029744245:web:1e6335ddb8d116ad9a003c"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -81,7 +81,6 @@ const db = getFirestore(app);
 let data = [];
 let editId = null;
 
-/* HELPERS */
 const $ = id => document.getElementById(id);
 
 function clean(v){ return v || "-"; }
@@ -95,7 +94,7 @@ TT: ${clean(r.tt)} DAYS
 ROUTING: ${clean(r.via)}`;
 }
 
-/* LOAD */
+/* LOAD DATA */
 async function load(){
   const snap = await getDocs(collection(db,"rates"));
   data=[];
@@ -103,7 +102,7 @@ async function load(){
   render();
 }
 
-/* RENDER */
+/* RENDER TABLE */
 function render(){
   let html="";
   data.forEach(r=>{
@@ -120,7 +119,7 @@ function render(){
       <td class="actions">
         <button onclick="copyRate('${r.id}')">Copy</button>
         <button onclick="editRate('${r.id}')">Edit</button>
-        <button onclick="delRate('${r.id}')">Del</button>
+        <button onclick="delRate('${r.id}')">Delete</button>
       </td>
     </tr>`;
   });
