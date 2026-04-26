@@ -33,7 +33,6 @@ font-size:11px;
 white-space:nowrap;
 }
 th{background:#e5e7eb}
-
 .actions button{font-size:12px}
 </style>
 </head>
@@ -45,17 +44,29 @@ th{background:#e5e7eb}
 
 <!-- FORM -->
 <div>
-<input id="carrier" placeholder="Carrier">
+<input id="carrier" list="carrierList" placeholder="Carrier">
+<datalist id="carrierList"></datalist>
+
 <input id="por" placeholder="POR">
-<input id="pol" placeholder="POL">
-<input id="pod" placeholder="POD">
-<input id="fpod" placeholder="FPOD">
+
+<input id="pol" list="polList" placeholder="POL">
+<datalist id="polList"></datalist>
+
+<input id="pod" list="podList" placeholder="POD">
+<datalist id="podList"></datalist>
+
+<input id="fpod" list="fpodList" placeholder="FPOD">
+<datalist id="fpodList"></datalist>
+
 <input id="dv20" placeholder="20DV USD">
 <input id="hc40" placeholder="40HC USD">
+
 <input id="validity" type="date">
 <input id="ft" placeholder="F/T">
 <input id="tt" placeholder="TT">
-<input id="via" placeholder="Routing">
+
+<input id="via" list="viaList" placeholder="Routing">
+<datalist id="viaList"></datalist>
 
 <button class="primary" id="save"><i class="bi bi-save"></i></button>
 <button id="update"><i class="bi bi-arrow-repeat"></i></button>
@@ -88,7 +99,7 @@ th{background:#e5e7eb}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
 apiKey:"AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
 authDomain:"swifty-52e05.firebaseapp.com",
@@ -106,18 +117,28 @@ let data=[],view=[],editId=null;
 const $=id=>document.getElementById(id);
 const upper=v=>(v||"").toUpperCase();
 
-/* AUTO CALC */
+/* SMART CALC */
 function calc(val){
 if(!val) return "";
+val = val.replace(/\s+/g, "+");
 if(val.includes("+")){
+try{
 return val.split("+").map(Number).reduce((a,b)=>a+b,0);
+}catch{return val;}
 }
 return val;
 }
 
+/* LIVE INPUT */
 ["dv20","hc40"].forEach(id=>{
-$(id).addEventListener("blur",()=>{
-$(id).value=calc($(id).value);
+const el=$(id);
+
+el.addEventListener("input",()=>{
+el.value=el.value.replace(/\s+/g,"+");
+});
+
+el.addEventListener("blur",()=>{
+el.value=calc(el.value);
 });
 });
 
@@ -128,6 +149,7 @@ data=[];
 snap.forEach(d=>data.push({id:d.id,...d.data()}));
 view=[...data];
 render();
+updateDatalist();
 }
 
 /* RENDER */
@@ -181,13 +203,13 @@ editId=id;
 Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
 };
 
-/* 🔥 FINAL FIXED OUTPUT */
+/* OUTPUT */
 window.copyRate=id=>{
 const r=data.find(x=>x.id===id);
 
 const route = r.fpod 
-  ? `${r.pol} TO ${r.fpod} VIA ${r.pod}`
-  : `${r.pol} TO ${r.pod}`;
+? `${r.pol} TO ${r.fpod} VIA ${r.pod}`
+: `${r.pol} TO ${r.pod}`;
 
 navigator.clipboard.writeText(
 `O/F FM ${route} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
@@ -233,6 +255,16 @@ return Object.keys(f).every(k=>
 render();
 };
 });
+
+/* AUTOCOMPLETE */
+function updateDatalist(){
+["carrier","pol","pod","fpod","via"].forEach(f=>{
+const list=document.getElementById(f+"List");
+if(!list) return;
+const unique=[...new Set(data.map(r=>r[f]).filter(Boolean))];
+list.innerHTML=unique.map(v=>`<option value="${v}">`).join("");
+});
+}
 
 $("clear").onclick=clearForm;
 
