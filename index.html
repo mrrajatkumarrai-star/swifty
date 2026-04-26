@@ -32,7 +32,7 @@ padding:3px 5px;
 font-size:11px;
 white-space:nowrap;
 }
-th{background:#e5e7eb;cursor:pointer}
+th{background:#e5e7eb}
 
 .actions button{font-size:12px}
 </style>
@@ -88,6 +88,7 @@ th{background:#e5e7eb;cursor:pointer}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+/* FIREBASE */
 const firebaseConfig = {
 apiKey:"AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
 authDomain:"swifty-52e05.firebaseapp.com",
@@ -105,18 +106,15 @@ let data=[],view=[],editId=null;
 const $=id=>document.getElementById(id);
 const upper=v=>(v||"").toUpperCase();
 
-/* 🔥 AUTO SUM FUNCTION */
+/* AUTO CALC */
 function calc(val){
 if(!val) return "";
 if(val.includes("+")){
-try{
 return val.split("+").map(Number).reduce((a,b)=>a+b,0);
-}catch{return val;}
 }
 return val;
 }
 
-/* INPUT AUTO CALC */
 ["dv20","hc40"].forEach(id=>{
 $(id).addEventListener("blur",()=>{
 $(id).value=calc($(id).value);
@@ -183,11 +181,16 @@ editId=id;
 Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
 };
 
-/* COPY */
+/* 🔥 FINAL FIXED OUTPUT */
 window.copyRate=id=>{
 const r=data.find(x=>x.id===id);
+
+const route = r.fpod 
+  ? `${r.pol} TO ${r.fpod} VIA ${r.pod}`
+  : `${r.pol} TO ${r.pod}`;
+
 navigator.clipboard.writeText(
-`O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
+`O/F FM ${route} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
 VALIDITY: ${r.validity}
 TT: ${r.tt}
 ROUTING: ${r.via}`
@@ -215,7 +218,7 @@ document.querySelectorAll("input").forEach(i=>i.value="");
 editId=null;
 }
 
-/* COLUMN FILTER */
+/* FILTER */
 document.querySelectorAll("thead input").forEach(inp=>{
 inp.oninput=()=>{
 let f={};
