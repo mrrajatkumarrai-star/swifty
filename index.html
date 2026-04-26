@@ -9,13 +9,21 @@
 body{font-family:Calibri;background:#f4f6f9;margin:0}
 .header{background:#1f2937;color:#fff;padding:10px;font-weight:600}
 .container{padding:12px}
-input{height:26px;padding:4px;margin:3px;border:1px solid #ccc;border-radius:6px}
+
+input, select{
+  height:28px;padding:4px;margin:3px;
+  border:1px solid #ccc;border-radius:6px;
+  text-transform:uppercase;
+}
+
 button{height:28px;margin:3px;border:none;border-radius:6px;padding:0 10px;cursor:pointer}
 .primary{background:#2563eb;color:#fff}
 .secondary{background:#9ca3af}
+
 table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{border:1px solid #ddd;padding:5px;font-size:12px}
-th{background:#e5e7eb}
+th{background:#e5e7eb;cursor:pointer}
+
 .actions button{margin:2px}
 </style>
 </head>
@@ -24,6 +32,9 @@ th{background:#e5e7eb}
 <div class="header">Swifty - Freight Rate CRM</div>
 
 <div class="container">
+
+<!-- SEARCH -->
+<input id="search" placeholder="Search anything...">
 
 <!-- FORM -->
 <div>
@@ -34,7 +45,7 @@ th{background:#e5e7eb}
 <input id="fpod" placeholder="FPOD">
 <input id="dv20" placeholder="20DV USD">
 <input id="hc40" placeholder="40HC USD">
-<input id="validity" placeholder="Validity">
+<input id="validity" type="date">
 <input id="ft" placeholder="F/T Days">
 <input id="tt" placeholder="TT Days">
 <input id="via" placeholder="Routing">
@@ -49,10 +60,15 @@ th{background:#e5e7eb}
 <table>
 <thead>
 <tr>
-<th>Carrier</th><th>POL</th><th>POD</th>
-<th>20DV</th><th>40HC</th>
-<th>Validity</th><th>TT</th>
-<th>Routing</th><th>Action</th>
+<th onclick="sortData('carrier')">Carrier</th>
+<th onclick="sortData('pol')">POL</th>
+<th onclick="sortData('pod')">POD</th>
+<th onclick="sortData('dv20')">20DV</th>
+<th onclick="sortData('hc40')">40HC</th>
+<th onclick="sortData('validity')">Validity</th>
+<th onclick="sortData('tt')">TT</th>
+<th onclick="sortData('via')">Routing</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -65,7 +81,7 @@ th{background:#e5e7eb}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* 🔥 YOUR FIREBASE CONFIG (ALREADY FILLED) */
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
   authDomain: "swifty-52e05.firebaseapp.com",
@@ -79,13 +95,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let data = [];
+let filteredData = [];
 let editId = null;
+let sortDir = 1;
 
 const $ = id => document.getElementById(id);
 
+/* CAPITALIZE */
+function upper(v){
+  return (v || "").toUpperCase();
+}
+
 function clean(v){ return v || "-"; }
 
-/* WHATSAPP FORMAT */
+/* FORMAT */
 function formatRate(r){
   return `O/F FM ${clean(r.pol)} TO ${clean(r.pod)} @ USD ${clean(r.dv20)}/20DV & USD ${clean(r.hc40)}/40HC
 VALIDITY: ${clean(r.validity)}
@@ -94,28 +117,29 @@ TT: ${clean(r.tt)} DAYS
 ROUTING: ${clean(r.via)}`;
 }
 
-/* LOAD DATA */
+/* LOAD */
 async function load(){
   const snap = await getDocs(collection(db,"rates"));
   data=[];
   snap.forEach(d=>data.push({id:d.id,...d.data()}));
+  filteredData = [...data];
   render();
 }
 
-/* RENDER TABLE */
+/* RENDER */
 function render(){
   let html="";
-  data.forEach(r=>{
+  filteredData.forEach(r=>{
     html+=`
     <tr>
-      <td>${r.carrier||""}</td>
-      <td>${r.pol||""}</td>
-      <td>${r.pod||""}</td>
+      <td>${upper(r.carrier)}</td>
+      <td>${upper(r.pol)}</td>
+      <td>${upper(r.pod)}</td>
       <td>${r.dv20||""}</td>
       <td>${r.hc40||""}</td>
       <td>${r.validity||""}</td>
       <td>${r.tt||""}</td>
-      <td>${r.via||""}</td>
+      <td>${upper(r.via)}</td>
       <td class="actions">
         <button onclick="copyRate('${r.id}')">Copy</button>
         <button onclick="editRate('${r.id}')">Edit</button>
@@ -167,17 +191,17 @@ window.copyRate = (id)=>{
 /* FORM */
 function getForm(){
   return {
-    carrier:$("carrier").value,
-    por:$("por").value,
-    pol:$("pol").value,
-    pod:$("pod").value,
-    fpod:$("fpod").value,
+    carrier:upper($("carrier").value),
+    por:upper($("por").value),
+    pol:upper($("pol").value),
+    pod:upper($("pod").value),
+    fpod:upper($("fpod").value),
     dv20:$("dv20").value,
     hc40:$("hc40").value,
     validity:$("validity").value,
     ft:$("ft").value,
     tt:$("tt").value,
-    via:$("via").value,
+    via:upper($("via").value),
     remarks:$("remarks").value
   };
 }
@@ -188,6 +212,30 @@ function clearForm(){
 }
 
 $("clear").onclick=clearForm;
+
+/* SEARCH */
+$("search").addEventListener("input", (e)=>{
+  const val = e.target.value.toLowerCase();
+  filteredData = data.filter(r =>
+    Object.values(r).join(" ").toLowerCase().includes(val)
+  );
+  render();
+});
+
+/* SORT */
+window.sortData = (key)=>{
+  sortDir *= -1;
+  filteredData.sort((a,b)=>{
+    let A = a[key] || "";
+    let B = b[key] || "";
+
+    if(!isNaN(A) && !isNaN(B)){
+      return (A-B)*sortDir;
+    }
+    return A.toString().localeCompare(B.toString())*sortDir;
+  });
+  render();
+};
 
 /* INIT */
 load();
