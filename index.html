@@ -9,7 +9,6 @@
 
 <style>
 
-/* GLOBAL */
 body{
 font-family:Calibri;
 font-size:12px;
@@ -17,53 +16,57 @@ margin:0;
 background:#eef2f7;
 }
 
-/* HEADER */
+.wrapper{
+max-width:1600px;
+margin:auto;
+padding:10px;
+}
+
 .header{
 background:#0f172a;
 color:#fff;
-padding:8px 12px;
-font-weight:600;
+padding:10px;
+border-radius:6px;
+margin-bottom:8px;
 }
 
-/* CONTAINER */
-.container{
-padding:6px;
-}
-
-/* FORM GRID */
 .form-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:4px;
+grid-template-columns:repeat(10,1fr);
+gap:6px;
+margin-bottom:8px;
 }
 
-/* INPUT */
 input{
-height:24px;
+height:26px;
 padding:2px 6px;
+border:1px solid #cbd5e1;
 border-radius:4px;
-border:1px solid #ccc;
-text-transform:uppercase;
 font-size:12px;
-width:100%;
+text-transform:uppercase;
 }
 
-/* BUTTON */
 button{
-height:24px;
+height:26px;
 border:none;
 border-radius:4px;
 background:#e2e8f0;
 cursor:pointer;
-font-size:12px;
-padding:0 6px;
+padding:0 8px;
 }
 .primary{background:#2563eb;color:#fff}
 
-/* TABLE */
+.chk{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
 .table-wrap{
 overflow-x:auto;
-margin-top:6px;
+background:#fff;
+border-radius:6px;
+padding:4px;
 }
 
 table{
@@ -72,31 +75,26 @@ border-collapse:collapse;
 }
 
 th,td{
-border:1px solid #d1d5db;
-padding:2px 4px;
-font-size:12px;
+border:1px solid #e2e8f0;
+padding:4px 6px;
 white-space:nowrap;
 text-align:center;
 }
 
-td.num{
-text-align:right;
-}
+td.num{text-align:right;}
 
-th{
-background:#e5e7eb;
-}
+th{background:#f1f5f9;}
 
-/* ACTION BUTTONS */
-.actions button{
-padding:0 4px;
-}
-
-/* CHECKBOX STYLE */
-.chk{
+.actions{
 display:flex;
-gap:6px;
-align-items:center;
+justify-content:center;
+gap:4px;
+}
+
+@media(max-width:900px){
+.form-grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 
 </style>
@@ -104,18 +102,16 @@ align-items:center;
 
 <body>
 
+<div class="wrapper">
+
 <div class="header">FR8X CRM</div>
 
-<div class="container">
-
-<!-- FORM -->
 <div class="form-grid">
 
 <input id="carrier" placeholder="Carrier">
 <input id="por" placeholder="POR">
 <input id="pol" placeholder="POL">
 <input id="pod" placeholder="POD">
-<input id="fpod" placeholder="FPOD">
 
 <input id="dv20" placeholder="20DV">
 <input id="hc40" placeholder="40HC">
@@ -125,32 +121,29 @@ align-items:center;
 <input id="via" placeholder="Routing">
 
 <div class="chk">
-<label><input type="checkbox" id="vtype" checked> V</label>
-<label><input type="checkbox" id="stype"> S</label>
+<label><input type="checkbox" id="vtype" checked>V</label>
+<label><input type="checkbox" id="stype">S</label>
 </div>
 
 <button class="primary" id="save"><i class="bi bi-save"></i></button>
-<button id="update"><i class="bi bi-arrow-repeat"></i></button>
 <button id="clear"><i class="bi bi-x"></i></button>
 
 </div>
 
-<!-- TABLE -->
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>Carrier</th>
-<th>POR</th>
+<th>ID</th>
 <th>POL</th>
 <th>POD</th>
 <th>20DV</th>
 <th>40HC</th>
-<th>Date</th>
-<th>Type</th>
+<th>DATE</th>
+<th>TYPE</th>
 <th>TT</th>
-<th>Routing</th>
-<th>Action</th>
+<th>ROUTING</th>
+<th>ACTION</th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -162,34 +155,70 @@ align-items:center;
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey:"AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
+apiKey:"AIzaSy...",
 authDomain:"swifty-52e05.firebaseapp.com",
-projectId:"swifty-52e05",
-storageBucket:"swifty-52e05.firebasestorage.app",
-messagingSenderId:"230029744245",
-appId:"1:230029744245:web:1e6335ddb8d116ad9a003c"
+projectId:"swifty-52e05"
 };
 
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
-let data=[],editId=null;
+let data=[];
 
 const $=id=>document.getElementById(id);
 const upper=v=>(v||"").toUpperCase();
+
+/* ===== SMART CALC ===== */
+function calc(val){
+if(!val) return "";
+val = val.replace(/\s+/g,"+");
+if(val.includes("+")){
+try{
+return val.split("+").map(Number).reduce((a,b)=>a+b,0);
+}catch{
+return val;
+}
+}
+return val;
+}
+
+/* APPLY SMART INPUT */
+["dv20","hc40"].forEach(id=>{
+const el=$(id);
+
+el.addEventListener("input",()=>{
+el.value = el.value.replace(/\s+/g,"+");
+});
+
+el.addEventListener("blur",()=>{
+el.value = calc(el.value);
+});
+});
 
 /* DATE FORMAT */
 function formatDate(d){
 if(!d) return "";
 const date=new Date(d);
-const day=date.toLocaleDateString('en-GB',{day:'2-digit'});
+const day=String(date.getDate()).padStart(2,'0');
 const mon=date.toLocaleDateString('en-GB',{month:'short'}).toUpperCase();
 const yr=date.getFullYear();
 const wk=date.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase();
 return `${day}-${mon}-${yr} (${wk})`;
+}
+
+/* SEQUENCE */
+function generateSeq(date,tt,type){
+if(!date) return "";
+const d=new Date(date);
+const dd=String(d.getDate()).padStart(2,'0');
+const mm=String(d.getMonth()+1).padStart(2,'0');
+
+const base=`${dd}${mm}${tt}${type}`;
+const count=data.filter(r=>r.seq && r.seq.startsWith(base)).length+1;
+return base + String(count).padStart(2,'0');
 }
 
 /* LOAD */
@@ -206,20 +235,17 @@ let html="";
 data.forEach(r=>{
 html+=`
 <tr>
-<td>${r.carrier||""}</td>
-<td>${r.por||""}</td>
+<td>${r.seq||""}</td>
 <td>${r.pol||""}</td>
 <td>${r.pod||""}</td>
 <td class="num">${r.dv20||""}</td>
 <td class="num">${r.hc40||""}</td>
 <td>${formatDate(r.validity)}</td>
 <td>${r.type||""}</td>
-<td>${r.tt||""}</td>
-<td>${r.via||""}</td>
+<td>${r.tt}</td>
+<td>${r.via}</td>
 <td class="actions">
 <button onclick="copyRate('${r.id}')"><i class="bi bi-copy"></i></button>
-<button onclick="editRate('${r.id}')"><i class="bi bi-pencil"></i></button>
-<button onclick="delRate('${r.id}')"><i class="bi bi-trash"></i></button>
 </td>
 </tr>`;
 });
@@ -228,68 +254,63 @@ $("tbody").innerHTML=html;
 
 /* SAVE */
 $("save").onclick=async()=>{
-await addDoc(collection(db,"rates"),getForm());
-clearForm();load();
+
+const type = $("stype").checked ? "S" : "V";
+
+const seq = generateSeq(
+$("validity").value,
+$("tt").value,
+type
+);
+
+await addDoc(collection(db,"rates"),{
+pol:upper($("pol").value),
+pod:upper($("pod").value),
+dv20:calc($("dv20").value),
+hc40:calc($("hc40").value),
+validity:$("validity").value,
+tt:$("tt").value,
+via:$("via").value,
+type:type,
+seq:seq,
+por:upper($("por").value)
+});
+
+clearForm();
+load();
 };
 
-/* DELETE */
-window.delRate=async(id)=>{
-await deleteDoc(doc(db,"rates",id));load();
-};
-
-/* EDIT */
-window.editRate=id=>{
-const r=data.find(x=>x.id===id);
-editId=id;
-Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
-};
-
-/* COPY (UPDATED FORMAT) */
+/* COPY */
 window.copyRate=async(id)=>{
 const r=data.find(x=>x.id===id);
 
-const type = r.type === "S" ? "SAILING" : "VALIDITY";
+const type = r.type==="S"?"SAILING":"VALIDITY";
 
 const text =
 `${r.por ? `(POR) : ${r.por}\n` : ""}` +
 `O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
 VALIDITY: ${formatDate(r.validity)} (${type})
 TT: ${r.tt} (DAYS)
-ROUTING: ${r.via} (DAYS)`;
+ROUTING: ${r.via} (DAYS)
+REF: ${r.seq}`;
 
 try{
 await navigator.clipboard.writeText(text);
 }catch{
 const t=document.createElement("textarea");
-t.value=text;document.body.appendChild(t);
-t.select();document.execCommand("copy");
+t.value=text;
+document.body.appendChild(t);
+t.select();
+document.execCommand("copy");
 document.body.removeChild(t);
 }
 };
 
-/* FORM */
-function getForm(){
-let type = $("stype").checked ? "S" : "V";
-
-return{
-carrier:upper($("carrier").value),
-por:upper($("por").value),
-pol:upper($("pol").value),
-pod:upper($("pod").value),
-dv20:$("dv20").value,
-hc40:$("hc40").value,
-validity:$("validity").value,
-tt:$("tt").value,
-via:$("via").value,
-type:type
-};
-}
-
+/* CLEAR */
 function clearForm(){
 document.querySelectorAll("input").forEach(i=>i.value="");
 $("vtype").checked=true;
 $("stype").checked=false;
-editId=null;
 }
 
 $("clear").onclick=clearForm;
