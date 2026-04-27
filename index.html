@@ -17,94 +17,86 @@ margin:0;
 background:#eef2f7;
 }
 
+/* HEADER */
 .header{
 background:#0f172a;
 color:#fff;
-padding:10px;
+padding:8px 12px;
 font-weight:600;
-text-align:center;
 }
 
+/* CONTAINER */
 .container{
-padding:8px;
+padding:6px;
 }
 
-/* FORM */
+/* FORM GRID */
 .form-grid{
-display:flex;
-flex-wrap:wrap;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
 gap:4px;
 }
 
+/* INPUT */
 input{
-height:28px;
-padding:4px 6px;
-border-radius:6px;
+height:24px;
+padding:2px 6px;
+border-radius:4px;
 border:1px solid #ccc;
 text-transform:uppercase;
 font-size:12px;
-flex:1 1 120px;
-min-width:100px;
+width:100%;
 }
 
+/* BUTTON */
 button{
-height:28px;
-padding:0 10px;
+height:24px;
 border:none;
-border-radius:6px;
+border-radius:4px;
 background:#e2e8f0;
 cursor:pointer;
 font-size:12px;
+padding:0 6px;
 }
-
-.primary{
-background:#2563eb;
-color:#fff;
-}
+.primary{background:#2563eb;color:#fff}
 
 /* TABLE */
 .table-wrap{
 overflow-x:auto;
-margin-top:8px;
+margin-top:6px;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-min-width:900px;
 }
 
 th,td{
 border:1px solid #d1d5db;
-padding:4px 6px;
+padding:2px 4px;
 font-size:12px;
 white-space:nowrap;
 text-align:center;
+}
+
+td.num{
+text-align:right;
 }
 
 th{
 background:#e5e7eb;
 }
 
+/* ACTION BUTTONS */
 .actions button{
-margin:0 2px;
+padding:0 4px;
 }
 
-/* MOBILE */
-@media(max-width:768px){
-
-.form-grid{
-flex-direction:column;
-}
-
-input{
-width:100%;
-}
-
-button{
-width:100%;
-}
-
+/* CHECKBOX STYLE */
+.chk{
+display:flex;
+gap:6px;
+align-items:center;
 }
 
 </style>
@@ -119,28 +111,23 @@ width:100%;
 <!-- FORM -->
 <div class="form-grid">
 
-<input id="carrier" list="carrierList" placeholder="Carrier">
-<datalist id="carrierList"></datalist>
-
+<input id="carrier" placeholder="Carrier">
 <input id="por" placeholder="POR">
+<input id="pol" placeholder="POL">
+<input id="pod" placeholder="POD">
+<input id="fpod" placeholder="FPOD">
 
-<input id="pol" list="polList" placeholder="POL">
-<datalist id="polList"></datalist>
-
-<input id="pod" list="podList" placeholder="POD">
-<datalist id="podList"></datalist>
-
-<input id="fpod" list="fpodList" placeholder="FPOD">
-<datalist id="fpodList"></datalist>
-
-<input id="dv20" placeholder="20DV USD">
-<input id="hc40" placeholder="40HC USD">
+<input id="dv20" placeholder="20DV">
+<input id="hc40" placeholder="40HC">
 
 <input id="validity" type="date">
 <input id="tt" placeholder="TT">
+<input id="via" placeholder="Routing">
 
-<input id="via" list="viaList" placeholder="Routing">
-<datalist id="viaList"></datalist>
+<div class="chk">
+<label><input type="checkbox" id="vtype" checked> V</label>
+<label><input type="checkbox" id="stype"> S</label>
+</div>
 
 <button class="primary" id="save"><i class="bi bi-save"></i></button>
 <button id="update"><i class="bi bi-arrow-repeat"></i></button>
@@ -151,25 +138,22 @@ width:100%;
 <!-- TABLE -->
 <div class="table-wrap">
 <table>
-
 <thead>
 <tr>
-<th>Carrier<br><input data-col="carrier"></th>
-<th>POR<br><input data-col="por"></th>
-<th>POL<br><input data-col="pol"></th>
-<th>POD<br><input data-col="pod"></th>
-<th>FPOD<br><input data-col="fpod"></th>
-<th>20DV<br><input data-col="dv20"></th>
-<th>40HC<br><input data-col="hc40"></th>
-<th>Validity<br><input data-col="validity"></th>
-<th>TT<br><input data-col="tt"></th>
-<th>Routing<br><input data-col="via"></th>
+<th>Carrier</th>
+<th>POR</th>
+<th>POL</th>
+<th>POD</th>
+<th>20DV</th>
+<th>40HC</th>
+<th>Date</th>
+<th>Type</th>
+<th>TT</th>
+<th>Routing</th>
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="tbody"></tbody>
-
 </table>
 </div>
 
@@ -180,7 +164,6 @@ width:100%;
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-/* FIREBASE */
 const firebaseConfig = {
 apiKey:"AIzaSyDrJFZfIgXwzFX1d2jdCUT8oykGmGbg0IE",
 authDomain:"swifty-52e05.firebaseapp.com",
@@ -193,60 +176,44 @@ appId:"1:230029744245:web:1e6335ddb8d116ad9a003c"
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
-let data=[],view=[],editId=null;
+let data=[],editId=null;
 
 const $=id=>document.getElementById(id);
 const upper=v=>(v||"").toUpperCase();
 
-/* SMART CALC */
-function calc(val){
-if(!val) return "";
-val = val.replace(/\s+/g, "+");
-if(val.includes("+")){
-try{
-return val.split("+").map(Number).reduce((a,b)=>a+b,0);
-}catch{return val;}
+/* DATE FORMAT */
+function formatDate(d){
+if(!d) return "";
+const date=new Date(d);
+const day=date.toLocaleDateString('en-GB',{day:'2-digit'});
+const mon=date.toLocaleDateString('en-GB',{month:'short'}).toUpperCase();
+const yr=date.getFullYear();
+const wk=date.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase();
+return `${day}-${mon}-${yr} (${wk})`;
 }
-return val;
-}
-
-/* LIVE INPUT */
-["dv20","hc40"].forEach(id=>{
-const el=$(id);
-
-el.addEventListener("input",()=>{
-el.value=el.value.replace(/\s+/g,"+");
-});
-
-el.addEventListener("blur",()=>{
-el.value=calc(el.value);
-});
-});
 
 /* LOAD */
 async function load(){
 const snap=await getDocs(collection(db,"rates"));
 data=[];
 snap.forEach(d=>data.push({id:d.id,...d.data()}));
-view=[...data];
 render();
-updateDatalist();
 }
 
 /* RENDER */
 function render(){
 let html="";
-view.forEach(r=>{
+data.forEach(r=>{
 html+=`
 <tr>
 <td>${r.carrier||""}</td>
 <td>${r.por||""}</td>
 <td>${r.pol||""}</td>
 <td>${r.pod||""}</td>
-<td>${r.fpod||""}</td>
-<td>${r.dv20||""}</td>
-<td>${r.hc40||""}</td>
-<td>${r.validity||""}</td>
+<td class="num">${r.dv20||""}</td>
+<td class="num">${r.hc40||""}</td>
+<td>${formatDate(r.validity)}</td>
+<td>${r.type||""}</td>
 <td>${r.tt||""}</td>
 <td>${r.via||""}</td>
 <td class="actions">
@@ -265,13 +232,6 @@ await addDoc(collection(db,"rates"),getForm());
 clearForm();load();
 };
 
-/* UPDATE */
-$("update").onclick=async()=>{
-if(!editId)return;
-await updateDoc(doc(db,"rates",editId),getForm());
-clearForm();load();
-};
-
 /* DELETE */
 window.delRate=async(id)=>{
 await deleteDoc(doc(db,"rates",id));load();
@@ -284,82 +244,52 @@ editId=id;
 Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
 };
 
-/* COPY (FIXED PRO VERSION) */
-window.copyRate = async (id) => {
-const r = data.find(x => x.id === id);
+/* COPY (UPDATED FORMAT) */
+window.copyRate=async(id)=>{
+const r=data.find(x=>x.id===id);
 
-const route = r.fpod 
-? `${r.pol} TO ${r.fpod} VIA ${r.pod}`
-: `${r.pol} TO ${r.pod}`;
+const type = r.type === "S" ? "SAILING" : "VALIDITY";
 
 const text =
-`O/F FM ${route} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
-VALIDITY: ${r.validity}
-TT: ${r.tt}
-ROUTING: ${r.via}`;
+`${r.por ? `(POR) : ${r.por}\n` : ""}` +
+`O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
+VALIDITY: ${formatDate(r.validity)} (${type})
+TT: ${r.tt} (DAYS)
+ROUTING: ${r.via} (DAYS)`;
 
-try {
+try{
 await navigator.clipboard.writeText(text);
-} catch (err) {
-
-const textarea = document.createElement("textarea");
-textarea.value = text;
-document.body.appendChild(textarea);
-textarea.select();
-
-try {
-document.execCommand("copy");
-} catch {}
-
-document.body.removeChild(textarea);
+}catch{
+const t=document.createElement("textarea");
+t.value=text;document.body.appendChild(t);
+t.select();document.execCommand("copy");
+document.body.removeChild(t);
 }
 };
 
 /* FORM */
 function getForm(){
+let type = $("stype").checked ? "S" : "V";
+
 return{
 carrier:upper($("carrier").value),
 por:upper($("por").value),
 pol:upper($("pol").value),
 pod:upper($("pod").value),
-fpod:upper($("fpod").value),
-dv20:calc($("dv20").value),
-hc40:calc($("hc40").value),
+dv20:$("dv20").value,
+hc40:$("hc40").value,
 validity:$("validity").value,
 tt:$("tt").value,
-via:upper($("via").value)
+via:$("via").value,
+type:type
 };
 }
 
 function clearForm(){
 document.querySelectorAll("input").forEach(i=>i.value="");
+$("vtype").checked=true;
+$("stype").checked=false;
 editId=null;
-}
-
-/* FILTER */
-document.querySelectorAll("thead input").forEach(inp=>{
-inp.oninput=()=>{
-let f={};
-document.querySelectorAll("thead input").forEach(i=>{
-if(i.value)f[i.dataset.col]=i.value.toLowerCase();
-});
-view=data.filter(r=>{
-return Object.keys(f).every(k=>
-(r[k]||"").toLowerCase().includes(f[k])
-);
-});
-render();
-};
-});
-
-/* AUTOCOMPLETE */
-function updateDatalist(){
-["carrier","pol","pod","fpod","via"].forEach(f=>{
-const list=document.getElementById(f+"List");
-if(!list) return;
-const unique=[...new Set(data.map(r=>r[f]).filter(Boolean))];
-list.innerHTML=unique.map(v=>`<option value="${v}">`).join("");
-});
 }
 
 $("clear").onclick=clearForm;
