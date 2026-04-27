@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 <title>FR8X CRM</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
 body{font-family:Calibri;font-size:12px;margin:0;background:#fff;color:#111}
-.header{padding:10px;font-weight:600;border-bottom:1px solid #ddd}
-.main{padding:6px}
+.header{padding:10px;border-bottom:1px solid #ddd;font-weight:600}
+.main{padding:8px}
 
-.form{display:grid;grid-template-columns:repeat(13,1fr);gap:5px;margin-bottom:6px}
-
-input{height:26px;padding:2px 5px;border:1px solid #ccc;border-radius:4px;text-transform:uppercase}
-button{height:26px;border:none;background:#eee;border-radius:4px;cursor:pointer}
+/* FORM */
+.form{
+display:grid;
+grid-template-columns:repeat(13,1fr);
+gap:6px;
+margin-bottom:8px;
+}
+input{
+height:26px;padding:2px 6px;border:1px solid #ccc;border-radius:4px;
+text-transform:uppercase
+}
+button{
+height:26px;border:none;border-radius:4px;background:#f1f5f9;cursor:pointer
+}
 .primary{background:#2563eb;color:#fff}
 
+/* TABLE */
 .table-wrap{overflow:auto}
 table{width:100%;border-collapse:collapse}
-th,td{border:1px solid #ddd;padding:4px;text-align:center}
+th,td{border:1px solid #eee;padding:4px 6px;text-align:center;white-space:nowrap}
 td.num{text-align:right}
 .actions{display:flex;gap:4px;justify-content:center}
 
-@media(max-width:900px){
-.form{grid-template-columns:repeat(2,1fr)}
-}
 </style>
 </head>
 
@@ -34,19 +43,18 @@ td.num{text-align:right}
 <div class="main">
 
 <div class="form">
+
 <input id="carrier" placeholder="Carrier">
 <input id="por" placeholder="POR">
 <input id="pol" placeholder="POL">
 <input id="pod" placeholder="POD">
 
-<input id="dv20" placeholder="20DV">
-<input id="hc40" placeholder="40HC">
+<input id="dv20" placeholder="USD 20DV">
+<input id="hc40" placeholder="USD 40HC">
 
-<input id="currency" value="USD">
-
+<input id="ft" placeholder="F/T">
 <input id="validity" type="date">
 <input id="tt" placeholder="TT">
-<input id="ft" placeholder="F/T">
 <input id="via" placeholder="Routing">
 
 <label><input type="checkbox" id="vtype" checked>V</label>
@@ -55,16 +63,25 @@ td.num{text-align:right}
 <button class="primary" id="save">Save</button>
 <button id="update">Update</button>
 <button id="clear">Clear</button>
+
 </div>
 
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>ID</th><th>POL</th><th>POD</th>
-<th>20DV</th><th>40HC</th>
-<th>TT</th><th>F/T</th>
-<th>Date</th><th>Type</th>
+<th>ID</th>
+<th>Carrier</th>
+<th>POR</th>
+<th>POL</th>
+<th>POD</th>
+<th>20DV</th>
+<th>40HC</th>
+<th>F/T</th>
+<th>Date</th>
+<th>Type</th>
+<th>TT</th>
+<th>Routing</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -79,7 +96,7 @@ td.num{text-align:right}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIzaSy...",projectId:"swifty-52e05"});
+const app=initializeApp({projectId:"swifty-52e05"});
 const db=getFirestore(app);
 
 let data=[],editId=null;
@@ -89,34 +106,47 @@ const upper=v=>(v||"").toUpperCase();
 
 /* SMART CALC */
 function calc(v){
+if(!v) return "";
 v=v.replace(/\s+/g,"+");
-return v.includes("+") ? v.split("+").map(Number).reduce((a,b)=>a+b,0) : v;
+if(v.includes("+")){
+try{return v.split("+").map(Number).reduce((a,b)=>a+b,0);}
+catch{return v;}
+}
+return v;
 }
 
 ["dv20","hc40"].forEach(id=>{
-$(id).oninput=()=>$(id).value=$(id).value.replace(/\s+/g,"+");
-$(id).onblur=()=>$(id).value=calc($(id).value);
+$(id).oninput=e=>e.target.value=e.target.value.replace(/\s+/g,"+");
+$(id).onblur=e=>e.target.value=calc(e.target.value);
 });
 
-/* DATE */
+/* DATE FORMAT */
 function formatDate(d){
-if(!d)return "";
-const x=new Date(d);
-return x.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',weekday:'short'}).toUpperCase();
+if(!d) return "";
+const dt=new Date(d);
+const day=String(dt.getDate()).padStart(2,'0');
+const mon=dt.toLocaleDateString('en-GB',{month:'short'}).toUpperCase();
+const yr=dt.getFullYear();
+const wk=dt.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase();
+return `${day}-${mon}-${yr} (${wk})`;
 }
 
-/* SEQ */
-function seq(d,tt,t){
-const x=new Date(d);
-const base=`${String(x.getDate()).padStart(2,'0')}${String(x.getMonth()+1).padStart(2,'0')}${tt}${t}`;
-const count=data.filter(r=>r.seq?.startsWith(base)).length+1;
+/* SEQUENCE */
+function genSeq(d,tt,t){
+if(!d) return "";
+const dt=new Date(d);
+const dd=String(dt.getDate()).padStart(2,'0');
+const mm=String(dt.getMonth()+1).padStart(2,'0');
+const base=`${dd}${mm}${tt}${t}`;
+const count=data.filter(x=>x.seq?.startsWith(base)).length+1;
 return base+String(count).padStart(2,'0');
 }
 
 /* LOAD */
 async function load(){
 const snap=await getDocs(collection(db,"rates"));
-data=[];snap.forEach(d=>data.push({id:d.id,...d.data()}));
+data=[];
+snap.forEach(d=>data.push({id:d.id,...d.data()}));
 render();
 }
 
@@ -124,43 +154,70 @@ render();
 function render(){
 let h="";
 data.forEach(r=>{
-h+=`<tr>
-<td>${r.seq}</td>
-<td>${r.pol}</td>
-<td>${r.pod}</td>
-<td class="num">${r.dv20}</td>
-<td class="num">${r.hc40}</td>
-<td>${r.tt}</td>
+h+=`
+<tr>
+<td>${r.seq||""}</td>
+<td>${r.carrier||""}</td>
+<td>${r.por||""}</td>
+<td>${r.pol||""}</td>
+<td>${r.pod||""}</td>
+<td class="num">${r.dv20||""}</td>
+<td class="num">${r.hc40||""}</td>
 <td>${r.ft||""}</td>
 <td>${formatDate(r.validity)}</td>
 <td>${r.type}</td>
+<td>${r.tt}</td>
+<td>${r.via}</td>
 <td class="actions">
-<button onclick="copyRate('${r.id}')">📋</button>
-<button onclick="editRate('${r.id}')">✏️</button>
-<button onclick="dupRate('${r.id}')">⧉</button>
-<button onclick="delRate('${r.id}')">🗑</button>
+<button onclick="copyRate('${r.id}')"><i class="bi bi-copy"></i></button>
+<button onclick="dupRate('${r.id}')"><i class="bi bi-files"></i></button>
+<button onclick="editRate('${r.id}')"><i class="bi bi-pencil"></i></button>
+<button onclick="delRate('${r.id}')"><i class="bi bi-trash"></i></button>
 </td>
 </tr>`;
 });
 $("tbody").innerHTML=h;
 }
 
+/* FORM */
+function getForm(){
+const type=$("stype").checked?"S":"V";
+return{
+carrier:upper($("carrier").value),
+por:upper($("por").value),
+pol:upper($("pol").value),
+pod:upper($("pod").value),
+dv20:calc($("dv20").value),
+hc40:calc($("hc40").value),
+ft:$("ft").value,
+validity:$("validity").value,
+tt:$("tt").value,
+via:$("via").value,
+type:type,
+seq:genSeq($("validity").value,$("tt").value,type)
+};
+}
+
 /* SAVE */
 $("save").onclick=async()=>{
-const t=$("stype").checked?"S":"V";
-const s=seq($("validity").value,$("tt").value,t);
-
-await addDoc(collection(db,"rates"),getForm(s));
-alert("Saved");
+await addDoc(collection(db,"rates"),getForm());
+alert("Saved Successfully");
 clear();load();
 };
 
 /* UPDATE */
 $("update").onclick=async()=>{
-if(!editId)return;
+if(!editId)return alert("Select record first");
 await updateDoc(doc(db,"rates",editId),getForm());
-alert("Updated");
+alert("Updated Successfully");
 clear();load();
+};
+
+/* EDIT */
+window.editRate=id=>{
+const r=data.find(x=>x.id===id);
+editId=id;
+Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
 };
 
 /* DELETE */
@@ -170,18 +227,14 @@ alert("Deleted");
 load();
 };
 
-/* EDIT */
-window.editRate=id=>{
-const r=data.find(x=>x.id===id);
-editId=id;
-Object.keys(r).forEach(k=>$(k) && ($(k).value=r[k]));
-};
-
 /* DUPLICATE */
-window.dupRate=id=>{
+window.dupRate=async(id)=>{
 const r=data.find(x=>x.id===id);
-navigator.clipboard.writeText(JSON.stringify(r,null,2));
-alert("Copied full record");
+const copy={...r};
+delete copy.id;
+await addDoc(collection(db,"rates"),copy);
+alert("Duplicated");
+load();
 };
 
 /* COPY */
@@ -190,40 +243,25 @@ const r=data.find(x=>x.id===id);
 const type=r.type==="S"?"SAILING":"VALIDITY";
 
 const txt=
-`${r.por?`(POR) : ${r.por}\n`:""}O/F FM ${r.pol} TO ${r.pod} @ ${r.currency||"USD"} ${r.dv20}/20DV & ${r.hc40}/40HC
+`${r.por?`(POR) : ${r.por}\n`:""}O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
 VALIDITY: ${formatDate(r.validity)} (${type})
 TT: ${r.tt} (DAYS)
-F/T: ${r.ft||""} DAYS
-ROUTING: ${r.via} (DAYS)
-REF: ${r.seq}`;
+ROUTING: ${r.via} (DAYS)`;
 
-navigator.clipboard.writeText(txt);
-alert("Copied");
-};
-
-/* FORM */
-function getForm(s=null){
-return{
-carrier:upper($("carrier").value),
-por:upper($("por").value),
-pol:upper($("pol").value),
-pod:upper($("pod").value),
-dv20:calc($("dv20").value),
-hc40:calc($("hc40").value),
-currency:$("currency").value||"USD",
-validity:$("validity").value,
-tt:$("tt").value,
-ft:$("ft").value,
-via:$("via").value,
-type:$("stype").checked?"S":"V",
-seq:s||null
-};
+try{await navigator.clipboard.writeText(txt);}
+catch{
+const t=document.createElement("textarea");
+t.value=txt;document.body.appendChild(t);
+t.select();document.execCommand("copy");
+document.body.removeChild(t);
 }
+
+alert("Copied Successfully");
+};
 
 /* CLEAR */
 function clear(){
 document.querySelectorAll("input").forEach(i=>i.value="");
-$("currency").value="USD";
 $("vtype").checked=true;
 $("stype").checked=false;
 editId=null;
