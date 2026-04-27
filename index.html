@@ -8,41 +8,37 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-body{
-font-family:Calibri;
-font-size:12px;
-margin:0;
-background:#fff;
-}
+body{font-family:Calibri;font-size:12px;margin:0;background:#fff}
 
 /* HEADER */
 .header{
 background:#0f172a;
 color:#fff;
 padding:10px;
-font-weight:600;
+font-weight:600
 }
 
-/* FULL WIDTH CONTAINER */
+/* FULL WIDTH */
 .container{
 padding:6px;
 width:100%;
 box-sizing:border-box;
 }
 
-/* GLOBAL SEARCH */
+/* SEARCH */
 #globalSearch{
 margin-bottom:6px;
-padding:4px;
 width:300px;
+padding:4px;
 }
 
-/* FORM GRID (KEY FIX) */
+/* FORM GRID (FIXED ALIGNMENT) */
 .form{
 display:grid;
 grid-template-columns:repeat(13,1fr);
 gap:6px;
 margin-bottom:6px;
+align-items:center;
 }
 
 /* INPUT */
@@ -81,9 +77,8 @@ border-collapse:collapse;
 th,td{
 border:1px solid #d1d5db;
 padding:3px 5px;
-font-size:12px;
-white-space:nowrap;
 text-align:center;
+white-space:nowrap;
 }
 
 td.num{text-align:right}
@@ -92,6 +87,13 @@ th{
 background:#e5e7eb;
 }
 
+/* FILTER INPUTS */
+th input{
+width:100%;
+font-size:11px;
+}
+
+/* ACTION */
 .actions{
 display:flex;
 justify-content:center;
@@ -191,7 +193,13 @@ $(id).onblur=e=>e.target.value=calc(e.target.value);
 function formatDate(d){
 if(!d)return"";
 const dt=new Date(d);
-return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',weekday:'short'}).toUpperCase();
+return dt.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+}
+
+/* ROUTING CLEAN */
+function cleanRouting(v){
+if(!v)return"";
+return v.replace(/^VIA\s*/i,"").trim();
 }
 
 /* SEQ */
@@ -261,6 +269,49 @@ return col && glob;
 render();
 }
 
+/* ===== FIX: MAKE BUTTONS WORK ===== */
+window.copyRate = async(id)=>{
+const r=data.find(x=>x.id===id);
+const type=r.type==="S"?"SAILING":"VALIDITY";
+
+const txt=
+`${r.carrier?`CARRIER: ${r.carrier}\n`:""}`+
+`${r.por?`(POR) : ${r.por}\n`:""}O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
+${r.ft?`F/T: ${r.ft} DAYS\n`:""}VALIDITY: ${formatDate(r.validity)} (${type})
+TT: ${r.tt} (DAYS)
+ROUTING: ${cleanRouting(r.via)}`;
+
+try{await navigator.clipboard.writeText(txt);}
+catch{
+const t=document.createElement("textarea");
+t.value=txt;document.body.appendChild(t);
+t.select();document.execCommand("copy");
+document.body.removeChild(t);
+}
+
+alert("Copied");
+};
+
+window.editRate=(id)=>{
+const r=data.find(x=>x.id===id);
+editId=id;
+Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
+};
+
+window.delRate=async(id)=>{
+await deleteDoc(doc(db,"rates",id));
+alert("Deleted");
+load();
+};
+
+window.dupRate=async(id)=>{
+const r=data.find(x=>x.id===id);
+const c={...r};delete c.id;
+await addDoc(collection(db,"rates"),c);
+alert("Duplicated");
+load();
+};
+
 /* SAVE */
 $("save").onclick=async()=>{
 const type=$("stype").checked?"S":"V";
@@ -286,8 +337,6 @@ load();
 $("update").onclick=async()=>{
 if(!editId)return alert("Select record");
 await updateDoc(doc(db,"rates",editId),{
-...data.find(x=>x.id===editId),
-...{
 carrier:upper($("carrier").value),
 por:upper($("por").value),
 pol:upper($("pol").value),
@@ -298,58 +347,11 @@ ft:$("ft").value,
 validity:$("validity").value,
 tt:$("tt").value,
 via:$("via").value
-}
 });
 alert("Updated");
 load();
 };
 
-/* EDIT */
-window.editRate=id=>{
-const r=data.find(x=>x.id===id);
-editId=id;
-Object.keys(r).forEach(k=>{if($(k))$(k).value=r[k]});
-};
-
-/* DELETE */
-window.delRate=async(id)=>{
-await deleteDoc(doc(db,"rates",id));
-alert("Deleted");
-load();
-};
-
-/* DUP */
-window.dupRate=async(id)=>{
-const r=data.find(x=>x.id===id);
-const c={...r};delete c.id;
-await addDoc(collection(db,"rates"),c);
-alert("Duplicated");
-load();
-};
-
-/* COPY */
-window.copyRate=async(id)=>{
-const r=data.find(x=>x.id===id);
-const type=r.type==="S"?"SAILING":"VALIDITY";
-
-const txt=
-`${r.por?`(POR) : ${r.por}\n`:""}O/F FM ${r.pol} TO ${r.pod} @ USD ${r.dv20}/20DV & USD ${r.hc40}/40HC
-VALIDITY: ${formatDate(r.validity)} (${type})
-TT: ${r.tt} (DAYS)
-ROUTING: ${r.via} (DAYS)`;
-
-try{await navigator.clipboard.writeText(txt);}
-catch{
-const t=document.createElement("textarea");
-t.value=txt;document.body.appendChild(t);
-t.select();document.execCommand("copy");
-document.body.removeChild(t);
-}
-
-alert("Copied");
-};
-
-/* EVENTS */
 document.querySelectorAll("thead input").forEach(i=>i.oninput=applyFilter);
 $("globalSearch").oninput=applyFilter;
 
