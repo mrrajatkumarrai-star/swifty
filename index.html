@@ -9,7 +9,7 @@
 :root{
   --bg:#f7fbff;
   --glass:rgba(255,255,255,.72);
-  --glass-strong:rgba(255,255,255,.90);
+  --glass-strong:rgba(255,255,255,.92);
   --border:rgba(15,23,42,.10);
   --text:#0f172a;
   --muted:#64748b;
@@ -45,7 +45,7 @@ body{
   -webkit-backdrop-filter:blur(18px);
 }
 .card{
-  width:min(1180px,calc(100% - 18px));
+  width:min(1240px,calc(100% - 18px));
   max-height:92vh;
   overflow:auto;
   padding:22px;
@@ -668,6 +668,9 @@ function render(){
   `).join("");
   $("sectionLabel").textContent=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
 }
+function renderTicker(){
+  $("tickerTrack").innerHTML=`<span><span class="note">LOADING EXCHANGE RATE...</span></span>`;
+}
 function switchView(mode){
   viewMode=mode;
   $("tabActiveBtn").classList.toggle("active",mode==="active");
@@ -896,8 +899,23 @@ function parseCSV(txt){
     return o;
   });
 }
-function normalizeUploadRow(r,idx){
-  return { seq:r.seq||r.sequence||"", carrier:upper(r.carrier), por:upper(r.por), pol:upper(r.pol), pod:upper(r.pod), fpod:upper(r.fpod), dv20:calc(r.dv20||r["20dv"]||""), hc40:calc(r.hc40||r["40hc"]||""), ft:r["f/t"]||r.ft||"", validity:isoDate(r.validity||r.date||""), type:upper(r.type||"V"), tt:r.tt||"", via:r.via||"", remarks:upper(r.remarks||""), _i:idx };
+function normalizeUploadRow(r){
+  return {
+    seq:r.seq||r.sequence||"",
+    carrier:upper(r.carrier),
+    por:upper(r.por),
+    pol:upper(r.pol),
+    pod:upper(r.pod),
+    fpod:upper(r.fpod),
+    dv20:calc(r.dv20||r["20dv"]||""),
+    hc40:calc(r.hc40||r["40hc"]||""),
+    ft:r["f/t"]||r.ft||"",
+    validity:isoDate(r.validity||r.date||""),
+    type:upper(r.type||"V"),
+    tt:r.tt||"",
+    via:r.via||"",
+    remarks:upper(r.remarks||"")
+  };
 }
 function renderUpload(){
   $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
@@ -912,7 +930,7 @@ $("fileInput").addEventListener("change",async e=>{
   if(!f) return;
   showLoader("IMPORTING","READING FILE");
   const txt=await f.text();
-  uploadRows=parseCSV(txt).map((r,i)=>normalizeUploadRow(r,i));
+  uploadRows=parseCSV(txt).map(normalizeUploadRow);
   selectedUploadRows.clear();
   renderUpload();
   hideLoader();
