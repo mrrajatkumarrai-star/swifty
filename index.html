@@ -7,26 +7,29 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <style>
 :root{
-  --bg:#ffffff;
-  --glass:rgba(255,255,255,.72);
-  --glass2:rgba(255,255,255,.86);
+  --bg1:#f7fbff;
+  --bg2:#ffffff;
+  --glass:rgba(255,255,255,.70);
+  --glass-strong:rgba(255,255,255,.88);
   --border:rgba(15,23,42,.10);
-  --text:#111827;
+  --text:#0f172a;
   --muted:#64748b;
-  --primary:#2563eb;
-  --success:#059669;
-  --danger:#dc2626;
-  --shadow:0 18px 45px rgba(15,23,42,.10);
+  --blue:#2563eb;
+  --blue2:#4f8cff;
+  --green:#059669;
+  --red:#dc2626;
+  --shadow:0 20px 50px rgba(15,23,42,.10);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
   font-family:Calibri,Arial,sans-serif;
-  font-size:12px;
   color:var(--text);
-  min-height:100vh;
-  background:linear-gradient(180deg,#fbfdff 0%,#ffffff 42%,#f5f7fb 100%);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(37,99,235,.06), transparent 24%),
+    radial-gradient(circle at 90% 20%, rgba(15,23,42,.04), transparent 20%),
+    linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 52%, #f3f7fb 100%);
   text-transform:uppercase;
   overflow-x:hidden;
 }
@@ -34,183 +37,173 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 10% 10%, rgba(37,99,235,.08), transparent 22%),
-    radial-gradient(circle at 90% 20%, rgba(15,23,42,.05), transparent 20%),
-    radial-gradient(circle at 50% 100%, rgba(255,255,255,.95), transparent 38%);
   pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.12));
 }
+.hidden{display:none !important}
 .header{
   position:sticky;
   top:0;
-  z-index:20;
-  padding:12px 18px;
-  background:rgba(255,255,255,.84);
-  border-bottom:1px solid rgba(15,23,42,.08);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  box-shadow:0 6px 22px rgba(15,23,42,.05);
-  font-weight:700;
-  letter-spacing:.14em;
+  z-index:30;
   display:flex;
   justify-content:space-between;
   align-items:center;
-}
-.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ticker{
-  position:sticky;
-  top:45px;
-  z-index:19;
-  overflow:hidden;
-  border-bottom:1px solid rgba(15,23,42,.08);
-  background:rgba(255,255,255,.88);
+  gap:12px;
+  padding:12px 18px;
+  background:rgba(255,255,255,.78);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(15,23,42,.08);
+  box-shadow:0 6px 18px rgba(15,23,42,.04);
+  letter-spacing:.12em;
+  font-weight:800;
+}
+.header-right{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.ticker{
+  position:sticky;
+  top:49px;
+  z-index:25;
+  overflow:hidden;
+  background:rgba(255,255,255,.80);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(15,23,42,.08);
 }
 .ticker-track{
   display:flex;
-  gap:34px;
+  gap:36px;
   white-space:nowrap;
   padding:8px 18px;
-  animation:scroll 24s linear infinite;
   font-weight:700;
-  color:#0f172a;
+  animation:scroll 24s linear infinite;
 }
-.ticker-track span{display:inline-flex;gap:8px;align-items:center}
-.up{color:#059669}
-.down{color:#dc2626}
-.muted{color:var(--muted)}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .container{
-  width:min(100vw - 12px, 100%);
-  margin:8px auto;
+  width:min(100vw - 12px, 1640px);
+  margin:10px auto;
   padding:16px;
   background:var(--glass);
   border:1px solid var(--border);
-  border-radius:22px;
+  border-radius:24px;
   box-shadow:var(--shadow);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
 }
-.topbar{
+.topbar,.section-head,.modal-head{
   display:flex;
-  gap:12px;
   align-items:center;
   justify-content:space-between;
+  gap:10px;
   flex-wrap:wrap;
-  margin-bottom:12px;
 }
-#globalSearch{
-  width:min(460px,100%);
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(15,23,42,.10);
-  outline:none;
-  background:rgba(255,255,255,.85);
-  color:var(--text);
-  font-family:Calibri,Arial,sans-serif;
-  font-size:12px;
-  text-transform:uppercase;
+.topbar{margin-bottom:12px}
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(37,99,235,.08);
+  color:#1d4ed8;
+  border:1px solid rgba(37,99,235,.14);
+  font-weight:700;
 }
-#globalSearch::placeholder,input::placeholder{color:#94a3b8}
-.form{
-  display:grid;
-  grid-template-columns:repeat(12,minmax(0,1fr));
-  gap:8px;
-  align-items:center;
-  margin-bottom:12px;
+.note{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.08em;
 }
-.field-span-2{grid-column:span 2}
-.field-span-3{grid-column:span 3}
-.field-span-4{grid-column:span 4}
-.field-span-6{grid-column:span 6}
-.field-span-12{grid-column:span 12}
 input,select{
-  height:34px;
-  padding:7px 10px;
-  border-radius:12px;
+  height:36px;
+  width:100%;
+  padding:8px 11px;
+  border-radius:14px;
   border:1px solid rgba(15,23,42,.10);
-  background:rgba(255,255,255,.85);
+  background:rgba(255,255,255,.90);
   color:var(--text);
   outline:none;
-  width:100%;
-  transition:.18s ease;
   font-family:Calibri,Arial,sans-serif;
   font-size:12px;
   text-transform:uppercase;
 }
 input:focus,select:focus{
   border-color:rgba(37,99,235,.35);
-  box-shadow:0 0 0 3px rgba(37,99,235,.08);
+  box-shadow:0 0 0 4px rgba(37,99,235,.08);
 }
 button{
-  height:34px;
+  height:36px;
   border:none;
-  border-radius:12px;
-  padding:0 12px;
+  border-radius:14px;
+  padding:0 14px;
   cursor:pointer;
-  color:#fff;
-  background:#e2e8f0;
-  transition:.18s ease;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  gap:7px;
+  gap:8px;
   font-family:Calibri,Arial,sans-serif;
   font-size:12px;
   text-transform:uppercase;
+  transition:.18s ease;
 }
 button:hover{transform:translateY(-1px)}
-.primary{background:linear-gradient(135deg,#2563eb,#4f8cff)}
-.success{background:linear-gradient(135deg,#059669,#10b981)}
-.danger{background:linear-gradient(135deg,#b91c1c,#dc2626)}
+button:active{transform:translateY(0)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}
+.success{background:linear-gradient(135deg,var(--green),#10b981);color:#fff}
+.danger{background:linear-gradient(135deg,#b91c1c,var(--red));color:#fff}
 .ghost{
-  background:rgba(255,255,255,.9);
-  color:#111827;
-  border:1px solid rgba(15,23,42,.08);
+  background:rgba(255,255,255,.88);
+  color:#0f172a;
+  border:1px solid rgba(15,23,42,.10);
 }
+.section-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0 12px;
+}
+.section-tabs button.active{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;
+}
+.form{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px;
+  align-items:center;
+}
+.span2{grid-column:span 2}
+.span3{grid-column:span 3}
+.span4{grid-column:span 4}
+.span6{grid-column:span 6}
 .vs{
   grid-column:span 2;
   display:flex;
-  gap:10px;
   align-items:center;
   justify-content:flex-end;
+  gap:12px;
   color:var(--muted);
-  padding:0 6px;
+  padding:0 4px;
+  font-weight:700;
 }
-.vs label{display:flex;align-items:center;gap:6px;font-weight:700}
-.section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:8px 0 6px;
-}
-.small-note{
-  color:var(--muted);
-  font-size:11px;
-  letter-spacing:.08em;
-}
-.badge{
-  padding:5px 9px;
-  border-radius:999px;
-  background:rgba(37,99,235,.08);
-  color:#1d4ed8;
-  border:1px solid rgba(37,99,235,.12);
-}
+.vs label{display:flex;align-items:center;gap:6px}
 .table-wrap{
   overflow:auto;
-  border-radius:16px;
+  border-radius:18px;
   border:1px solid rgba(15,23,42,.08);
-  background:rgba(255,255,255,.76);
+  background:rgba(255,255,255,.74);
 }
 table{
   width:100%;
+  min-width:1700px;
   border-collapse:separate;
   border-spacing:0;
-  min-width:1700px;
 }
 th,td{
-  padding:5px 7px;
+  padding:6px 7px;
   border-bottom:1px solid rgba(15,23,42,.08);
   text-align:center;
   white-space:nowrap;
@@ -220,14 +213,13 @@ th,td{
 th{
   position:sticky;
   top:0;
-  background:rgba(249,250,251,.97);
-  color:#111827;
   z-index:5;
+  background:rgba(249,250,251,.98);
+  color:#111827;
   letter-spacing:.06em;
 }
 .filter-row th{
-  position:sticky;
-  top:30px;
+  top:31px;
   background:rgba(248,250,252,.98);
   z-index:4;
   padding:4px 5px;
@@ -237,7 +229,6 @@ th{
   padding:3px 6px;
   border-radius:10px;
   font-size:11px;
-  background:rgba(255,255,255,.95);
 }
 tbody tr:hover{background:rgba(37,99,235,.04)}
 .actions{
@@ -246,43 +237,49 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
   justify-content:center;
   flex-wrap:wrap;
 }
-.actions button{
-  width:28px;
-  height:28px;
+.icon-btn{
+  width:30px;
+  height:30px;
   padding:0;
   border-radius:10px;
+  border:1px solid rgba(15,23,42,.10);
   background:rgba(255,255,255,.92);
   color:#111827;
-  border:1px solid rgba(15,23,42,.10);
 }
-.actions i,button i{color:#111827}
+.icon-btn i{color:#111827}
+.checkbox-col{width:36px}
+.row-check{width:16px;height:16px;accent-color:var(--blue)}
 .small-btn{width:28px;height:28px;padding:0;border-radius:10px}
-#pinGate,#modalOverlay,#uploadOverlay{
+
+.overlay{
   position:fixed;
   inset:0;
   z-index:999;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(255,255,255,.74);
+  background:rgba(255,255,255,.72);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
 }
 .card{
-  width:min(540px,calc(100% - 28px));
-  padding:24px;
+  width:min(1180px,calc(100% - 18px));
+  max-height:92vh;
+  overflow:auto;
+  padding:22px;
   border-radius:26px;
-  background:rgba(255,255,255,.88);
+  background:var(--glass-strong);
   border:1px solid rgba(15,23,42,.08);
   box-shadow:var(--shadow);
 }
-.pin-title{
+.card.narrow{width:min(520px,calc(100% - 28px))}
+.title{
   font-size:22px;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:.12em;
   text-align:center;
 }
-.pin-sub{
+.subtitle{
   text-align:center;
   color:var(--muted);
   margin:8px 0 16px;
@@ -294,23 +291,11 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
   margin-bottom:12px;
 }
 .pin-input{
-  height:52px;
+  height:54px;
   text-align:center;
   font-size:20px;
   font-weight:800;
   letter-spacing:.2em;
-}
-.pin-actions,.modal-actions,.toolbar-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.pin-actions button,.modal-actions button{flex:1;height:38px}
-.modal-title{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:8px;
-  letter-spacing:.1em;
 }
 .modal-tabs{
   display:flex;
@@ -319,13 +304,12 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 }
 .modal-tabs button{
   flex:1;
-  height:34px;
+  background:rgba(255,255,255,.90);
   color:#111827;
-  background:rgba(255,255,255,.92);
   border:1px solid rgba(15,23,42,.08);
 }
 .modal-tabs button.active{
-  background:linear-gradient(135deg,#2563eb,#4f8cff);
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
   color:#fff;
 }
 .modal-grid{
@@ -336,55 +320,56 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 }
 .modal-grid input{height:32px}
 .compact-table th,.compact-table td{padding:4px 6px}
-.hidden{display:none !important}
-.tabbar{display:flex;gap:8px;margin:10px 0 12px;flex-wrap:wrap}
-.tabbar button.active{background:linear-gradient(135deg,#2563eb,#4f8cff);color:#fff}
+.action-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.expired-note{color:var(--red);font-weight:800;margin-left:8px}
 .section{display:none}
 .section.active{display:block}
-.checkbox-col{width:36px}
-.row-check{width:16px;height:16px;accent-color:#2563eb}
 .file-input{display:none}
-.expired-note{margin-left:8px;color:#dc2626;font-weight:700}
-.full-width{width:min(100vw - 12px, 100%)}
 @media (max-width:1200px){
   .form{grid-template-columns:repeat(6,minmax(0,1fr))}
-  .field-span-2,.field-span-3,.field-span-4,.field-span-6,.field-span-12,.vs{grid-column:span 6}
+  .span2,.span3,.span4,.span6,.vs{grid-column:span 6}
+  .modal-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:700px){
   .form{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .field-span-2,.field-span-3,.field-span-4,.field-span-6,.field-span-12,.vs{grid-column:span 2}
+  .span2,.span3,.span4,.span6,.vs{grid-column:span 2}
   .container{padding:12px}
 }
 </style>
 </head>
 <body>
-<div id="pinGate">
-  <div class="card">
-    <div class="pin-title">FR8X ACCESS</div>
-    <div class="pin-sub">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR 4 HOURS.</div>
+
+<div id="pinGate" class="overlay">
+  <div class="card narrow">
+    <div class="title">FR8X ACCESS</div>
+    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR 4 HOURS.</div>
     <div class="pin-row">
       <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin4" maxlength="1" inputmode="numeric" type="password">
     </div>
-    <div class="pin-actions">
-      <button class="primary" id="unlockBtn"><i class="bi bi-shield-lock"></i> UNLOCK</button>
-      <button class="ghost" id="clearPinBtn"><i class="bi bi-eraser"></i> CLEAR</button>
+    <div class="action-bar">
+      <button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock"></i> UNLOCK</button>
+      <button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser"></i> CLEAR</button>
     </div>
   </div>
 </div>
 
-<div id="modalOverlay" class="hidden">
-  <div class="card" style="width:min(1180px,calc(100% - 18px));max-height:92vh;overflow:auto">
-    <div class="section-head">
-      <div class="modal-title" id="modalTitle">LOCAL CHARGES</div>
-      <button class="ghost" onclick="closeModal()"><i class="bi bi-x-lg"></i></button>
+<div id="modalOverlay" class="overlay hidden">
+  <div class="card">
+    <div class="modal-head">
+      <div class="title" id="modalTitle">LOCAL CHARGES</div>
+      <button class="ghost" id="closeModalBtn"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="modal-tabs">
-      <button id="tabLocal" class="active" onclick="setChargeMode('local')">LOCAL CHARGES</button>
-      <button id="tab20" onclick="setChargeMode('20dv')">20DV</button>
-      <button id="tab40" onclick="setChargeMode('40hc')">40HC</button>
+      <button id="tabLocal" class="active" data-mode="local">LOCAL CHARGES</button>
+      <button id="tab20" data-mode="20dv">20DV</button>
+      <button id="tab40" data-mode="40hc">40HC</button>
     </div>
     <div class="modal-grid">
       <input id="mHead" placeholder="HEAD">
@@ -396,48 +381,41 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
     </div>
     <div class="table-wrap compact-table">
       <table>
-        <thead>
-          <tr><th>HEAD</th><th>CURRENCY</th><th>AMOUNT</th><th>PER UNITS/DOCS</th><th>TOTAL</th><th>ACTION</th></tr>
-        </thead>
+        <thead><tr><th>HEAD</th><th>CURRENCY</th><th>AMOUNT</th><th>PER UNITS/DOCS</th><th>TOTAL</th><th>ACTION</th></tr></thead>
         <tbody id="modalBody"></tbody>
       </table>
     </div>
-    <div class="modal-actions" style="margin-top:10px">
-      <button class="ghost" onclick="closeModal()">CLOSE</button>
+    <div class="action-bar" style="margin-top:10px">
+      <button class="ghost" id="modalClose2">CLOSE</button>
       <button class="success" id="saveChargesBtn"><i class="bi bi-check2-circle"></i> SAVE</button>
     </div>
   </div>
 </div>
 
-<div id="uploadOverlay" class="hidden">
-  <div class="card" style="width:min(980px,calc(100% - 18px));max-height:92vh;overflow:auto">
-    <div class="section-head">
-      <div class="modal-title">MASS UPLOAD / EXPORT</div>
-      <button class="ghost" onclick="closeUploadModal()"><i class="bi bi-x-lg"></i></button>
+<div id="uploadOverlay" class="overlay hidden">
+  <div class="card">
+    <div class="modal-head">
+      <div class="title">MASS UPLOAD / EXPORT</div>
+      <button class="ghost" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div class="small-note" style="margin-bottom:10px">
-      BLANK CELLS ARE ALLOWED. HEADERS SHOULD MATCH THE TEMPLATE.
-    </div>
-    <div class="modal-actions" style="margin-bottom:12px">
-      <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> DOWNLOAD TEMPLATE</button>
+    <div class="note" style="margin-bottom:10px">CSV/TXT IMPORT IS SUPPORTED HERE. BLANK CELLS ARE ALLOWED.</div>
+    <div class="action-bar" style="margin-bottom:12px">
+      <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
       <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
       <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
+      <button class="ghost" id="bulkApplyBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
     </div>
-    <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls,.csv" />
+    <input type="file" id="excelFile" class="file-input" accept=".csv,.txt,.xlsx,.xls" />
     <div class="table-wrap compact-table">
       <table>
         <thead>
           <tr>
-            <th class="checkbox-col"><input type="checkbox" id="selectAllExport"></th>
+            <th class="checkbox-col"><input type="checkbox" id="selectAllUpload"></th>
             <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th>
           </tr>
         </thead>
-        <tbody id="uploadPreview"></tbody>
+        <tbody id="uploadBody"></tbody>
       </table>
-    </div>
-    <div class="modal-actions" style="margin-top:10px">
-      <button class="ghost" onclick="closeUploadModal()">CLOSE</button>
-      <button class="success" id="applyBulkBtn"><i class="bi bi-check2-circle"></i> APPLY BATCH</button>
     </div>
   </div>
 </div>
@@ -454,49 +432,49 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 
   <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
 
-  <div class="container full-width">
+  <div class="container">
     <div class="topbar">
       <input id="globalSearch" placeholder="GLOBAL SEARCH">
-      <div class="small-note">
+      <div>
         <span class="badge" id="activeCount">0 ACTIVE</span>
         <span class="expired-note" id="expiredCount">0 EXPIRED</span>
       </div>
     </div>
 
-    <div class="tabbar">
-      <button class="active" id="tabActiveBtn" onclick="switchView('active')">ACTIVE RATES</button>
-      <button id="tabExpiredBtn" onclick="switchView('expired')">EXPIRED RATES</button>
-      <button id="tabAllBtn" onclick="switchView('all')">ALL RATES</button>
+    <div class="section-tabs">
+      <button class="active" id="tabActiveBtn" data-view="active">ACTIVE RATES</button>
+      <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
+      <button id="tabAllBtn" data-view="all">ALL RATES</button>
     </div>
 
     <div class="form">
-      <input class="field-span-3" id="carrier" placeholder="CARRIER">
-      <input class="field-span-2" id="por" placeholder="POR">
-      <input class="field-span-2" id="pol" placeholder="POL">
-      <input class="field-span-2" id="pod" placeholder="POD">
-      <input class="field-span-2" id="fpod" placeholder="FPOD">
-      <input class="field-span-2" id="dv20" placeholder="USD 20DV">
-      <input class="field-span-2" id="hc40" placeholder="USD 40HC">
-      <input class="field-span-2" id="ft" placeholder="F/T">
-      <input class="field-span-2" id="validity" type="date">
-      <input class="field-span-2" id="tt" placeholder="TT">
-      <input class="field-span-4" id="via" placeholder="ROUTING">
-      <input class="field-span-4" id="remarks" placeholder="REMARKS">
+      <input class="span3" id="carrier" placeholder="CARRIER">
+      <input class="span2" id="por" placeholder="POR">
+      <input class="span2" id="pol" placeholder="POL">
+      <input class="span2" id="pod" placeholder="POD">
+      <input class="span2" id="fpod" placeholder="FPOD">
+      <input class="span2" id="dv20" placeholder="USD 20DV">
+      <input class="span2" id="hc40" placeholder="USD 40HC">
+      <input class="span2" id="ft" placeholder="F/T">
+      <input class="span2" id="validity" type="date">
+      <input class="span2" id="tt" placeholder="TT">
+      <input class="span4" id="via" placeholder="ROUTING">
+      <input class="span4" id="remarks" placeholder="REMARKS">
       <div class="vs">
         <label><input type="checkbox" id="vtype" checked>V</label>
         <label><input type="checkbox" id="stype">S</label>
       </div>
-      <button class="primary field-span-2" id="save"><i class="bi bi-floppy"></i> SAVE</button>
-      <button class="success field-span-2" id="update"><i class="bi bi-file-arrow-up"></i> UPDATE</button>
-      <button class="danger field-span-2" id="clear"><i class="bi bi-x-octagon"></i> CLEAR</button>
-      <button class="ghost field-span-2" id="openLocal"><i class="bi bi-plus-lg"></i> LOCAL</button>
-      <button class="ghost field-span-2" id="open20"><i class="bi bi-plus-lg"></i> 20DV</button>
-      <button class="ghost field-span-2" id="open40"><i class="bi bi-plus-lg"></i> 40HC</button>
-      <button class="ghost field-span-2" id="exportBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT</button>
+      <button class="primary span2" id="save"><i class="bi bi-floppy"></i> SAVE</button>
+      <button class="success span2" id="update"><i class="bi bi-file-arrow-up"></i> UPDATE</button>
+      <button class="danger span2" id="clear"><i class="bi bi-x-octagon"></i> CLEAR</button>
+      <button class="ghost span2" id="openLocal"><i class="bi bi-plus-lg"></i> LOCAL</button>
+      <button class="ghost span2" id="open20"><i class="bi bi-plus-lg"></i> 20DV</button>
+      <button class="ghost span2" id="open40"><i class="bi bi-plus-lg"></i> 40HC</button>
+      <button class="ghost span2" id="exportBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT</button>
     </div>
 
     <div class="section-head">
-      <div class="small-note" id="sectionLabel">ACTIVE RATES</div>
+      <div class="note" id="sectionLabel">ACTIVE RATES</div>
     </div>
 
     <div class="section active" id="sectionActive">
@@ -536,7 +514,7 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
         <table>
           <thead>
             <tr>
-              <th class="checkbox-col"><input type="checkbox" id="selectAllExpiredRows"></th>
+              <th class="checkbox-col"><input type="checkbox" id="selectAllExpired"></th>
               <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
             </tr>
           </thead>
@@ -550,7 +528,7 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
         <table>
           <thead>
             <tr>
-              <th class="checkbox-col"><input type="checkbox" id="selectAllAllRows"></th>
+              <th class="checkbox-col"><input type="checkbox" id="selectAllAll"></th>
               <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
             </tr>
           </thead>
@@ -568,20 +546,18 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } 
 const app=initializeApp({projectId:"swifty-52e05"});
 const db=getFirestore(app);
 
-let data=[], editId=null, activeModal="", modalItems=[], activeChargeField="localCharges";
-let filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",hc40:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
-let viewMode="active";
-let uploadPreviewRows=[];
-let selectedUploadIds=new Set();
-
 const $=id=>document.getElementById(id);
-const upper=v=>(v||"").toUpperCase();
+const upper=v=>(v??"").toString().toUpperCase();
 const PIN="1234";
 const KEY="fr8x_pin_until";
 const FOUR_HOURS=4*60*60*1000;
 
+let data=[], editId=null, viewMode="active", filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",hc40:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
+let activeModal="local", activeChargeField="localCharges", modalItems=[];
+let uploadRows=[], selectedUploadRows=new Set();
+
 function calc(v){
-  v=(v||"").toString().trim();
+  v=(v??"").toString().trim();
   if(!v) return "";
   if(/[+\s]/.test(v)){
     try{return String(v.split(/[\s+]+/).filter(Boolean).map(Number).reduce((a,b)=>a+b,0));}
@@ -589,82 +565,70 @@ function calc(v){
   }
   return v;
 }
-function formatDate(d){
+function fmtDate(d){
   if(!d) return "";
   const dt=new Date(d);
   if(isNaN(dt)) return String(d).toUpperCase();
-  return dt.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+  return dt.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
 }
-function normalizeDate(d){
+function isoDate(d){
   if(!d) return "";
   const dt=new Date(d);
   if(isNaN(dt)) return "";
   return dt.toISOString().slice(0,10);
 }
-function isExpired(r){
-  const v=normalizeDate(r.validity);
-  if(!v) return false;
+function expired(r){
+  const d=isoDate(r.validity);
+  if(!d) return false;
   const today=new Date();
   today.setHours(0,0,0,0);
-  const vd=new Date(v+"T00:00:00");
-  return vd < today;
+  return new Date(d+"T00:00:00")<today;
 }
 function sessionValid(){
-  const t=+localStorage.getItem(KEY)||0;
-  return Date.now()<t;
+  return Date.now() < (+localStorage.getItem(KEY)||0);
 }
 function setSession(){localStorage.setItem(KEY,String(Date.now()+FOUR_HOURS))}
 function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load()}
 if(sessionValid()) showApp();
 
 async function load(){
-  const s=await getDocs(collection(db,"rates"));
+  const snap=await getDocs(collection(db,"rates"));
   data=[];
-  s.forEach(d=>data.push({id:d.id,...d.data()}));
+  snap.forEach(d=>data.push({id:d.id,...d.data()}));
   data.sort((a,b)=>(a.seq||999999)-(b.seq||999999));
+  updateCounters();
   render();
   renderTicker();
-  updateCounters();
 }
-
 function updateCounters(){
-  const expired=data.filter(isExpired).length;
-  const active=data.length-expired;
-  $("activeCount").textContent=`${active} ACTIVE`;
-  $("expiredCount").textContent=`${expired} EXPIRED`;
+  const ex=data.filter(expired).length;
+  $("expiredCount").textContent=`${ex} EXPIRED`;
+  $("activeCount").textContent=`${data.length-ex} ACTIVE`;
 }
-
-function applyFilters(rows){
-  return rows.filter(r=>{
+function filteredRows(){
+  const g=($("globalSearch").value||"").toUpperCase();
+  let rows=[...data];
+  if(viewMode==="active") rows=rows.filter(r=>!expired(r));
+  if(viewMode==="expired") rows=rows.filter(r=>expired(r));
+  rows=rows.filter(r=>{
     for(const k in filterMap){
       const q=filterMap[k].trim().toUpperCase();
       if(!q) continue;
-      const val=(k==="validity"?formatDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
+      const val=(k==="validity"?fmtDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
       if(!val.includes(q)) return false;
     }
     return true;
   });
-}
-
-function filteredDataForMode(){
-  const g=($("globalSearch").value||"").toUpperCase();
-  let rows=[...data];
-  if(viewMode==="active") rows=rows.filter(r=>!isExpired(r));
-  if(viewMode==="expired") rows=rows.filter(r=>isExpired(r));
-  rows=applyFilters(rows);
   if(g) rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
   return rows;
 }
-
 function render(){
-  const rows=filteredDataForMode();
-  let h="";
-  rows.forEach((r,i)=>{
-    const seq=r.seq || (i+1);
-    const rowId=r.id;
-    h+=`<tr>
-      <td><input class="row-check" type="checkbox" data-id="${rowId}" onchange="toggleRowSelection('${rowId}', this.checked)"></td>
-      <td>${seq}</td>
+  const rows=filteredRows();
+  const body=viewMode==="active" ? $("tbody") : viewMode==="expired" ? $("expiredBody") : $("allBody");
+  body.innerHTML=rows.map((r,i)=>`
+    <tr>
+      <td><input class="row-check" type="checkbox" data-id="${r.id}"></td>
+      <td>${r.seq||i+1}</td>
       <td>${r.carrier||""}</td>
       <td>${r.por||""}</td>
       <td>${r.pol||""}</td>
@@ -673,25 +637,20 @@ function render(){
       <td>${r.dv20||""}</td>
       <td>${r.hc40||""}</td>
       <td>${r.ft||""}</td>
-      <td>${formatDate(r.validity)}</td>
+      <td>${fmtDate(r.validity)}</td>
       <td>${r.type||""}</td>
       <td>${r.tt||""}</td>
       <td>${r.via||""}</td>
       <td>${r.remarks||""}</td>
       <td class="actions">
-        <button onclick="copyRate('${r.id}')"><i class="bi bi-clipboard"></i></button>
-        <button onclick="editRate('${r.id}')"><i class="bi bi-pencil-square"></i></button>
-        <button onclick="delRate('${r.id}')"><i class="bi bi-x-square"></i></button>
+        <button class="icon-btn" data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i></button>
+        <button class="icon-btn" data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i></button>
+        <button class="icon-btn" data-action="delete" data-id="${r.id}"><i class="bi bi-x-square"></i></button>
       </td>
-    </tr>`;
-  });
-  if(viewMode==="active") $("tbody").innerHTML=h;
-  if(viewMode==="expired") $("expiredBody").innerHTML=h;
-  if(viewMode==="all") $("allBody").innerHTML=h;
-  $("sectionLabel").textContent = viewMode==="active" ? "ACTIVE RATES" : viewMode==="expired" ? "EXPIRED RATES" : "ALL RATES";
-  updateCounters();
+    </tr>
+  `).join("");
+  $("sectionLabel").textContent=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
 }
-
 function switchView(mode){
   viewMode=mode;
   $("tabActiveBtn").classList.toggle("active",mode==="active");
@@ -704,70 +663,19 @@ function switchView(mode){
 }
 window.switchView=switchView;
 
-$("globalSearch").oninput=render;
-document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value;render()}));
-
 async function loadExchangeRates(){
   try{
-    const res=await fetch("https://api.frankfurter.dev/v2/latest?base=INR&symbols=USD,GBP,JPY,EUR");
+    const res=await fetch("https://api.frankfurter.dev/v2/latest?base=INR&symbols=USD,EUR,GBP,JPY");
     const json=await res.json();
     const rates=json.rates||{};
-    $("tickerTrack").innerHTML=
-      `<span><span class="muted">USD/INR</span> <span class="up">${rates.USD||"-"}</span></span>
-       <span><span class="muted">EUR/INR</span> <span class="down">${rates.EUR||"-"}</span></span>
-       <span><span class="muted">GBP/INR</span> <span class="up">${rates.GBP||"-"}</span></span>
-       <span><span class="muted">JPY/INR</span> <span class="up">${rates.JPY||"-"}</span></span>`;
-  }catch(err){
-    console.error("Exchange rate load failed",err);
-  }
+    $("tickerTrack").innerHTML=`
+      <span><span class="note">USD/INR</span> <span style="color:#059669">${rates.USD||"-"}</span></span>
+      <span><span class="note">EUR/INR</span> <span style="color:#dc2626">${rates.EUR||"-"}</span></span>
+      <span><span class="note">GBP/INR</span> <span style="color:#059669">${rates.GBP||"-"}</span></span>
+      <span><span class="note">JPY/INR</span> <span style="color:#059669">${rates.JPY||"-"}</span></span>`;
+  }catch(e){}
 }
-function renderTicker(){loadExchangeRates()}
-loadExchangeRates();setInterval(loadExchangeRates,5*60*1000);
-
-window.copyRate=async(id)=>{
-  const r=data.find(x=>x.id===id);
-  const lines=[];
-  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
-  if(r.por) lines.push(`POR: ${r.por}`);
-  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
-  lines.push(`O/F FM ${r.pol||""} TO ${r.pod||""} @ USD ${r.dv20||""}/20DV & USD ${r.hc40||""}/40HC`);
-  if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
-  if(r.validity) lines.push(`VALIDITY: ${formatDate(r.validity)}`);
-  if(r.tt) lines.push(`TT: ${r.tt} (DAYS)`);
-  if(r.via) lines.push(`ROUTING: ${r.via}`);
-  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-  try{await navigator.clipboard.writeText(lines.join("\n"))}
-  catch{
-    const t=document.createElement("textarea");
-    t.value=lines.join("\n");
-    document.body.appendChild(t);
-    t.select();
-    document.execCommand("copy");
-    t.remove();
-  }
-  alert("COPIED");
-};
-
-window.editRate=(id)=>{
-  const r=data.find(x=>x.id===id);
-  editId=id;
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>{
-    if($(k))$(k).value=r?.[k]||"";
-  });
-  $("stype").checked=(r?.type==="S");
-  $("vtype").checked=!$("stype").checked;
-};
-
-window.delRate=async(id)=>{
-  if(!confirm("DELETE THIS RATE?")) return;
-  await deleteDoc(doc(db,"rates",id));
-  load()
-};
-
-async function nextSequence(){
-  const nums=data.map(r=>Number(r.seq)||0);
-  return Math.max(0,...nums)+1;
-}
+loadExchangeRates();setInterval(loadExchangeRates,300000);
 
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(id=>$(id).value="");
@@ -775,6 +683,7 @@ function clearForm(resetEdit=true){
   $("vtype").checked=true;
   if(resetEdit) editId=null;
 }
+async function nextSequence(){return Math.max(0,...data.map(r=>Number(r.seq)||0))+1;}
 
 $("save").onclick=async()=>{
   const seq=await nextSequence();
@@ -800,12 +709,11 @@ $("save").onclick=async()=>{
   clearForm();
   load();
 };
-
 $("update").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD TO UPDATE.");
   const current=data.find(x=>x.id===editId)||{};
   await updateDoc(doc(db,"rates",editId),{
-    seq:current.seq || await nextSequence(),
+    seq:current.seq||await nextSequence(),
     carrier:upper($("carrier").value),
     por:upper($("por").value),
     pol:upper($("pol").value),
@@ -825,88 +733,87 @@ $("update").onclick=async()=>{
   });
   load();
 };
-
 $("clear").onclick=()=>clearForm(true);
 
-function unlock(){
+function pinUnlock(){
   const pin=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin===PIN){setSession();showApp()}else{alert("INVALID PIN");clearPin()}
+  if(pin===PIN){setSession();showApp();} else {alert("INVALID PIN"); clearPin();}
 }
-function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");$("pin1").focus()}
+function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value=""); $("pin1").focus();}
 ["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
   $(id).addEventListener("input",e=>{
     e.target.value=e.target.value.replace(/\D/g,"").slice(0,1);
-    if(e.target.value&&arr[i+1]) $(arr[i+1]).focus()
+    if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
   });
   $(id).addEventListener("keydown",e=>{
-    if(e.key==="Backspace"&&!e.target.value&&arr[i-1]) $(arr[i-1]).focus();
-    if(e.key==="Enter") unlock();
+    if(e.key==="Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
+    if(e.key==="Enter") pinUnlock();
   });
 });
-$("unlockBtn").onclick=unlock;
+$("unlockBtn").onclick=pinUnlock;
 $("clearPinBtn").onclick=clearPin;
-clearPin();
 
-function getChargeField(type){
-  if(type==="20dv") return "charges20dv";
-  if(type==="40hc") return "charges40hc";
-  return "localCharges";
-}
-function loadModalItems(){
+window.copyRate=async(id)=>{
+  const r=data.find(x=>x.id===id);
+  if(!r) return;
+  const lines=[];
+  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
+  if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pod) lines.push(`POD: ${r.pod}`);
+  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
+  lines.push(`O/F FM ${r.pol||""} TO ${r.pod||""} @ USD ${r.dv20||""}/20DV & USD ${r.hc40||""}/40HC`);
+  if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
+  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
+  if(r.tt) lines.push(`TT: ${r.tt} (DAYS)`);
+  if(r.via) lines.push(`ROUTING: ${r.via}`);
+  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
+  try{await navigator.clipboard.writeText(lines.join("\n"))}catch{const t=document.createElement("textarea");t.value=lines.join("\n");document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}
+  alert("COPIED");
+};
+window.editRate=(id)=>{
+  const r=data.find(x=>x.id===id);
+  if(!r) return;
+  editId=id;
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value=r[k]||"");
+  $("stype").checked=r.type==="S";
+  $("vtype").checked=!$("stype").checked;
+};
+window.delRate=async(id)=>{
+  if(!confirm("DELETE THIS RATE?")) return;
+  await deleteDoc(doc(db,"rates",id));
+  load();
+};
+
+function openModal(mode){
+  activeModal=mode;
+  activeChargeField=mode==="20dv"?"charges20dv":mode==="40hc"?"charges40hc":"localCharges";
   const r=editId?data.find(x=>x.id===editId):null;
   modalItems=r&&Array.isArray(r[activeChargeField])?[...r[activeChargeField]]:[];
-}
-function setModalTitle(){
-  $("modalTitle").textContent=activeModal==="local"?"LOCAL CHARGES":activeModal==="20dv"?"20DV CHARGES":"40HC CHARGES";
-}
-window.openChargesModal=(type)=>{
-  activeModal=type;
-  activeChargeField=getChargeField(type);
-  loadModalItems();
-  setModalTitle();
+  $("modalTitle").textContent=mode==="local"?"LOCAL CHARGES":mode==="20dv"?"20DV CHARGES":"40HC CHARGES";
   document.querySelectorAll(".modal-tabs button").forEach(b=>b.classList.remove("active"));
-  if(type==="local") $("tabLocal").classList.add("active");
-  if(type==="20dv") $("tab20").classList.add("active");
-  if(type==="40hc") $("tab40").classList.add("active");
+  $("tabLocal").classList.toggle("active",mode==="local");
+  $("tab20").classList.toggle("active",mode==="20dv");
+  $("tab40").classList.toggle("active",mode==="40hc");
+  renderModal();
   $("modalOverlay").classList.remove("hidden");
-  renderModal();
-};
-window.closeModal=()=>{
-  $("modalOverlay").classList.add("hidden");
-  activeModal="";
-};
-window.setChargeMode=(type)=>{
-  activeModal=type;
-  activeChargeField=getChargeField(type);
-  loadModalItems();
-  setModalTitle();
-  document.querySelectorAll(".modal-tabs button").forEach(b=>b.classList.remove("active"));
-  if(type==="local") $("tabLocal").classList.add("active");
-  if(type==="20dv") $("tab20").classList.add("active");
-  if(type==="40hc") $("tab40").classList.add("active");
-  renderModal();
-};
+}
+function renderModal(){
+  $("modalBody").innerHTML=modalItems.map((r,i)=>`
+    <tr>
+      <td>${r.head||""}</td><td>${r.currency||""}</td><td>${r.amount||""}</td><td>${r.units||""}</td><td>${r.total||""}</td>
+      <td><button class="danger small-btn" data-rm="${i}"><i class="bi bi-x-lg"></i></button></td>
+    </tr>
+  `).join("");
+}
 function updateModalTotal(){
   const a=parseFloat($("mAmount").value||"0");
   const u=parseFloat($("mUnits").value||"1");
   $("mTotal").value=((a||0)*(u||1))||"";
 }
-function renderModal(){
-  let h="";
-  modalItems.forEach((r,idx)=>{
-    h+=`<tr><td>${r.head||""}</td><td>${r.currency||""}</td><td>${r.amount||""}</td><td>${r.units||""}</td><td>${r.total||""}</td><td><button class="danger small-btn" onclick="removeModalRow(${idx})"><i class="bi bi-x-lg"></i></button></td></tr>`;
-  });
-  $("modalBody").innerHTML=h;
-}
-window.removeModalRow=i=>{modalItems.splice(i,1);renderModal()};
-$("mAmount").oninput=updateModalTotal;
-$("mUnits").oninput=updateModalTotal;
-$("mAmount").addEventListener("keydown",e=>{
-  if(e.key===" "||e.key==="+"){e.preventDefault();$("mUnits").focus();}
-});
-$("mUnits").addEventListener("keydown",e=>{
-  if(e.key===" "||e.key==="+"){e.preventDefault();$("mAdd").click();}
-});
+$("mAmount").addEventListener("input",updateModalTotal);
+$("mUnits").addEventListener("input",updateModalTotal);
+$("mAmount").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mUnits").focus();}});
+$("mUnits").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mAdd").click();}});
 $("mAdd").onclick=()=>{
   modalItems.push({
     head:upper($("mHead").value),
@@ -920,59 +827,74 @@ $("mAdd").onclick=()=>{
 };
 $("saveChargesBtn").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD FIRST.");
-  const payload={[activeChargeField]:modalItems};
-  await updateDoc(doc(db,"rates",editId),payload);
+  await updateDoc(doc(db,"rates",editId),{[activeChargeField]:modalItems});
   const rec=data.find(x=>x.id===editId);
   if(rec) rec[activeChargeField]=modalItems;
-  closeModal();
+  $("modalOverlay").classList.add("hidden");
   load();
 };
-$("openLocal").onclick=()=>openChargesModal("local");
-$("open20").onclick=()=>openChargesModal("20dv");
-$("open40").onclick=()=>openChargesModal("40hc");
-
-window.toggleRowSelection=(id,checked)=>{
-  if(checked) selectedUploadIds.add(id);
-  else selectedUploadIds.delete(id);
-};
-
-window.openUploadModal=()=>{
-  $("uploadOverlay").classList.remove("hidden");
-  renderUploadPreview();
-};
-window.closeUploadModal=()=>{
-  $("uploadOverlay").classList.add("hidden");
-};
-$("openUploadBtn").onclick=openUploadModal;
-$("pickFileBtn").onclick=()=>$("excelFile").click();
-
-$("excelFile").addEventListener("change", async e=>{
-  const file=e.target.files?.[0];
-  if(!file) return;
-  const text=await file.text();
-  const rows=parseSpreadsheet(text);
-  uploadPreviewRows=rows.map((r,idx)=>normalizeImportedRow(r,idx));
-  renderUploadPreview();
+$("closeModalBtn").onclick=()=>$("modalOverlay").classList.add("hidden");
+$("modalClose2").onclick=()=>$("modalOverlay").classList.add("hidden");
+$("openLocal").onclick=()=>openModal("local");
+$("open20").onclick=()=>openModal("20dv");
+$("open40").onclick=()=>openModal("40hc");
+$("modalBody").addEventListener("click",e=>{
+  const btn=e.target.closest("button[data-rm]");
+  if(!btn) return;
+  modalItems.splice(Number(btn.dataset.rm),1);
+  renderModal();
 });
 
-function parseSpreadsheet(text){
-  const lines=text.replace(/\r/g,"\n").split("\n").filter(x=>x!==undefined);
-  if(!lines.length) return [];
-  const sep=lines[0].includes("\t") ? "\t" : ",";
-  const headers=lines[0].split(sep).map(h=>h.trim().toLowerCase());
-  const rows=[];
-  for(let i=1;i<lines.length;i++){
-    const line=lines[i];
-    if(line===undefined || line==="") continue;
-    const cols=line.split(sep);
-    const obj={};
-    headers.forEach((h,idx)=>obj[h]=(cols[idx]??"").trim());
-    rows.push(obj);
-  }
-  return rows;
+function toCSV(rows){
+  const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","40HC","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
+  const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  return [head.join(","), ...rows.map((r,i)=>[
+    esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),esc(r.dv20),esc(r.hc40),esc(r.ft),esc(isoDate(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)
+  ].join(","))].join("\n");
 }
+function download(name,txt){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"}));
+  a.download=name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+$("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
+$("downloadTemplateBtn").onclick=()=>download("fr8x_rate_template.csv",toCSV([{seq:1,carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL ALI",fpod:"F-POD",dv20:"100",hc40:"200",ft:"2",validity:"2026-04-30",type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"}]));
+$("toggleFullBtn").onclick=async()=>{try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}catch(e){}};
 
-function normalizeImportedRow(r,idx){
+function openUpload(){
+  $("uploadOverlay").classList.remove("hidden");
+  renderUpload();
+}
+function closeUpload(){
+  $("uploadOverlay").classList.add("hidden");
+}
+$("openUploadBtn").onclick=openUpload;
+$("closeUploadBtn").onclick=closeUpload;
+$("pickFileBtn").onclick=()=>$("excelFile").click();
+$("excelFile").addEventListener("change",async e=>{
+  const f=e.target.files?.[0];
+  if(!f) return;
+  const txt=await f.text();
+  uploadRows=parseCSV(txt).map((r,i)=>normalizeUploadRow(r,i));
+  selectedUploadRows.clear();
+  renderUpload();
+});
+
+function parseCSV(txt){
+  const lines=txt.replace(/\r/g,"\n").split("\n").filter(Boolean);
+  if(!lines.length) return [];
+  const sep=lines[0].includes("\t")?"\t":",";
+  const headers=lines[0].split(sep).map(s=>s.trim().toLowerCase());
+  return lines.slice(1).map(line=>{
+    const cols=line.split(sep);
+    const o={};
+    headers.forEach((h,i)=>o[h]=(cols[i]??"").trim());
+    return o;
+  });
+}
+function normalizeUploadRow(r,idx){
   return {
     seq:r.seq||r.sequence||"",
     carrier:upper(r.carrier),
@@ -980,169 +902,73 @@ function normalizeImportedRow(r,idx){
     pol:upper(r.pol),
     pod:upper(r.pod),
     fpod:upper(r.fpod),
-    dv20:calc(r.dv20||r["20dv"]||r["usd 20dv"]||""),
-    hc40:calc(r.hc40||r["40hc"]||r["usd 40hc"]||""),
-    ft:r.ft||"",
-    validity:normalizeDate(r.validity||r.date||""),
+    dv20:calc(r.dv20||r["20dv"]||""),
+    hc40:calc(r.hc40||r["40hc"]||""),
+    ft:r["f/t"]||r.ft||"",
+    validity:isoDate(r.validity||r.date||""),
     type:upper(r.type||"V"),
     tt:r.tt||"",
     via:r.via||"",
     remarks:upper(r.remarks||""),
-    localCharges:r.localcharges||"",
-    charges20dv:r.charges20dv||"",
-    charges40hc:r.charges40hc||"",
-    _rowIndex:idx+1
+    _i:idx
   };
 }
-function renderUploadPreview(){
-  let h="";
-  uploadPreviewRows.forEach((r,idx)=>{
-    h+=`<tr>
-      <td><input type="checkbox" class="row-check" ${selectedUploadIds.has(idx)?'checked':''} onchange="toggleUploadPreview(${idx},this.checked)"></td>
-      <td>${r.seq||idx+1}</td><td>${r.carrier||""}</td><td>${r.por||""}</td><td>${r.pol||""}</td><td>${r.pod||""}</td><td>${r.fpod||""}</td><td>${r.dv20||""}</td><td>${r.hc40||""}</td><td>${r.ft||""}</td><td>${formatDate(r.validity)}</td><td>${r.type||""}</td><td>${r.tt||""}</td><td>${r.via||""}</td><td>${r.remarks||""}</td>
-    </tr>`;
-  });
-  $("uploadPreview").innerHTML=h;
+function renderUpload(){
+  $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
+    <tr>
+      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
+      <td>${r.seq||i+1}</td><td>${r.carrier||""}</td><td>${r.por||""}</td><td>${r.pol||""}</td><td>${r.pod||""}</td><td>${r.fpod||""}</td><td>${r.dv20||""}</td><td>${r.hc40||""}</td><td>${r.ft||""}</td><td>${fmtDate(r.validity)}</td><td>${r.type||""}</td><td>${r.tt||""}</td><td>${r.via||""}</td><td>${r.remarks||""}</td>
+    </tr>
+  `).join("");
 }
-window.toggleUploadPreview=(idx,checked)=>{
-  if(checked) selectedUploadIds.add(idx);
-  else selectedUploadIds.delete(idx);
-};
-$("selectAllExport").onchange=e=>{
-  if(e.target.checked) uploadPreviewRows.forEach((_,i)=>selectedUploadIds.add(i));
-  else selectedUploadIds.clear();
-  renderUploadPreview();
-};
-
-function csvEscape(v){
-  v=(v??"").toString();
-  if(/[",\n]/.test(v)) return `"${v.replace(/"/g,'""')}"`;
-  return v;
-}
-function downloadCSV(filename, rows){
-  const headers=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","40HC","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
-  const lines=[headers.join(",")];
-  rows.forEach((r,i)=>{
-    lines.push([
-      csvEscape(r.seq||i+1),
-      csvEscape(r.carrier),
-      csvEscape(r.por),
-      csvEscape(r.pol),
-      csvEscape(r.pod),
-      csvEscape(r.fpod),
-      csvEscape(r.dv20),
-      csvEscape(r.hc40),
-      csvEscape(r.ft),
-      csvEscape(normalizeDate(r.validity)),
-      csvEscape(r.type),
-      csvEscape(r.tt),
-      csvEscape(r.via),
-      csvEscape(r.remarks)
-    ].join(","));
-  });
-  const blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8;"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=filename;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-$("downloadTemplateBtn").onclick=()=>{
-  downloadCSV("fr8x_rate_template.csv",[{
-    seq:1,carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL ALI",fpod:"F-POD",dv20:"100",hc40:"200",ft:"2",validity:"2026-04-30",type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"
-  }]);
-};
+$("selectAllUpload").addEventListener("change",e=>{
+  if(e.target.checked) uploadRows.forEach((_,i)=>selectedUploadRows.add(i));
+  else selectedUploadRows.clear();
+  renderUpload();
+});
+$("uploadBody").addEventListener("change",e=>{
+  const cb=e.target.closest('input[data-ui]');
+  if(!cb) return;
+  const i=Number(cb.dataset.ui);
+  if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
+});
 $("exportSelectedBtn").onclick=()=>{
-  const selected=uploadPreviewRows.filter((_,i)=>selectedUploadIds.has(i));
-  downloadCSV("fr8x_selected_rates.csv",selected.length?selected:filteredDataForMode());
+  const rows=(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows());
+  download("fr8x_selected_export.csv",toCSV(rows));
 };
-
-async function bulkUpdateFromRows(rows){
-  for(const row of rows){
-    const payload=toImportObj(row);
-    const match=data.find(d =>
-      upper(d.carrier)===upper(payload.carrier) &&
-      upper(d.fpod)===upper(payload.fpod) &&
-      upper(d.por)===upper(payload.por) &&
-      upper(d.pol)===upper(payload.pol) &&
-      upper(d.pod)===upper(payload.pod) &&
-      normalizeDate(d.validity)===normalizeDate(payload.validity)
-    );
-    if(match) await updateDoc(doc(db,"rates",match.id),payload);
-    else await addDoc(collection(db,"rates"),payload);
-  }
-  load();
-}
-window.bulkUpdateFromRows=bulkUpdateFromRows;
-
-function toImportObj(r){
-  return {
-    seq: r.seq ? Number(r.seq) : undefined,
-    carrier: upper(r.carrier||""),
-    por: upper(r.por||""),
-    pol: upper(r.pol||""),
-    pod: upper(r.pod||""),
-    fpod: upper(r.fpod||""),
-    dv20: calc(r.dv20||""),
-    hc40: calc(r.hc40||""),
-    ft: r.ft||"",
-    validity: normalizeDate(r.validity||""),
-    tt: r.tt||"",
-    via: r.via||"",
-    remarks: upper(r.remarks||""),
-    type: upper(r.type||"V"),
-    localCharges: Array.isArray(r.localCharges)?r.localCharges:[],
-    charges20dv: Array.isArray(r.charges20dv)?r.charges20dv:[],
-    charges40hc: Array.isArray(r.charges40hc)?r.charges40hc:[]
-  };
-}
-
-$("applyBulkBtn").onclick=async()=>{
-  if(!uploadPreviewRows.length) return alert("NO FILE DATA FOUND.");
-  const chosen=selectedUploadIds.size ? uploadPreviewRows.filter((_,i)=>selectedUploadIds.has(i)) : uploadPreviewRows;
-  for(const row of chosen){
-    if(!row.carrier && !row.fpod && !row.por && !row.pol && !row.pod && !row.dv20 && !row.hc40) continue;
-    const seq = row.seq ? Number(row.seq) : await nextSequence();
+$("bulkApplyBtn").onclick=async()=>{
+  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
+  for(const r of rows){
+    if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
+    const seq=r.seq ? Number(r.seq) : await nextSequence();
     await addDoc(collection(db,"rates"),{
-      ...toImportObj(row),
-      seq
+      seq,
+      carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod,
+      dv20:r.dv20, hc40:r.hc40, ft:r.ft, validity:r.validity, type:r.type, tt:r.tt, via:r.via, remarks:r.remarks,
+      localCharges:[], charges20dv:[], charges40hc:[]
     });
   }
-  closeUploadModal();
+  closeUpload();
   load();
 };
 
-$("toggleFullBtn").onclick=async()=>{
-  try{
-    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
-    else await document.exitFullscreen();
-  }catch(e){}
-};
+$("globalSearch").addEventListener("input",render);
+document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value; render();}));
+document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
 
-$("exportBtn").onclick=()=>{
-  downloadCSV(`fr8x_${viewMode}_export.csv`, compactRowsForExport(filteredDataForMode()));
-};
+document.addEventListener("click",e=>{
+  const btn=e.target.closest("button[data-action]");
+  if(btn){
+    const id=btn.dataset.id;
+    if(btn.dataset.action==="copy") copyRate(id);
+    if(btn.dataset.action==="edit") editRate(id);
+    if(btn.dataset.action==="delete") delRate(id);
+  }
+});
 
-function compactRowsForExport(rows){
-  return rows.map(r=>({
-    seq:r.seq||"",
-    carrier:r.carrier||"",
-    por:r.por||"",
-    pol:r.pol||"",
-    pod:r.pod||"",
-    fpod:r.fpod||"",
-    dv20:r.dv20||"",
-    hc40:r.hc40||"",
-    ft:r.ft||"",
-    validity:normalizeDate(r.validity)||"",
-    type:r.type||"",
-    tt:r.tt||"",
-    via:r.via||"",
-    remarks:r.remarks||""
-  }));
-}
-window.compactRowsForExport=compactRowsForExport;
-window.nextSequence=nextSequence;
+$("selectAllRows").addEventListener("change",e=>document.querySelectorAll("#tbody .row-check").forEach(cb=>cb.checked=e.target.checked));
+$("selectAllExpired").addEventListener("change",e=>document.querySelectorAll("#expiredBody .row-check").forEach(cb=>cb.checked=e.target.checked));
+$("selectAllAll").addEventListener("change",e=>document.querySelectorAll("#allBody .row-check").forEach(cb=>cb.checked=e.target.checked));
 </script>
 </body>
 </html>
