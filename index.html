@@ -8,7 +8,7 @@
 <style>
 :root{
   --bg:#f7fbff;
-  --glass:rgba(255,255,255,.70);
+  --glass:rgba(255,255,255,.72);
   --glass-strong:rgba(255,255,255,.90);
   --border:rgba(15,23,42,.10);
   --text:#0f172a;
@@ -699,31 +699,23 @@ function switchView(mode){
   $("sectionAll").classList.toggle("active",mode==="all");
   render();
 }
-window.switchView=switchView;
 
 async function loadExchangeRates(){
-  const urls=[
-    "https://open.er-api.com/v6/latest/USD",
-    "https://api.frankfurter.dev/v2/latest?base=USD"
-  ];
+  const urls=["https://open.er-api.com/v6/latest/USD","https://api.frankfurter.dev/v2/latest?base=USD"];
   for(const url of urls){
     try{
       const res=await fetch(url,{cache:"no-store"});
       const json=await res.json();
       if(json?.rates?.INR){
         const usdToInr = json.base==="USD" ? json.rates.INR : (1/json.rates.USD);
-        $("tickerTrack").innerHTML=`
-          <span><span class="note">1 USD = ${Number(usdToInr).toFixed(2)} INR</span></span>
-          <span><span class="note">EXCHANGE UPDATED</span></span>
-        `;
+        $("tickerTrack").innerHTML=`<span><span class="note">1 USD = ${Number(usdToInr).toFixed(2)} INR</span></span><span><span class="note">EXCHANGE UPDATED</span></span>`;
         return;
       }
     }catch(e){}
   }
   $("tickerTrack").innerHTML=`<span><span class="note">EXCHANGE RATE API UNAVAILABLE</span></span>`;
 }
-loadExchangeRates();
-setInterval(loadExchangeRates,300000);
+loadExchangeRates(); setInterval(loadExchangeRates,300000);
 
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(id=>$(id).value="");
@@ -865,13 +857,7 @@ $("mUnits").addEventListener("input",updateModalTotal);
 $("mAmount").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mUnits").focus();}});
 $("mUnits").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mAdd").click();}});
 $("mAdd").onclick=()=>{
-  modalItems.push({
-    head:upper($("mHead").value),
-    currency:upper($("mCurrency").value),
-    amount:upper($("mAmount").value),
-    units:upper($("mUnits").value),
-    total:upper($("mTotal").value)
-  });
+  modalItems.push({ head:upper($("mHead").value), currency:upper($("mCurrency").value), amount:upper($("mAmount").value), units:upper($("mUnits").value), total:upper($("mTotal").value) });
   ["mHead","mCurrency","mAmount","mUnits","mTotal"].forEach(id=>$(id).value="");
   renderModal();
 };
@@ -931,23 +917,7 @@ function parseCSV(txt){
   });
 }
 function normalizeUploadRow(r,idx){
-  return {
-    seq:r.seq||r.sequence||"",
-    carrier:upper(r.carrier),
-    por:upper(r.por),
-    pol:upper(r.pol),
-    pod:upper(r.pod),
-    fpod:upper(r.fpod),
-    dv20:calc(r.dv20||r["20dv"]||""),
-    hc40:calc(r.hc40||r["40hc"]||""),
-    ft:r["f/t"]||r.ft||"",
-    validity:isoDate(r.validity||r.date||""),
-    type:upper(r.type||"V"),
-    tt:r.tt||"",
-    via:r.via||"",
-    remarks:upper(r.remarks||""),
-    _i:idx
-  };
+  return { seq:r.seq||r.sequence||"", carrier:upper(r.carrier), por:upper(r.por), pol:upper(r.pol), pod:upper(r.pod), fpod:upper(r.fpod), dv20:calc(r.dv20||r["20dv"]||""), hc40:calc(r.hc40||r["40hc"]||""), ft:r["f/t"]||r.ft||"", validity:isoDate(r.validity||r.date||""), type:upper(r.type||"V"), tt:r.tt||"", via:r.via||"", remarks:upper(r.remarks||""), _i:idx };
 }
 function renderUpload(){
   $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
