@@ -100,13 +100,13 @@ body::before{
 }
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .container{
-  width:min(100vw - 8px, 100vw);
-  margin:8px auto;
+  width:100vw;
+  margin:0;
   padding:16px;
   background:var(--glass);
-  border:1px solid var(--border);
-  border-radius:24px;
-  box-shadow:var(--shadow);
+  border-top:1px solid rgba(15,23,42,.05);
+  border-radius:0;
+  box-shadow:none;
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
 }
@@ -583,21 +583,16 @@ const FOUR_HOURS=4*60*60*1000;
 
 let data=[], editId=null, viewMode="active";
 let filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",hc40:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
-let activeModal="local", activeChargeField="localCharges", modalItems=[];
-let uploadRows=[], selectedUploadRows=new Set();
-let loaderTimer=null;
+let activeChargeField="localCharges", modalItems=[], uploadRows=[], selectedUploadRows=new Set(), loaderTimer=null;
 
-function showLoader(title, sub){
+function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
   clearTimeout(loaderTimer);
-  $("loaderText").textContent=title||"UPDATING...";
-  $("loaderSub").textContent=sub||"PLEASE WAIT";
+  $("loaderText").textContent=title;
+  $("loaderSub").textContent=sub;
   $("loader").classList.add("show");
-  loaderTimer=setTimeout(()=>hideLoader(),900);
+  loaderTimer=setTimeout(()=>hideLoader(),800);
 }
-function hideLoader(){
-  clearTimeout(loaderTimer);
-  $("loader").classList.remove("show");
-}
+function hideLoader(){clearTimeout(loaderTimer);$("loader").classList.remove("show")}
 
 function calc(v){
   v=(v??"").toString().trim();
@@ -707,18 +702,28 @@ function switchView(mode){
 window.switchView=switchView;
 
 async function loadExchangeRates(){
-  try{
-    const res=await fetch("https://api.frankfurter.dev/v2/latest?base=INR&symbols=USD,EUR,GBP,JPY");
-    const json=await res.json();
-    const rates=json.rates||{};
-    $("tickerTrack").innerHTML=`
-      <span><span class="note">USD/INR</span> <span style="color:#059669">${rates.USD||"-"}</span></span>
-      <span><span class="note">EUR/INR</span> <span style="color:#dc2626">${rates.EUR||"-"}</span></span>
-      <span><span class="note">GBP/INR</span> <span style="color:#059669">${rates.GBP||"-"}</span></span>
-      <span><span class="note">JPY/INR</span> <span style="color:#059669">${rates.JPY||"-"}</span></span>`;
-  }catch(e){}
+  const urls=[
+    "https://open.er-api.com/v6/latest/USD",
+    "https://api.frankfurter.dev/v2/latest?base=USD"
+  ];
+  for(const url of urls){
+    try{
+      const res=await fetch(url,{cache:"no-store"});
+      const json=await res.json();
+      if(json?.rates?.INR){
+        const usdToInr = json.base==="USD" ? json.rates.INR : (1/json.rates.USD);
+        $("tickerTrack").innerHTML=`
+          <span><span class="note">1 USD = ${Number(usdToInr).toFixed(2)} INR</span></span>
+          <span><span class="note">EXCHANGE UPDATED</span></span>
+        `;
+        return;
+      }
+    }catch(e){}
+  }
+  $("tickerTrack").innerHTML=`<span><span class="note">EXCHANGE RATE API UNAVAILABLE</span></span>`;
 }
-loadExchangeRates();setInterval(loadExchangeRates,300000);
+loadExchangeRates();
+setInterval(loadExchangeRates,300000);
 
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(id=>$(id).value="");
@@ -812,7 +817,7 @@ window.copyRate=async(id)=>{
   if(r.tt) lines.push(`TT: ${r.tt} (DAYS)`);
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-  try{await navigator.clipboard.writeText(lines.join("\n"))}catch{const t=document.createElement("textarea");t.value=lines.join("\n");document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}
+  try{await navigator.clipboard.writeText(lines.join("\n"))}catch{}
   alert("COPIED");
 };
 window.editRate=(id)=>{
@@ -831,7 +836,6 @@ window.delRate=async(id)=>{
 };
 
 function openModal(mode){
-  activeModal=mode;
   activeChargeField=mode==="20dv"?"charges20dv":mode==="40hc"?"charges40hc":"localCharges";
   const r=editId?data.find(x=>x.id===editId):null;
   modalItems=r&&Array.isArray(r[activeChargeField])?[...r[activeChargeField]]:[];
@@ -875,8 +879,6 @@ $("saveChargesBtn").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD FIRST.");
   showLoader("SAVING CHARGES","UPDATING RECORD");
   await updateDoc(doc(db,"rates",editId),{[activeChargeField]:modalItems});
-  const rec=data.find(x=>x.id===editId);
-  if(rec) rec[activeChargeField]=modalItems;
   $("modalOverlay").classList.add("hidden");
   await load();
 };
@@ -910,11 +912,8 @@ $("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filtered
 $("downloadTemplateBtn").onclick=()=>download("fr8x_rate_template.csv",toCSV([{seq:1,carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL ALI",fpod:"F-POD",dv20:"100",hc40:"200",ft:"2",validity:"2026-04-30",type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"}]));
 $("toggleFullBtn").onclick=async()=>{try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}catch(e){}};
 
-function openUpload(){
-  $("uploadOverlay").classList.remove("hidden");
-  renderUpload();
-}
-function closeUpload(){$("uploadOverlay").classList.add("hidden")}
+function openUpload(){ $("uploadOverlay").classList.remove("hidden"); renderUpload(); }
+function closeUpload(){ $("uploadOverlay").classList.add("hidden"); }
 $("openUploadBtn").onclick=openUpload;
 $("closeUploadBtn").onclick=closeUpload;
 $("pickFileBtn").onclick=()=>$("fileInput").click();
