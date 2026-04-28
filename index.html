@@ -7,8 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <style>
 :root{
-  --bg1:#f7fbff;
-  --bg2:#ffffff;
+  --bg:#f6fbff;
   --glass:rgba(255,255,255,.70);
   --glass-strong:rgba(255,255,255,.88);
   --border:rgba(15,23,42,.10);
@@ -29,7 +28,7 @@ body{
   background:
     radial-gradient(circle at 10% 10%, rgba(37,99,235,.06), transparent 24%),
     radial-gradient(circle at 90% 20%, rgba(15,23,42,.04), transparent 20%),
-    linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 52%, #f3f7fb 100%);
+    linear-gradient(180deg,#f7fbff 0%, #ffffff 52%, #f3f7fb 100%);
   text-transform:uppercase;
   overflow-x:hidden;
 }
@@ -38,9 +37,31 @@ body::before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.12));
+  background:linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.10));
 }
 .hidden{display:none !important}
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.card{
+  width:min(1180px,calc(100% - 18px));
+  max-height:92vh;
+  overflow:auto;
+  padding:22px;
+  border-radius:26px;
+  background:var(--glass-strong);
+  border:1px solid rgba(15,23,42,.08);
+  box-shadow:var(--shadow);
+}
+.card.narrow{width:min(520px,calc(100% - 28px))}
 .header{
   position:sticky;
   top:0;
@@ -50,7 +71,7 @@ body::before{
   align-items:center;
   gap:12px;
   padding:12px 18px;
-  background:rgba(255,255,255,.78);
+  background:rgba(255,255,255,.80);
   backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
   border-bottom:1px solid rgba(15,23,42,.08);
@@ -58,12 +79,7 @@ body::before{
   letter-spacing:.12em;
   font-weight:800;
 }
-.header-right{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ticker{
   position:sticky;
   top:49px;
@@ -94,10 +110,10 @@ body::before{
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
 }
-.topbar,.section-head,.modal-head{
+.topbar,.section-head,.modal-head,.loader-inner{
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap:10px;
   flex-wrap:wrap;
 }
@@ -154,7 +170,7 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .success{background:linear-gradient(135deg,var(--green),#10b981);color:#fff}
 .danger{background:linear-gradient(135deg,#b91c1c,var(--red));color:#fff}
 .ghost{
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.90);
   color:#0f172a;
   border:1px solid rgba(15,23,42,.10);
 }
@@ -164,7 +180,7 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
   flex-wrap:wrap;
   margin:10px 0 12px;
 }
-.section-tabs button.active{
+.section-tabs button.active,.modal-tabs button.active{
   background:linear-gradient(135deg,var(--blue),var(--blue2));
   color:#fff;
 }
@@ -250,29 +266,6 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 .checkbox-col{width:36px}
 .row-check{width:16px;height:16px;accent-color:var(--blue)}
 .small-btn{width:28px;height:28px;padding:0;border-radius:10px}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  z-index:999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.72);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-}
-.card{
-  width:min(1180px,calc(100% - 18px));
-  max-height:92vh;
-  overflow:auto;
-  padding:22px;
-  border-radius:26px;
-  background:var(--glass-strong);
-  border:1px solid rgba(15,23,42,.08);
-  box-shadow:var(--shadow);
-}
-.card.narrow{width:min(520px,calc(100% - 28px))}
 .title{
   font-size:22px;
   font-weight:900;
@@ -308,10 +301,6 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
   color:#111827;
   border:1px solid rgba(15,23,42,.08);
 }
-.modal-tabs button.active{
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:#fff;
-}
 .modal-grid{
   display:grid;
   grid-template-columns:1.1fr 1fr 1fr 1fr .8fr auto;
@@ -329,6 +318,37 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 .section{display:none}
 .section.active{display:block}
 .file-input{display:none}
+.loader{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.70);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.loader.show{display:flex}
+.loader-box{
+  min-width:240px;
+  padding:18px 20px;
+  border-radius:20px;
+  border:1px solid rgba(15,23,42,.08);
+  background:rgba(255,255,255,.90);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+.spinner{
+  width:42px;
+  height:42px;
+  margin:0 auto 12px;
+  border-radius:50%;
+  border:4px solid rgba(37,99,235,.14);
+  border-top-color:var(--blue);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media (max-width:1200px){
   .form{grid-template-columns:repeat(6,minmax(0,1fr))}
   .span2,.span3,.span4,.span6,.vs{grid-column:span 6}
@@ -342,6 +362,14 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 </style>
 </head>
 <body>
+
+<div id="loader" class="loader">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <div id="loaderText" class="title" style="font-size:14px">UPDATING...</div>
+    <div class="note" id="loaderSub" style="margin-top:6px">PLEASE WAIT</div>
+  </div>
+</div>
 
 <div id="pinGate" class="overlay">
   <div class="card narrow">
@@ -398,14 +426,14 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
       <div class="title">MASS UPLOAD / EXPORT</div>
       <button class="ghost" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div class="note" style="margin-bottom:10px">CSV/TXT IMPORT IS SUPPORTED HERE. BLANK CELLS ARE ALLOWED.</div>
+    <div class="note" style="margin-bottom:10px">CSV IMPORT IS SUPPORTED. BLANK CELLS ARE ALLOWED.</div>
     <div class="action-bar" style="margin-bottom:12px">
       <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
       <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
       <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
-      <button class="ghost" id="bulkApplyBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
+      <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
     </div>
-    <input type="file" id="excelFile" class="file-input" accept=".csv,.txt,.xlsx,.xls" />
+    <input type="file" id="fileInput" class="file-input" accept=".csv,.txt" />
     <div class="table-wrap compact-table">
       <table>
         <thead>
@@ -552,9 +580,17 @@ const PIN="1234";
 const KEY="fr8x_pin_until";
 const FOUR_HOURS=4*60*60*1000;
 
-let data=[], editId=null, viewMode="active", filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",hc40:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
+let data=[], editId=null, viewMode="active";
+let filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",hc40:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
 let activeModal="local", activeChargeField="localCharges", modalItems=[];
 let uploadRows=[], selectedUploadRows=new Set();
+
+function showLoader(title, sub){
+  $("loaderText").textContent=title||"UPDATING...";
+  $("loaderSub").textContent=sub||"PLEASE WAIT";
+  $("loader").classList.add("show");
+}
+function hideLoader(){$("loader").classList.remove("show")}
 
 function calc(v){
   v=(v??"").toString().trim();
@@ -584,14 +620,13 @@ function expired(r){
   today.setHours(0,0,0,0);
   return new Date(d+"T00:00:00")<today;
 }
-function sessionValid(){
-  return Date.now() < (+localStorage.getItem(KEY)||0);
-}
+function sessionValid(){return Date.now() < (+localStorage.getItem(KEY)||0)}
 function setSession(){localStorage.setItem(KEY,String(Date.now()+FOUR_HOURS))}
 function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load()}
 if(sessionValid()) showApp();
 
 async function load(){
+  showLoader("UPDATING DATA","FETCHING RECORDS");
   const snap=await getDocs(collection(db,"rates"));
   data=[];
   snap.forEach(d=>data.push({id:d.id,...d.data()}));
@@ -599,6 +634,7 @@ async function load(){
   updateCounters();
   render();
   renderTicker();
+  hideLoader();
 }
 function updateCounters(){
   const ex=data.filter(expired).length;
@@ -686,6 +722,7 @@ function clearForm(resetEdit=true){
 async function nextSequence(){return Math.max(0,...data.map(r=>Number(r.seq)||0))+1;}
 
 $("save").onclick=async()=>{
+  showLoader("SAVING","CREATING NEW RECORD");
   const seq=await nextSequence();
   await addDoc(collection(db,"rates"),{
     seq,
@@ -707,10 +744,11 @@ $("save").onclick=async()=>{
     charges40hc:[]
   });
   clearForm();
-  load();
+  await load();
 };
 $("update").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD TO UPDATE.");
+  showLoader("UPDATING","SAVING CHANGES");
   const current=data.find(x=>x.id===editId)||{};
   await updateDoc(doc(db,"rates",editId),{
     seq:current.seq||await nextSequence(),
@@ -731,7 +769,7 @@ $("update").onclick=async()=>{
     charges20dv:current.charges20dv||[],
     charges40hc:current.charges40hc||[]
   });
-  load();
+  await load();
 };
 $("clear").onclick=()=>clearForm(true);
 
@@ -780,8 +818,9 @@ window.editRate=(id)=>{
 };
 window.delRate=async(id)=>{
   if(!confirm("DELETE THIS RATE?")) return;
+  showLoader("DELETING","REMOVING RECORD");
   await deleteDoc(doc(db,"rates",id));
-  load();
+  await load();
 };
 
 function openModal(mode){
@@ -827,11 +866,12 @@ $("mAdd").onclick=()=>{
 };
 $("saveChargesBtn").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD FIRST.");
+  showLoader("SAVING CHARGES","UPDATING RECORD");
   await updateDoc(doc(db,"rates",editId),{[activeChargeField]:modalItems});
   const rec=data.find(x=>x.id===editId);
   if(rec) rec[activeChargeField]=modalItems;
   $("modalOverlay").classList.add("hidden");
-  load();
+  await load();
 };
 $("closeModalBtn").onclick=()=>$("modalOverlay").classList.add("hidden");
 $("modalClose2").onclick=()=>$("modalOverlay").classList.add("hidden");
@@ -867,20 +907,10 @@ function openUpload(){
   $("uploadOverlay").classList.remove("hidden");
   renderUpload();
 }
-function closeUpload(){
-  $("uploadOverlay").classList.add("hidden");
-}
+function closeUpload(){$("uploadOverlay").classList.add("hidden")}
 $("openUploadBtn").onclick=openUpload;
 $("closeUploadBtn").onclick=closeUpload;
-$("pickFileBtn").onclick=()=>$("excelFile").click();
-$("excelFile").addEventListener("change",async e=>{
-  const f=e.target.files?.[0];
-  if(!f) return;
-  const txt=await f.text();
-  uploadRows=parseCSV(txt).map((r,i)=>normalizeUploadRow(r,i));
-  selectedUploadRows.clear();
-  renderUpload();
-});
+$("pickFileBtn").onclick=()=>$("fileInput").click();
 
 function parseCSV(txt){
   const lines=txt.replace(/\r/g,"\n").split("\n").filter(Boolean);
@@ -921,13 +951,23 @@ function renderUpload(){
     </tr>
   `).join("");
 }
+$("fileInput").addEventListener("change",async e=>{
+  const f=e.target.files?.[0];
+  if(!f) return;
+  showLoader("IMPORTING","READING FILE");
+  const txt=await f.text();
+  uploadRows=parseCSV(txt).map((r,i)=>normalizeUploadRow(r,i));
+  selectedUploadRows.clear();
+  renderUpload();
+  hideLoader();
+});
 $("selectAllUpload").addEventListener("change",e=>{
   if(e.target.checked) uploadRows.forEach((_,i)=>selectedUploadRows.add(i));
   else selectedUploadRows.clear();
   renderUpload();
 });
 $("uploadBody").addEventListener("change",e=>{
-  const cb=e.target.closest('input[data-ui]');
+  const cb=e.target.closest("input[data-ui]");
   if(!cb) return;
   const i=Number(cb.dataset.ui);
   if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
@@ -936,8 +976,10 @@ $("exportSelectedBtn").onclick=()=>{
   const rows=(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows());
   download("fr8x_selected_export.csv",toCSV(rows));
 };
-$("bulkApplyBtn").onclick=async()=>{
+$("applyImportBtn").onclick=async()=>{
   const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
+  if(!rows.length) return alert("NO DATA TO IMPORT.");
+  showLoader("IMPORTING","ADDING RECORDS");
   for(const r of rows){
     if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
     const seq=r.seq ? Number(r.seq) : await nextSequence();
@@ -949,23 +991,20 @@ $("bulkApplyBtn").onclick=async()=>{
     });
   }
   closeUpload();
-  load();
+  await load();
 };
 
 $("globalSearch").addEventListener("input",render);
 document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value; render();}));
 document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
-
 document.addEventListener("click",e=>{
   const btn=e.target.closest("button[data-action]");
-  if(btn){
-    const id=btn.dataset.id;
-    if(btn.dataset.action==="copy") copyRate(id);
-    if(btn.dataset.action==="edit") editRate(id);
-    if(btn.dataset.action==="delete") delRate(id);
-  }
+  if(!btn) return;
+  const id=btn.dataset.id;
+  if(btn.dataset.action==="copy") copyRate(id);
+  if(btn.dataset.action==="edit") editRate(id);
+  if(btn.dataset.action==="delete") delRate(id);
 });
-
 $("selectAllRows").addEventListener("change",e=>document.querySelectorAll("#tbody .row-check").forEach(cb=>cb.checked=e.target.checked));
 $("selectAllExpired").addEventListener("change",e=>document.querySelectorAll("#expiredBody .row-check").forEach(cb=>cb.checked=e.target.checked));
 $("selectAllAll").addEventListener("change",e=>document.querySelectorAll("#allBody .row-check").forEach(cb=>cb.checked=e.target.checked));
