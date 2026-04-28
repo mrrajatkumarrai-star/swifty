@@ -784,15 +784,26 @@ window.copyRate=async(id)=>{
   const lines=[];
   if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
   if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pol) lines.push(`POL: ${r.pol}`);
   if(r.pod) lines.push(`POD: ${r.pod}`);
   if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
-  lines.push(`O/F FM ${r.pol||""} TO ${r.pod||""} @ USD ${r.dv20||""}/20DV & USD ${r.hc40||""}/40HC`);
+  const routeFrom=r.pol||r.por||"";
+  const routeTo=r.pod||"";
+  if(routeFrom||routeTo||r.dv20||r.hc40) lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ USD ${r.dv20||""}/20DV & USD ${r.hc40||""}/40HC`);
   if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
   if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
-  if(r.tt) lines.push(`TT: ${r.tt} (DAYS)`);
+  if(r.tt) lines.push(`TT: ${r.tt} DAYS`);
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-  try{await navigator.clipboard.writeText(lines.join("\n"))}catch{}
+  const text=lines.join("\n");
+  try{await navigator.clipboard.writeText(text)}catch{
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
   alert("COPIED");
 };
 window.editRate=(id)=>{
@@ -959,9 +970,22 @@ $("applyImportBtn").onclick=async()=>{
     const seq=r.seq ? Number(r.seq) : await nextSequence();
     await addDoc(collection(db,"rates"),{
       seq,
-      carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod,
-      dv20:r.dv20, hc40:r.hc40, ft:r.ft, validity:r.validity, type:r.type, tt:r.tt, via:r.via, remarks:r.remarks,
-      localCharges:[], charges20dv:[], charges40hc:[]
+      carrier:r.carrier,
+      por:r.por,
+      pol:r.pol,
+      pod:r.pod,
+      fpod:r.fpod,
+      dv20:r.dv20,
+      hc40:r.hc40,
+      ft:r.ft,
+      validity:r.validity,
+      type:r.type,
+      tt:r.tt,
+      via:r.via,
+      remarks:r.remarks,
+      localCharges:[],
+      charges20dv:[],
+      charges40hc:[]
     });
   }
   closeUpload();
@@ -969,7 +993,7 @@ $("applyImportBtn").onclick=async()=>{
 };
 
 $("globalSearch").addEventListener("input",render);
-document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value; render();}));
+document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value;render();}));
 document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
 document.addEventListener("click",e=>{
   const btn=e.target.closest("button[data-action]");
