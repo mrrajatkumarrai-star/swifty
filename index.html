@@ -32,13 +32,6 @@ body{
   text-transform:uppercase;
   overflow-x:hidden;
 }
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.10));
-}
 .hidden{display:none !important}
 .overlay{
   position:fixed;
@@ -110,7 +103,7 @@ body::before{
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
 }
-.topbar,.section-head,.modal-head,.loader-inner{
+.topbar,.section-head,.modal-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -126,11 +119,7 @@ body::before{
   border:1px solid rgba(37,99,235,.14);
   font-weight:700;
 }
-.note{
-  color:var(--muted);
-  font-size:11px;
-  letter-spacing:.08em;
-}
+.note{color:var(--muted);font-size:11px;letter-spacing:.08em}
 input,select{
   height:36px;
   width:100%;
@@ -194,7 +183,6 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .span2{grid-column:span 2}
 .span3{grid-column:span 3}
 .span4{grid-column:span 4}
-.span6{grid-column:span 6}
 .vs{
   grid-column:span 2;
   display:flex;
@@ -262,7 +250,6 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
   background:rgba(255,255,255,.92);
   color:#111827;
 }
-.icon-btn i{color:#111827}
 .checkbox-col{width:36px}
 .row-check{width:16px;height:16px;accent-color:var(--blue)}
 .small-btn{width:28px;height:28px;padding:0;border-radius:10px}
@@ -272,11 +259,7 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
   letter-spacing:.12em;
   text-align:center;
 }
-.subtitle{
-  text-align:center;
-  color:var(--muted);
-  margin:8px 0 16px;
-}
+.subtitle{text-align:center;color:var(--muted);margin:8px 0 16px}
 .pin-row{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -309,11 +292,7 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 }
 .modal-grid input{height:32px}
 .compact-table th,.compact-table td{padding:4px 6px}
-.action-bar{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
+.action-bar{display:flex;gap:8px;flex-wrap:wrap}
 .expired-note{color:var(--red);font-weight:800;margin-left:8px}
 .section{display:none}
 .section.active{display:block}
@@ -352,12 +331,12 @@ tbody tr:hover{background:rgba(37,99,235,.04)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (max-width:1200px){
   .form{grid-template-columns:repeat(6,minmax(0,1fr))}
-  .span2,.span3,.span4,.span6,.vs{grid-column:span 6}
+  .span2,.span3,.span4,.vs{grid-column:span 6}
   .modal-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:700px){
   .form{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .span2,.span3,.span4,.span6,.vs{grid-column:span 2}
+  .span2,.span3,.span4,.vs{grid-column:span 2}
   .container{padding:12px}
 }
 </style>
@@ -715,7 +694,8 @@ async function loadExchangeRates(){
   }
   $("tickerTrack").innerHTML=`<span><span class="note">EXCHANGE RATE API UNAVAILABLE</span></span>`;
 }
-loadExchangeRates(); setInterval(loadExchangeRates,300000);
+loadExchangeRates();
+setInterval(loadExchangeRates,300000);
 
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(id=>$(id).value="");
