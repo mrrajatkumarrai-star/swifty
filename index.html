@@ -30,46 +30,115 @@ body{margin:0;color:var(--text);background:var(--bg);overflow-x:hidden}
 .card{width:min(1240px,calc(100% - 16px));max-height:92vh;overflow:auto;padding:20px;border-radius:18px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow)}
 .card.narrow{width:min(520px,calc(100% - 24px))}
 .header{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-soft)}
-.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.brand{font-size:18px;font-weight:800;letter-spacing:.02em}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.brand{font-size:18px;font-weight:800;letter-spacing:.02em}
 .ticker{position:sticky;top:61px;z-index:25;overflow:hidden;background:var(--surface);border-bottom:1px solid var(--border)}
 .ticker-track{display:flex;gap:32px;white-space:nowrap;padding:10px 18px;font-weight:600;animation:scroll 24s linear infinite}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .container{width:100%;margin:0;padding:16px}
 .topbar,.section-head,.modal-head,.toolbar,.editor-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.topbar{margin-bottom:12px}.badge{padding:7px 12px;border-radius:999px;background:#eef4ff;color:var(--primary);border:1px solid #d8e5ff;font-weight:700}
+.topbar{margin-bottom:12px}
+.badge{padding:7px 12px;border-radius:999px;background:#eef4ff;color:var(--primary);border:1px solid #d8e5ff;font-weight:700}
 .note{color:var(--muted);font-size:12px;letter-spacing:.03em}
 input,select,textarea{min-height:40px;width:100%;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none;font-size:14px;transition:.2s ease}
 textarea{min-height:78px;resize:vertical}
 input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
 button{min-height:40px;border:none;border-radius:10px;padding:0 14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;transition:.18s ease;background:var(--surface);color:var(--text);border:1px solid var(--border)}
-button:hover{transform:translateY(-1px)}button:active{transform:translateY(0)}button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.primary{background:var(--primary);border-color:var(--primary);color:#fff}.primary:hover{background:var(--primary-2)}.success{background:var(--success);border-color:var(--success);color:#fff}.danger{background:var(--danger);border-color:var(--danger);color:#fff}.ghost{background:var(--surface);color:var(--text)}
-.icon-only{width:40px;height:40px;padding:0}.compact-btn{min-width:40px;height:40px;padding:0}
-.section-tabs,.utility-tabs,.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}.section-tabs button.active,.modal-tabs button.active,.utility-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.primary:hover{background:var(--primary-2)}
+.success{background:var(--success);border-color:var(--success);color:#fff}
+.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.ghost{background:var(--surface);color:var(--text)}
+.icon-only{width:40px;height:40px;padding:0}
+.compact-btn{min-width:40px;height:40px;padding:0}
+.section-tabs,.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+.section-tabs button.active,.modal-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff}
 .layout-grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px;align-items:start}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow-soft)}
-.form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px;align-items:start}.field{grid-column:span 12;display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;font-weight:700;color:var(--muted)}
-.span6{grid-column:span 6}.span12{grid-column:span 12}
+.form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px;align-items:start}
+.field{grid-column:span 12;display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:700;color:var(--muted)}
+.span6{grid-column:span 6}
+.span12{grid-column:span 12}
 .container-type-row{grid-column:span 12;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.vs{grid-column:span 12;display:flex;align-items:center;gap:18px;color:var(--muted);padding:2px 0;font-weight:700}.vs label{display:flex;align-items:center;gap:8px}
+.vs{grid-column:span 12;display:flex;align-items:center;gap:18px;color:var(--muted);padding:2px 0;font-weight:700}
+.vs label{display:flex;align-items:center;gap:8px}
 .table-wrap{overflow:auto;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);max-height:70vh}
 table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
 th,td{padding:8px 8px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;font-size:12px;line-height:1.3;min-height:38px;overflow:hidden;text-overflow:ellipsis}
-th{position:sticky;top:0;z-index:5;background:var(--surface);color:var(--text);font-weight:800}.filter-row th{top:38px;background:var(--surface-2);z-index:4;padding:4px 6px}.filter-row input{min-height:30px;padding:6px 8px;font-size:11px}
-tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:center}.icon-btn{width:28px;height:28px;min-height:28px;padding:0}.checkbox-col{width:40px}.row-check{width:16px;height:16px;accent-color:var(--primary)}.small-btn{width:28px;height:28px;padding:0;min-height:28px}
-.title{font-size:22px;font-weight:800;letter-spacing:.03em;text-align:center}.subtitle{text-align:center;color:var(--muted);margin:8px 0 16px;font-size:14px}
-.pin-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.pin-input{height:54px;text-align:center;font-size:20px;font-weight:800;letter-spacing:.2em}
-.modal-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}.modal-tabs button{flex:1}.modal-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr .8fr auto;gap:8px;margin-bottom:10px}.compact-table th,.compact-table td{padding:6px 8px;min-height:34px}
-.action-bar{display:flex;gap:8px;flex-wrap:wrap}.expired-note{color:var(--danger);font-weight:800;margin-left:8px}.section{display:none}.section.active{display:block}.file-input{display:none}
-.remarks-cell{position:relative}.remarks-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--surface);color:var(--text);padding:10px 12px;border:1px solid var(--border);border-radius:10px;white-space:pre-wrap;max-width:320px;min-width:180px;font-size:12px;z-index:100;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s}.remarks-cell:hover .remarks-tooltip,.remarks-cell:focus-within .remarks-tooltip{opacity:1}
-.loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.18);backdrop-filter:blur(4px)}.loader.show{display:flex}.loader-box{min-width:240px;padding:18px 20px;border-radius:16px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);text-align:center}
+th{position:sticky;top:0;z-index:5;background:var(--surface);color:var(--text);font-weight:800}
+.filter-row th{top:38px;background:var(--surface-2);z-index:4;padding:4px 6px}
+.filter-row input{min-height:30px;padding:6px 8px;font-size:11px}
+tbody tr:hover{background:#f5f9ff}
+.actions{display:flex;gap:4px;justify-content:center}
+.icon-btn{width:28px;height:28px;min-height:28px;padding:0}
+.checkbox-col{width:40px}
+.row-check{width:16px;height:16px;accent-color:var(--primary)}
+.small-btn{width:28px;height:28px;padding:0;min-height:28px}
+.title{font-size:22px;font-weight:800;letter-spacing:.03em;text-align:center}
+.subtitle{text-align:center;color:var(--muted);margin:8px 0 16px;font-size:14px}
+.pin-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.pin-input{height:54px;text-align:center;font-size:20px;font-weight:800;letter-spacing:.2em}
+.modal-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.modal-tabs button{flex:1}
+.modal-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr .8fr auto;gap:8px;margin-bottom:10px}
+.compact-table th,.compact-table td{padding:6px 8px;min-height:34px}
+.action-bar{display:flex;gap:8px;flex-wrap:wrap}
+.expired-note{color:var(--danger);font-weight:800;margin-left:8px}
+.section{display:none}
+.section.active{display:block}
+.file-input{display:none}
+.remarks-cell{position:relative;text-align:left}
+.remarks-preview{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.remarks-tooltip{
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--surface);
+  color:var(--text);
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  white-space:pre-wrap;
+  max-width:320px;
+  min-width:180px;
+  font-size:12px;
+  z-index:100;
+  box-shadow:var(--shadow);
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+}
+.remarks-cell:hover .remarks-tooltip,
+.remarks-cell:focus-within .remarks-tooltip{opacity:1}
+.loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.18);backdrop-filter:blur(4px)}
+.loader.show{display:flex}
+.loader-box{min-width:240px;padding:18px 20px;border-radius:16px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);text-align:center}
 .spinner{width:42px;height:42px;margin:0 auto 12px;border-radius:50%;border:4px solid rgba(37,99,235,.14);border-top-color:var(--primary);animation:spin 1s linear infinite}
-.utility-content{display:none}.utility-content.active{display:block}.utility-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.utility-card{background:var(--surface-2);border-radius:12px;padding:14px;border:1px solid var(--border)}.utility-card h4{margin:0 0 8px;font-size:14px}.utility-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.4}.mobile-summary{display:none}
+.mobile-summary{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (max-width:1200px){.layout-grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:900px){.container-type-row{grid-template-columns:1fr}.header{align-items:flex-start}}
-@media (max-width:700px){html,body{font-size:13px}.container{padding:12px}.header{padding:12px}.ticker{top:auto;position:relative}.topbar{flex-direction:column;align-items:stretch}.layout-grid{gap:12px}.panel,.card{padding:14px}.header-right{width:100%;justify-content:space-between}.table-wrap{max-height:none}th,td{font-size:11px;padding:6px 6px;min-height:34px}.filter-row th{top:34px}.modal-grid{grid-template-columns:1fr}.utility-grid{grid-template-columns:1fr}.mobile-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.editor-actions button{flex:1 1 calc(50% - 8px)}}
-
+@media (max-width:700px){
+  html,body{font-size:13px}
+  .container{padding:12px}
+  .header{padding:12px}
+  .ticker{top:auto;position:relative}
+  .topbar{flex-direction:column;align-items:stretch}
+  .layout-grid{gap:12px}
+  .panel,.card{padding:14px}
+  .header-right{width:100%;justify-content:space-between}
+  .table-wrap{max-height:none}
+  th,td{font-size:11px;padding:6px 6px;min-height:34px}
+  .filter-row th{top:34px}
+  .modal-grid{grid-template-columns:1fr}
+  .mobile-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .editor-actions button{flex:1 1 calc(50% - 8px)}
+}
 </style>
 </head>
 <body>
@@ -85,7 +154,7 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
 <div id="pinGate" class="overlay">
   <div class="card narrow">
     <div class="title">FR8X ACCESS</div>
-    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR 4 HOURS.</div>
+    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
     <div class="pin-row">
       <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
@@ -134,7 +203,7 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
 <div id="uploadOverlay" class="overlay hidden">
   <div class="card">
     <div class="modal-head">
-      <div class="title">MASS UPLOAD / EXPORT</div>
+      <div class="title">UPLOAD / EXPORT</div>
       <button class="ghost" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="note" style="margin-bottom:10px">CSV IMPORT IS SUPPORTED. BLANK CELLS ARE ALLOWED.</div>
@@ -164,7 +233,7 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
     <div class="brand">FR8X CRM</div>
     <div class="header-right">
       <button class="ghost icon-only compact-btn" id="toggleFullBtn" title="FULL SCREEN"><i class="bi bi-arrows-fullscreen"></i></button>
-      <button class="ghost icon-only compact-btn" id="openUploadBtn" title="MASS UPLOAD"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+      <button class="ghost icon-only compact-btn" id="openUploadBtn" title="UPLOAD"><i class="bi bi-file-earmark-spreadsheet"></i></button>
       <span class="badge" id="sessionInfo">ACCESS ACTIVE</span>
     </div>
   </div>
@@ -177,40 +246,6 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
       <span class="badge" id="mobileViewState">ACTIVE</span>
     </div>
 
-    <div class="panel" style="margin-bottom:14px">
-        <div class="section-head">
-        <div>
-          <div style="font-size:16px;font-weight:800">ENHANCEMENTS</div>
-          <div class="note">QUICK ACCESS PANELS</div>
-        </div>
-      </div>
-      <div class="utility-tabs">
-        <button class="active" data-utility="dimensions">CONTAINER DIMENSIONS</button>
-        <button data-utility="requirements">IMPORT REQUIREMENTS</button>
-        <button data-utility="firebase">FIREBASE SAVE</button>
-      </div>
-      <div class="utility-content active" id="utilityDimensions">
-        <div class="utility-grid">
-          <div class="utility-card"><h4>20DV</h4><p>Container dimension reference panel.</p></div>
-          <div class="utility-card"><h4>40HC</h4><p>High cube reference panel.</p></div>
-          <div class="utility-card"><h4>SPECIAL TYPES</h4><p>OT, FR, RF, DG and OG quick info panel.</p></div>
-        </div>
-      </div>
-      <div class="utility-content" id="utilityRequirements">
-        <div class="utility-grid">
-          <div class="utility-card"><h4>DOCUMENTS</h4><p>Import document requirement panel.</p></div>
-          <div class="utility-card"><h4>COUNTRY RULES</h4><p>Country-specific import requirement panel.</p></div>
-          <div class="utility-card"><h4>CUSTOMS NOTES</h4><p>Destination requirement notes panel.</p></div>
-        </div>
-      </div>
-      <div class="utility-content" id="utilityFirebase">
-        <div class="utility-grid">
-          <div class="utility-card"><h4>SAVE READY</h4><p>Enhancement block prepared for record save flow.</p></div>
-          <div class="utility-card"><h4>FORCE SAVE</h4><p>UI area reserved for Firebase-bound save state.</p></div>
-          <div class="utility-card"><h4>SYNC</h4><p>Status panel for future linked save display.</p></div>
-        </div>
-      </div>
-    </div>
     <div class="topbar">
       <input id="globalSearch" placeholder="GLOBAL SEARCH">
       <div>
@@ -251,7 +286,7 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
           <div class="field span6"><label for="validity">VALIDITY</label><input id="validity" type="date"></div>
           <div class="field span6"><label for="tt">TT</label><input id="tt" placeholder="TT"></div>
           <div class="field span6"><label for="via">ROUTING</label><input id="via" placeholder="Routing"></div>
-          <div class="field span12"><label for="remarks">REMARKS</label><textarea class="remarks-input" id="remarks" placeholder="Remarks" maxlength="50"></textarea></div>
+          <div class="field span12"><label for="remarks">REMARKS</label><textarea class="remarks-input" id="remarks" placeholder="Remarks" maxlength="120"></textarea></div>
           <div class="vs">
             <label><input type="checkbox" id="vtype" checked>V</label>
             <label><input type="checkbox" id="stype">S</label>
@@ -269,72 +304,72 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
         </div>
       </div>
 
-      <div class="panel"></div>
+      <div class="panel">
+        <div class="section-head">
+          <div class="note" id="sectionLabel">ACTIVE RATES</div>
+        </div>
 
-    <div class="section-head">
-      <div class="note" id="sectionLabel">ACTIVE RATES</div>
-    </div>
+        <div class="section active" id="sectionActive">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="checkbox-col"><input type="checkbox" id="selectAllRows"></th>
+                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
+                </tr>
+                <tr class="filter-row">
+                  <th></th>
+                  <th><input data-col="seq" placeholder="SEARCH"></th>
+                  <th><input data-col="carrier" placeholder="SEARCH"></th>
+                  <th><input data-col="por" placeholder="SEARCH"></th>
+                  <th><input data-col="pol" placeholder="SEARCH"></th>
+                  <th><input data-col="pod" placeholder="SEARCH"></th>
+                  <th><input data-col="fpod" placeholder="SEARCH"></th>
+                  <th><input data-col="dv20" placeholder="SEARCH"></th>
+                  <th><input data-col="container20Type" placeholder="SEARCH"></th>
+                  <th><input data-col="hc40" placeholder="SEARCH"></th>
+                  <th><input data-col="container40Type" placeholder="SEARCH"></th>
+                  <th><input data-col="ft" placeholder="SEARCH"></th>
+                  <th><input data-col="validity" placeholder="SEARCH"></th>
+                  <th><input data-col="type" placeholder="SEARCH"></th>
+                  <th><input data-col="tt" placeholder="SEARCH"></th>
+                  <th><input data-col="via" placeholder="SEARCH"></th>
+                  <th><input data-col="remarks" placeholder="SEARCH"></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+        </div>
 
-    <div class="section active" id="sectionActive">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="checkbox-col"><input type="checkbox" id="selectAllRows"></th>
-              <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th class="remarks-cell">REMARKS<div class="remarks-tooltip" style="display:none"></div></th><th>ACTION</th>
-            </tr>
-            <tr class="filter-row">
-              <th></th>
-              <th><input data-col="seq" placeholder="SEARCH"></th>
-              <th><input data-col="carrier" placeholder="SEARCH"></th>
-              <th><input data-col="por" placeholder="SEARCH"></th>
-              <th><input data-col="pol" placeholder="SEARCH"></th>
-              <th><input data-col="pod" placeholder="SEARCH"></th>
-              <th><input data-col="fpod" placeholder="SEARCH"></th>
-              <th><input data-col="dv20" placeholder="SEARCH"></th>
-              <th><input data-col="container20Type" placeholder="SEARCH"></th>
-              <th><input data-col="hc40" placeholder="SEARCH"></th>
-              <th><input data-col="container40Type" placeholder="SEARCH"></th>
-              <th><input data-col="ft" placeholder="SEARCH"></th>
-              <th><input data-col="validity" placeholder="SEARCH"></th>
-              <th><input data-col="type" placeholder="SEARCH"></th>
-              <th><input data-col="tt" placeholder="SEARCH"></th>
-              <th><input data-col="via" placeholder="SEARCH"></th>
-              <th><input data-col="remarks" placeholder="SEARCH"></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </div>
+        <div class="section" id="sectionExpired">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="checkbox-col"><input type="checkbox" id="selectAllExpired"></th>
+                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="expiredBody"></tbody>
+            </table>
+          </div>
+        </div>
 
-    <div class="section" id="sectionExpired">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="checkbox-col"><input type="checkbox" id="selectAllExpired"></th>
-              <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th class="remarks-cell">REMARKS<div class="remarks-tooltip" style="display:none"></div></th><th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody id="expiredBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="section" id="sectionAll">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="checkbox-col"><input type="checkbox" id="selectAllAll"></th>
-              <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th class="remarks-cell">REMARKS<div class="remarks-tooltip" style="display:none"></div></th><th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody id="allBody"></tbody>
-        </table>
-      </div>
+        <div class="section" id="sectionAll">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="checkbox-col"><input type="checkbox" id="selectAllAll"></th>
+                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="allBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -344,203 +379,223 @@ tbody tr:hover{background:#f5f9ff}.actions{display:flex;gap:4px;justify-content:
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const app=initializeApp({projectId:"swifty-52e05"});
-const db=getFirestore(app);
+const app = initializeApp({ projectId:"swifty-52e05" });
+const db = getFirestore(app);
 
-const $=id=>document.getElementById(id);
-const upper=v=>(v??"").toString().toUpperCase();
-const PIN="1234";
-const KEY="fr8x_pin_until";
-const FOUR_HOURS=4*60*60*1000;
+const $ = id => document.getElementById(id);
+const upper = v => (v ?? "").toString().toUpperCase();
+const PIN = "1234";
 
-let data=[], editId=null, viewMode="active";
-let filterMap={seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",container20Type:"",hc40:"",container40Type:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
-let activeChargeField="localCharges", modalItems=[], uploadRows=[], selectedUploadRows=new Set(), loaderTimer=null, utilityMode="dimensions";
+let data = [];
+let editId = null;
+let viewMode = "active";
+let modalItems = [];
+let uploadRows = [];
+let selectedUploadRows = new Set();
+let activeChargeField = "localCharges";
+let loaderTimer = null;
+let sessionUntil = 0;
 
-function padZero(n){return n.toString().padStart(2,'0')}
+let filterMap = {
+  seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",
+  dv20:"",container20Type:"",hc40:"",container40Type:"",
+  ft:"",validity:"",type:"",tt:"",via:"",remarks:""
+};
+
+function escapeHtml(v=""){
+  return String(v)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+function truncate(v="", len=18){
+  const s = String(v);
+  return s.length > len ? s.slice(0, len-1) + "…" : s;
+}
+function padZero(n){ return n.toString().padStart(2,"0"); }
 function generateSeq(){
-  const now=new Date();
+  const now = new Date();
   return `${padZero(now.getDate())}${padZero(now.getMonth()+1)}${padZero(now.getHours())}${padZero(now.getMinutes())}${padZero(now.getSeconds())}01`;
 }
-
 function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
   clearTimeout(loaderTimer);
-  $("loaderText").textContent=title;
-  $("loaderSub").textContent=sub;
+  $("loaderText").textContent = title;
+  $("loaderSub").textContent = sub;
   $("loader").classList.add("show");
-  loaderTimer=setTimeout(()=>hideLoader(),800);
+  loaderTimer = setTimeout(hideLoader, 900);
 }
-function hideLoader(){clearTimeout(loaderTimer);$("loader").classList.remove("show")}
-
+function hideLoader(){
+  clearTimeout(loaderTimer);
+  $("loader").classList.remove("show");
+}
 function calc(v){
-  v=(v??"").toString().trim();
+  v = (v ?? "").toString().trim();
   if(!v) return "";
-  if(/[+\\s]/.test(v)){
-    try{return String(v.split(/[\\s+]+/).filter(Boolean).map(Number).reduce((a,b)=>a+b,0));}
-    catch{return v}
+  if(/[+\s]/.test(v)){
+    const sum = v.split(/[+\s]+/).filter(Boolean).map(Number).reduce((a,b)=>a+(isNaN(b)?0:b),0);
+    return sum ? String(sum) : "";
   }
   return v;
 }
 function fmtDate(d){
   if(!d) return "";
-  const dt=new Date(d);
+  const dt = new Date(d);
   if(isNaN(dt)) return String(d).toUpperCase();
   return dt.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
 }
 function isoDate(d){
   if(!d) return "";
-  const dt=new Date(d);
+  const dt = new Date(d);
   if(isNaN(dt)) return "";
   return dt.toISOString().slice(0,10);
 }
 function expired(r){
-  const d=isoDate(r.validity);
+  const d = isoDate(r.validity);
   if(!d) return false;
-  const today=new Date();
+  const today = new Date();
   today.setHours(0,0,0,0);
-  return new Date(d+"T00:00:00")<today;
+  return new Date(d + "T00:00:00") < today;
 }
-function sessionValid(){return Date.now() < (+localStorage.getItem(KEY)||0)}
-function setSession(){localStorage.setItem(KEY,String(Date.now()+FOUR_HOURS))}
-function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load()}
-if(sessionValid()) showApp();
-switchUtility("dimensions");
-setEditorState("CREATE OR UPDATE RATE");
-setViewState("ACTIVE RATES");
+function sessionValid(){ return Date.now() < sessionUntil; }
+function setSession(){ sessionUntil = Date.now() + (4 * 60 * 60 * 1000); }
+function showApp(){
+  $("pinGate").classList.add("hidden");
+  $("appShell").classList.remove("hidden");
+  load();
+}
+function setEditorState(text){
+  const el = $("editorState");
+  if(el) el.textContent = text;
+  const m = $("mobileEditState");
+  if(m) m.textContent = text;
+}
+function setViewState(text){
+  const m = $("mobileViewState");
+  if(m) m.textContent = text;
+}
 
 async function load(){
   showLoader("UPDATING DATA","FETCHING RECORDS");
-  const snap=await getDocs(collection(db,"rates"));
-  data=[];
-  snap.forEach(d=>data.push({id:d.id,...d.data()}));
-  data.sort((a,b)=>new Date(b.createdAt||0) - new Date(a.createdAt||0)); // Latest first
+  const snap = await getDocs(collection(db,"rates"));
+  data = [];
+  snap.forEach(d => data.push({id:d.id, ...d.data()}));
+  data.sort((a,b)=>new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   updateCounters();
   render();
   renderTicker();
   hideLoader();
 }
 function updateCounters(){
-  const ex=data.filter(expired).length;
-  $("expiredCount").textContent=`${ex} EXPIRED`;
-  $("activeCount").textContent=`${data.length-ex} ACTIVE`;
+  const ex = data.filter(expired).length;
+  $("expiredCount").textContent = `${ex} EXPIRED`;
+  $("activeCount").textContent = `${data.length - ex} ACTIVE`;
 }
 function filteredRows(){
-  const g=($("globalSearch").value||"").toUpperCase();
-  let rows=[...data];
-  if(viewMode==="active") rows=rows.filter(r=>!expired(r));
-  if(viewMode==="expired") rows=rows.filter(r=>expired(r));
-  rows=rows.filter(r=>{
+  const g = ($("globalSearch").value || "").toUpperCase();
+  let rows = [...data];
+  if(viewMode === "active") rows = rows.filter(r => !expired(r));
+  if(viewMode === "expired") rows = rows.filter(r => expired(r));
+  rows = rows.filter(r => {
     for(const k in filterMap){
-      const q=filterMap[k].trim().toUpperCase();
+      const q = filterMap[k].trim().toUpperCase();
       if(!q) continue;
-      const val=(k==="validity"?fmtDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
+      const val = (k === "validity" ? fmtDate(r[k] || "") : (r[k] || "")).toString().toUpperCase();
       if(!val.includes(q)) return false;
     }
     return true;
   });
-  if(g) rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
+  if(g) rows = rows.filter(r => JSON.stringify(r).toUpperCase().includes(g));
   return rows;
 }
 function render(){
-  const rows=filteredRows();
-  const body=viewMode==="active" ? $("tbody") : viewMode==="expired" ? $("expiredBody") : $("allBody");
-  body.innerHTML=rows.map((r,i)=>`
+  const rows = filteredRows();
+  const body = viewMode === "active" ? $("tbody") : viewMode === "expired" ? $("expiredBody") : $("allBody");
+  body.innerHTML = rows.map((r,i)=>`
     <tr>
-      <td><input class="row-check" type="checkbox" data-id="${r.id}"></td>
-      <td title="${r.seq||i+1}">${(r.seq||i+1).toString().slice(-8)}</td>
-      <td>${r.carrier||""}</td>
-      <td>${r.por||""}</td>
-      <td>${r.pol||""}</td>
-      <td>${r.pod||""}</td>
-      <td>${r.fpod||""}</td>
-      <td>${r.dv20||""}</td>
-      <td>${r.container20Type||""}</td>
-      <td>${r.hc40||""}</td>
-      <td>${r.container40Type||""}</td>
-      <td>${r.ft||""}</td>
-      <td>${fmtDate(r.validity)}</td>
-      <td>${r.type||""}</td>
-      <td>${r.tt||""}</td>
-      <td>${r.via||""}</td>
-      <td class="remarks-cell" data-remarks="${r.remarks||""}">...</td>
+      <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}"></td>
+      <td title="${escapeHtml(r.seq || i+1)}">${escapeHtml((r.seq || i+1).toString().slice(-8))}</td>
+      <td>${escapeHtml(r.carrier || "")}</td>
+      <td>${escapeHtml(r.por || "")}</td>
+      <td>${escapeHtml(r.pol || "")}</td>
+      <td>${escapeHtml(r.pod || "")}</td>
+      <td>${escapeHtml(r.fpod || "")}</td>
+      <td>${escapeHtml(r.dv20 || "")}</td>
+      <td>${escapeHtml(r.container20Type || "")}</td>
+      <td>${escapeHtml(r.hc40 || "")}</td>
+      <td>${escapeHtml(r.container40Type || "")}</td>
+      <td>${escapeHtml(r.ft || "")}</td>
+      <td>${escapeHtml(fmtDate(r.validity))}</td>
+      <td>${escapeHtml(r.type || "")}</td>
+      <td>${escapeHtml(r.tt || "")}</td>
+      <td>${escapeHtml(r.via || "")}</td>
+      <td class="remarks-cell" tabindex="0">
+        <span class="remarks-preview">${escapeHtml(truncate(r.remarks || "", 16))}</span>
+        <div class="remarks-tooltip">${escapeHtml(r.remarks || "")}</div>
+      </td>
       <td class="actions">
-        <button class="icon-btn" data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i></button>
-        <button class="icon-btn" data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i></button>
-        <button class="icon-btn" data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i></button>
-        <button class="icon-btn" data-action="delete" data-id="${r.id}"><i class="bi bi-x-square"></i></button>
+        <button class="icon-btn" data-action="copy" data-id="${escapeHtml(r.id)}" title="Copy"><i class="bi bi-clipboard"></i></button>
+        <button class="icon-btn" data-action="duplicate" data-id="${escapeHtml(r.id)}" title="Duplicate"><i class="bi bi-copy"></i></button>
+        <button class="icon-btn" data-action="edit" data-id="${escapeHtml(r.id)}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+        <button class="icon-btn" data-action="delete" data-id="${escapeHtml(r.id)}" title="Delete"><i class="bi bi-x-square"></i></button>
       </td>
     </tr>
   `).join("");
-  const viewLabel=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
-  $("sectionLabel").textContent=viewLabel;
+
+  const viewLabel = viewMode === "active" ? "ACTIVE RATES" : viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES";
+  $("sectionLabel").textContent = viewLabel;
   setViewState(viewLabel);
-  // Add tooltip listeners
-  document.querySelectorAll('.remarks-cell').forEach(cell=>{
-    cell.addEventListener('mouseenter', e=>{
-      const tooltip = cell.querySelector('.remarks-tooltip');
-      const remarks = cell.dataset.remarks;
-      if(remarks && tooltip){
-        tooltip.textContent = remarks;
-        tooltip.style.display = 'block';
-      }
-    });
-    cell.addEventListener('mouseleave', e=>{
-      const tooltip = cell.querySelector('.remarks-tooltip');
-      if(tooltip) tooltip.style.display = 'none';
-    });
-  });
 }
 function renderTicker(){
-  $("tickerTrack").innerHTML=`<span><span class="note">LOADING EXCHANGE RATE...</span></span>`;
+  $("tickerTrack").innerHTML = `<span><span class="note">LOADING EXCHANGE RATE...</span></span>`;
 }
-function setEditorState(text){const el=$("editorState"); if(el) el.textContent=text; const m=$("mobileEditState"); if(m) m.textContent=text;}
-function setViewState(text){const el=$("mobileViewState"); if(el) el.textContent=text;}
-function switchUtility(mode){utilityMode=mode;["dimensions","requirements","firebase"].forEach(name=>{const btn=document.querySelector(`[data-utility="${name}"]`);const panel=$("utility"+name.charAt(0).toUpperCase()+name.slice(1));if(btn) btn.classList.toggle("active",name===mode);if(panel) panel.classList.toggle("active",name===mode);});}
 function switchView(mode){
-  viewMode=mode;
-  $("tabActiveBtn").classList.toggle("active",mode==="active");
-  $("tabExpiredBtn").classList.toggle("active",mode==="expired");
-  $("tabAllBtn").classList.toggle("active",mode==="all");
-  $("sectionActive").classList.toggle("active",mode==="active");
-  $("sectionExpired").classList.toggle("active",mode==="expired");
-  $("sectionAll").classList.toggle("active",mode==="all");
+  viewMode = mode;
+  $("tabActiveBtn").classList.toggle("active", mode === "active");
+  $("tabExpiredBtn").classList.toggle("active", mode === "expired");
+  $("tabAllBtn").classList.toggle("active", mode === "all");
+  $("sectionActive").classList.toggle("active", mode === "active");
+  $("sectionExpired").classList.toggle("active", mode === "expired");
+  $("sectionAll").classList.toggle("active", mode === "all");
   render();
 }
 
 async function loadExchangeRates(){
-  const urls=["https://open.er-api.com/v6/latest/USD","https://api.frankfurter.dev/v2/latest?base=USD"];
+  const urls = [
+    "https://open.er-api.com/v6/latest/USD",
+    "https://api.frankfurter.dev/v2/latest?base=USD"
+  ];
   for(const url of urls){
     try{
-      const res=await fetch(url,{cache:"no-store"});
-      const json=await res.json();
+      const res = await fetch(url,{cache:"no-store"});
+      const json = await res.json();
       if(json?.rates?.INR){
-        const usdToInr = json.base==="USD" ? json.rates.INR : (1/json.rates.USD);
-        $("tickerTrack").innerHTML=`<span><span class="note">1 USD = ${Number(usdToInr).toFixed(2)} INR</span></span><span><span class="note">EXCHANGE UPDATED</span></span>`;
+        const usdToInr = json.base === "USD" ? json.rates.INR : (1 / json.rates.USD);
+        $("tickerTrack").innerHTML = `<span><span class="note">1 USD = ${Number(usdToInr).toFixed(2)} INR</span></span><span><span class="note">EXCHANGE UPDATED</span></span>`;
         return;
       }
     }catch(e){}
   }
-  $("tickerTrack").innerHTML=`<span><span class="note">EXCHANGE RATE API UNAVAILABLE</span></span>`;
+  $("tickerTrack").innerHTML = `<span><span class="note">EXCHANGE RATE UNAVAILABLE</span></span>`;
 }
 loadExchangeRates();
-setInterval(loadExchangeRates,300000);
+setInterval(loadExchangeRates, 300000);
 
 function clearForm(resetEdit=true){
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
-  $("stype").checked=false;
-  $("vtype").checked=true;
-  if(resetEdit) editId=null;
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = "");
+  $("stype").checked = false;
+  $("vtype").checked = true;
+  if(resetEdit) editId = null;
 }
-async function nextSequence(){return generateSeq();}
+async function nextSequence(){ return generateSeq(); }
 
-$("save").onclick=async()=>{
+$("save").onclick = async () => {
   showLoader("SAVING","CREATING NEW RECORD");
-  const seq=await nextSequence();
+  const seq = await nextSequence();
   const now = new Date().toISOString();
   await addDoc(collection(db,"rates"),{
-    seq,
-    createdAt: now,
-    updatedAt: now,
+    seq, createdAt:now, updatedAt:now,
     carrier:upper($("carrier").value),
     por:upper($("por").value),
     pol:upper($("pol").value),
@@ -555,7 +610,7 @@ $("save").onclick=async()=>{
     tt:$("tt").value,
     via:$("via").value,
     remarks:upper($("remarks").value),
-    type:$("stype").checked?"S":"V",
+    type:$("stype").checked ? "S" : "V",
     localCharges:[],
     charges20dv:[],
     charges40hc:[]
@@ -564,14 +619,15 @@ $("save").onclick=async()=>{
   setEditorState("CREATE OR UPDATE RATE");
   await load();
 };
-$("update").onclick=async()=>{
+
+$("update").onclick = async () => {
   if(!editId) return alert("SELECT A RECORD TO UPDATE.");
   showLoader("UPDATING","SAVING CHANGES");
-  const current=data.find(x=>x.id===editId)||{};
+  const current = data.find(x => x.id === editId) || {};
   const now = new Date().toISOString();
   await updateDoc(doc(db,"rates",editId),{
-    seq:current.seq||await nextSequence(),
-    updatedAt: now,
+    seq:current.seq || await nextSequence(),
+    updatedAt:now,
     carrier:upper($("carrier").value),
     por:upper($("por").value),
     pol:upper($("pol").value),
@@ -586,76 +642,88 @@ $("update").onclick=async()=>{
     tt:$("tt").value,
     via:$("via").value,
     remarks:upper($("remarks").value),
-    type:$("stype").checked?"S":"V",
-    localCharges:current.localCharges||[],
-    charges20dv:current.charges20dv||[],
-    charges40hc:current.charges40hc||[]
+    type:$("stype").checked ? "S" : "V",
+    localCharges:current.localCharges || [],
+    charges20dv:current.charges20dv || [],
+    charges40hc:current.charges40hc || []
   });
   clearForm();
   setEditorState("CREATE OR UPDATE RATE");
   await load();
 };
-$("clear").onclick=()=>{clearForm(true); setEditorState("CREATE OR UPDATE RATE");};
-$("duplicateBtn").onclick=async()=>{
-  if(!editId) return alert("SELECT A RECORD TO DUPLICATE.");
-  const r = data.find(x=>x.id===editId);
+
+$("clear").onclick = () => {
+  clearForm(true);
+  setEditorState("CREATE OR UPDATE RATE");
+};
+
+async function duplicateRate(id){
+  const r = data.find(x => x.id === id);
   if(!r) return;
   showLoader("DUPLICATING","CREATING COPY");
-  const seq=await nextSequence();
+  const seq = await nextSequence();
   const now = new Date().toISOString();
-  await addDoc(collection(db,"rates"),{
-    seq,
-    createdAt: now,
-    updatedAt: now,
-    ...r,
-    id: null // Remove ID for new record
-  });
-  clearForm();
+  const payload = { ...r };
+  delete payload.id;
+  payload.seq = seq;
+  payload.createdAt = now;
+  payload.updatedAt = now;
+  await addDoc(collection(db,"rates"), payload);
   await load();
+}
+
+$("duplicateBtn").onclick = async () => {
+  if(!editId) return alert("SELECT A RECORD TO DUPLICATE.");
+  await duplicateRate(editId);
 };
 
 function pinUnlock(){
-  const pin=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin===PIN){setSession();showApp();} else {alert("INVALID PIN"); clearPin();}
+  const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
+  if(pin === PIN){ setSession(); showApp(); }
+  else { alert("INVALID PIN"); clearPin(); }
 }
-function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value=""); $("pin1").focus();}
+function clearPin(){
+  ["pin1","pin2","pin3","pin4"].forEach(id => $(id).value = "");
+  $("pin1").focus();
+}
 ["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
   $(id).addEventListener("input",e=>{
-    e.target.value=e.target.value.replace(/\D/g,"").slice(0,1);
+    e.target.value = e.target.value.replace(/\D/g,"").slice(0,1);
     if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
   });
   $(id).addEventListener("keydown",e=>{
-    if(e.key==="Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
-    if(e.key==="Enter") pinUnlock();
+    if(e.key === "Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
+    if(e.key === "Enter") pinUnlock();
   });
 });
-document.querySelectorAll("[data-utility]").forEach(btn=>btn.addEventListener("click",()=>switchUtility(btn.dataset.utility)));
-$("unlockBtn").onclick=pinUnlock;
-$("clearPinBtn").onclick=clearPin;
+$("unlockBtn").onclick = pinUnlock;
+$("clearPinBtn").onclick = clearPin;
 
-window.copyRate=async(id)=>{
-  const r=data.find(x=>x.id===id);
+window.copyRate = async (id) => {
+  const r = data.find(x => x.id === id);
   if(!r) return;
-  const lines=[];
+  const lines = [];
   if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
   if(r.por) lines.push(`POR: ${r.por}`);
   if(r.pol) lines.push(`POL: ${r.pol}`);
   if(r.pod) lines.push(`POD: ${r.pod}`);
   if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
-  const routeFrom=r.pol||r.por||"";
-  const routeTo=r.pod||"";
-  const dv20Type = r.container20Type ? ` (${r.container20Type})` : '';
-  const hc40Type = r.container40Type ? ` (${r.container40Type})` : '';
-  if(routeFrom||routeTo||r.dv20||r.hc40) lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ USD ${r.dv20||""}${dv20Type}/20DV & USD ${r.hc40||""}${hc40Type}/40HC`);
+  const routeFrom = r.pol || r.por || "";
+  const routeTo = r.pod || "";
+  const dv20Type = r.container20Type ? ` (${r.container20Type})` : "";
+  const hc40Type = r.container40Type ? ` (${r.container40Type})` : "";
+  if(routeFrom || routeTo || r.dv20 || r.hc40) lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ USD ${r.dv20 || ""}${dv20Type}/20DV & USD ${r.hc40 || ""}${hc40Type}/40HC`);
   if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
   if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
   if(r.tt) lines.push(`TT: ${r.tt} DAYS`);
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-  const text=lines.join("\n");
-  try{await navigator.clipboard.writeText(text)}catch{
-    const ta=document.createElement("textarea");
-    ta.value=text;
+  const text = lines.join("\n");
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
     document.body.appendChild(ta);
     ta.select();
     document.execCommand("copy");
@@ -663,18 +731,20 @@ window.copyRate=async(id)=>{
   }
   alert("COPIED");
 };
-window.editRate=(id)=>{
-  const r=data.find(x=>x.id===id);
+
+window.editRate = (id) => {
+  const r = data.find(x => x.id === id);
   if(!r) return;
-  editId=id;
-  setEditorState(`EDITING ${r.seq||"SELECTED RATE"}`);
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value=r[k]||"");
-  $("container20Type").value=r.container20Type||"";
-  $("container40Type").value=r.container40Type||"";
-  $("stype").checked=r.type==="S";
-  $("vtype").checked=!$("stype").checked;
+  editId = id;
+  setEditorState(`EDITING ${r.seq || "SELECTED RATE"}`);
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k => $(k).value = r[k] || "");
+  $("container20Type").value = r.container20Type || "";
+  $("container40Type").value = r.container40Type || "";
+  $("stype").checked = r.type === "S";
+  $("vtype").checked = !$("stype").checked;
 };
-window.delRate=async(id)=>{
+
+window.delRate = async (id) => {
   if(!confirm("DELETE THIS RATE?")) return;
   showLoader("DELETING","REMOVING RECORD");
   await deleteDoc(doc(db,"rates",id));
@@ -682,199 +752,243 @@ window.delRate=async(id)=>{
 };
 
 function openModal(mode){
-  activeChargeField=mode==="20dv"?"charges20dv":mode==="40hc"?"charges40hc":"localCharges";
-  const r=editId?data.find(x=>x.id===editId):null;
-  modalItems=r&&Array.isArray(r[activeChargeField])?[...r[activeChargeField]]:[];
-  $("modalTitle").textContent=mode==="local"?"LOCAL CHARGES":mode==="20dv"?"20DV CHARGES":"40HC CHARGES";
-  document.querySelectorAll(".modal-tabs button").forEach(b=>b.classList.remove("active"));
-  $(`tab${mode.charAt(0).toUpperCase()}${mode.slice(1)}`).classList.add("active");
+  activeChargeField = mode === "20dv" ? "charges20dv" : mode === "40hc" ? "charges40hc" : "localCharges";
+  const r = editId ? data.find(x => x.id === editId) : null;
+  modalItems = r && Array.isArray(r[activeChargeField]) ? [...r[activeChargeField]] : [];
+  $("modalTitle").textContent = mode === "local" ? "LOCAL CHARGES" : mode === "20dv" ? "20DV CHARGES" : "40HC CHARGES";
+  document.querySelectorAll(".modal-tabs button").forEach(b => b.classList.remove("active"));
+  const tabMap = { local:"tabLocal", "20dv":"tab20", "40hc":"tab40" };
+  $(tabMap[mode]).classList.add("active");
   renderModal();
   $("modalOverlay").classList.remove("hidden");
 }
 function renderModal(){
-  $("modalBody").innerHTML=modalItems.map((r,i)=>`
+  $("modalBody").innerHTML = modalItems.map((r,i)=>`
     <tr>
-      <td>${r.head||""}</td><td>${r.currency||""}</td><td>${r.amount||""}</td><td>${r.units||""}</td><td>${r.total||""}</td>
+      <td>${escapeHtml(r.head || "")}</td>
+      <td>${escapeHtml(r.currency || "")}</td>
+      <td>${escapeHtml(r.amount || "")}</td>
+      <td>${escapeHtml(r.units || "")}</td>
+      <td>${escapeHtml(r.total || "")}</td>
       <td><button class="danger small-btn" data-rm="${i}"><i class="bi bi-x-lg"></i></button></td>
     </tr>
   `).join("");
 }
 function updateModalTotal(){
-  const a=parseFloat($("mAmount").value||"0");
-  const u=parseFloat($("mUnits").value||"1");
-  $("mTotal").value=((a||0)*(u||1))||"";
+  const a = parseFloat($("mAmount").value || "0");
+  const u = parseFloat($("mUnits").value || "1");
+  $("mTotal").value = ((a || 0) * (u || 1)) || "";
 }
-$("mAmount").addEventListener("input",updateModalTotal);
-$("mUnits").addEventListener("input",updateModalTotal);
-$("mAmount").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mUnits").focus();}});
-$("mUnits").addEventListener("keydown",e=>{if(e.key===" "||e.key==="+"){e.preventDefault();$("mAdd").click();}});
-$("mAdd").onclick=()=>{
-  modalItems.push({ head:upper($("mHead").value), currency:upper($("mCurrency").value), amount:upper($("mAmount").value), units:upper($("mUnits").value), total:upper($("mTotal").value) });
-  ["mHead","mCurrency","mAmount","mUnits","mTotal"].forEach(id=>$(id).value="");
+$("mAmount").addEventListener("input", updateModalTotal);
+$("mUnits").addEventListener("input", updateModalTotal);
+$("mAdd").onclick = () => {
+  modalItems.push({
+    head:upper($("mHead").value),
+    currency:upper($("mCurrency").value),
+    amount:upper($("mAmount").value),
+    units:upper($("mUnits").value),
+    total:upper($("mTotal").value)
+  });
+  ["mHead","mCurrency","mAmount","mUnits","mTotal"].forEach(id => $(id).value = "");
   renderModal();
 };
-$("saveChargesBtn").onclick=async()=>{
+$("saveChargesBtn").onclick = async () => {
   if(!editId) return alert("SELECT A RECORD FIRST.");
   showLoader("SAVING CHARGES","UPDATING RECORD");
-  await updateDoc(doc(db,"rates",editId),{[activeChargeField]:modalItems});
+  await updateDoc(doc(db,"rates",editId),{ [activeChargeField]: modalItems });
   $("modalOverlay").classList.add("hidden");
   await load();
 };
-$("closeModalBtn").onclick=()=>$("modalOverlay").classList.add("hidden");
-$("modalClose2").onclick=()=>$("modalOverlay").classList.add("hidden");
-$("openLocal").onclick=()=>openModal("local");
-$("open20").onclick=()=>openModal("20dv");
-$("open40").onclick=()=>openModal("40hc");
+$("closeModalBtn").onclick = () => $("modalOverlay").classList.add("hidden");
+$("modalClose2").onclick = () => $("modalOverlay").classList.add("hidden");
+$("openLocal").onclick = () => openModal("local");
+$("open20").onclick = () => openModal("20dv");
+$("open40").onclick = () => openModal("40hc");
 $("modalBody").addEventListener("click",e=>{
-  const btn=e.target.closest("button[data-rm]");
+  const btn = e.target.closest("button[data-rm]");
   if(!btn) return;
   modalItems.splice(Number(btn.dataset.rm),1);
   renderModal();
 });
 
 function toCSV(rows){
-  const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
-  const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const head = ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
+  const esc = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
   return [head.join(","), ...rows.map((r,i)=>[
-    esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),
-    esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),
-    esc(r.ft),esc(isoDate(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)
+    esc(r.seq || i+1), esc(r.carrier), esc(r.por), esc(r.pol), esc(r.pod), esc(r.fpod),
+    esc(r.dv20), esc(r.container20Type), esc(r.hc40), esc(r.container40Type),
+    esc(r.ft), esc(isoDate(r.validity)), esc(r.type), esc(r.tt), esc(r.via), esc(r.remarks)
   ].join(","))].join("\n");
 }
-function download(name,txt){
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"}));
-  a.download=name;
+function download(name, txt){
+  const a = document.createElement("a");
+  const blob = new Blob([txt],{type:"text/csv;charset=utf-8"});
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
 }
-$("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
-$("downloadTemplateBtn").onclick=()=>download("fr8x_rate_template.csv",toCSV([{seq:"DDMMHHSS01",carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL ALI",fpod:"F-POD",dv20:"100",container20Type:"OT",hc40:"200",container40Type:"OG",ft:"2",validity:"2026-04-30",type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"}]));
+$("exportBtn").onclick = () => download(`fr8x_${viewMode}_export.csv`, toCSV(filteredRows()));
+$("downloadTemplateBtn").onclick = () => download("fr8x_rate_template.csv", toCSV([{
+  seq:"DDMMHHSS01",carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL ALI",fpod:"F-POD",
+  dv20:"100",container20Type:"OT",hc40:"200",container40Type:"OG",ft:"2",
+  validity:"2026-04-30",type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"
+}]));
 
-$("toggleFullBtn").onclick=async()=>{try{if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen();}catch(e){}};
+$("toggleFullBtn").onclick = async () => {
+  try{
+    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){}
+};
 
 function openUpload(){ $("uploadOverlay").classList.remove("hidden"); renderUpload(); }
 function closeUpload(){ $("uploadOverlay").classList.add("hidden"); }
-$("openUploadBtn").onclick=openUpload;
-$("closeUploadBtn").onclick=closeUpload;
-$("pickFileBtn").onclick=()=>$("fileInput").click();
+$("openUploadBtn").onclick = openUpload;
+$("closeUploadBtn").onclick = closeUpload;
+$("pickFileBtn").onclick = () => $("fileInput").click();
 
+function parseCSVLine(line, sep=","){
+  const out = [];
+  let cur = "";
+  let inQuotes = false;
+  for(let i=0;i<line.length;i++){
+    const ch = line[i];
+    if(ch === '"'){
+      if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
+      else inQuotes = !inQuotes;
+    }else if(ch === sep && !inQuotes){
+      out.push(cur);
+      cur = "";
+    }else{
+      cur += ch;
+    }
+  }
+  out.push(cur);
+  return out.map(v=>v.trim());
+}
 function parseCSV(txt){
-  const lines=txt.replace(/\r/g,"\n").split("\n").filter(Boolean);
+  const lines = txt.split(/\r?\n/).filter(line => line.trim() !== "");
   if(!lines.length) return [];
-  const sep=lines[0].includes("\t")?"\t":",";
-  const headers=lines[0].split(sep).map(s=>s.trim().toLowerCase());
-  return lines.slice(1).map(line=>{
-    const cols=line.split(sep);
-    const o={};
-    headers.forEach((h,i)=>o[h]=(cols[i]??"").trim());
+  const sep = lines[0].includes("\t") ? "\t" : ",";
+  const headers = parseCSVLine(lines[0], sep).map(s => s.trim().toLowerCase());
+  return lines.slice(1).map(line => {
+    const cols = parseCSVLine(line, sep);
+    const o = {};
+    headers.forEach((h,i)=>o[h] = (cols[i] ?? "").trim());
     return o;
   });
 }
 function normalizeUploadRow(r){
   return {
-    seq:r.seq||r.sequence||"",
+    seq:r.seq || r.sequence || "",
     carrier:upper(r.carrier),
     por:upper(r.por),
     pol:upper(r.pol),
     pod:upper(r.pod),
     fpod:upper(r.fpod),
-    dv20:calc(r.dv20||r["20dv"]||""),
-    container20Type:upper(r["20type"]||r.container20type||""),
-    hc40:calc(r.hc40||r["40hc"]||""),
-    container40Type:upper(r["40type"]||r.container40type||""),
-    ft:r["f/t"]||r.ft||"",
-    validity:isoDate(r.validity||r.date||""),
-    type:upper(r.type||"V"),
-    tt:r.tt||"",
-    via:r.via||"",
-    remarks:upper(r.remarks||"")
+    dv20:calc(r.dv20 || r["20dv"] || ""),
+    container20Type:upper(r["20type"] || r.container20type || ""),
+    hc40:calc(r.hc40 || r["40hc"] || ""),
+    container40Type:upper(r["40type"] || r.container40type || ""),
+    ft:r["f/t"] || r.ft || "",
+    validity:isoDate(r.validity || r.date || ""),
+    type:upper(r.type || "V"),
+    tt:r.tt || "",
+    via:r.via || "",
+    remarks:upper(r.remarks || "")
   };
 }
 function renderUpload(){
-  $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
+  $("uploadBody").innerHTML = uploadRows.map((r,i)=>`
     <tr>
-      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
-      <td>${r.seq||i+1}</td><td>${r.carrier||""}</td><td>${r.por||""}</td><td>${r.pol||""}</td><td>${r.pod||""}</td><td>${r.fpod||""}</td><td>${r.dv20||""}</td><td>${r.container20Type||""}</td><td>${r.hc40||""}</td><td>${r.container40Type||""}</td><td>${r.ft||""}</td><td>${fmtDate(r.validity)}</td><td>${r.type||""}</td><td>${r.tt||""}</td><td>${r.via||""}</td><td>${r.remarks||""}</td>
+      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}></td>
+      <td>${escapeHtml(r.seq || i+1)}</td>
+      <td>${escapeHtml(r.carrier || "")}</td>
+      <td>${escapeHtml(r.por || "")}</td>
+      <td>${escapeHtml(r.pol || "")}</td>
+      <td>${escapeHtml(r.pod || "")}</td>
+      <td>${escapeHtml(r.fpod || "")}</td>
+      <td>${escapeHtml(r.dv20 || "")}</td>
+      <td>${escapeHtml(r.hc40 || "")}</td>
+      <td>${escapeHtml(r.ft || "")}</td>
+      <td>${escapeHtml(fmtDate(r.validity))}</td>
+      <td>${escapeHtml(r.type || "")}</td>
+      <td>${escapeHtml(r.tt || "")}</td>
+      <td>${escapeHtml(r.via || "")}</td>
+      <td>${escapeHtml(r.remarks || "")}</td>
     </tr>
   `).join("");
 }
-$("fileInput").addEventListener("change",async e=>{
-  const f=e.target.files?.[0];
+$("fileInput").addEventListener("change", async e => {
+  const f = e.target.files?.[0];
   if(!f) return;
   showLoader("IMPORTING","READING FILE");
-  const txt=await f.text();
-  uploadRows=parseCSV(txt).map(normalizeUploadRow);
+  const txt = await f.text();
+  uploadRows = parseCSV(txt).map(normalizeUploadRow);
   selectedUploadRows.clear();
   renderUpload();
   hideLoader();
 });
-$("selectAllUpload").addEventListener("change",e=>{
+$("selectAllUpload").addEventListener("change", e => {
   if(e.target.checked) uploadRows.forEach((_,i)=>selectedUploadRows.add(i));
   else selectedUploadRows.clear();
   renderUpload();
 });
-$("uploadBody").addEventListener("change",e=>{
-  const cb=e.target.closest("input[data-ui]");
+$("uploadBody").addEventListener("change", e => {
+  const cb = e.target.closest("input[data-ui]");
   if(!cb) return;
-  const i=Number(cb.dataset.ui);
-  if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
+  const i = Number(cb.dataset.ui);
+  if(cb.checked) selectedUploadRows.add(i);
+  else selectedUploadRows.delete(i);
 });
-$("exportSelectedBtn").onclick=()=>{
-  const rows=(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows());
-  download("fr8x_selected_export.csv",toCSV(rows));
+$("exportSelectedBtn").onclick = () => {
+  const rows = selectedUploadRows.size ? uploadRows.filter((_,i)=>selectedUploadRows.has(i)) : filteredRows();
+  download("fr8x_selected_export.csv", toCSV(rows));
 };
-$("applyImportBtn").onclick=async()=>{
-  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
+$("applyImportBtn").onclick = async () => {
+  const rows = selectedUploadRows.size ? uploadRows.filter((_,i)=>selectedUploadRows.has(i)) : uploadRows;
   if(!rows.length) return alert("NO DATA TO IMPORT.");
   showLoader("IMPORTING","ADDING RECORDS");
   for(const r of rows){
     if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
-    const seq=r.seq ? r.seq : generateSeq();
+    const seq = r.seq || generateSeq();
     const now = new Date().toISOString();
     await addDoc(collection(db,"rates"),{
-      seq,
-      createdAt: now,
-      updatedAt: now,
-      carrier:r.carrier,
-      por:r.por,
-      pol:r.pol,
-      pod:r.pod,
-      fpod:r.fpod,
-      dv20:r.dv20,
-      container20Type:r.container20Type,
-      hc40:r.hc40,
-      container40Type:r.container40Type,
-      ft:r.ft,
-      validity:r.validity,
-      type:r.type,
-      tt:r.tt,
-      via:r.via,
-      remarks:r.remarks,
-      localCharges:[],
-      charges20dv:[],
-      charges40hc:[]
+      seq, createdAt:now, updatedAt:now,
+      carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod,
+      dv20:r.dv20, container20Type:r.container20Type,
+      hc40:r.hc40, container40Type:r.container40Type,
+      ft:r.ft, validity:r.validity, type:r.type, tt:r.tt, via:r.via, remarks:r.remarks,
+      localCharges:[], charges20dv:[], charges40hc:[]
     });
   }
   closeUpload();
   await load();
 };
 
-$("globalSearch").addEventListener("input",render);
-document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value;render();}));
-document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
-document.addEventListener("click",e=>{
-  const btn=e.target.closest("button[data-action]");
+$("globalSearch").addEventListener("input", render);
+document.querySelectorAll(".filter-row input").forEach(inp => inp.addEventListener("input", e => {
+  filterMap[e.target.dataset.col] = e.target.value;
+  render();
+}));
+document.querySelectorAll(".section-tabs button").forEach(btn => btn.addEventListener("click", () => switchView(btn.dataset.view)));
+document.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-action]");
   if(!btn) return;
-  const id=btn.dataset.id;
-  if(btn.dataset.action==="copy") copyRate(id);
-  if(btn.dataset.action==="duplicate") editRate(id); // Use edit for duplicate prep
-  if(btn.dataset.action==="edit") editRate(id);
-  if(btn.dataset.action==="delete") delRate(id);
+  const id = btn.dataset.id;
+  if(btn.dataset.action === "copy") copyRate(id);
+  if(btn.dataset.action === "duplicate") duplicateRate(id);
+  if(btn.dataset.action === "edit") editRate(id);
+  if(btn.dataset.action === "delete") delRate(id);
 });
-$("selectAllRows").addEventListener("change",e=>document.querySelectorAll("#tbody .row-check").forEach(cb=>cb.checked=e.target.checked));
-$("selectAllExpired").addEventListener("change",e=>document.querySelectorAll("#expiredBody .row-check").forEach(cb=>cb.checked=e.target.checked));
-$("selectAllAll").addEventListener("change",e=>document.querySelectorAll("#allBody .row-check").forEach(cb=>cb.checked=e.target.checked));
+$("selectAllRows").addEventListener("change", e => document.querySelectorAll("#tbody .row-check").forEach(cb => cb.checked = e.target.checked));
+$("selectAllExpired").addEventListener("change", e => document.querySelectorAll("#expiredBody .row-check").forEach(cb => cb.checked = e.target.checked));
+$("selectAllAll").addEventListener("change", e => document.querySelectorAll("#allBody .row-check").forEach(cb => cb.checked = e.target.checked));
+
+setEditorState("CREATE OR UPDATE RATE");
+setViewState("ACTIVE RATES");
+if(sessionValid()) showApp();
 </script>
 </body>
 </html>
