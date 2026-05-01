@@ -6,82 +6,119 @@
 <title>FR8X ADMIN</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <style>
-:root{--bg:#f5f7fb;--surface:#ffffff;--surface2:#f8fafc;--border:#dbe3ef;--text:#142033;--muted:#66758b;--primary:#2563eb;--success:#059669;--danger:#dc2626;--warning:#d97706}
+:root{
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --border:#dbe3ef;
+  --text:#142033;
+  --muted:#66758b;
+  --primary:#2563eb;
+  --primary-2:#1d4ed8;
+  --success:#059669;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow-soft:0 2px 10px rgba(15,23,42,.06);
+  --radius:14px;
+  --radius-sm:10px;
+}
 *{box-sizing:border-box}
 html,body{height:100%;font-family:Calibri,"Segoe UI",system-ui,sans-serif;font-size:12px}
 body{margin:0;color:var(--text);background:var(--bg);overflow-x:hidden}
-.hidden{display:none!important}
-.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.18);padding:16px;z-index:999}
-.card{width:min(1240px,100%);max-height:92vh;overflow:auto;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 24px rgba(15,23,42,.08);padding:16px}
-.header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30}
-.brand{font-weight:800;font-size:14px;letter-spacing:.03em}
-.badge{padding:4px 8px;border-radius:999px;background:#eef4ff;color:var(--primary);font-weight:700;border:1px solid #d8e5ff;font-size:11px}
-.container{padding:10px 14px 14px}
-.topbar,.section-head,.action-bar,.editor-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.topbar{margin-bottom:8px}
-.panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;box-shadow:0 2px 8px rgba(15,23,42,.05)}
-.layout{display:grid;grid-template-columns:320px 1fr;gap:10px;align-items:start}
-.editor-panel{max-height:calc(100vh - 120px);overflow:auto;position:sticky;top:50px}
-.form > div{margin-bottom:6px}
-label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px}
-input,select,textarea,button{font-family:inherit;font-size:12px}
-input,select,textarea{width:100%;min-height:28px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#fff}
-textarea{min-height:48px;resize:vertical}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);outline:none}
-button{min-height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:4px}
-button:disabled{opacity:.6;cursor:not-allowed}
+.hidden{display:none !important}
+.overlay{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.18);backdrop-filter:blur(4px);padding:16px}
+.card{width:min(1240px,calc(100% - 16px));max-height:92vh;overflow:auto;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow)}
+.card.narrow{width:min(520px,calc(100% - 24px))}
+.header{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-soft)}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.brand{font-size:16px;font-weight:800;letter-spacing:.03em}
+.container{width:100%;padding:12px 16px 16px}
+.topbar,.section-head,.modal-head,.toolbar,.editor-actions,.bulk-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.topbar{margin-bottom:10px}
+.badge{padding:5px 10px;border-radius:999px;background:#eef4ff;color:var(--primary);border:1px solid #d8e5ff;font-weight:700;font-size:11px}
+.note{color:var(--muted);font-size:11px;letter-spacing:.03em}
+input,select,textarea{min-height:28px;width:100%;padding:6px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none;font-size:12px;transition:.2s ease}
+textarea{min-height:54px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(37,99,235,.12)}
+button{min-height:28px;border:none;border-radius:8px;padding:0 10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;transition:.16s ease;background:var(--surface);color:var(--text);border:1px solid var(--border)}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.primary:hover{background:var(--primary-2)}
 .success{background:var(--success);border-color:var(--success);color:#fff}
 .danger{background:var(--danger);border-color:var(--danger);color:#fff}
-.ghost{background:#fff;color:var(--text)}
-.compact-btn{min-width:32px;height:32px;padding:0}
+.warning{background:var(--warning);border-color:var(--warning);color:#fff}
+.ghost{background:var(--surface);color:var(--text)}
 .icon-only{width:32px;height:32px;padding:0}
-.tabs{display:flex;gap:4px;margin:6px 0 8px;flex-wrap:wrap}
-.tab{min-height:24px;padding:2px 10px;border-radius:999px;font-size:11px;background:var(--surface2)}
-.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface2);max-height:70vh}
+.compact-btn{min-width:32px;height:32px;padding:0}
+.section-tabs,.editor-actions{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}
+.section-tabs button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.layout-grid{display:grid;grid-template-columns:320px minmax(0,1fr);gap:12px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;box-shadow:var(--shadow-soft)}
+.form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px;align-items:start}
+.field{grid-column:span 12;display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;font-weight:700;color:var(--muted)}
+.span6{grid-column:span 6}
+.span12{grid-column:span 12}
+.container-type-row{grid-column:span 12;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.table-wrap{overflow:auto;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);max-height:70vh}
 table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
-th,td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;font-size:12px;overflow:hidden;text-overflow:ellipsis;min-height:24px}
-th{position:sticky;top:0;background:#fff;z-index:5;font-weight:800}
-.filter-row th{top:29px;background:var(--surface2);z-index:4;padding:4px 6px}
-.filter-row input{min-height:24px;padding:4px 6px;font-size:11px}
+th,td{padding:6px 6px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;font-size:12px;line-height:1.3;min-height:30px;overflow:hidden;text-overflow:ellipsis}
+th{position:sticky;top:0;z-index:5;background:var(--surface);color:var(--text);font-weight:800}
+.filter-row th{top:28px;background:var(--surface-2);z-index:4;padding:3px 4px}
+.filter-row input{min-height:24px;padding:3px 4px;font-size:11px}
 tbody tr:hover{background:#f5f9ff}
-.actions{display:flex;gap:2px;justify-content:center}
-.icon-btn{width:24px;height:24px;padding:0;min-height:24px;font-size:10px}
+.actions{display:flex;gap:3px;justify-content:center}
+.icon-btn{width:24px;height:24px;min-height:24px;padding:0}
+.checkbox-col{width:30px}
 .row-check{width:14px;height:14px;accent-color:var(--primary)}
-.checkbox-col{width:36px}
-.remarks-cell{position:relative;text-align:left;cursor:pointer;padding:6px 8px}
-.remarks-preview{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
-.remarks-tooltip{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);background:#fff;color:var(--text);padding:10px 12px;border:1px solid var(--border);border-radius:8px;max-width:280px;font-size:12px;white-space:pre-wrap;box-shadow:0 8px 24px rgba(15,23,42,.18);opacity:0;pointer-events:none;z-index:20;z-index:20}
-.remarks-cell:hover .remarks-tooltip,.remarks-cell:focus-within .remarks-tooltip{opacity:1}
+.title{font-size:16px;font-weight:800;letter-spacing:.03em;text-align:center}
+.subtitle{text-align:center;color:var(--muted);margin:6px 0 10px;font-size:11px}
 .pin-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
-.pin-input{height:46px;text-align:center;font-size:18px;font-weight:800}
-.title{font-size:16px;font-weight:800;text-align:center}
-.subtitle{text-align:center;color:var(--muted);margin:6px 0 10px;font-size:12px}
-.note{color:var(--muted);font-size:11px}
+.pin-input{height:44px;text-align:center;font-size:18px;font-weight:800;letter-spacing:.2em}
+.bulk-bar{margin-bottom:10px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.section{display:none}
+.section.active{display:block}
+.file-input{display:none}
+.remarks-cell{position:relative;text-align:left;cursor:default;overflow:visible}
+.remarks-preview{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.text-popup{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(6px) scale(.96);background:#fff;color:var(--text);padding:8px 10px;border:1px solid var(--border);border-radius:10px;box-shadow:0 14px 30px rgba(15,23,42,.16);min-width:220px;max-width:340px;white-space:normal;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:30}
+.text-popup::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%) rotate(45deg);width:12px;height:12px;background:#fff;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.remarks-cell:hover .text-popup,.remarks-cell:focus-within .text-popup{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+.hover-cell{position:relative;overflow:visible}
+.dim-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dim-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px}
+.dim-card-title{font-weight:800;font-size:12px;margin-bottom:6px;color:var(--primary)}
+.dim-specs{display:flex;flex-direction:column;gap:4px}
+.dim-spec{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:3px}
+.dim-label{font-weight:700;font-size:11px;color:var(--muted)}
+.dim-value{font-size:11px;color:var(--text)}
+.markup-card{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px}
+.markup-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.markup-row input{flex:0 0 70px}
+.markup-row label{margin:0;font-size:11px;flex:1}
+.applied-markups{margin-top:8px;padding:8px;background:#fff;border:1px solid var(--border);border-radius:8px;font-size:11px}
+.applied-markups-title{font-weight:700;font-size:11px;color:var(--muted);margin-bottom:4px}
+.applied-markup{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px}
+.copy-toast{position:fixed;bottom:16px;right:16px;background:var(--success);color:#fff;padding:10px 12px;border-radius:8px;box-shadow:0 10px 26px rgba(15,23,42,.25);font-weight:700;z-index:1000;animation:slideIn .25s ease}
+@keyframes slideIn{from{transform:translateX(240px);opacity:0}to{transform:translateX(0);opacity:1}}
 .loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.18);backdrop-filter:blur(4px)}
 .loader.show{display:flex}
-.loader-box{min-width:200px;padding:16px;border-radius:12px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.08);text-align:center}
-.spinner{width:36px;height:36px;margin:0 auto 10px;border-radius:50%;border:3px solid rgba(37,99,235,.14);border-top-color:var(--primary);animation:spin 1s linear infinite}
+.loader-box{min-width:200px;padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);text-align:center}
+.spinner{width:34px;height:34px;margin:0 auto 8px;border-radius:50%;border:3px solid rgba(37,99,235,.14);border-top-color:var(--primary);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.dim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.dim-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px}
-.dim-card-title{font-weight:800;font-size:13px;margin-bottom:8px;color:var(--primary)}
-.dim-specs{display:flex;flex-direction:column;gap:6px}
-.dim-spec{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:4px}
-.dim-label{font-weight:700;font-size:11px;color:var(--muted)}
-.dim-value{font-size:12px;color:var(--text)}
-.markup-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
-.markup-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.markup-row input{flex:1;max-width:100px}
-.markup-row label{margin:0;font-size:12px;flex:1}
-.applied-markups{margin-top:12px;padding:10px;background:#fff;border:1px solid var(--border);border-radius:8px}
-.applied-markups-title{font-weight:700;font-size:11px;color:var(--muted);margin-bottom:6px}
-.applied-markup{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px}
-.copy-toast{position:fixed;bottom:20px;right:20px;background:var(--success);color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,.18);font-weight:700;z-index:1000;animation:slideIn .3s ease}
-@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
-@media (max-width:1100px){.layout{grid-template-columns:1fr}.editor-panel{max-height:none;position:static}.dim-grid{grid-template-columns:1fr}}
-@media (max-width:700px){.container{padding:10px}.card{padding:12px}}
+@media (max-width:1100px){
+  .layout-grid{grid-template-columns:1fr}
+  .dim-grid{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  html,body{font-size:11px}
+  .container{padding:10px}
+  .header{padding:10px}
+  .panel,.card{padding:12px}
+}
 </style>
 </head>
 <body>
@@ -89,48 +126,49 @@ tbody tr:hover{background:#f5f9ff}
 <div id="loader" class="loader">
   <div class="loader-box">
     <div class="spinner"></div>
-    <div id="loaderText" class="title" style="font-size:14px">UPDATING...</div>
+    <div id="loaderText" class="title" style="font-size:13px">UPDATING...</div>
+    <div class="note" id="loaderSub" style="margin-top:4px">PLEASE WAIT</div>
   </div>
 </div>
 
-<!-- PIN GATE -->
 <div id="pinGate" class="overlay">
-  <div class="card" style="max-width:420px">
-    <div class="title">FR8X ADMIN ACCESS</div>
-    <div class="subtitle">ENTER 4 DIGIT PIN</div>
+  <div class="card narrow">
+    <div class="title">FR8X ACCESS</div>
+    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
     <div class="pin-row">
       <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin4" maxlength="1" inputmode="numeric" type="password">
     </div>
-    <div class="action-bar">
+    <div class="toolbar">
       <button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock"></i> UNLOCK</button>
       <button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser"></i> CLEAR</button>
     </div>
   </div>
 </div>
 
-<!-- IMPORT/UPLOAD OVERLAY -->
 <div id="uploadOverlay" class="overlay hidden">
   <div class="card">
-    <div class="action-bar" style="margin-bottom:10px">
-      <div class="title">MASS UPLOAD / EXPORT</div>
-      <button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
+    <div class="modal-head">
+      <div class="title">UPLOAD / EXPORT</div>
+      <button class="ghost" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div class="action-bar" style="margin-bottom:12px">
+    <div class="note" style="margin-bottom:8px">CSV IMPORT IS SUPPORTED. BLANK CELLS ARE ALLOWED. TYPE: V = HANDOVER, S = SAILING.</div>
+    <div class="toolbar" style="margin-bottom:10px">
       <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
       <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
       <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
-      <button class="primary" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
+      <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
     </div>
-    <input type="file" id="fileInput" class="hidden" accept=".csv,.txt" />
+    <input type="file" id="fileInput" class="file-input" accept=".csv,.txt" />
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th class="checkbox-col"><input type="checkbox" id="selectAllUpload"></th>
-            <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th>
+            <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th>
+            <th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th>
           </tr>
         </thead>
         <tbody id="uploadBody"></tbody>
@@ -139,113 +177,131 @@ tbody tr:hover{background:#f5f9ff}
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="appShell" class="hidden">
   <div class="header">
     <div class="brand">FR8X ADMIN</div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="ghost compact-btn" id="openUploadBtn" title="MASS UPLOAD"><i class="bi bi-file-earmark-spreadsheet"></i></button>
-      <span class="badge" id="sessionInfo">ADMIN ACTIVE</span>
+    <div class="header-right">
+      <button class="ghost icon-only compact-btn" id="openUploadBtn" title="UPLOAD"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+      <span class="badge" id="sessionInfo">ACCESS ACTIVE</span>
     </div>
   </div>
 
   <div class="container">
     <div class="topbar">
-      <input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:300px">
+      <input id="globalSearch" placeholder="GLOBAL SEARCH">
       <div>
         <span class="badge" id="activeCount">0 ACTIVE</span>
         <span class="badge" style="color:var(--danger);border-color:#fecaca" id="expiredCount">0 EXPIRED</span>
       </div>
     </div>
 
-    <!-- MAIN TABS -->
-    <div class="tabs" style="margin-bottom:12px">
-      <button class="tab active" data-tab="active">ACTIVE RATES</button>
-      <button class="tab" data-tab="expired">EXPIRED RATES</button>
-      <button class="tab" data-tab="all">ALL RATES</button>
-      <button class="tab" data-tab="dimensions">DIMENSIONS</button>
-      <button class="tab" data-tab="markups">MARKUPS</button>
+    <div class="bulk-bar">
+      <div class="note" id="selectedCountInfo">0 SELECTED</div>
+      <div class="toolbar">
+        <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
+        <button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
+      </div>
     </div>
 
-    <div class="layout">
-      <!-- LEFT EDITOR -->
-      <div class="panel editor-panel" id="editorWrap">
-        <div style="font-weight:800;font-size:13px;margin-bottom:2px">RATE EDITOR</div>
-        <div class="note" id="editorStateNote" style="margin-bottom:8px">CREATE OR UPDATE RATE</div>
-        <div class="form">
-          <div><label>CARRIER</label><input id="carrier"></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div><label>POR</label><input id="por"></div>
-            <div><label>POL</label><input id="pol"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div><label>POD</label><input id="pod"></div>
-            <div><label>FPOD</label><input id="fpod"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div>
-              <label>20DV TYPE</label>
-              <select id="container20Type"><option value="">20DV Type</option><option>OT</option><option>OG</option><option>FR</option><option>DG</option><option>RF</option></select>
-            </div>
-            <div><label>USD 20DV</label><input id="dv20"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div>
-              <label>40HC TYPE</label>
-              <select id="container40Type"><option value="">40HC Type</option><option>OT</option><option>OG</option><option>FR</option><option>DG</option><option>RF</option></select>
-            </div>
-            <div><label>USD 40HC</label><input id="hc40"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div><label>F/T</label><input id="ft"></div>
-            <div><label>VALIDITY</label><input id="validity" type="date"></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div><label>TT</label><input id="tt"></div>
-            <div><label>ROUTING</label><input id="via"></div>
-          </div>
+    <div class="section-tabs">
+      <button class="active" id="tabActiveBtn" data-view="active">ACTIVE RATES</button>
+      <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
+      <button id="tabAllBtn" data-view="all">ALL RATES</button>
+      <button id="tabDimBtn" data-view="dimensions">DIMENSIONS</button>
+      <button id="tabMarkupBtn" data-view="markups">MARKUPS</button>
+    </div>
+
+    <div class="layout-grid">
+      <div class="panel" id="editorPanel">
+        <div class="section-head" style="margin-bottom:8px">
           <div>
-            <label>TYPE</label>
-            <select id="rateType"><option value="HANDOVER">HANDOVER</option><option value="SAILING">SAILING</option></select>
+            <div style="font-size:13px;font-weight:800">RATE EDITOR</div>
+            <div class="note" id="editorState">CREATE OR UPDATE RATE</div>
           </div>
-          <div><label>REMARKS</label><textarea id="remarks" maxlength="120"></textarea></div>
-          <div class="editor-actions" style="margin-top:10px">
-            <button class="primary" id="save" style="flex:1">SAVE</button>
-            <button class="success" id="update" style="flex:1">UPDATE</button>
+        </div>
+        <div class="form">
+          <div class="field span12"><label for="carrier">CARRIER</label><input id="carrier" placeholder="Carrier"></div>
+          <div class="field span6"><label for="por">POR</label><input id="por" placeholder="POR"></div>
+          <div class="field span6"><label for="pol">POL</label><input id="pol" placeholder="POL"></div>
+          <div class="field span6"><label for="pod">POD</label><input id="pod" placeholder="POD"></div>
+          <div class="field span6"><label for="fpod">FPOD</label><input id="fpod" placeholder="FPOD"></div>
+
+          <div class="container-type-row">
+            <div class="field"><label for="container20Type">20DV TYPE</label>
+              <select id="container20Type">
+                <option value="">20DV Type</option><option value="OT">OT</option><option value="OG">OG</option>
+                <option value="FR">FR</option><option value="DG">DG</option><option value="RF">RF</option>
+              </select>
+            </div>
+            <div class="field"><label for="dv20">USD 20DV</label><input id="dv20" placeholder="USD 20DV"></div>
           </div>
-          <div class="editor-actions" style="margin-top:6px">
-            <button class="ghost" id="clear" style="flex:1">CLEAR</button>
-            <button class="ghost" id="exportBtn" style="flex:1">EXPORT</button>
+
+          <div class="container-type-row">
+            <div class="field"><label for="container40Type">40HC TYPE</label>
+              <select id="container40Type">
+                <option value="">40HC Type</option><option value="OT">OT</option><option value="OG">OG</option>
+                <option value="FR">FR</option><option value="DG">DG</option><option value="RF">RF</option>
+              </select>
+            </div>
+            <div class="field"><label for="hc40">USD 40HC</label><input id="hc40" placeholder="USD 40HC"></div>
+          </div>
+
+          <div class="field span6"><label for="ft">F/T</label><input id="ft" placeholder="F/T"></div>
+          <div class="field span6"><label for="validity">VALIDITY</label><input id="validity" type="date"></div>
+          <div class="field span6"><label for="tt">TT</label><input id="tt" placeholder="TT"></div>
+          <div class="field span6"><label for="via">ROUTING</label><input id="via" placeholder="Routing"></div>
+
+          <div class="field span6">
+            <label for="rateType">TYPE</label>
+            <select id="rateType">
+              <option value="V">HANDOVER (V)</option>
+              <option value="S">SAILING (S)</option>
+            </select>
+          </div>
+
+          <div class="field span12"><label for="remarks">REMARKS</label><textarea id="remarks" placeholder="Remarks" maxlength="120"></textarea></div>
+
+          <div class="editor-actions span12">
+            <button class="primary" id="save"><i class="bi bi-floppy"></i> SAVE</button>
+            <button class="success" id="update"><i class="bi bi-file-arrow-up"></i> UPDATE</button>
+            <button class="danger" id="clear"><i class="bi bi-x-octagon"></i> CLEAR</button>
+            <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
+            <button class="ghost" id="exportBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT</button>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT PANELS -->
-      <div id="view-rates">
-        <div class="panel">
+      <div id="rightPanel">
+        <div class="panel section active" id="sectionRates">
+          <div class="section-head">
+            <div class="note" id="sectionLabel">ACTIVE RATES</div>
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th class="checkbox-col"><input type="checkbox" id="selectAllRows"></th>
-                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>40HC</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACT</th>
+                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th>
+                  <th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
                 </tr>
                 <tr class="filter-row">
                   <th></th>
-                  <th><input data-col="seq" placeholder=".."></th>
-                  <th><input data-col="carrier" placeholder=".."></th>
-                  <th><input data-col="por" placeholder=".."></th>
-                  <th><input data-col="pol" placeholder=".."></th>
-                  <th><input data-col="pod" placeholder=".."></th>
-                  <th><input data-col="fpod" placeholder=".."></th>
-                  <th><input data-col="dv20" placeholder=".."></th>
-                  <th><input data-col="hc40" placeholder=".."></th>
-                  <th><input data-col="ft" placeholder=".."></th>
-                  <th><input data-col="validity" placeholder=".."></th>
-                  <th><input data-col="type" placeholder=".."></th>
-                  <th><input data-col="tt" placeholder=".."></th>
-                  <th><input data-col="via" placeholder=".."></th>
-                  <th><input data-col="remarks" placeholder=".."></th>
+                  <th><input data-col="seq" placeholder="SEARCH"></th>
+                  <th><input data-col="carrier" placeholder="SEARCH"></th>
+                  <th><input data-col="por" placeholder="SEARCH"></th>
+                  <th><input data-col="pol" placeholder="SEARCH"></th>
+                  <th><input data-col="pod" placeholder="SEARCH"></th>
+                  <th><input data-col="fpod" placeholder="SEARCH"></th>
+                  <th><input data-col="dv20" placeholder="SEARCH"></th>
+                  <th><input data-col="container20Type" placeholder="SEARCH"></th>
+                  <th><input data-col="hc40" placeholder="SEARCH"></th>
+                  <th><input data-col="container40Type" placeholder="SEARCH"></th>
+                  <th><input data-col="ft" placeholder="SEARCH"></th>
+                  <th><input data-col="validity" placeholder="SEARCH"></th>
+                  <th><input data-col="type" placeholder="SEARCH"></th>
+                  <th><input data-col="tt" placeholder="SEARCH"></th>
+                  <th><input data-col="via" placeholder="SEARCH"></th>
+                  <th><input data-col="remarks" placeholder="SEARCH"></th>
                   <th></th>
                 </tr>
               </thead>
@@ -253,86 +309,42 @@ tbody tr:hover{background:#f5f9ff}
             </table>
           </div>
         </div>
-      </div>
 
-      <!-- DIMENSIONS TAB - CLEAN & PROFESSIONAL -->
-      <div id="view-dimensions" class="hidden">
-        <div class="dim-grid">
-          <div class="dim-card">
-            <div class="dim-card-title">20DV CONTAINER</div>
-            <div class="dim-specs">
-              <div class="dim-spec">
-                <span class="dim-label">Outer (CM)</span>
-                <span class="dim-value">589.8 × 235.2 × 239.3</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Outer (M)</span>
-                <span class="dim-value">5.898 × 2.352 × 2.393</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Outer (Inch)</span>
-                <span class="dim-value">232 × 92.6 × 94.2</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (CM)</span>
-                <span class="dim-value">590 × 235 × 239</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (M)</span>
-                <span class="dim-value">5.90 × 2.35 × 2.39</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (Inch)</span>
-                <span class="dim-value">232 × 92.5 × 94.1</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Breakbulk Note</span>
-                <span class="dim-value" style="color:var(--warning)">Oversized cargo allowed</span>
+        <div class="panel section" id="sectionDim">
+          <div style="font-weight:800;font-size:13px;margin-bottom:6px">DIMENSIONS & BREAKBULK</div>
+          <div class="dim-grid">
+            <div class="dim-card">
+              <div class="dim-card-title">20DV CONTAINER</div>
+              <div class="dim-specs">
+                <div class="dim-spec"><span class="dim-label">Outer (CM)</span><span class="dim-value">589.8 × 235.2 × 239.3</span></div>
+                <div class="dim-spec"><span class="dim-label">Outer (M)</span><span class="dim-value">5.898 × 2.352 × 2.393</span></div>
+                <div class="dim-spec"><span class="dim-label">Outer (INCH)</span><span class="dim-value">232 × 92.6 × 94.2</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (CM)</span><span class="dim-value">590 × 235 × 239</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (M)</span><span class="dim-value">5.90 × 2.35 × 2.39</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (INCH)</span><span class="dim-value">232 × 92.5 × 94.1</span></div>
+                <div class="dim-spec"><span class="dim-label">Breakbulk Note</span><span class="dim-value" style="color:var(--warning)">Oversized cargo allowed</span></div>
               </div>
             </div>
-          </div>
-
-          <div class="dim-card">
-            <div class="dim-card-title">40HC CONTAINER</div>
-            <div class="dim-specs">
-              <div class="dim-spec">
-                <span class="dim-label">Outer (CM)</span>
-                <span class="dim-value">1202 × 235 × 269</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Outer (M)</span>
-                <span class="dim-value">12.02 × 2.35 × 2.69</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Outer (Inch)</span>
-                <span class="dim-value">473 × 92.5 × 106</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (CM)</span>
-                <span class="dim-value">1203 × 235 × 269</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (M)</span>
-                <span class="dim-value">12.03 × 2.35 × 2.69</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Internal (Inch)</span>
-                <span class="dim-value">474 × 92.5 × 106</span>
-              </div>
-              <div class="dim-spec">
-                <span class="dim-label">Breakbulk Note</span>
-                <span class="dim-value" style="color:var(--warning)">Height limit 269 CM</span>
+            <div class="dim-card">
+              <div class="dim-card-title">40HC CONTAINER</div>
+              <div class="dim-specs">
+                <div class="dim-spec"><span class="dim-label">Outer (CM)</span><span class="dim-value">1202 × 235 × 269</span></div>
+                <div class="dim-spec"><span class="dim-label">Outer (M)</span><span class="dim-value">12.02 × 2.35 × 2.69</span></div>
+                <div class="dim-spec"><span class="dim-label">Outer (INCH)</span><span class="dim-value">473 × 92.5 × 106</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (CM)</span><span class="dim-value">1203 × 235 × 269</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (M)</span><span class="dim-value">12.03 × 2.35 × 2.69</span></div>
+                <div class="dim-spec"><span class="dim-label">Internal (INCH)</span><span class="dim-value">474 × 92.5 × 106</span></div>
+                <div class="dim-spec"><span class="dim-label">Breakbulk Note</span><span class="dim-value" style="color:var(--warning)">Height limit 269 CM</span></div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- MARKUPS TAB - WITH AUTO UPDATE -->
-      <div id="view-markups" class="hidden">
-        <div class="panel">
-          <div style="font-weight:800;font-size:14px;margin-bottom:10px">GLOBAL MARKUP SETTINGS</div>
-          <div class="note" style="margin-bottom:12px">Set default markups. These will be automatically applied to ALL records when saved.</div>
+        <div class="panel section" id="sectionMarkup">
+          <div style="font-weight:800;font-size:13px;margin-bottom:6px">GLOBAL MARKUP SETTINGS (COPY ONLY)</div>
+          <div class="note" style="margin-bottom:6px">
+            These markups are applied only in COPY text. Base admin rates are not changed.
+          </div>
 
           <div class="markup-card">
             <div class="markup-row">
@@ -347,24 +359,19 @@ tbody tr:hover{background:#f5f9ff}
             </div>
           </div>
 
-          <div style="display:flex;gap:8px;margin-bottom:12px">
-            <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy"></i> SAVE & APPLY MARKUPS</button>
+          <div class="toolbar" style="margin-bottom:8px">
+            <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy"></i> SAVE MARKUPS</button>
             <button class="ghost" id="clearMarkupsBtn" style="flex:1"><i class="bi bi-x-octagon"></i> CLEAR</button>
           </div>
 
           <div class="applied-markups">
-            <div class="applied-markups-title">APPLIED TO RECORDS</div>
+            <div class="applied-markups-title">CURRENT COPY CALCULATION</div>
             <div id="appliedMarkupsList">
-              <div style="padding:8px;color:var(--muted);font-size:11px;text-align:center">No markups applied yet</div>
+              <div style="padding:4px;color:var(--muted);font-size:11px">No markup configured. COPY uses base rates.</div>
             </div>
-          </div>
-
-          <div style="margin-top:12px;padding:10px;background:#fff3cd;border-left:4px solid var(--warning);border-radius:6px;font-size:11px;color:#856404">
-            <strong>INFO:</strong> Markups are automatically recalculated and applied to all active rates in real-time.
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -373,27 +380,270 @@ tbody tr:hover{background:#f5f9ff}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-const app = initializeApp({ projectId:"swifty-52e05" });
+const app = initializeApp({projectId:"swifty-52e05"});
 const db = getFirestore(app);
 const $ = id => document.getElementById(id);
+const upper = v => (v ?? "").toString().toUpperCase();
+const PIN = "1234";
 
-const PIN = "1234"; const KEY = "admin_until";
-let data = [], editId = null, viewMode = "active", filterMap = {}, uploadRows = [], selectedUploadRows = new Set();
-let mu20 = 0, mu40 = 0; // Global markup values
+let sessionUntil = 0;
+let data = [], editId = null, viewMode = "active";
+let uploadRows = [], selectedUploadRows = new Set(), loaderTimer = null;
+let selectedIds = new Set();
+let filterMap = {seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",dv20:"",container20Type:"",hc40:"",container40Type:"",ft:"",validity:"",type:"",tt:"",via:"",remarks:""};
 
-const upper = v => (v??"").toString().toUpperCase();
-const fmt = d => d ? new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).toUpperCase() : "";
-const isoDate = d => {if(!d) return ""; const dt=new Date(d); if(isNaN(dt)) return ""; return dt.toISOString().slice(0,10)};
-const expired = r => r.validity && new Date(r.validity) < new Date(new Date().toDateString());
-const escapeHtml = (v="") => String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+let mu20 = 0, mu40 = 0;
+const MU20_KEY = "fr8x_mu20";
+const MU40_KEY = "fr8x_mu40";
 
+function escapeHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;")}
 function pad2(n){return String(n).padStart(2,'0')}
-function seqFromDate(dt){const y=String(dt.getFullYear()).slice(-2); return `${y}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}${pad2(dt.getHours())}${pad2(dt.getMinutes())}${pad2(dt.getSeconds())}`;}
+function seqFromDate(dateLike){
+  const dt = dateLike ? new Date(dateLike) : new Date();
+  const y = String(dt.getFullYear()).slice(-2);
+  return `${y}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}${pad2(dt.getHours())}${pad2(dt.getMinutes())}${pad2(dt.getSeconds())}`;
+}
+function generateSeq(){return seqFromDate(new Date())}
+function normalizeSeq(record){
+  if(record?.createdAt){
+    const dt = new Date(record.createdAt);
+    if(!isNaN(dt)) return seqFromDate(dt);
+  }
+  if(record?.updatedAt){
+    const dt = new Date(record.updatedAt);
+    if(!isNaN(dt)) return seqFromDate(dt);
+  }
+  return generateSeq();
+}
+function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
+  clearTimeout(loaderTimer);
+  $("loaderText").textContent = title;
+  $("loaderSub").textContent = sub;
+  $("loader").classList.add("show");
+  loaderTimer = setTimeout(()=>hideLoader(), 900);
+}
+function hideLoader(){clearTimeout(loaderTimer);$("loader").classList.remove("show")}
+function calc(v){
+  v=(v??"").toString().trim();
+  if(!v) return "";
+  if(/[+\s]/.test(v)){
+    const sum=v.split(/[+\s]+/).filter(Boolean).map(Number).reduce((a,b)=>a+(isNaN(b)?0:b),0);
+    return sum?String(sum):"";
+  }
+  return v;
+}
+function fmtDate(d){
+  if(!d) return "";
+  const dt=new Date(d);
+  if(isNaN(dt)) return String(d).toUpperCase();
+  return dt.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
+}
+function isoDate(d){
+  if(!d) return "";
+  const dt=new Date(d);
+  if(isNaN(dt)) return "";
+  return dt.toISOString().slice(0,10);
+}
+function expired(r){
+  const d=isoDate(r.validity);
+  if(!d) return false;
+  const today=new Date(); today.setHours(0,0,0,0);
+  return new Date(d+"T00:00:00")<today;
+}
+function sessionValid(){return Date.now() < sessionUntil}
+function setSession(){sessionUntil = Date.now() + 4*60*60*1000}
+function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups();}
+function setEditorState(text){const el=$("editorState"); if(el) el.textContent=text;}
+function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s}
 
-const sessionValid = () => Date.now() < (+localStorage.getItem(KEY)||0);
-const setSession = () => localStorage.setItem(KEY, String(Date.now() + 4*60*60*1000));
-const showLoader = t => {$("loaderText").textContent=t||"UPDATING...";$("loader").classList.add("show")};
-const hideLoader = () => $("loader").classList.remove("show");
+async function load(){
+  showLoader("UPDATING DATA","FETCHING RECORDS");
+  const snap = await getDocs(collection(db,"rates"));
+  data = [];
+  snap.forEach(d=>data.push({id:d.id,...d.data()}));
+  data.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+  updateCounters();
+  render();
+  hideLoader();
+}
+function updateCounters(){
+  const ex=data.filter(expired).length;
+  $("expiredCount").textContent=`${ex} EXPIRED`;
+  $("activeCount").textContent=`${data.length-ex} ACTIVE`;
+}
+function filteredRows(){
+  const g = ($("globalSearch").value||"").toUpperCase();
+  let rows = [...data];
+  if(viewMode==="active") rows=rows.filter(r=>!expired(r));
+  if(viewMode==="expired") rows=rows.filter(r=>expired(r));
+  rows=rows.filter(r=>{
+    for(const k in filterMap){
+      const q=(filterMap[k]||"").trim().toUpperCase();
+      if(!q) continue;
+      const val=(k==="validity"?fmtDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
+      if(!val.includes(q)) return false;
+    }
+    return true;
+  });
+  if(g) rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
+  return rows;
+}
+function rowPopup(text){return `<div class="text-popup">${escapeHtml(text || "")}</div>`}
+function renderDesktopRows(rows){
+  return rows.map((r,i)=>{
+    const displayType = r.type==="V" ? "HANDOVER" : r.type==="S" ? "SAILING" : (r.type||"");
+    return `
+    <tr>
+      <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?'checked':''}></td>
+      <td title="${escapeHtml(r.seq||i+1)}">${escapeHtml(r.seq||"")}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.carrier||"",14))}${rowPopup(r.carrier)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.por||"",12))}${rowPopup(r.por)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.pol||"",12))}${rowPopup(r.pol)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.pod||"",12))}${rowPopup(r.pod)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.fpod||"",12))}${rowPopup(r.fpod)}</td>
+      <td>${escapeHtml(r.dv20||"")}</td>
+      <td>${escapeHtml(r.container20Type||"")}</td>
+      <td>${escapeHtml(r.hc40||"")}</td>
+      <td>${escapeHtml(r.container40Type||"")}</td>
+      <td>${escapeHtml(r.ft||"")}</td>
+      <td>${escapeHtml(fmtDate(r.validity))}</td>
+      <td>${escapeHtml(displayType)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.tt||"",10))}${rowPopup(r.tt)}</td>
+      <td class="hover-cell">${escapeHtml(truncate(r.via||"",14))}${rowPopup(r.via)}</td>
+      <td class="remarks-cell" tabindex="0"><span class="remarks-preview">${escapeHtml(truncate(r.remarks||"",18))}</span>${rowPopup(r.remarks)}</td>
+      <td class="actions">
+        <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
+        <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
+        <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+        <button class="icon-btn" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+function render(){
+  const rows = filteredRows();
+  $("tbody").innerHTML = renderDesktopRows(rows);
+  const viewLabel=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
+  $("sectionLabel").textContent=viewLabel;
+  updateSelectedInfo();
+}
+function updateSelectedInfo(){$("selectedCountInfo").textContent=`${selectedIds.size} SELECTED`}
+
+function switchView(mode){
+  viewMode = mode;
+  ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn"].forEach(id=>$(id).classList.remove("active"));
+  ["sectionRates","sectionDim","sectionMarkup"].forEach(id=>$(id).classList.remove("active"));
+  $("editorPanel").classList.remove("hidden");
+  $("sectionRates").classList.add("active");
+
+  if(mode==="active") $("tabActiveBtn").classList.add("active");
+  if(mode==="expired") $("tabExpiredBtn").classList.add("active");
+  if(mode==="all") $("tabAllBtn").classList.add("active");
+  if(mode==="dimensions"){
+    $("tabDimBtn").classList.add("active");
+    $("sectionRates").classList.remove("active");
+    $("sectionDim").classList.add("active");
+    $("editorPanel").classList.add("hidden");
+  }
+  if(mode==="markups"){
+    $("tabMarkupBtn").classList.add("active");
+    $("sectionRates").classList.remove("active");
+    $("sectionMarkup").classList.add("active");
+    $("editorPanel").classList.add("hidden");
+  }
+  if(["active","expired","all"].includes(mode)) render();
+}
+
+function clearForm(resetEdit=true){
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
+  $("rateType").value="V";
+  if(resetEdit) editId=null;
+  setEditorState("CREATE OR UPDATE RATE");
+}
+async function nextSequence(){return generateSeq()}
+
+$("save").onclick=async()=>{
+  showLoader("SAVING","CREATING NEW RECORD");
+  const now = new Date().toISOString();
+  await addDoc(collection(db,"rates"),{
+    seq: await nextSequence(), createdAt:now, updatedAt:now,
+    carrier:upper($("carrier").value), por:upper($("por").value), pol:upper($("pol").value),
+    pod:upper($("pod").value), fpod:upper($("fpod").value),
+    dv20:calc($("dv20").value), container20Type:upper($("container20Type").value),
+    hc40:calc($("hc40").value), container40Type:upper($("container40Type").value),
+    ft:$("ft").value, validity:$("validity").value, tt:$("tt").value,
+    via:$("via").value, remarks:upper($("remarks").value),
+    type:$("rateType").value,
+    localCharges:[], charges20dv:[], charges40hc:[]
+  });
+  clearForm(); await load();
+};
+$("update").onclick=async()=>{
+  if(!editId) return alert("SELECT A RECORD TO UPDATE.");
+  showLoader("UPDATING","SAVING CHANGES");
+  const current=data.find(x=>x.id===editId)||{};
+  const now=new Date().toISOString();
+  await updateDoc(doc(db,"rates",editId),{
+    seq: current.seq || await nextSequence(), updatedAt:now,
+    carrier:upper($("carrier").value), por:upper($("por").value), pol:upper($("pol").value),
+    pod:upper($("pod").value), fpod:upper($("fpod").value),
+    dv20:calc($("dv20").value), container20Type:upper($("container20Type").value),
+    hc40:calc($("hc40").value), container40Type:upper($("container40Type").value),
+    ft:$("ft").value, validity:$("validity").value, tt:$("tt").value,
+    via:$("via").value, remarks:upper($("remarks").value),
+    type:$("rateType").value,
+    localCharges:current.localCharges||[], charges20dv:current.charges20dv||[], charges40hc:current.charges40hc||[]
+  });
+  clearForm(); await load();
+};
+$("clear").onclick=()=>{clearForm(true)}
+
+async function duplicateRate(id){
+  const r=data.find(x=>x.id===id); if(!r) return;
+  showLoader("DUPLICATING","CREATING COPY");
+  const now=new Date().toISOString();
+  const payload={...r};
+  delete payload.id;
+  payload.seq=await nextSequence();
+  payload.createdAt=now;
+  payload.updatedAt=now;
+  await addDoc(collection(db,"rates"),payload);
+  await load();
+}
+$("duplicateBtn").onclick=async()=>{if(!editId) return alert("SELECT A RECORD TO DUPLICATE."); await duplicateRate(editId)}
+
+async function migrateAllSequences(){
+  if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return;
+  showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
+  for(const r of data){
+    const newSeq = normalizeSeq(r);
+    if(r.seq !== newSeq) await updateDoc(doc(db,"rates",r.id),{seq:newSeq});
+  }
+  await load();
+}
+$("migrateSeqBtn").onclick=migrateAllSequences;
+
+async function bulkDeleteSelected(){
+  if(!selectedIds.size) return alert("SELECT RECORDS FIRST.");
+  if(!confirm(`DELETE ${selectedIds.size} SELECTED RECORD(S)?`)) return;
+  showLoader("DELETING","REMOVING SELECTED RECORDS");
+  for(const id of [...selectedIds]) await deleteDoc(doc(db,"rates",id));
+  selectedIds.clear();
+  await load();
+}
+$("bulkDeleteBtn").onclick=bulkDeleteSelected;
+
+function pinUnlock(){
+  const pin=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
+  if(pin===PIN){setSession();showApp()} else {alert("INVALID PIN"); clearPin()}
+}
+function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value=""); $("pin1").focus()}
+["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
+  $(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,1); if(e.target.value&&arr[i+1]) $(arr[i+1]).focus()});
+  $(id).addEventListener("keydown",e=>{if(e.key==="Backspace"&&!e.target.value&&arr[i-1]) $(arr[i-1]).focus(); if(e.key==="Enter") pinUnlock()})
+});
+$("unlockBtn").onclick=pinUnlock;
+$("clearPinBtn").onclick=clearPin;
 
 function showCopyToast(msg="COPIED"){
   const t=document.createElement("div");
@@ -403,181 +653,283 @@ function showCopyToast(msg="COPIED"){
   setTimeout(()=>t.remove(),2000);
 }
 
-function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups()}
-function pinUnlock(){const p=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join(""); if(p===PIN){setSession();showApp()}else{alert("INVALID PIN");$("pin1").focus()}}
-["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
-  $(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,1); if(e.target.value&&arr[i+1]) $(arr[i+1]).focus()});
-  $(id).addEventListener("keydown",e=>{if(e.key==="Backspace"&&!e.target.value&&arr[i-1]) $(arr[i-1]).focus(); if(e.key==="Enter") pinUnlock()});
-});
-$("unlockBtn").onclick = pinUnlock; $("clearPinBtn").onclick = () => {["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");$("pin1").focus()};
-if(sessionValid()) showApp();
+window.copyRate=async(id)=>{
+  const r=data.find(x=>x.id===id); if(!r) return;
+  const lines=[];
+  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
+  if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pol) lines.push(`POL: ${r.pol}`);
+  if(r.pod) lines.push(`POD: ${r.pod}`);
+  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
 
-async function load(){showLoader("FETCHING..."); const s=await getDocs(collection(db,"rates")); data=[]; s.forEach(d=>data.push({id:d.id,...d.data()})); data.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)); render(); hideLoader()}
+  const routeFrom = r.pol || r.por || "";
+  const routeTo = r.pod || "";
+  const base20 = parseFloat(r.dv20||"") || 0;
+  const base40 = parseFloat(r.hc40||"") || 0;
+  const dv20Type = r.container20Type ? ` (${r.container20Type})` : "";
+  const hc40Type = r.container40Type ? ` (${r.container40Type})` : "";
+  const hasBase = base20 || base40;
 
-function render(){
-  const g = ($("globalSearch").value||"").toUpperCase();
-  let rows = [...data];
-  if(viewMode==="active") rows=rows.filter(r=>!expired(r));
-  if(viewMode==="expired") rows=rows.filter(r=>expired(r));
-  rows = rows.filter(r=>{
-    for(const k in filterMap){
-      const q = (filterMap[k]||"").toUpperCase(); if(!q) continue;
-      const val = (k==="validity"?fmt(r[k]):(r[k]||"")).toString().toUpperCase();
-      if(!val.includes(q)) return false;
+  let lineRates = "";
+  if(routeFrom || routeTo || hasBase){
+    const round = n => Math.round(Number(n || 0)).toString();
+    if(mu20 || mu40){
+      const val20 = base20 ? (base20 * (1 + mu20/100)) : 0;
+      const val40 = base40 ? (base40 * (1 + mu40/100)) : 0;
+      const part20 = base20 ? `USD ${round(val20)}/20DV${dv20Type}` : "";
+      const part40 = base40 ? `USD ${round(val40)}/40HC${hc40Type}` : "";
+      lineRates = `O/F FM ${routeFrom} TO ${routeTo} @ ${[part20,part40].filter(Boolean).join(" & ")}`;
+    } else {
+      const part20 = base20 ? `USD ${round(base20)}/20DV${dv20Type}` : "";
+      const part40 = base40 ? `USD ${round(base40)}/40HC${hc40Type}` : "";
+      lineRates = `O/F FM ${routeFrom} TO ${routeTo} @ ${[part20,part40].filter(Boolean).join(" & ")}`;
     }
-    return true;
-  });
-  if(g) rows = rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
-
-  $("activeCount").textContent=`${data.filter(r=>!expired(r)).length} ACTIVE`;
-  $("expiredCount").textContent=`${data.filter(expired).length} EXPIRED`;
-
-  $("tbody").innerHTML = rows.map((r,i)=>{
-    const dv20markup = mu20 ? (parseFloat(r.dv20||0) * (1 + mu20/100)).toFixed(2) : (r.dv20||"");
-    const hc40markup = mu40 ? (parseFloat(r.hc40||0) * (1 + mu40/100)).toFixed(2) : (r.hc40||"");
-    return `<tr>
-      <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}"></td>
-      <td>${escapeHtml(r.seq||i+1)}</td><td>${escapeHtml(r.carrier)}</td><td>${escapeHtml(r.por)}</td><td>${escapeHtml(r.pol)}</td><td>${escapeHtml(r.pod)}</td><td>${escapeHtml(r.fpod)}</td>
-      <td title="Base: ${escapeHtml(r.dv20)}">${escapeHtml(dv20markup)}</td><td title="Base: ${escapeHtml(r.hc40)}">${escapeHtml(hc40markup)}</td><td>${escapeHtml(r.ft)}</td><td>${escapeHtml(fmt(r.validity))}</td><td>${escapeHtml(r.type)}</td><td>${escapeHtml(r.tt)}</td><td>${escapeHtml(r.via)}</td>
-      <td class="remarks-cell" title="CLICK TO COPY"><span class="remarks-preview">${escapeHtml(String(r.remarks||"").slice(0,20))}</span><div class="remarks-tooltip">${escapeHtml(r.remarks||"")}</div></td>
-      <td class="actions">
-        <button class="icon-btn" data-act="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil"></i></button>
-        <button class="icon-btn" data-act="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
-        <button class="icon-btn danger" data-act="del" data-id="${r.id}" title="Delete"><i class="bi bi-x-lg"></i></button>
-      </td>
-    </tr>`;
-  }).join("");
-}
-
-$("globalSearch").addEventListener("input",render);
-document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value;render()}));
-
-document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("click",()=>{
-  const tab=btn.dataset.tab;
-  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
-  $("editorWrap").classList.toggle("hidden", tab==="dimensions"||tab==="markups");
-  $("view-rates").classList.toggle("hidden", tab==="dimensions"||tab==="markups");
-  $("view-dimensions").classList.toggle("hidden", tab!=="dimensions");
-  $("view-markups").classList.toggle("hidden", tab!=="markups");
-  if(["active","expired","all"].includes(tab)){ viewMode=tab; render(); }
-}));
-
-function clearForm(){
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
-  $("rateType").value="HANDOVER"; editId=null; $("editorStateNote").textContent="CREATE OR UPDATE RATE";
-}
-$("clear").onclick = clearForm;
-
-document.addEventListener("click",async e=>{
-  const b=e.target.closest("button[data-act]"); if(!b) return; const id=b.dataset.id; const r=data.find(x=>x.id===id); if(!r) return;
-  if(b.dataset.act==="edit"){
-    editId=id; $("editorStateNote").textContent=`EDITING ${r.seq||""}`;
-    ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(k=>$(k).value=r[k]||"");
-    $("rateType").value = r.type==="SAILING"?"SAILING":"HANDOVER";
+    lines.push(lineRates.trim());
   }
-  if(b.dataset.act==="copy"){
-    const lines=[];
-    if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
-    if(r.por || r.pol) lines.push(`ROUTE: ${r.por||""} → ${r.pol||""} → ${r.pod||""}`);
-    if(r.fpod) lines.push(`FINAL POD: ${r.fpod}`);
-    const dv20m = mu20 ? (parseFloat(r.dv20||0)*(1+mu20/100)).toFixed(2) : (r.dv20||"");
-    const hc40m = mu40 ? (parseFloat(r.hc40||0)*(1+mu40/100)).toFixed(2) : (r.hc40||"");
-    lines.push(`RATES: USD ${dv20m}/20DV (${r.container20Type||""}) | USD ${hc40m}/40HC (${r.container40Type||""})`);
-    if(r.ft) lines.push(`FREE TIME: ${r.ft} days`);
-    if(r.validity) lines.push(`VALID UNTIL: ${fmt(r.validity)}`);
-    if(r.tt) lines.push(`TRANSIT TIME: ${r.tt} days`);
-    if(r.via) lines.push(`ROUTING: ${r.via}`);
-    if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-    const txt = lines.join("
-");
-    try{ await navigator.clipboard.writeText(txt); }catch{ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
-    showCopyToast("RATE COPIED");
-  }
-  if(b.dataset.act==="del"){ if(confirm("DELETE?")){ showLoader("DELETING..."); await deleteDoc(doc(db,"rates",id)); await load(); } }
-});
 
-$("save").onclick=async()=>{
-  showLoader("SAVING..."); const now=new Date().toISOString();
-  await addDoc(collection(db,"rates"),{seq:seqFromDate(new Date()),createdAt:now,updatedAt:now,carrier:upper($("carrier").value),por:upper($("por").value),pol:upper($("pol").value),pod:upper($("pod").value),fpod:upper($("fpod").value),dv20:upper($("dv20").value),hc40:upper($("hc40").value),ft:$("ft").value,validity:$("validity").value,tt:$("tt").value,via:upper($("via").value),remarks:upper($("remarks").value),type:$("rateType").value,container20Type:upper($("container20Type").value),container40Type:upper($("container40Type").value)});
-  clearForm(); await load();
+  if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
+  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
+  if(r.tt) lines.push(`TT: ${r.tt} DAYS`);
+  if(r.via) lines.push(`ROUTING: ${r.via}`);
+  if(r.type){
+    const t = r.type==="V"?"HANDOVER":"SAILING";
+    lines.push(`TYPE: ${t}`);
+  }
+  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
+
+  const text=lines.join("\n");
+  try{await navigator.clipboard.writeText(text)}catch{
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+  showCopyToast("RATE COPIED");
 };
 
-$("update").onclick=async()=>{
-  if(!editId) return alert("SELECT RECORD TO UPDATE"); showLoader("UPDATING...");
-  await updateDoc(doc(db,"rates",editId),{updatedAt:new Date().toISOString(),carrier:upper($("carrier").value),por:upper($("por").value),pol:upper($("pol").value),pod:upper($("pod").value),fpod:upper($("fpod").value),dv20:upper($("dv20").value),hc40:upper($("hc40").value),ft:$("ft").value,validity:$("validity").value,tt:$("tt").value,via:upper($("via").value),remarks:upper($("remarks").value),type:$("rateType").value,container20Type:upper($("container20Type").value),container40Type:upper($("container40Type").value)});
-  clearForm(); await load();
+window.editRate=(id)=>{
+  const r=data.find(x=>x.id===id); if(!r) return;
+  editId=id;
+  setEditorState(`EDITING ${r.seq||"SELECTED RATE"}`);
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value=r[k]||"");
+  $("container20Type").value=r.container20Type||"";
+  $("container40Type").value=r.container40Type||"";
+  $("rateType").value=r.type==="S"?"S":"V";
+};
+window.delRate=async(id)=>{
+  if(!confirm("DELETE THIS RATE?")) return;
+  showLoader("DELETING","REMOVING RECORD");
+  await deleteDoc(doc(db,"rates",id));
+  selectedIds.delete(id);
+  await load();
 };
 
-/* MARKUPS */
 function loadMarkups(){
-  const s20 = localStorage.getItem("mu20");
-  const s40 = localStorage.getItem("mu40");
-  if(s20) { mu20 = parseFloat(s20); $("mu20").value = s20; $("mu20Status").textContent = s20 + "%"; }
-  if(s40) { mu40 = parseFloat(s40); $("mu40").value = s40; $("mu40Status").textContent = s40 + "%"; }
+  const s20 = localStorage.getItem(MU20_KEY);
+  const s40 = localStorage.getItem(MU40_KEY);
+  if(s20){ mu20 = parseFloat(s20)||0; $("mu20").value = s20; $("mu20Status").textContent = mu20 ? `${mu20}%` : "NOT SET"; }
+  if(s40){ mu40 = parseFloat(s40)||0; $("mu40").value = s40; $("mu40Status").textContent = mu40 ? `${mu40}%` : "NOT SET"; }
   updateAppliedMarkupsList();
 }
-
 function updateAppliedMarkupsList(){
-  if(mu20===0 && mu40===0) {
-    $("appliedMarkupsList").innerHTML = '<div style="padding:8px;color:var(--muted);font-size:11px;text-align:center">No markups applied</div>';
+  if(!mu20 && !mu40){
+    $("appliedMarkupsList").innerHTML = '<div style="padding:4px;color:var(--muted);font-size:11px">No markup configured. COPY uses base rates.</div>';
     return;
   }
-  const active = data.filter(r=>!expired(r));
-  let html = '';
-  if(mu20>0) html += `<div class="applied-markup"><span><strong>20DV:</strong> +${mu20}% Applied to ${active.length} active records</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
-  if(mu40>0) html += `<div class="applied-markup"><span><strong>40HC:</strong> +${mu40}% Applied to ${active.length} active records</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
+  let html = "";
+  if(mu20) html += `<div class="applied-markup"><span><strong>20DV:</strong> +${mu20}% (applied only in COPY)</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
+  if(mu40) html += `<div class="applied-markup"><span><strong>40HC:</strong> +${mu40}% (applied only in COPY)</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
   $("appliedMarkupsList").innerHTML = html;
 }
-
-$("saveMarkupsBtn").onclick = () => {
-  const v20 = parseFloat($("mu20").value || 0);
-  const v40 = parseFloat($("mu40").value || 0);
-  if(v20 < 0 || v40 < 0) return alert("MARKUPS CANNOT BE NEGATIVE");
+$("saveMarkupsBtn").onclick=()=>{
+  const v20 = parseFloat($("mu20").value||"0")||0;
+  const v40 = parseFloat($("mu40").value||"0")||0;
+  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
   mu20 = v20; mu40 = v40;
-  localStorage.setItem("mu20", String(v20));
-  localStorage.setItem("mu40", String(v40));
-  $("mu20Status").textContent = v20 ? v20 + "%" : "NOT SET";
-  $("mu40Status").textContent = v40 ? v40 + "%" : "NOT SET";
+  localStorage.setItem(MU20_KEY,String(v20));
+  localStorage.setItem(MU40_KEY,String(v40));
+  $("mu20Status").textContent = v20 ? `${v20}%` : "NOT SET";
+  $("mu40Status").textContent = v40 ? `${v40}%` : "NOT SET";
   updateAppliedMarkupsList();
-  render();
-  showCopyToast("MARKUPS SAVED & APPLIED");
+  showCopyToast("MARKUPS SAVED");
 };
-
-$("clearMarkupsBtn").onclick = () => {
+$("clearMarkupsBtn").onclick=()=>{
   mu20 = 0; mu40 = 0;
   $("mu20").value = ""; $("mu40").value = "";
   $("mu20Status").textContent = "NOT SET";
   $("mu40Status").textContent = "NOT SET";
-  localStorage.removeItem("mu20");
-  localStorage.removeItem("mu40");
+  localStorage.removeItem(MU20_KEY); localStorage.removeItem(MU40_KEY);
   updateAppliedMarkupsList();
-  render();
   showCopyToast("MARKUPS CLEARED");
 };
 
-/* MASS UPLOAD */
 function toCSV(rows){
-  const h=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
+  const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
   const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  return [h.join(","),...rows.map(r=>[esc(r.seq),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),esc(r.ft),esc(isoDate(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)].join(","))].join("
-");
+  return [head.join(","), ...rows.map((r,i)=>[
+    esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),
+    esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),
+    esc(r.ft),esc(isoDate(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)
+  ].join(","))].join("\n");
 }
-function download(name,txt){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"}));a.download=name;a.click();}
-$("exportBtn").onclick=()=>download("fr8x_rates.csv",toCSV(data));
-$("openUploadBtn").onclick=()=>{ $("uploadOverlay").classList.remove("hidden"); renderUpload(); };
-$("closeUploadBtn").onclick=()=>$("uploadOverlay").classList.add("hidden");
-$("downloadTemplateBtn").onclick=()=>download("template.csv",toCSV([{seq:"",carrier:"CARRIER",por:"DEL",pol:"NSA",pod:"JEBEL",fpod:"",dv20:"100",container20Type:"OT",hc40:"200",container40Type:"OG",ft:"2",validity:"2026-04-30",type:"HANDOVER",tt:"7",via:"DIRECT",remarks:""}]));
+function download(name,txt){
+  const a=document.createElement("a");
+  const blob=new Blob([txt],{type:"text/csv;charset=utf-8"});
+  a.href=URL.createObjectURL(blob);
+  a.download=name;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+}
+$("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
+
+function openUpload(){$("uploadOverlay").classList.remove("hidden"); renderUpload()}
+function closeUpload(){$("uploadOverlay").classList.add("hidden")}
+$("openUploadBtn").onclick=openUpload;
+$("closeUploadBtn").onclick=closeUpload;
 $("pickFileBtn").onclick=()=>$("fileInput").click();
-function parseCSVLine(line,sep=","){const out=[];let cur="",inQ=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++}else inQ=!inQ}else if(c===sep&&!inQ){out.push(cur);cur=""}else cur+=c}out.push(cur);return out.map(v=>v.trim())}
-function parseCSV(txt){const l=txt.split(/
-?
-/).filter(x=>x.trim()!=="");if(!l.length)return[];const s=l[0].includes("	")?"	":",";const h=parseCSVLine(l[0],s).map(x=>x.toLowerCase());return l.slice(1).map(line=>{const c=parseCSVLine(line,s);const o={};h.forEach((x,i)=>o[x]=c[i]??"");return o})}
-$("fileInput").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;showLoader("READING...");const txt=await f.text();uploadRows=parseCSV(txt).map(r=>({seq:r.seq||r.sequence||"",carrier:upper(r.carrier),por:upper(r.por),pol:upper(r.pol),pod:upper(r.pod),fpod:upper(r.fpod),dv20:upper(r.dv20||r["20dv"]||""),container20Type:upper(r["20type"]||r.container20type||""),hc40:upper(r.hc40||r["40hc"]||""),container40Type:upper(r["40type"]||r.container40type||""),ft:r["f/t"]||r.ft||"",validity:isoDate(r.validity||r.date||""),type:upper(r.type||"HANDOVER"),via:upper(r.routing||r.via||""),remarks:upper(r.remarks||"")}));selectedUploadRows.clear();renderUpload();hideLoader()});
-function renderUpload(){$("uploadBody").innerHTML=uploadRows.map((r,i)=>`<tr><td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td><td>${escapeHtml(r.seq)}</td><td>${escapeHtml(r.carrier)}</td><td>${escapeHtml(r.por)}</td><td>${escapeHtml(r.pol)}</td><td>${escapeHtml(r.pod)}</td><td>${escapeHtml(r.fpod)}</td><td>${escapeHtml(r.dv20)}</td><td>${escapeHtml(r.hc40)}</td><td>${escapeHtml(r.ft)}</td><td>${escapeHtml(fmt(r.validity))}</td><td>${escapeHtml(r.type)}</td><td>${escapeHtml(r.tt)}</td><td>${escapeHtml(r.via)}</td></tr>`).join("")}
-$("selectAllUpload").addEventListener("change",e=>{if(e.target.checked)uploadRows.forEach((_,i)=>selectedUploadRows.add(i));else selectedUploadRows.clear();renderUpload()});
-$("uploadBody").addEventListener("change",e=>{const cb=e.target.closest("input[data-ui]");if(!cb)return;const i=Number(cb.dataset.ui);if(cb.checked)selectedUploadRows.add(i);else selectedUploadRows.delete(i)});
-$("applyImportBtn").onclick=async()=>{const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;if(!rows.length)return alert("NO DATA");showLoader("IMPORTING...");for(const r of rows){if(!r.carrier&&!r.pod&&!r.pol)continue;await addDoc(collection(db,"rates"),{seq:r.seq||seqFromDate(new Date()),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),carrier:r.carrier,por:r.por,pol:r.pol,pod:r.pod,fpod:r.fpod,dv20:r.dv20,container20Type:r.container20Type,hc40:r.hc40,container40Type:r.container40Type,ft:r.ft,validity:r.validity,type:r.type,tt:r.tt,via:r.via,remarks:r.remarks});} $("uploadOverlay").classList.add("hidden"); await load()};
-$("exportSelectedBtn").onclick=()=>download("selected_export.csv",toCSV(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows));
+
+function parseCSVLine(line,sep=","){
+  const out=[]; let cur="", inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){
+      if(inQuotes && line[i+1]==='"'){cur+='"'; i++} else inQuotes=!inQuotes;
+    } else if(ch===sep && !inQuotes){ out.push(cur); cur="" } else cur+=ch;
+  }
+  out.push(cur);
+  return out.map(v=>v.trim());
+}
+function parseCSV(txt){
+  const lines=txt.split(/\r?\n/).filter(line=>line.trim()!=="");
+  if(!lines.length) return [];
+  const sep=lines[0].includes("\t")?"\t":",";
+  const headers=parseCSVLine(lines[0],sep).map(s=>s.trim().toLowerCase());
+  return lines.slice(1).map(line=>{
+    const cols=parseCSVLine(line,sep);
+    const o={};
+    headers.forEach((h,i)=>o[h]=(cols[i]??"").trim());
+    return o;
+  });
+}
+function normalizeUploadRow(r){
+  const rawType = upper(r.type || r.vtype || r.stype || "");
+  const typeCode = rawType==="S" || rawType==="SAILING" ? "S" : "V";
+  return {
+    seq:r.seq||r.sequence||"",
+    carrier:upper(r.carrier),
+    por:upper(r.por),
+    pol:upper(r.pol),
+    pod:upper(r.pod),
+    fpod:upper(r.fpod),
+    dv20:calc(r.dv20||r["20dv"]||""),
+    container20Type:upper(r["20type"]||r.container20type||""),
+    hc40:calc(r.hc40||r["40hc"]||""),
+    container40Type:upper(r["40type"]||r.container40type||""),
+    ft:r["f/t"]||r.ft||"",
+    validity:isoDate(r.validity||r.date||""),
+    type:typeCode,
+    tt:r.tt || r["transit time"] || "",
+    via:upper(r.routing || r.via || r.route || ""),
+    remarks:upper(r.remarks||"")
+  };
+}
+function renderUpload(){
+  $("uploadBody").innerHTML=uploadRows.map((r,i)=>{
+    const displayType = r.type==="V"?"HANDOVER":r.type==="S"?"SAILING":(r.type||"");
+    return `<tr>
+      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
+      <td>${escapeHtml(r.seq||i+1)}</td>
+      <td>${escapeHtml(r.carrier||"")}</td>
+      <td>${escapeHtml(r.por||"")}</td>
+      <td>${escapeHtml(r.pol||"")}</td>
+      <td>${escapeHtml(r.pod||"")}</td>
+      <td>${escapeHtml(r.fpod||"")}</td>
+      <td>${escapeHtml(r.dv20||"")}</td>
+      <td>${escapeHtml(r.hc40||"")}</td>
+      <td>${escapeHtml(r.ft||"")}</td>
+      <td>${escapeHtml(fmtDate(r.validity))}</td>
+      <td>${escapeHtml(displayType)}</td>
+      <td>${escapeHtml(r.tt||"")}</td>
+      <td>${escapeHtml(r.via||"")}</td>
+      <td>${escapeHtml(r.remarks||"")}</td>
+    </tr>`;
+  }).join("");
+}
+$("fileInput").addEventListener("change",async e=>{
+  const f=e.target.files?.[0]; if(!f) return;
+  showLoader("IMPORTING","READING FILE");
+  const txt=await f.text();
+  uploadRows=parseCSV(txt).map(normalizeUploadRow);
+  selectedUploadRows.clear();
+  renderUpload();
+  hideLoader();
+});
+$("selectAllUpload").addEventListener("change",e=>{
+  if(e.target.checked) uploadRows.forEach((_,i)=>selectedUploadRows.add(i));
+  else selectedUploadRows.clear();
+  renderUpload();
+});
+$("uploadBody").addEventListener("change",e=>{
+  const cb=e.target.closest("input[data-ui]"); if(!cb) return;
+  const i=Number(cb.dataset.ui);
+  if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
+});
+$("exportSelectedBtn").onclick=()=>{
+  const rows=(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows());
+  download("fr8x_selected_export.csv",toCSV(rows));
+};
+$("applyImportBtn").onclick=async()=>{
+  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
+  if(!rows.length) return alert("NO DATA TO IMPORT.");
+  showLoader("IMPORTING","ADDING RECORDS");
+  for(const r of rows){
+    if(!r.carrier&&!r.pod&&!r.fpod&&!r.pol) continue;
+    const now=new Date().toISOString();
+    await addDoc(collection(db,"rates"),{
+      seq:r.seq||generateSeq(), createdAt:now, updatedAt:now,
+      carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod,
+      dv20:r.dv20, container20Type:r.container20Type,
+      hc40:r.hc40, container40Type:r.container40Type,
+      ft:r.ft, validity:r.validity, type:r.type, tt:r.tt, via:r.via, remarks:r.remarks,
+      localCharges:[], charges20dv:[], charges40hc:[]
+    });
+  }
+  closeUpload();
+  await load();
+};
+
+$("globalSearch").addEventListener("input",render);
+document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{
+  filterMap[e.target.dataset.col]=e.target.value; render();
+}));
+document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
+document.addEventListener("click",e=>{
+  const btn=e.target.closest("button[data-action]"); if(!btn) return;
+  const id=btn.dataset.id;
+  if(btn.dataset.action==="copy") window.copyRate(id);
+  if(btn.dataset.action==="duplicate") duplicateRate(id);
+  if(btn.dataset.action==="edit") window.editRate(id);
+  if(btn.dataset.action==="delete") window.delRate(id);
+});
+document.addEventListener("change",e=>{
+  const cb=e.target.closest(".row-check[data-id]"); if(!cb) return;
+  const id=cb.dataset.id;
+  if(cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+  document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{if(el!==cb) el.checked=cb.checked});
+  updateSelectedInfo();
+});
+$("selectAllRows").addEventListener("change",e=>{
+  document.querySelectorAll("#tbody .row-check[data-id]").forEach(cb=>{
+    cb.checked=e.target.checked;
+    if(e.target.checked) selectedIds.add(cb.dataset.id); else selectedIds.delete(cb.dataset.id);
+  });
+  updateSelectedInfo();
+});
+
+setEditorState("CREATE OR UPDATE RATE");
+if(sessionValid()) showApp();
 </script>
 </body>
 </html>
