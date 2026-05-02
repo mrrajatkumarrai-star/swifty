@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>FR8X RATES</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4fb;--surface:#fff;--surface-2:#f8fafc;--border:#dbe3ef;--text:#142033;--muted:#66758b;
+  --primary:#2563eb;--primary-2:#1d4ed8;--success:#059669;--danger:#dc2626;--warning:#d97706;
+  --shadow:0 10px 30px rgba(15,23,42,.09);--shadow-soft:0 4px 16px rgba(15,23,42,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;font-family:Inter,Calibri,"Segoe UI",system-ui,sans-serif;font-size:13px;margin:0;background:var(--bg);color:var(--text)}
+.hidden{display:none!important}
+.header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--shadow-soft)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-logo{width:36px;height:36px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;letter-spacing:.03em}
+.brand-name{font-weight:900;font-size:17px;letter-spacing:.04em}
+.brand-tag{font-size:10px;color:var(--muted);font-weight:700;margin-top:1px}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{padding:5px 10px;border-radius:999px;background:#eef4ff;color:var(--primary);border:1px solid #d8e5ff;font-weight:800;font-size:11px}
+.badge.green{background:#ecfdf5;color:var(--success);border-color:#a7f3d0}
+.badge.red{background:#fef2f2;color:var(--danger);border-color:#fecaca}
+.badge.orange{background:#fff7ed;color:var(--warning);border-color:#fed7aa}
+.hero{padding:18px 20px 0}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.04em}
+.stat-value{font-size:22px;font-weight:900;letter-spacing:-.02em}
+.stat-value.green{color:var(--success)}.stat-value.red{color:var(--danger)}.stat-value.blue{color:var(--primary)}
+.controls{padding:0 20px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px}
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-wrap input{padding:10px 14px 10px 40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);width:100%;font-size:13px;outline:none;transition:.2s}
+.search-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.search-icon{position:absolute;left:12px;color:var(--muted);font-size:16px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-weight:800;font-size:12px;cursor:pointer;transition:.16s;outline:none}
+.tab:hover{border-color:var(--primary);color:var(--primary)}
+.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.tab.active.red{background:var(--danger);border-color:var(--danger)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
+.filter-pill{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;transition:.15s}
+.filter-pill:hover{border-color:var(--primary);color:var(--primary)}
+.filter-pill.active{border-color:var(--primary);color:var(--primary);background:#eef4ff}
+.rates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;padding:0 20px 28px}
+.rate-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);overflow:hidden;transition:.2s ease;cursor:default}
+.rate-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.rate-card.expired{border-color:#fecaca;opacity:.85}
+.rate-card.expired .rc-header{background:linear-gradient(135deg,#fef2f2,#fff)}
+.rc-header{background:linear-gradient(135deg,#eef4ff,#f8fafc);padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.rc-carrier{font-size:14px;font-weight:900;letter-spacing:.02em}
+.rc-route{font-size:11px;color:var(--muted);margin-top:2px;font-weight:700}
+.rc-badges{display:flex;gap:5px;align-items:flex-start;flex-wrap:wrap}
+.rc-body{padding:14px 16px}
+.rc-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.rc-rate-box{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.rc-rate-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin-bottom:4px}
+.rc-rate-val{font-size:18px;font-weight:900;color:var(--primary);line-height:1}
+.rc-rate-type{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px}
+.rc-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.rc-meta-item{display:flex;flex-direction:column;gap:2px}
+.rc-meta-k{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.rc-meta-v{font-size:12px;font-weight:700;word-break:break-word}
+.rc-remarks{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:11px;color:var(--muted);line-height:1.5}
+.rc-remarks strong{color:var(--text);font-weight:800}
+.rc-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.rc-seq{font-size:10px;color:var(--muted);font-weight:700}
+.rc-validity{font-size:11px;font-weight:800}
+.rc-validity.green{color:var(--success)}.rc-validity.orange{color:var(--warning)}.rc-validity.red{color:var(--danger)}
+.copy-btn{min-height:32px;padding:0 12px;border-radius:9px;border:1.5px solid var(--primary);background:#eef4ff;color:var(--primary);font-weight:800;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.16s}
+.copy-btn:hover{background:var(--primary);color:#fff}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:.35}
+.empty-text{font-size:15px;font-weight:800;margin-bottom:4px}
+.empty-sub{font-size:12px}
+.overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;background:rgba(15,23,42,.25);backdrop-filter:blur(4px);padding:0}
+@media(min-width:600px){.overlay{align-items:center;padding:20px}}
+.modal{background:var(--surface);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:22px 20px 28px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow)}
+@media(min-width:600px){.modal{border-radius:22px}}
+.modal-handle{width:48px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}
+.modal-carrier{font-size:17px;font-weight:900}.modal-route{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}
+.close-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.modal-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.modal-rate-box{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px}
+.modal-rate-label{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px}
+.modal-rate-val{font-size:24px;font-weight:900;color:var(--primary)}
+.modal-rate-type{font-size:11px;color:var(--muted);font-weight:700;margin-top:3px}
+.modal-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mf{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px}
+.mf-k{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin-bottom:3px}
+.mf-v{font-size:13px;font-weight:800;word-break:break-word}
+.modal-remarks{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;line-height:1.55;margin-bottom:16px}
+.modal-copy-btn{width:100%;min-height:44px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s}
+.modal-copy-btn:hover{background:var(--primary-2)}
+.copy-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:11px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,.25);font-weight:800;z-index:1000;animation:toastIn .25s ease;white-space:nowrap}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+.loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.15);backdrop-filter:blur(4px)}
+.loader.show{display:flex}.loader-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 28px;text-align:center;box-shadow:var(--shadow)}.spinner{width:38px;height:38px;margin:0 auto 10px;border-radius:50%;border:3px solid rgba(37,99,235,.14);border-top-color:var(--primary);animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){.rates-grid{grid-template-columns:1fr;padding:0 12px 24px}.controls{padding:0 12px}.filters{padding:0 12px 10px}.hero{padding:14px 12px 0}.header{padding:10px 14px}.modal-rates,.modal-fields,.rc-rates,.rc-meta{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="loader" class="loader"><div class="loader-box"><div class="spinner"></div><div style="font-weight:900;font-size:14px">LOADING RATES</div><div style="font-size:11px;color:var(--muted);margin-top:4px">PLEASE WAIT</div></div></div>
+
+<div class="header">
+  <div class="brand">
+    <div class="brand-logo">FR</div>
+    <div><div class="brand-name">FR8X</div><div class="brand-tag">LIVE FREIGHT RATES</div></div>
+  </div>
+  <div class="header-right">
+    <span class="badge green" id="hdrActive">— ACTIVE</span>
+    <span class="badge red" id="hdrExpired">— EXPIRED</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="stats-row" id="statsRow"></div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap"><i class="bi bi-search search-icon"></i><input id="searchInput" placeholder="Search carrier, origin, destination, routing…"></div>
+  <div class="tabs">
+    <button class="tab active" data-view="active" id="tabActive">ACTIVE RATES</button>
+    <button class="tab" data-view="expired" id="tabExpired" style="color:var(--danger);border-color:#fecaca">EXPIRED RATES</button>
+    <button class="tab" data-view="all" id="tabAll">ALL RATES</button>
+  </div>
+</div>
+
+<div class="filters" id="filterPills"></div>
+<div class="rates-grid" id="ratesGrid"></div>
+
+<div id="rateModal" class="overlay hidden">
+  <div class="modal" id="modalBox">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <div><div class="modal-carrier" id="mCarrier"></div><div class="modal-route" id="mRoute"></div></div>
+      <div class="close-btn" id="closeModal"><i class="bi bi-x-lg" style="font-size:13px"></i></div>
+    </div>
+    <div class="modal-rates" id="mRates"></div>
+    <div class="modal-fields" id="mFields"></div>
+    <div class="modal-remarks" id="mRemarks" style="display:none"></div>
+    <button class="modal-copy-btn" id="mCopyBtn"><i class="bi bi-clipboard"></i> COPY RATE</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+const app = initializeApp({projectId:"swifty-52e05"});
+const db  = getFirestore(app);
+const $   = id => document.getElementById(id);
+
+const MU20_KEY = "fr8x_mu20", MU40_KEY = "fr8x_mu40";
+let mu20 = 0, mu40 = 0;
+function loadMarkups(){
+  const s20 = localStorage.getItem(MU20_KEY);
+  const s40 = localStorage.getItem(MU40_KEY);
+  if(s20) mu20 = parseFloat(s20)||0;
+  if(s40) mu40 = parseFloat(s40)||0;
+}
+
+let allData = [], viewMode = "active", searchQ = "", activeFilter = "";
+let currentRate = null;
+
+function escHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function fmtDate(d){if(!d)return ""; const dt=new Date(d); if(isNaN(dt))return String(d).toUpperCase(); return dt.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase()}
+function isoDate(d){if(!d)return ""; const dt=new Date(d); if(isNaN(dt))return ""; return dt.toISOString().slice(0,10)}
+function expired(r){const d=isoDate(r.validity); if(!d)return false; const t=new Date(); t.setHours(0,0,0,0); return new Date(d+"T00:00:00")<t}
+function daysLeft(r){const d=isoDate(r.validity); if(!d)return null; const t=new Date(); t.setHours(0,0,0,0); const diff=Math.round((new Date(d+"T00:00:00")-t)/86400000); return diff}
+function truncate(v="",n=40){const s=String(v); return s.length>n?s.slice(0,n-1)+"…":s}
+function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
+function applyMarkup(base, muPct){ return base ? Math.round(base * (1 + muPct/100)) : 0 }
+function rateDisplay(rawVal, muPct){
+  const base = parseFloat(rawVal||"") || 0;
+  if(!base) return null;
+  return muPct ? applyMarkup(base, muPct) : Math.round(base);
+}
+function showLoader(){$("loader").classList.add("show")}
+function hideLoader(){$("loader").classList.remove("show")}
+
+async function loadRates(){
+  showLoader();
+  const snap = await getDocs(collection(db,"rates"));
+  allData = [];
+  snap.forEach(d=>allData.push({id:d.id,...d.data()}));
+  allData.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+  buildStats();
+  buildFilterPills();
+  render();
+  hideLoader();
+}
+
+function buildStats(){
+  const active = allData.filter(r=>!expired(r));
+  const exp    = allData.filter(r=>expired(r));
+  $("hdrActive").textContent  = `${active.length} ACTIVE`;
+  $("hdrExpired").textContent = `${exp.length} EXPIRED`;
+  const carriers = new Set(allData.map(r=>r.carrier||"").filter(Boolean));
+  const dests    = new Set(allData.map(r=>r.pod||"").filter(Boolean));
+  $("statsRow").innerHTML = [
+    {label:"ACTIVE RATES", val:active.length, cls:"green"},
+    {label:"EXPIRED RATES", val:exp.length, cls:"red"},
+    {label:"CARRIERS", val:carriers.size, cls:"blue"},
+    {label:"DESTINATIONS", val:dests.size, cls:"blue"},
+  ].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.val}</div></div>`).join("");
+}
+
+function buildFilterPills(){
+  const carriers = [...new Set(allData.map(r=>r.carrier||"").filter(Boolean))].sort();
+  $("filterPills").innerHTML = [`<button class="filter-pill ${!activeFilter?'active':''}" data-filter="">ALL CARRIERS</button>`,
+    ...carriers.map(c=>`<button class="filter-pill ${activeFilter===c?'active':''}" data-filter="${escHtml(c)}">${escHtml(c)}</button>`)
+  ].join("");
+}
+
+function filteredRows(){
+  let rows = [...allData];
+  if(viewMode==="active")  rows = rows.filter(r=>!expired(r));
+  if(viewMode==="expired") rows = rows.filter(r=>expired(r));
+  if(activeFilter) rows = rows.filter(r=>(r.carrier||"")=== activeFilter);
+  if(searchQ){
+    const q = searchQ.toUpperCase();
+    rows = rows.filter(r=>JSON.stringify(r).toUpperCase().includes(q));
+  }
+  return rows;
+}
+
+function validityClass(r){
+  const dl = daysLeft(r);
+  if(dl === null) return "";
+  if(dl < 0) return "red";
+  if(dl <= 7) return "orange";
+  return "green";
+}
+function validityLabel(r){
+  const dl = daysLeft(r);
+  if(dl === null) return "";
+  if(dl < 0)  return `EXPIRED ${Math.abs(dl)}D AGO`;
+  if(dl === 0) return "EXPIRES TODAY";
+  return `${dl} DAYS LEFT`;
+}
+
+function rateBox(label, rawVal, muPct, containerType){
+  const val = rateDisplay(rawVal, muPct);
+  if(!val) return `<div class="rc-rate-box"><div class="rc-rate-label">${label}</div><div class="rc-rate-val" style="font-size:13px;color:var(--muted)">—</div></div>`;
+  return `<div class="rc-rate-box"><div class="rc-rate-label">${label}</div><div class="rc-rate-val">USD ${val}</div><div class="rc-rate-type">${containerType||label}</div></div>`;
+}
+
+function renderCard(r){
+  const isExp = expired(r);
+  const vClass = validityClass(r);
+  const vLabel = validityLabel(r);
+  const route = [r.por||r.pol||"", r.pod||""].filter(Boolean).join(" → ");
+  const fpod  = r.fpod ? ` → ${r.fpod}` : "";
+  const meta = [
+    r.ft  ? `<div class="rc-meta-item"><div class="rc-meta-k">F/T</div><div class="rc-meta-v">${escHtml(r.ft)} DAYS</div></div>` : "",
+    r.tt  ? `<div class="rc-meta-item"><div class="rc-meta-k">TT</div><div class="rc-meta-v">${escHtml(r.tt)} DAYS</div></div>` : "",
+    r.via ? `<div class="rc-meta-item"><div class="rc-meta-k">ROUTING</div><div class="rc-meta-v">${escHtml(truncate(r.via,24))}</div></div>` : "",
+    r.type? `<div class="rc-meta-item"><div class="rc-meta-k">TYPE</div><div class="rc-meta-v">${escHtml(displayType(r.type))}</div></div>` : "",
+  ].filter(Boolean).join("");
+
+  return `
+  <div class="rate-card ${isExp?'expired':''}" data-id="${r.id}">
+    <div class="rc-header">
+      <div>
+        <div class="rc-carrier">${escHtml(r.carrier||"UNKNOWN CARRIER")}</div>
+        <div class="rc-route">${escHtml(route+fpod)}</div>
+      </div>
+      <div class="rc-badges">
+        ${isExp?'<span class="badge red">EXPIRED</span>':'<span class="badge green">ACTIVE</span>'}
+        ${r.type?`<span class="badge orange">${escHtml(displayType(r.type))}</span>`:''}
+      </div>
+    </div>
+    <div class="rc-body">
+      <div class="rc-rates">
+        ${rateBox("20DV", r.dv20, mu20, r.container20Type||"20DV")}
+        ${rateBox("40HC", r.hc40, mu40, r.container40Type||"40HC")}
+      </div>
+      ${meta?`<div class="rc-meta">${meta}</div>`:''}
+      ${r.remarks?`<div class="rc-remarks"><strong>NOTE:</strong> ${escHtml(truncate(r.remarks,90))}</div>`:''}
+    </div>
+    <div class="rc-footer">
+      <div>
+        <div class="rc-seq">SEQ ${escHtml(r.seq||r.id.slice(-8).toUpperCase())}</div>
+        ${r.validity?`<div class="rc-validity ${vClass}">${escHtml(fmtDate(r.validity))} · ${vLabel}</div>`:''}
+      </div>
+      <button class="copy-btn" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const rows = filteredRows();
+  if(!rows.length){
+    $("ratesGrid").innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><i class="bi bi-inbox"></i></div><div class="empty-text">NO RATES FOUND</div><div class="empty-sub">Try adjusting search or filter</div></div>`;
+    return;
+  }
+  $("ratesGrid").innerHTML = rows.map(renderCard).join("");
+}
+
+function openModal(id){
+  const r = allData.find(x=>x.id===id); if(!r) return;
+  currentRate = r;
+  $("mCarrier").textContent = r.carrier||"UNKNOWN CARRIER";
+  const route = [r.por||r.pol||"", r.pod||""].filter(Boolean).join(" → ");
+  $("mRoute").textContent = route + (r.fpod?` → ${r.fpod}`:"");
+
+  const v20 = rateDisplay(r.dv20, mu20), v40 = rateDisplay(r.hc40, mu40);
+  $("mRates").innerHTML = `
+    <div class="modal-rate-box"><div class="modal-rate-label">20DV ${r.container20Type?`(${r.container20Type})`:""}</div>
+      <div class="modal-rate-val">${v20?`USD ${v20}`:"—"}</div>
+      <div class="modal-rate-type">PER CONTAINER</div></div>
+    <div class="modal-rate-box"><div class="modal-rate-label">40HC ${r.container40Type?`(${r.container40Type})`:""}</div>
+      <div class="modal-rate-val">${v40?`USD ${v40}`:"—"}</div>
+      <div class="modal-rate-type">PER CONTAINER</div></div>`;
+
+  const fields = [
+    ["CARRIER",r.carrier],["POR",r.por],["POL",r.pol],["POD",r.pod],["FPOD",r.fpod],
+    ["F/T",r.ft?`${r.ft} DAYS`:null],["TT",r.tt?`${r.tt} DAYS`:null],
+    ["ROUTING",r.via],["TYPE",displayType(r.type)],["VALIDITY",fmtDate(r.validity)],
+  ].filter(([k,v])=>v);
+  $("mFields").innerHTML = fields.map(([k,v])=>`<div class="mf"><div class="mf-k">${escHtml(k)}</div><div class="mf-v">${escHtml(v)}</div></div>`).join("");
+
+  const rem = $("mRemarks");
+  if(r.remarks){rem.style.display="block"; rem.innerHTML=`<strong style="font-weight:800">REMARKS:</strong> ${escHtml(r.remarks)}`}
+  else rem.style.display="none";
+
+  $("rateModal").classList.remove("hidden");
+  document.body.style.overflow="hidden";
+}
+function closeModalFn(){$("rateModal").classList.add("hidden"); document.body.style.overflow=""; currentRate=null}
+$("closeModal").onclick=closeModalFn;
+$("rateModal").addEventListener("click",e=>{if(e.target.id==="rateModal") closeModalFn()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape") closeModalFn()});
+
+function buildCopyText(r){
+  const lines = [];
+  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
+  if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pol) lines.push(`POL: ${r.pol}`);
+  if(r.pod) lines.push(`POD: ${r.pod}`);
+  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
+  const from = r.pol||r.por||""; const to = r.pod||"";
+  const v20 = rateDisplay(r.dv20, mu20); const v40 = rateDisplay(r.hc40, mu40);
+  const dv20Type = r.container20Type?` (${r.container20Type})`:"";
+  const hc40Type = r.container40Type?` (${r.container40Type})`:"";
+  const parts = [v20?`USD ${v20}/20DV${dv20Type}`:"", v40?`USD ${v40}/40HC${hc40Type}`:""].filter(Boolean);
+  if(parts.length) lines.push(`O/F FM ${from} TO ${to} @ ${parts.join(" & ")}`);
+  if(r.ft)       lines.push(`F/T: ${r.ft} DAYS`);
+  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
+  if(r.tt)       lines.push(`TT: ${r.tt} DAYS`);
+  if(r.via)      lines.push(`ROUTING: ${r.via}`);
+  if(r.type)     lines.push(`TYPE: ${displayType(r.type)}`);
+  if(r.remarks)  lines.push(`REMARKS: ${r.remarks}`);
+  return lines.join("\n");
+}
+async function doCopy(id){
+  const r = allData.find(x=>x.id===id); if(!r) return;
+  const text = buildCopyText(r);
+  try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove()}
+  const t=document.createElement("div"); t.className="copy-toast"; t.innerHTML=`<i class="bi bi-check2-circle"></i>&nbsp; RATE COPIED`; document.body.appendChild(t); setTimeout(()=>t.remove(),2000);
+}
+$("mCopyBtn").onclick=()=>{if(currentRate) doCopy(currentRate.id); closeModalFn()};
+
+document.addEventListener("click",e=>{
+  const copyBtn = e.target.closest(".copy-btn[data-id]");
+  if(copyBtn){e.stopPropagation(); doCopy(copyBtn.dataset.id); return}
+  const card = e.target.closest(".rate-card[data-id]");
+  if(card) openModal(card.dataset.id);
+  const fp = e.target.closest(".filter-pill[data-filter]");
+  if(fp){activeFilter = fp.dataset.filter; buildFilterPills(); render(); return}
+  const tab = e.target.closest(".tab[data-view]");
+  if(tab){viewMode=tab.dataset.view; document.querySelectorAll(".tab").forEach(b=>{b.classList.remove("active")}); tab.classList.add("active"); render()}
+});
+$("searchInput").addEventListener("input",e=>{searchQ=e.target.value; render()});
+
+loadMarkups();
+loadRates();
+</script>
+</body>
+</html>
