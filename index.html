@@ -7,19 +7,22 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <style>
 :root{
-  --bg:#ffffff;
+  --bg:#f4f6fb;
   --surface:#ffffff;
-  --surface-2:#f5f5f5;
-  --border:#dde1e6;
-  --text:#111111;
-  --muted:#6b7280;
-  --primary:#111111;
-  --danger:#b91c1c;
-  --warning:#b45309;
+  --surface-2:#f8fafc;
+  --border:#dbe3ef;
+  --text:#0f172a;
+  --muted:#64748b;
+  --primary:#0f172a;
+  --primary-2:#1e293b;
+  --success:#059669;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
   --radius:16px;
   --radius-sm:10px;
   --header-h:68px;
-  --editor-w:340px;
+  --editor-w:350px;
 }
 *{box-sizing:border-box}
 html,body{
@@ -44,7 +47,8 @@ html,body{
   align-items:center;
   gap:12px;
   padding:10px 16px;
-  background:#ffffff;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border);
 }
 .brand{
@@ -62,9 +66,10 @@ html,body{
   padding:5px 10px;
   border-radius:999px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   font-size:11px;
   font-weight:800;
+  box-shadow:0 1px 0 rgba(15,23,42,.03);
 }
 
 /* LAYOUT */
@@ -85,7 +90,7 @@ html,body{
   padding:8px 10px;
   border-radius:12px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
 }
 .note{
   color:var(--muted);
@@ -102,15 +107,15 @@ html,body{
   min-height:30px;
   border-radius:9px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   font-size:11px;
   font-weight:800;
   padding:0 10px;
 }
 .section-tabs button.active{
-  background:#111111;
-  color:#ffffff;
-  border-color:#111111;
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
 }
 
 /* INPUTS / BUTTONS */
@@ -120,7 +125,7 @@ input,select,textarea{
   padding:6px 8px;
   border-radius:var(--radius-sm);
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   color:var(--text);
   font-size:12px;
   outline:none;
@@ -130,14 +135,14 @@ textarea{
   resize:vertical;
 }
 input:focus,select:focus,textarea:focus{
-  border-color:#111111;
+  border-color:var(--primary);
+  box-shadow:0 0 0 2px rgba(15,23,42,.08);
 }
-
 button{
   min-height:30px;
   border-radius:9px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   color:var(--text);
   font-size:12px;
   font-weight:800;
@@ -149,11 +154,22 @@ button{
   gap:6px;
 }
 button:disabled{opacity:.6;cursor:not-allowed}
-.primary{background:#111111;color:#ffffff;border-color:#111111}
-.success{background:#111111;color:#ffffff;border-color:#111111}
-.danger{background:var(--danger);color:#ffffff;border-color:#danger}
-.warning{background:#b45309;color:#ffffff;border-color:#b45309}
-.ghost{background:#ffffff;color:var(--text)}
+.primary,.success{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+.danger{
+  background:var(--danger);
+  color:#fff;
+  border-color:var(--danger);
+}
+.warning{
+  background:var(--warning);
+  color:#fff;
+  border-color:var(--warning);
+}
+.ghost{background:#fff;color:var(--text)}
 .icon-only{width:32px;height:32px;padding:0}
 .icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px}
 
@@ -165,13 +181,12 @@ button:disabled{opacity:.6;cursor:not-allowed}
   align-items:start;
 }
 .panel{
-  background:#ffffff;
+  background:#fff;
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:12px;
+  box-shadow:var(--shadow);
 }
-
-/* EDITOR PANEL */
 #editorPanel{
   position:sticky;
   top:calc(var(--header-h) + 8px);
@@ -213,7 +228,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
   overflow:auto;
   border-radius:12px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   max-height:72vh;
 }
 table{
@@ -246,12 +261,12 @@ th{
   position:sticky;
   top:0;
   z-index:5;
-  background:#ffffff;
+  background:#fff;
   font-weight:900;
 }
 .filter-row th{
   top:30px;
-  background:#f5f5f5;
+  background:#f8fafc;
   z-index:4;
   padding:4px;
 }
@@ -260,7 +275,7 @@ th{
   padding:3px 5px;
   font-size:11px;
 }
-tbody tr:hover{background:#f3f4f6}
+tbody tr:hover{background:#f8fafc}
 .actions{
   display:flex;
   gap:3px;
@@ -269,7 +284,7 @@ tbody tr:hover{background:#f3f4f6}
 .row-check{
   width:14px;
   height:14px;
-  accent-color:#111111;
+  accent-color:var(--primary);
 }
 
 /* SECTION VISIBILITY */
@@ -284,7 +299,8 @@ tbody tr:hover{background:#f3f4f6}
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.18);
+  background:rgba(15,23,42,.18);
+  backdrop-filter:blur(4px);
   padding:16px;
 }
 .card{
@@ -294,7 +310,8 @@ tbody tr:hover{background:#f3f4f6}
   padding:16px;
   border-radius:18px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
+  box-shadow:var(--shadow);
 }
 .card.narrow{
   width:min(520px,calc(100% - 24px));
@@ -335,7 +352,8 @@ tbody tr:hover{background:#f3f4f6}
   display:none;
   align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.2);
+  background:rgba(15,23,42,.18);
+  backdrop-filter:blur(4px);
 }
 .loader.show{display:flex}
 .loader-box{
@@ -343,7 +361,7 @@ tbody tr:hover{background:#f3f4f6}
   padding:14px 16px;
   border-radius:14px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   text-align:center;
 }
 .spinner{
@@ -351,8 +369,8 @@ tbody tr:hover{background:#f3f4f6}
   height:34px;
   margin:0 auto 8px;
   border-radius:50%;
-  border:3px solid #e5e7eb;
-  border-top-color:#111111;
+  border:3px solid rgba(15,23,42,.12);
+  border-top-color:var(--primary);
   animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -362,13 +380,14 @@ tbody tr:hover{background:#f3f4f6}
   position:fixed;
   bottom:16px;
   right:16px;
-  background:#111111;
-  color:#ffffff;
+  background:var(--primary);
+  color:#fff;
   padding:8px 10px;
   border-radius:10px;
   font-size:12px;
   font-weight:800;
   z-index:1200;
+  box-shadow:0 12px 24px rgba(15,23,42,.18);
 }
 
 /* GLOBAL POPUP */
@@ -377,8 +396,8 @@ tbody tr:hover{background:#f3f4f6}
   z-index:1200;
   min-width:180px;
   max-width:360px;
-  background:#ffffff;
-  color:#111111;
+  background:#fff;
+  color:var(--text);
   border:1px solid var(--border);
   border-radius:10px;
   padding:8px 10px;
@@ -414,7 +433,8 @@ tbody tr:hover{background:#f3f4f6}
   border:1px solid var(--border);
   border-radius:14px;
   padding:10px;
-  background:#ffffff;
+  background:#fff;
+  box-shadow:var(--shadow);
 }
 .mobile-card-head{
   display:flex;
@@ -456,12 +476,12 @@ tbody tr:hover{background:#f3f4f6}
 }
 .mobile-actions button{flex:1}
 
-/* DIMENSIONS: cards in rows (single column) */
+/* DIMENSIONS */
 .info-strip{
   padding:10px;
   border-radius:12px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   font-size:11px;
   line-height:1.45;
 }
@@ -475,7 +495,7 @@ tbody tr:hover{background:#f3f4f6}
   border-radius:14px;
   border:1px solid var(--border);
   padding:10px;
-  background:#ffffff;
+  background:#fff;
 }
 .dim-card-title{
   font-size:12px;
@@ -516,14 +536,14 @@ tbody tr:hover{background:#f3f4f6}
   border-radius:12px;
   border:1px solid var(--border);
   padding:10px;
-  background:#ffffff;
+  background:#fff;
   margin-bottom:8px;
 }
 .markup-row{
   display:flex;
   align-items:center;
-  gap:6px;
-  margin-bottom:6px;
+  gap:8px;
+  margin-bottom:8px;
 }
 .markup-row input{flex:0 0 80px}
 .markup-row label{margin:0;flex:1;font-size:11px;font-weight:800}
@@ -532,7 +552,7 @@ tbody tr:hover{background:#f3f4f6}
   padding:8px;
   border-radius:10px;
   border:1px solid var(--border);
-  background:#ffffff;
+  background:#fff;
   font-size:11px;
 }
 .applied-markup{
@@ -612,7 +632,7 @@ tbody tr:hover{background:#f3f4f6}
       <button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="note" style="margin-bottom:8px">
-      CSV IMPORT SUPPORTED. TYPE: V = HANDOVER, S = SAILING. ROUTING CAN BE IN COLUMN ROUTING / VIA / ROUTE.
+      CSV IMPORT SUPPORTED. TYPE: V = HANDOVER, S = SAILING. ROUTING CAN BE IN ROUTING / VIA / ROUTE.
     </div>
     <div class="toolbar" style="margin-bottom:8px">
       <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
@@ -628,18 +648,9 @@ tbody tr:hover{background:#f3f4f6}
           <col class="col-chk">
           <col class="col-seq">
           <col class="col-carrier">
-          <col class="col-loc">
-          <col class="col-loc">
-          <col class="col-loc">
-          <col class="col-loc">
-          <col class="col-rate">
-          <col class="col-rate">
-          <col class="col-rate">
-          <col class="col-date">
-          <col class="col-type">
-          <col class="col-tt">
-          <col class="col-route">
-          <col class="col-rem">
+          <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
+          <col class="col-rate"><col class="col-rate"><col class="col-rate"><col class="col-date">
+          <col class="col-type"><col class="col-tt"><col class="col-route"><col class="col-rem">
         </colgroup>
         <thead>
           <tr>
@@ -651,7 +662,6 @@ tbody tr:hover{background:#f3f4f6}
         <tbody id="uploadBody"></tbody>
       </table>
     </div>
-
     <div class="mobile-list" id="uploadMobile"></div>
   </div>
 </div>
@@ -716,7 +726,6 @@ tbody tr:hover{background:#f3f4f6}
             <label for="fpod">FPOD</label>
             <input id="fpod" placeholder="FPOD">
           </div>
-
           <div class="container-type-row">
             <div class="field">
               <label for="container20Type">20DV TYPE</label>
@@ -734,7 +743,6 @@ tbody tr:hover{background:#f3f4f6}
               <input id="dv20" placeholder="USD 20DV">
             </div>
           </div>
-
           <div class="container-type-row">
             <div class="field">
               <label for="container40Type">40HC TYPE</label>
@@ -752,7 +760,6 @@ tbody tr:hover{background:#f3f4f6}
               <input id="hc40" placeholder="USD 40HC">
             </div>
           </div>
-
           <div class="field span6">
             <label for="ft">F/T</label>
             <input id="ft" placeholder="F/T">
@@ -761,7 +768,6 @@ tbody tr:hover{background:#f3f4f6}
             <label for="validity">VALIDITY</label>
             <input id="validity" type="date">
           </div>
-
           <div class="field span6">
             <label for="tt">TT</label>
             <input id="tt" placeholder="TT">
@@ -770,7 +776,6 @@ tbody tr:hover{background:#f3f4f6}
             <label for="via">ROUTING</label>
             <input id="via" placeholder="Routing">
           </div>
-
           <div class="field span6">
             <label for="rateType">TYPE</label>
             <select id="rateType">
@@ -778,12 +783,10 @@ tbody tr:hover{background:#f3f4f6}
               <option value="S">SAILING (S)</option>
             </select>
           </div>
-
           <div class="field span12">
             <label for="remarks">REMARKS</label>
             <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
           </div>
-
           <div class="editor-actions span12">
             <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
             <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
@@ -944,13 +947,12 @@ tbody tr:hover{background:#f3f4f6}
         </div>
 
         <div class="panel section" id="sectionMarkup">
-          <div style="font-weight:900;font-size:13px;margin-bottom:6px">GLOBAL + USER MARKUP (COPY ONLY)</div>
+          <div style="font-weight:900;font-size:13px;margin-bottom:6px">GLOBAL MARKUP SETTINGS (COPY ONLY)</div>
           <div class="note" style="margin-bottom:6px">
-            Base admin rates stay as entered. Markup is applied only on COPY, pasted text shows only final rounded rates (no markup details).
+            Base admin rates stay exactly as entered. Markup is applied only when you press COPY.
           </div>
 
           <div class="markup-card">
-            <div style="font-weight:900;font-size:12px;margin-bottom:8px">GLOBAL MARKUP</div>
             <div class="markup-row">
               <label>20DV MARKUP (%)</label>
               <input type="number" id="mu20" step="0.01" placeholder="e.g. 2">
@@ -961,14 +963,9 @@ tbody tr:hover{background:#f3f4f6}
               <input type="number" id="mu40" step="0.01" placeholder="e.g. 3">
               <span class="badge" id="mu40Status">NOT SET</span>
             </div>
-            <div class="toolbar">
-              <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE GLOBAL</button>
-              <button class="ghost" id="clearMarkupsBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR GLOBAL</button>
-            </div>
           </div>
 
           <div class="markup-card">
-            <div style="font-weight:900;font-size:12px;margin-bottom:8px">USER MARKUP (SINGLE USER)</div>
             <div class="markup-row">
               <label>USER 20DV MARKUP (%)</label>
               <input type="number" id="userMu20" step="0.01" placeholder="e.g. 1">
@@ -977,10 +974,15 @@ tbody tr:hover{background:#f3f4f6}
               <label>USER 40HC MARKUP (%)</label>
               <input type="number" id="userMu40" step="0.01" placeholder="e.g. 2">
             </div>
-            <div class="toolbar">
-              <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
-              <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
-            </div>
+          </div>
+
+          <div class="toolbar">
+            <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE GLOBAL</button>
+            <button class="ghost" id="clearMarkupsBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR GLOBAL</button>
+          </div>
+          <div class="toolbar" style="margin-top:6px">
+            <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
+            <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
           </div>
 
           <div class="applied-markups">
@@ -991,7 +993,6 @@ tbody tr:hover{background:#f3f4f6}
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -1024,8 +1025,7 @@ let filterMap = {
   ft:"",validity:"",type:"",tt:"",via:"",remarks:""
 };
 
-let mu20 = 0, mu40 = 0;
-let userMu20 = 0, userMu40 = 0;
+let mu20 = 0, mu40 = 0, userMu20 = 0, userMu40 = 0;
 const MU20_KEY = "fr8x_mu20";
 const MU40_KEY = "fr8x_mu40";
 const USER_MU20_KEY = "fr8x_user_mu20";
@@ -1056,7 +1056,10 @@ function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
   $("loaderSub").textContent = sub;
   $("loader").classList.add("show");
 }
-function hideLoader(){clearTimeout(loaderTimer);$("loader").classList.remove("show")}
+function hideLoader(){
+  clearTimeout(loaderTimer);
+  $("loader").classList.remove("show");
+}
 function calc(v){
   v=(v??"").toString().trim();
   if(!v) return "";
@@ -1088,10 +1091,9 @@ function sessionValid(){return Date.now() < sessionUntil}
 function setSession(){sessionUntil = Date.now() + 4*60*60*1000}
 function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups();}
 function setEditorState(text){$("editorState").textContent=text}
-function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s;}
+function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s}
 function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
 
-/* popup */
 const popupEl = $("globalPopup");
 let popupTimer=null;
 function showPopup(text,target){
@@ -1111,14 +1113,16 @@ function showPopup(text,target){
 }
 function hidePopup(){popupTimer = setTimeout(()=>popupEl.classList.remove("show"),60)}
 
-/* text viewer */
-function showTextViewer(label,value){$("textViewerTitle").textContent = label || "DETAIL";$("textViewerBody").textContent = value || "—";$("textViewer").classList.remove("hidden")}
+function showTextViewer(label,value){
+  $("textViewerTitle").textContent = label || "DETAIL";
+  $("textViewerBody").textContent = value || "—";
+  $("textViewer").classList.remove("hidden");
+}
 function closeTextViewer(){$("textViewer").classList.add("hidden")}
 $("closeTextViewer").onclick = closeTextViewer;
 $("textViewer").addEventListener("click",e=>{if(e.target.id==="textViewer") closeTextViewer()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape") closeTextViewer()});
 
-/* data load */
 async function load(){
   showLoader("UPDATING DATA","FETCHING RECORDS");
   try{
@@ -1158,7 +1162,6 @@ function filteredRows(){
   return rows;
 }
 
-/* render */
 function popupField(label,value,shortLen=14){
   const full = value ?? "";
   const clip = truncate(full,shortLen) || "—";
@@ -1233,8 +1236,7 @@ function render(){
   const rows=filteredRows();
   $("tbody").innerHTML=renderDesktopRows(rows);
   $("mobileRates").innerHTML=renderMobileRows(rows);
-  const viewLabel = viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
-  $("sectionLabel").textContent=viewLabel;
+  $("sectionLabel").textContent=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
   updateSelectedInfo();
 }
 function updateSelectedInfo(){$("selectedCountInfo").textContent=`${selectedIds.size} SELECTED`}
@@ -1262,7 +1264,6 @@ function switchView(mode){
   if(["active","expired","all"].includes(mode)) render();
 }
 
-/* form */
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
   $("rateType").value="V";
@@ -1271,7 +1272,6 @@ function clearForm(resetEdit=true){
 }
 $("clear").onclick=()=>clearForm(true);
 
-/* save/update */
 $("save").onclick=async()=>{
   showLoader("SAVING","CREATING NEW RECORD");
   try{
@@ -1295,18 +1295,18 @@ $("save").onclick=async()=>{
       via:upper($("via").value),
       remarks:upper($("remarks").value),
       type:$("rateType").value,
-      localCharges:[],
-      charges20dv:[],
-      charges40hc:[]
+      localCharges:[], charges20dv:[], charges40hc:[]
     });
     clearForm();
     await load();
   }catch(err){
-    alert("FAILED TO SAVE");
+    alert("SAVE FAILED");
     console.error(err);
+  }finally{
     hideLoader();
   }
 };
+
 $("update").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD TO UPDATE.");
   showLoader("UPDATING","SAVING CHANGES");
@@ -1314,7 +1314,7 @@ $("update").onclick=async()=>{
     const current=data.find(x=>x.id===editId)||{};
     const now=new Date().toISOString();
     await updateDoc(doc(db,"rates",editId),{
-      seq:current.seq || generateSeq(),
+      seq: current.seq || generateSeq(),
       updatedAt:now,
       carrier:upper($("carrier").value),
       por:upper($("por").value),
@@ -1338,16 +1338,15 @@ $("update").onclick=async()=>{
     clearForm();
     await load();
   }catch(err){
-    alert("FAILED TO UPDATE");
+    alert("UPDATE FAILED");
     console.error(err);
+  }finally{
     hideLoader();
   }
 };
 
-/* duplicate */
 async function duplicateRate(id){
-  const r=data.find(x=>x.id===id);
-  if(!r) return;
+  const r=data.find(x=>x.id===id); if(!r) return;
   showLoader("DUPLICATING","CREATING COPY");
   try{
     const now=new Date().toISOString();
@@ -1358,70 +1357,124 @@ async function duplicateRate(id){
     payload.updatedAt=now;
     await addDoc(collection(db,"rates"),payload);
     await load();
-  }catch(err){
-    alert("FAILED TO DUPLICATE");
-    console.error(err);
+  }finally{
     hideLoader();
   }
 }
-$("duplicateBtn").onclick=async()=>{
-  if(!editId) return alert("SELECT A RECORD TO DUPLICATE.");
-  await duplicateRate(editId);
-};
+$("duplicateBtn").onclick=async()=>{if(!editId) return alert("SELECT A RECORD TO DUPLICATE."); await duplicateRate(editId)}
 
-/* seq update */
-$("migrateSeqBtn").onclick=async()=>{
+async function migrateAllSequences(){
   if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return;
   showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
   try{
     for(const r of data){
-      const newSeq=normalizeSeq(r);
-      if(r.seq!==newSeq) await updateDoc(doc(db,"rates",r.id),{seq:newSeq});
+      const newSeq = normalizeSeq(r);
+      if(r.seq !== newSeq){
+        await updateDoc(doc(db,"rates",r.id),{seq:newSeq});
+      }
     }
     await load();
-  }catch(err){
-    alert("FAILED TO UPDATE SEQ");
-    console.error(err);
+  }finally{
     hideLoader();
   }
-};
+}
+$("migrateSeqBtn").onclick=migrateAllSequences;
 
-/* bulk delete */
-$("bulkDeleteBtn").onclick=async()=>{
+async function bulkDeleteSelected(){
   if(!selectedIds.size) return alert("SELECT RECORDS FIRST.");
-  if(!confirm(`DELETE ${selectedIds.size} RECORD(S)?`)) return;
-  showLoader("DELETING","REMOVING RECORDS");
+  if(!confirm(`DELETE ${selectedIds.size} SELECTED RECORD(S)?`)) return;
+  showLoader("DELETING","REMOVING SELECTED RECORDS");
   try{
     for(const id of [...selectedIds]) await deleteDoc(doc(db,"rates",id));
     selectedIds.clear();
     await load();
-  }catch(err){
-    alert("FAILED TO DELETE");
-    console.error(err);
+  }finally{
     hideLoader();
   }
-};
+}
+$("bulkDeleteBtn").onclick=bulkDeleteSelected;
 
-/* pin */
+/* PIN */
 function pinUnlock(){
   const pin=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin===PIN){setSession();showApp()}else{alert("INVALID PIN");clearPin();}
+  if(pin===PIN){setSession();showApp()} else {alert("INVALID PIN"); clearPin()}
 }
-function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");$("pin1").focus()}
+function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value=""); $("pin1").focus()}
 ["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
   $(id).addEventListener("input",e=>{
     e.target.value=e.target.value.replace(/\D/g,"").slice(0,1);
     if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
   });
   $(id).addEventListener("keydown",e=>{
-    if(e.key==="Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
+    if(e.key==="Backspace"&&!e.target.value&&arr[i-1]) $(arr[i-1]).focus();
     if(e.key==="Enter") pinUnlock();
   });
 });
 $("unlockBtn").onclick=pinUnlock;
 $("clearPinBtn").onclick=clearPin;
 
-/* copy with global + single user markup */
+/* MARKUP */
+function loadMarkups(){
+  mu20 = parseFloat(localStorage.getItem(MU20_KEY) || "0") || 0;
+  mu40 = parseFloat(localStorage.getItem(MU40_KEY) || "0") || 0;
+  userMu20 = parseFloat(localStorage.getItem(USER_MU20_KEY) || "0") || 0;
+  userMu40 = parseFloat(localStorage.getItem(USER_MU40_KEY) || "0") || 0;
+
+  $("mu20").value = localStorage.getItem(MU20_KEY) || "";
+  $("mu40").value = localStorage.getItem(MU40_KEY) || "";
+  $("userMu20").value = localStorage.getItem(USER_MU20_KEY) || "";
+  $("userMu40").value = localStorage.getItem(USER_MU40_KEY) || "";
+
+  $("mu20Status").textContent = mu20 ? `${mu20}%` : "NOT SET";
+  $("mu40Status").textContent = mu40 ? `${mu40}%` : "NOT SET";
+  updateAppliedMarkupsList();
+}
+function effectiveMarkup20(){ return (parseFloat(mu20)||0) + (parseFloat(userMu20)||0); }
+function effectiveMarkup40(){ return (parseFloat(mu40)||0) + (parseFloat(userMu40)||0); }
+function updateAppliedMarkupsList(){
+  const m20 = effectiveMarkup20();
+  const m40 = effectiveMarkup40();
+  if(!m20 && !m40){
+    $("appliedMarkupsList").innerHTML = '<div style="padding:4px;color:var(--muted)">No markup configured. COPY uses base rates.</div>';
+    return;
+  }
+  let html = "";
+  if(m20) html += `<div class="applied-markup"><span><strong>20DV:</strong> +${m20}%</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
+  if(m40) html += `<div class="applied-markup"><span><strong>40HC:</strong> +${m40}%</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
+  $("appliedMarkupsList").innerHTML = html;
+}
+$("saveMarkupsBtn").onclick=()=>{
+  const v20 = parseFloat($("mu20").value || "0") || 0;
+  const v40 = parseFloat($("mu40").value || "0") || 0;
+  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
+  localStorage.setItem(MU20_KEY, String(v20));
+  localStorage.setItem(MU40_KEY, String(v40));
+  loadMarkups();
+  showCopyToast("GLOBAL MARKUPS SAVED");
+};
+$("clearMarkupsBtn").onclick=()=>{
+  localStorage.removeItem(MU20_KEY);
+  localStorage.removeItem(MU40_KEY);
+  loadMarkups();
+  showCopyToast("GLOBAL MARKUPS CLEARED");
+};
+$("saveUserMarkupBtn").onclick=()=>{
+  const v20 = parseFloat($("userMu20").value || "0") || 0;
+  const v40 = parseFloat($("userMu40").value || "0") || 0;
+  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
+  localStorage.setItem(USER_MU20_KEY, String(v20));
+  localStorage.setItem(USER_MU40_KEY, String(v40));
+  loadMarkups();
+  showCopyToast("USER MARKUPS SAVED");
+};
+$("clearUserMarkupBtn").onclick=()=>{
+  localStorage.removeItem(USER_MU20_KEY);
+  localStorage.removeItem(USER_MU40_KEY);
+  loadMarkups();
+  showCopyToast("USER MARKUPS CLEARED");
+};
+
+/* COPY */
 function showCopyToast(msg="COPIED"){
   const t=document.createElement("div");
   t.className="copy-toast";
@@ -1429,11 +1482,21 @@ function showCopyToast(msg="COPIED"){
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),2000);
 }
-function effectiveMu20(){return (mu20||0) + (userMu20||0)}
-function effectiveMu40(){return (mu40||0) + (userMu40||0)}
-window.copyRate=async(id)=>{
-  const r=data.find(x=>x.id===id);
-  if(!r) return;
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+}
+window.copyRate = async(id)=>{
+  const r=data.find(x=>x.id===id); if(!r) return;
+
   const lines=[];
   if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
   if(r.por) lines.push(`POR: ${r.por}`);
@@ -1441,19 +1504,18 @@ window.copyRate=async(id)=>{
   if(r.pod) lines.push(`POD: ${r.pod}`);
   if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
 
-  const routeFrom=r.pol || r.por || "";
-  const routeTo=r.pod || "";
-  const base20=parseFloat(r.dv20||"")||0;
-  const base40=parseFloat(r.hc40||"")||0;
-  const eff20=effectiveMu20();
-  const eff40=effectiveMu40();
-  const final20=base20 ? Math.round(base20 * (1 + eff20/100)) : 0;
-  const final40=base40 ? Math.round(base40 * (1 + eff40/100)) : 0;
-  const type20=r.container20Type ? ` (${r.container20Type})` : "";
-  const type40=r.container40Type ? ` (${r.container40Type})` : "";
+  const routeFrom = r.pol || r.por || "";
+  const routeTo = r.pod || "";
+  const base20 = parseFloat(r.dv20 || "") || 0;
+  const base40 = parseFloat(r.hc40 || "") || 0;
+  const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20() / 100)) : 0;
+  const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40() / 100)) : 0;
 
-  const part20=final20 ? `USD ${final20}/20DV${type20}` : "";
-  const part40=final40 ? `USD ${final40}/40HC${type40}` : "";
+  const type20 = r.container20Type ? ` (${r.container20Type})` : "";
+  const type40 = r.container40Type ? ` (${r.container40Type})` : "";
+  const part20 = final20 ? `USD ${final20}/20DV${type20}` : "";
+  const part40 = final40 ? `USD ${final40}/40HC${type40}` : "";
+
   if(routeFrom || routeTo || part20 || part40){
     lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${[part20,part40].filter(Boolean).join(" & ")}`);
   }
@@ -1465,19 +1527,15 @@ window.copyRate=async(id)=>{
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
   const text=lines.join("\n");
-  try{await navigator.clipboard.writeText(text);}catch{
-    const ta=document.createElement("textarea");
-    ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
-  }
+  await copyText(text);
   showCopyToast("RATE COPIED");
 };
 
-/* edit/delete */
+/* EDIT / DELETE */
 window.editRate=(id)=>{
-  const r=data.find(x=>x.id===id);
-  if(!r) return;
+  const r=data.find(x=>x.id===id); if(!r) return;
   editId=id;
-  setEditorState(`EDITING ${r.seq || "SELECTED RATE"}`);
+  setEditorState(`EDITING ${r.seq||"SELECTED RATE"}`);
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value=r[k]||"");
   $("container20Type").value=r.container20Type||"";
   $("container40Type").value=r.container40Type||"";
@@ -1490,96 +1548,16 @@ window.delRate=async(id)=>{
     await deleteDoc(doc(db,"rates",id));
     selectedIds.delete(id);
     await load();
-  }catch(err){
-    alert("FAILED TO DELETE");
-    console.error(err);
+  }finally{
     hideLoader();
   }
 };
 
-/* markups load/save */
-function updateAppliedMarkupsList(){
-  const eff20=effectiveMu20();
-  const eff40=effectiveMu40();
-  let html="";
-  html+=`<div class="applied-markup"><span><strong>GLOBAL 20DV:</strong> ${mu20?`+${mu20}%`:"0%"}</span></div>`;
-  html+=`<div class="applied-markup"><span><strong>GLOBAL 40HC:</strong> ${mu40?`+${mu40}%`:"0%"}</span></div>`;
-  html+=`<div class="applied-markup"><span><strong>USER 20DV:</strong> ${userMu20?`+${userMu20}%`:"0%"}</span></div>`;
-  html+=`<div class="applied-markup"><span><strong>USER 40HC:</strong> ${userMu40?`+${userMu40}%`:"0%"}</span></div>`;
-  html+=`<div class="applied-markup"><span><strong>EFFECTIVE 20DV:</strong> ${eff20?`+${eff20}%`:"0%"}</span></div>`;
-  html+=`<div class="applied-markup"><span><strong>EFFECTIVE 40HC:</strong> ${eff40?`+${eff40}%`:"0%"}</span></div>`;
-  if(!mu20 && !mu40 && !userMu20 && !userMu40){
-    html='<div style="padding:4px;color:var(--muted)">No markup configured. COPY uses base rates.</div>';
-  }
-  $("appliedMarkupsList").innerHTML=html;
-}
-function loadMarkups(){
-  const s20=localStorage.getItem(MU20_KEY);
-  const s40=localStorage.getItem(MU40_KEY);
-  const us20=localStorage.getItem(USER_MU20_KEY);
-  const us40=localStorage.getItem(USER_MU40_KEY);
-
-  mu20=s20!==null?(parseFloat(s20)||0):0;
-  mu40=s40!==null?(parseFloat(s40)||0):0;
-  userMu20=us20!==null?(parseFloat(us20)||0):0;
-  userMu40=us40!==null?(parseFloat(us40)||0):0;
-
-  $("mu20").value = s20 ?? "";
-  $("mu40").value = s40 ?? "";
-  $("userMu20").value = us20 ?? "";
-  $("userMu40").value = us40 ?? "";
-  $("mu20Status").textContent = mu20?`${mu20}%`:"NOT SET";
-  $("mu40Status").textContent = mu40?`${mu40}%`:"NOT SET";
-  updateAppliedMarkupsList();
-}
-
-$("saveMarkupsBtn").onclick=()=>{
-  const v20=parseFloat($("mu20").value||"0")||0;
-  const v40=parseFloat($("mu40").value||"0")||0;
-  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
-  mu20=v20;mu40=v40;
-  localStorage.setItem(MU20_KEY,String(v20));
-  localStorage.setItem(MU40_KEY,String(v40));
-  $("mu20Status").textContent=v20?`${v20}%`:"NOT SET";
-  $("mu40Status").textContent=v40?`${v40}%`:"NOT SET";
-  updateAppliedMarkupsList();
-  showCopyToast("GLOBAL MARKUPS SAVED");
-};
-$("clearMarkupsBtn").onclick=()=>{
-  mu20=0;mu40=0;
-  $("mu20").value="";$("mu40").value="";
-  $("mu20Status").textContent="NOT SET";
-  $("mu40Status").textContent="NOT SET";
-  localStorage.removeItem(MU20_KEY);
-  localStorage.removeItem(MU40_KEY);
-  updateAppliedMarkupsList();
-  showCopyToast("GLOBAL MARKUPS CLEARED");
-};
-
-$("saveUserMarkupBtn").onclick=()=>{
-  const v20=parseFloat($("userMu20").value||"0")||0;
-  const v40=parseFloat($("userMu40").value||"0")||0;
-  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
-  userMu20=v20;userMu40=v40;
-  localStorage.setItem(USER_MU20_KEY,String(v20));
-  localStorage.setItem(USER_MU40_KEY,String(v40));
-  updateAppliedMarkupsList();
-  showCopyToast("USER MARKUPS SAVED");
-};
-$("clearUserMarkupBtn").onclick=()=>{
-  userMu20=0;userMu40=0;
-  $("userMu20").value="";$("userMu40").value="";
-  localStorage.removeItem(USER_MU20_KEY);
-  localStorage.removeItem(USER_MU40_KEY);
-  updateAppliedMarkupsList();
-  showCopyToast("USER MARKUPS CLEARED");
-};
-
-/* export */
+/* EXPORT */
 function toCSV(rows){
   const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
   const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  return [head.join(","),...rows.map((r,i)=>[
+  return [head.join(","), ...rows.map((r,i)=>[
     esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),
     esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),
     esc(r.ft),esc(isoDate(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)
@@ -1594,33 +1572,27 @@ function download(name,txt){
   setTimeout(()=>URL.revokeObjectURL(a.href),500);
 }
 $("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
-$("downloadTemplateBtn").onclick=()=>{
-  const tpl='SEQ,CARRIER,POR,POL,POD,FPOD,20DV,20TYPE,40HC,40TYPE,F/T,DATE,TYPE,TT,ROUTING,REMARKS\n,MSC,DELHI,NHAVA SHEVA,JEBEL ALI,DUBAI,3602,,4284,,6,2026-05-31,V,14,VIA KHOR AL FAKKAN,SAMPLE ROW';
-  download("fr8x_upload_template.csv",tpl);
-};
 
-/* upload */
-function openUpload(){$("uploadOverlay").classList.remove("hidden");renderUpload()}
+/* UPLOAD */
+function openUpload(){$("uploadOverlay").classList.remove("hidden"); renderUpload()}
 function closeUpload(){$("uploadOverlay").classList.add("hidden")}
 $("openUploadBtn").onclick=openUpload;
 $("closeUploadBtn").onclick=closeUpload;
 $("pickFileBtn").onclick=()=>$("fileInput").click();
 
 function parseCSVLine(line,sep=","){
-  const out=[];let cur="",inQuotes=false;
+  const out=[]; let cur="", inQuotes=false;
   for(let i=0;i<line.length;i++){
     const ch=line[i];
     if(ch==='"'){
-      if(inQuotes && line[i+1]==='"'){cur+='"';i++}else inQuotes=!inQuotes;
-    }else if(ch===sep && !inQuotes){
-      out.push(cur);cur="";
-    }else cur+=ch;
+      if(inQuotes && line[i+1]==='"'){cur+='"'; i++} else inQuotes=!inQuotes;
+    } else if(ch===sep && !inQuotes){ out.push(cur); cur="" } else cur+=ch;
   }
   out.push(cur);
   return out.map(v=>v.trim());
 }
 function parseCSV(txt){
-  const lines=txt.split(/\r?\n/).filter(l=>l.trim()!=="");
+  const lines=txt.split(/\r?\n/).filter(line=>line.trim()!=="");
   if(!lines.length) return [];
   const sep=lines[0].includes("\t")?"\t":",";
   const headers=parseCSVLine(lines[0],sep).map(s=>s.trim().toLowerCase());
@@ -1632,9 +1604,9 @@ function parseCSV(txt){
   });
 }
 function normalizeUploadRow(r){
-  const rawType=upper(r.type || r.vtype || r.stype || "");
-  const typeCode=rawType==="S" || rawType==="SAILING" ? "S" : "V";
-  return{
+  const rawType = upper(r.type || r.vtype || r.stype || "");
+  const typeCode = rawType==="S" || rawType==="SAILING" ? "S" : "V";
+  return {
     seq:r.seq||r.sequence||"",
     carrier:upper(r.carrier),
     por:upper(r.por),
@@ -1654,8 +1626,9 @@ function normalizeUploadRow(r){
   };
 }
 function renderUpload(){
-  $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
-    <tr>
+  $("uploadBody").innerHTML=uploadRows.map((r,i)=>{
+    const display = displayType(r.type);
+    return `<tr>
       <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
       <td>${escapeHtml(r.seq||i+1)}</td>
       <td>${escapeHtml(r.carrier||"")}</td>
@@ -1667,19 +1640,18 @@ function renderUpload(){
       <td>${escapeHtml(r.hc40||"")}</td>
       <td>${escapeHtml(r.ft||"")}</td>
       <td>${escapeHtml(fmtDate(r.validity))}</td>
-      <td>${escapeHtml(displayType(r.type))}</td>
+      <td>${escapeHtml(display)}</td>
       <td>${escapeHtml(r.tt||"")}</td>
       <td>${escapeHtml(r.via||"")}</td>
       <td>${escapeHtml(r.remarks||"")}</td>
-    </tr>
-  `).join("");
-
-  $("uploadMobile").innerHTML=uploadRows.map((r,i)=>`
+    </tr>`;
+  }).join("");
+  $("uploadMobile").innerHTML = uploadRows.map((r,i)=>`
     <div class="mobile-card">
       <div class="mobile-card-head">
         <div>
-          <div class="mobile-card-title">${escapeHtml(r.carrier||"UPLOAD ROW")}</div>
-          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq||i+1)}</div>
+          <div class="mobile-card-title">${escapeHtml(r.carrier||"NO CARRIER")}</div>
+          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq||"")}</div>
         </div>
         <label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}> SELECT</label>
       </div>
@@ -1688,8 +1660,8 @@ function renderUpload(){
         ${mobileItem("POL",r.pol)}
         ${mobileItem("POD",r.pod)}
         ${mobileItem("FPOD",r.fpod)}
-        ${mobileItem("20DV",r.dv20)}
-        ${mobileItem("40HC",r.hc40)}
+        ${mobileItem("20DV",`${r.dv20||""} ${r.container20Type||""}`.trim())}
+        ${mobileItem("40HC",`${r.hc40||""} ${r.container40Type||""}`.trim())}
         ${mobileItem("F/T",r.ft)}
         ${mobileItem("DATE",fmtDate(r.validity))}
         ${mobileItem("TYPE",displayType(r.type))}
@@ -1701,34 +1673,32 @@ function renderUpload(){
   `).join("");
 }
 $("fileInput").addEventListener("change",async e=>{
-  const f=e.target.files?.[0];
-  if(!f) return;
+  const f=e.target.files?.[0]; if(!f) return;
   showLoader("IMPORTING","READING FILE");
-  try{
-    const txt=await f.text();
-    uploadRows=parseCSV(txt).map(normalizeUploadRow);
-    selectedUploadRows.clear();
-    renderUpload();
-  }catch(err){
-    alert("FAILED TO READ FILE");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
+  const txt=await f.text();
+  uploadRows=parseCSV(txt).map(normalizeUploadRow);
+  selectedUploadRows.clear();
+  renderUpload();
+  hideLoader();
 });
 $("selectAllUpload").addEventListener("change",e=>{
   if(e.target.checked) uploadRows.forEach((_,i)=>selectedUploadRows.add(i));
   else selectedUploadRows.clear();
   renderUpload();
 });
-$("uploadOverlay").addEventListener("change",e=>{
-  const cb=e.target.closest("input[data-ui]");
-  if(!cb) return;
+$("uploadBody").addEventListener("change",e=>{
+  const cb=e.target.closest("input[data-ui]"); if(!cb) return;
   const i=Number(cb.dataset.ui);
   if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
 });
+$("uploadMobile").addEventListener("change",e=>{
+  const cb=e.target.closest("input[data-ui]"); if(!cb) return;
+  const i=Number(cb.dataset.ui);
+  if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
+  renderUpload();
+});
 $("exportSelectedBtn").onclick=()=>{
-  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows();
+  const rows=(selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows());
   download("fr8x_selected_export.csv",toCSV(rows));
 };
 $("applyImportBtn").onclick=async()=>{
@@ -1737,7 +1707,7 @@ $("applyImportBtn").onclick=async()=>{
   showLoader("IMPORTING","ADDING RECORDS");
   try{
     for(const r of rows){
-      if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
+      if(!r.carrier&&!r.pod&&!r.fpod&&!r.pol) continue;
       const now=new Date().toISOString();
       await addDoc(collection(db,"rates"),{
         seq:r.seq||generateSeq(),
@@ -1758,78 +1728,62 @@ $("applyImportBtn").onclick=async()=>{
         tt:r.tt,
         via:r.via,
         remarks:r.remarks,
-        localCharges:[],
-        charges20dv:[],
-        charges40hc:[]
+        localCharges:[], charges20dv:[], charges40hc:[]
       });
     }
     closeUpload();
     await load();
-  }catch(err){
-    alert("FAILED TO IMPORT");
-    console.error(err);
+  }finally{
     hideLoader();
   }
 };
 
-/* events */
+/* SEARCH / FILTERS / EVENTS */
 $("globalSearch").addEventListener("input",render);
-document.querySelectorAll(".filter-row input").forEach(inp=>{
-  inp.addEventListener("input",e=>{
-    filterMap[e.target.dataset.col]=e.target.value;
-    render();
-  });
-});
-document.querySelectorAll(".section-tabs button").forEach(btn=>{
-  btn.addEventListener("click",()=>switchView(btn.dataset.view));
-});
+document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{
+  filterMap[e.target.dataset.col]=e.target.value;
+  render();
+}));
+document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
 document.addEventListener("click",e=>{
-  const btn=e.target.closest("button[data-action]");
-  if(btn){
-    const id=btn.dataset.id;
-    if(btn.dataset.action==="copy") window.copyRate(id);
-    if(btn.dataset.action==="duplicate") duplicateRate(id);
-    if(btn.dataset.action==="edit") window.editRate(id);
-    if(btn.dataset.action==="delete") window.delRate(id);
-    return;
+  const actionBtn=e.target.closest("button[data-action]");
+  if(actionBtn){
+    const id=actionBtn.dataset.id;
+    if(actionBtn.dataset.action==="copy") window.copyRate(id);
+    if(actionBtn.dataset.action==="duplicate") duplicateRate(id);
+    if(actionBtn.dataset.action==="edit") window.editRate(id);
+    if(actionBtn.dataset.action==="delete") window.delRate(id);
   }
-  const field=e.target.closest(".pop-field");
-  if(field) showTextViewer(field.dataset.label||"DETAIL",field.dataset.value||"");
-});
-document.addEventListener("mouseover",e=>{
-  const field=e.target.closest(".pop-field");
-  if(field) showPopup(field.dataset.value,field);
-});
-document.addEventListener("mouseout",e=>{
-  const field=e.target.closest(".pop-field");
-  if(field) hidePopup();
-});
-document.addEventListener("focusin",e=>{
-  const field=e.target.closest(".pop-field");
-  if(field) showPopup(field.dataset.value,field);
-});
-document.addEventListener("focusout",e=>{
-  const field=e.target.closest(".pop-field");
-  if(field) hidePopup();
+  const pop = e.target.closest(".pop-field");
+  if(pop){
+    const label=pop.dataset.label || "DETAIL";
+    const value=pop.dataset.value || "";
+    showTextViewer(label,value);
+    showPopup(value, pop);
+    clearTimeout(popupTimer);
+    popupTimer = setTimeout(()=>popupEl.classList.remove("show"),1500);
+  }else{
+    hidePopup();
+  }
 });
 document.addEventListener("change",e=>{
   const cb=e.target.closest(".row-check[data-id]");
   if(cb){
     const id=cb.dataset.id;
     if(cb.checked) selectedIds.add(id); else selectedIds.delete(id);
-    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{if(el!==cb) el.checked=cb.checked;});
+    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{if(el!==cb) el.checked=cb.checked});
     updateSelectedInfo();
   }
 });
 $("selectAllRows").addEventListener("change",e=>{
-  document.querySelectorAll("#tbody .row-check[data-id], #mobileRates .row-check[data-id]").forEach(cb=>{
+  document.querySelectorAll("#tbody .row-check[data-id]").forEach(cb=>{
     cb.checked=e.target.checked;
     if(e.target.checked) selectedIds.add(cb.dataset.id); else selectedIds.delete(cb.dataset.id);
   });
   updateSelectedInfo();
 });
 
-/* init */
+/* INIT */
 setEditorState("CREATE OR UPDATE RATE");
 if(sessionValid()) showApp();
 </script>
