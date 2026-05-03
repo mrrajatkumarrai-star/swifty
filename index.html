@@ -16,7 +16,6 @@
   --primary:#111111;
   --danger:#b91c1c;
   --warning:#b45309;
-
   --radius:16px;
   --radius-sm:10px;
   --header-h:68px;
@@ -152,8 +151,8 @@ button{
 button:disabled{opacity:.6;cursor:not-allowed}
 .primary{background:#111111;color:#ffffff;border-color:#111111}
 .success{background:#111111;color:#ffffff;border-color:#111111}
-.danger{background:var(--danger);color:#ffffff;border-color:var(--danger)}
-.warning{background:var(--warning);color:#ffffff;border-color:var(--warning)}
+.danger{background:var(--danger);color:#ffffff;border-color:#danger}
+.warning{background:#b45309;color:#ffffff;border-color:#b45309}
 .ghost{background:#ffffff;color:var(--text)}
 .icon-only{width:32px;height:32px;padding:0}
 .icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px}
@@ -172,7 +171,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
   padding:12px;
 }
 
-/* EDITOR FIXED HEIGHT */
+/* EDITOR PANEL */
 #editorPanel{
   position:sticky;
   top:calc(var(--header-h) + 8px);
@@ -234,7 +233,6 @@ col.col-tt{width:60px}
 col.col-route{width:120px}
 col.col-rem{width:140px}
 col.col-act{width:100px}
-
 th,td{
   padding:6px 6px;
   border-bottom:1px solid var(--border);
@@ -373,7 +371,7 @@ tbody tr:hover{background:#f3f4f6}
   z-index:1200;
 }
 
-/* GLOBAL POPUP (NO ARROW) */
+/* GLOBAL POPUP */
 #globalPopup{
   position:fixed;
   z-index:1200;
@@ -392,7 +390,6 @@ tbody tr:hover{background:#f3f4f6}
   pointer-events:none;
 }
 #globalPopup.show{opacity:1}
-.pop-cell{overflow:visible;position:relative}
 .pop-field{display:block;width:100%;cursor:pointer}
 .cell-clip{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
@@ -459,7 +456,7 @@ tbody tr:hover{background:#f3f4f6}
 }
 .mobile-actions button{flex:1}
 
-/* DIMENSIONS */
+/* DIMENSIONS: cards in rows (single column) */
 .info-strip{
   padding:10px;
   border-radius:12px;
@@ -469,8 +466,8 @@ tbody tr:hover{background:#f3f4f6}
   line-height:1.45;
 }
 .dim-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  display:flex;
+  flex-direction:column;
   gap:10px;
   margin-top:10px;
 }
@@ -545,6 +542,7 @@ tbody tr:hover{background:#f3f4f6}
   padding:4px 0;
   border-bottom:1px solid var(--border);
 }
+.applied-markup:last-child{border-bottom:none}
 
 /* RESPONSIVE */
 @media (max-width:1180px){
@@ -554,7 +552,6 @@ tbody tr:hover{background:#f3f4f6}
     height:auto;
     max-height:none;
   }
-  .dim-grid{grid-template-columns:1fr}
 }
 @media (max-width:760px){
   html,body{font-size:11px}
@@ -578,7 +575,6 @@ tbody tr:hover{background:#f3f4f6}
   </div>
 </div>
 
-<!-- PIN -->
 <div id="pinGate" class="overlay">
   <div class="card narrow">
     <div class="title">FR8X ACCESS</div>
@@ -596,7 +592,6 @@ tbody tr:hover{background:#f3f4f6}
   </div>
 </div>
 
-<!-- TEXT VIEWER -->
 <div id="textViewer" class="overlay hidden">
   <div class="card narrow">
     <div class="modal-head">
@@ -610,7 +605,6 @@ tbody tr:hover{background:#f3f4f6}
   </div>
 </div>
 
-<!-- UPLOAD -->
 <div id="uploadOverlay" class="overlay hidden">
   <div class="card">
     <div class="modal-head">
@@ -662,7 +656,6 @@ tbody tr:hover{background:#f3f4f6}
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="appShell" class="hidden">
   <div class="header">
     <div class="brand">FR8X ADMIN</div>
@@ -695,7 +688,6 @@ tbody tr:hover{background:#f3f4f6}
     </div>
 
     <div class="layout-grid">
-      <!-- EDITOR -->
       <div class="panel" id="editorPanel">
         <div class="section-head">
           <div>
@@ -802,9 +794,7 @@ tbody tr:hover{background:#f3f4f6}
         </div>
       </div>
 
-      <!-- RIGHT: RATES / DIM / MARKUP -->
       <div id="rightPanel">
-        <!-- RATES -->
         <div class="panel section active" id="sectionRates">
           <div class="section-head">
             <div class="note" id="sectionLabel" style="font-weight:800;color:var(--text)">ACTIVE RATES</div>
@@ -855,7 +845,6 @@ tbody tr:hover{background:#f3f4f6}
           <div class="mobile-list" id="mobileRates"></div>
         </div>
 
-        <!-- DIMENSIONS -->
         <div class="panel section" id="sectionDim">
           <div style="font-weight:900;font-size:13px;margin-bottom:6px">COMPLETE CONTAINER DIMENSIONS (REFERENCE)</div>
           <div class="info-strip">
@@ -954,13 +943,14 @@ tbody tr:hover{background:#f3f4f6}
           </div>
         </div>
 
-        <!-- MARKUPS -->
         <div class="panel section" id="sectionMarkup">
-          <div style="font-weight:900;font-size:13px;margin-bottom:6px">GLOBAL MARKUP SETTINGS (COPY ONLY)</div>
+          <div style="font-weight:900;font-size:13px;margin-bottom:6px">GLOBAL + USER MARKUP (COPY ONLY)</div>
           <div class="note" style="margin-bottom:6px">
-            Base admin rates stay exactly as entered. Markup is applied only when you press COPY. Pasted text shows only final rounded rates, not markup details.
+            Base admin rates stay as entered. Markup is applied only on COPY, pasted text shows only final rounded rates (no markup details).
           </div>
+
           <div class="markup-card">
+            <div style="font-weight:900;font-size:12px;margin-bottom:8px">GLOBAL MARKUP</div>
             <div class="markup-row">
               <label>20DV MARKUP (%)</label>
               <input type="number" id="mu20" step="0.01" placeholder="e.g. 2">
@@ -971,11 +961,28 @@ tbody tr:hover{background:#f3f4f6}
               <input type="number" id="mu40" step="0.01" placeholder="e.g. 3">
               <span class="badge" id="mu40Status">NOT SET</span>
             </div>
+            <div class="toolbar">
+              <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE GLOBAL</button>
+              <button class="ghost" id="clearMarkupsBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR GLOBAL</button>
+            </div>
           </div>
-          <div class="toolbar">
-            <button class="primary" id="saveMarkupsBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE MARKUPS</button>
-            <button class="ghost" id="clearMarkupsBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
+
+          <div class="markup-card">
+            <div style="font-weight:900;font-size:12px;margin-bottom:8px">USER MARKUP (SINGLE USER)</div>
+            <div class="markup-row">
+              <label>USER 20DV MARKUP (%)</label>
+              <input type="number" id="userMu20" step="0.01" placeholder="e.g. 1">
+            </div>
+            <div class="markup-row">
+              <label>USER 40HC MARKUP (%)</label>
+              <input type="number" id="userMu40" step="0.01" placeholder="e.g. 2">
+            </div>
+            <div class="toolbar">
+              <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
+              <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
+            </div>
           </div>
+
           <div class="applied-markups">
             <div class="applied-markups-title">CURRENT COPY CALCULATION</div>
             <div id="appliedMarkupsList">
@@ -984,6 +991,7 @@ tbody tr:hover{background:#f3f4f6}
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -1017,8 +1025,11 @@ let filterMap = {
 };
 
 let mu20 = 0, mu40 = 0;
+let userMu20 = 0, userMu40 = 0;
 const MU20_KEY = "fr8x_mu20";
 const MU40_KEY = "fr8x_mu40";
+const USER_MU20_KEY = "fr8x_user_mu20";
+const USER_MU40_KEY = "fr8x_user_mu40";
 
 function escapeHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 function pad2(n){return String(n).padStart(2,"0")}
@@ -1045,10 +1056,7 @@ function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
   $("loaderSub").textContent = sub;
   $("loader").classList.add("show");
 }
-function hideLoader(){
-  clearTimeout(loaderTimer);
-  $("loader").classList.remove("show");
-}
+function hideLoader(){clearTimeout(loaderTimer);$("loader").classList.remove("show")}
 function calc(v){
   v=(v??"").toString().trim();
   if(!v) return "";
@@ -1071,72 +1079,46 @@ function isoDate(d){
   return dt.toISOString().slice(0,10);
 }
 function expired(r){
-  const d = isoDate(r.validity);
+  const d=isoDate(r.validity);
   if(!d) return false;
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  return new Date(d+"T00:00:00") < today;
+  const today=new Date(); today.setHours(0,0,0,0);
+  return new Date(d+"T00:00:00")<today;
 }
 function sessionValid(){return Date.now() < sessionUntil}
 function setSession(){sessionUntil = Date.now() + 4*60*60*1000}
-function showApp(){
-  $("pinGate").classList.add("hidden");
-  $("appShell").classList.remove("hidden");
-  load();
-  loadMarkups();
-}
+function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups();}
 function setEditorState(text){$("editorState").textContent=text}
-function truncate(v="",len=18){
-  const s=String(v);
-  return s.length>len?s.slice(0,len-1)+"…":s;
-}
+function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s;}
 function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
 
-/* GLOBAL POPUP */
+/* popup */
 const popupEl = $("globalPopup");
 let popupTimer=null;
-
-function showPopup(text, target){
+function showPopup(text,target){
   if(!text) return;
   clearTimeout(popupTimer);
   popupEl.textContent = text;
   popupEl.classList.add("show");
-
   const rect = target.getBoundingClientRect();
   const popupRect = popupEl.getBoundingClientRect();
-
   let left = rect.left + rect.width/2 - popupRect.width/2;
   let top = rect.top - popupRect.height - 6;
-
   if(left < 6) left = 6;
   if(left + popupRect.width > window.innerWidth - 6) left = window.innerWidth - popupRect.width - 6;
   if(top < 6) top = rect.bottom + 6;
-
   popupEl.style.left = left + "px";
   popupEl.style.top = top + "px";
 }
-function hidePopup(){
-  popupTimer = setTimeout(()=>popupEl.classList.remove("show"), 60);
-}
+function hidePopup(){popupTimer = setTimeout(()=>popupEl.classList.remove("show"),60)}
 
-/* TEXT VIEWER */
-function showTextViewer(label,value){
-  $("textViewerTitle").textContent = label || "DETAIL";
-  $("textViewerBody").textContent = value || "—";
-  $("textViewer").classList.remove("hidden");
-}
-function closeTextViewer(){
-  $("textViewer").classList.add("hidden");
-}
+/* text viewer */
+function showTextViewer(label,value){$("textViewerTitle").textContent = label || "DETAIL";$("textViewerBody").textContent = value || "—";$("textViewer").classList.remove("hidden")}
+function closeTextViewer(){$("textViewer").classList.add("hidden")}
 $("closeTextViewer").onclick = closeTextViewer;
-$("textViewer").addEventListener("click",e=>{
-  if(e.target.id==="textViewer") closeTextViewer();
-});
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") closeTextViewer();
-});
+$("textViewer").addEventListener("click",e=>{if(e.target.id==="textViewer") closeTextViewer()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape") closeTextViewer()});
 
-/* DATA LOAD */
+/* data load */
 async function load(){
   showLoader("UPDATING DATA","FETCHING RECORDS");
   try{
@@ -1154,32 +1136,29 @@ async function load(){
   }
 }
 function updateCounters(){
-  const ex = data.filter(expired).length;
+  const ex=data.filter(expired).length;
   $("expiredCount").textContent = `${ex} EXPIRED`;
   $("activeCount").textContent = `${data.length-ex} ACTIVE`;
 }
 function filteredRows(){
   const g = ($("globalSearch").value||"").toUpperCase();
-  let rows = [...data];
-
-  if(viewMode==="active") rows = rows.filter(r=>!expired(r));
-  if(viewMode==="expired") rows = rows.filter(r=>expired(r));
-
-  rows = rows.filter(r=>{
+  let rows=[...data];
+  if(viewMode==="active") rows=rows.filter(r=>!expired(r));
+  if(viewMode==="expired") rows=rows.filter(r=>expired(r));
+  rows=rows.filter(r=>{
     for(const k in filterMap){
-      const q = (filterMap[k]||"").trim().toUpperCase();
+      const q=(filterMap[k]||"").trim().toUpperCase();
       if(!q) continue;
-      const val = (k==="validity"?fmtDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
+      const val=(k==="validity"?fmtDate(r[k]||""):(r[k]||"")).toString().toUpperCase();
       if(!val.includes(q)) return false;
     }
     return true;
   });
-
-  if(g) rows = rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
+  if(g) rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
   return rows;
 }
 
-/* RENDER */
+/* render */
 function popupField(label,value,shortLen=14){
   const full = value ?? "";
   const clip = truncate(full,shortLen) || "—";
@@ -1189,22 +1168,22 @@ function renderDesktopRows(rows){
   return rows.map((r,i)=>`
     <tr>
       <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}></td>
-      <td class="pop-cell">${popupField("SEQ", r.seq||i+1, 16)}</td>
-      <td class="pop-cell">${popupField("CARRIER", r.carrier||"", 16)}</td>
-      <td class="pop-cell">${popupField("POR", r.por||"", 12)}</td>
-      <td class="pop-cell">${popupField("POL", r.pol||"", 12)}</td>
-      <td class="pop-cell">${popupField("POD", r.pod||"", 12)}</td>
-      <td class="pop-cell">${popupField("FPOD", r.fpod||"", 12)}</td>
-      <td class="pop-cell">${popupField("20DV", r.dv20||"", 10)}</td>
-      <td class="pop-cell">${popupField("20TYPE", r.container20Type||"", 8)}</td>
-      <td class="pop-cell">${popupField("40HC", r.hc40||"", 10)}</td>
-      <td class="pop-cell">${popupField("40TYPE", r.container40Type||"", 8)}</td>
-      <td class="pop-cell">${popupField("F/T", r.ft||"", 8)}</td>
-      <td class="pop-cell">${popupField("DATE", fmtDate(r.validity), 16)}</td>
-      <td class="pop-cell">${popupField("TYPE", displayType(r.type), 10)}</td>
-      <td class="pop-cell">${popupField("TT", r.tt||"", 8)}</td>
-      <td class="pop-cell">${popupField("ROUTING", r.via||"", 16)}</td>
-      <td class="pop-cell">${popupField("REMARKS", r.remarks||"", 18)}</td>
+      <td>${escapeHtml(r.seq || i+1)}</td>
+      <td>${popupField("CARRIER",r.carrier||"",16)}</td>
+      <td>${popupField("POR",r.por||"",12)}</td>
+      <td>${popupField("POL",r.pol||"",12)}</td>
+      <td>${popupField("POD",r.pod||"",12)}</td>
+      <td>${popupField("FPOD",r.fpod||"",12)}</td>
+      <td>${popupField("20DV",r.dv20||"",10)}</td>
+      <td>${popupField("20TYPE",r.container20Type||"",8)}</td>
+      <td>${popupField("40HC",r.hc40||"",10)}</td>
+      <td>${popupField("40TYPE",r.container40Type||"",8)}</td>
+      <td>${popupField("F/T",r.ft||"",8)}</td>
+      <td>${popupField("DATE",fmtDate(r.validity),16)}</td>
+      <td>${popupField("TYPE",displayType(r.type),10)}</td>
+      <td>${popupField("TT",r.tt||"",8)}</td>
+      <td>${popupField("ROUTING",r.via||"",16)}</td>
+      <td>${popupField("REMARKS",r.remarks||"",18)}</td>
       <td class="actions">
         <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
@@ -1222,8 +1201,8 @@ function renderMobileRows(rows){
     <div class="mobile-card">
       <div class="mobile-card-head">
         <div>
-          <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
-          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div>
+          <div class="mobile-card-title">${escapeHtml(r.carrier||"NO CARRIER")}</div>
+          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq||"")}</div>
         </div>
         <label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}> SELECT</label>
       </div>
@@ -1251,27 +1230,23 @@ function renderMobileRows(rows){
   `).join("");
 }
 function render(){
-  const rows = filteredRows();
-  $("tbody").innerHTML = renderDesktopRows(rows);
-  $("mobileRates").innerHTML = renderMobileRows(rows);
+  const rows=filteredRows();
+  $("tbody").innerHTML=renderDesktopRows(rows);
+  $("mobileRates").innerHTML=renderMobileRows(rows);
   const viewLabel = viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
-  $("sectionLabel").textContent = viewLabel;
+  $("sectionLabel").textContent=viewLabel;
   updateSelectedInfo();
 }
-function updateSelectedInfo(){
-  $("selectedCountInfo").textContent = `${selectedIds.size} SELECTED`;
-}
+function updateSelectedInfo(){$("selectedCountInfo").textContent=`${selectedIds.size} SELECTED`}
 function switchView(mode){
-  viewMode = mode;
+  viewMode=mode;
   ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn"].forEach(id=>$(id).classList.remove("active"));
   ["sectionRates","sectionDim","sectionMarkup"].forEach(id=>$(id).classList.remove("active"));
   $("editorPanel").classList.remove("hidden");
   $("sectionRates").classList.add("active");
-
   if(mode==="active") $("tabActiveBtn").classList.add("active");
   if(mode==="expired") $("tabExpiredBtn").classList.add("active");
   if(mode==="all") $("tabAllBtn").classList.add("active");
-
   if(mode==="dimensions"){
     $("tabDimBtn").classList.add("active");
     $("sectionRates").classList.remove("active");
@@ -1287,39 +1262,39 @@ function switchView(mode){
   if(["active","expired","all"].includes(mode)) render();
 }
 
-/* FORM */
+/* form */
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
-  $("rateType").value = "V";
+  $("rateType").value="V";
   if(resetEdit) editId=null;
   setEditorState("CREATE OR UPDATE RATE");
 }
-$("clear").onclick = ()=>clearForm(true);
+$("clear").onclick=()=>clearForm(true);
 
-/* SAVE / UPDATE */
-$("save").onclick = async ()=>{
+/* save/update */
+$("save").onclick=async()=>{
   showLoader("SAVING","CREATING NEW RECORD");
   try{
-    const now = new Date().toISOString();
+    const now=new Date().toISOString();
     await addDoc(collection(db,"rates"),{
-      seq: generateSeq(),
-      createdAt: now,
-      updatedAt: now,
-      carrier: upper($("carrier").value),
-      por: upper($("por").value),
-      pol: upper($("pol").value),
-      pod: upper($("pod").value),
-      fpod: upper($("fpod").value),
-      dv20: calc($("dv20").value),
-      container20Type: upper($("container20Type").value),
-      hc40: calc($("hc40").value),
-      container40Type: upper($("container40Type").value),
-      ft: $("ft").value,
-      validity: $("validity").value,
-      tt: $("tt").value,
-      via: upper($("via").value),
-      remarks: upper($("remarks").value),
-      type: $("rateType").value,
+      seq:generateSeq(),
+      createdAt:now,
+      updatedAt:now,
+      carrier:upper($("carrier").value),
+      por:upper($("por").value),
+      pol:upper($("pol").value),
+      pod:upper($("pod").value),
+      fpod:upper($("fpod").value),
+      dv20:calc($("dv20").value),
+      container20Type:upper($("container20Type").value),
+      hc40:calc($("hc40").value),
+      container40Type:upper($("container40Type").value),
+      ft:$("ft").value,
+      validity:$("validity").value,
+      tt:$("tt").value,
+      via:upper($("via").value),
+      remarks:upper($("remarks").value),
+      type:$("rateType").value,
       localCharges:[],
       charges20dv:[],
       charges40hc:[]
@@ -1332,33 +1307,33 @@ $("save").onclick = async ()=>{
     hideLoader();
   }
 };
-$("update").onclick = async ()=>{
+$("update").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD TO UPDATE.");
   showLoader("UPDATING","SAVING CHANGES");
   try{
-    const current = data.find(x=>x.id===editId) || {};
-    const now = new Date().toISOString();
+    const current=data.find(x=>x.id===editId)||{};
+    const now=new Date().toISOString();
     await updateDoc(doc(db,"rates",editId),{
-      seq: current.seq || generateSeq(),
-      updatedAt: now,
-      carrier: upper($("carrier").value),
-      por: upper($("por").value),
-      pol: upper($("pol").value),
-      pod: upper($("pod").value),
-      fpod: upper($("fpod").value),
-      dv20: calc($("dv20").value),
-      container20Type: upper($("container20Type").value),
-      hc40: calc($("hc40").value),
-      container40Type: upper($("container40Type").value),
-      ft: $("ft").value,
-      validity: $("validity").value,
-      tt: $("tt").value,
-      via: upper($("via").value),
-      remarks: upper($("remarks").value),
-      type: $("rateType").value,
-      localCharges: current.localCharges || [],
-      charges20dv: current.charges20dv || [],
-      charges40hc: current.charges40hc || []
+      seq:current.seq || generateSeq(),
+      updatedAt:now,
+      carrier:upper($("carrier").value),
+      por:upper($("por").value),
+      pol:upper($("pol").value),
+      pod:upper($("pod").value),
+      fpod:upper($("fpod").value),
+      dv20:calc($("dv20").value),
+      container20Type:upper($("container20Type").value),
+      hc40:calc($("hc40").value),
+      container40Type:upper($("container40Type").value),
+      ft:$("ft").value,
+      validity:$("validity").value,
+      tt:$("tt").value,
+      via:upper($("via").value),
+      remarks:upper($("remarks").value),
+      type:$("rateType").value,
+      localCharges:current.localCharges||[],
+      charges20dv:current.charges20dv||[],
+      charges40hc:current.charges40hc||[]
     });
     clearForm();
     await load();
@@ -1369,18 +1344,18 @@ $("update").onclick = async ()=>{
   }
 };
 
-/* DUPLICATE */
+/* duplicate */
 async function duplicateRate(id){
   const r=data.find(x=>x.id===id);
   if(!r) return;
   showLoader("DUPLICATING","CREATING COPY");
   try{
-    const now = new Date().toISOString();
-    const payload = {...r};
+    const now=new Date().toISOString();
+    const payload={...r};
     delete payload.id;
-    payload.seq = generateSeq();
-    payload.createdAt = now;
-    payload.updatedAt = now;
+    payload.seq=generateSeq();
+    payload.createdAt=now;
+    payload.updatedAt=now;
     await addDoc(collection(db,"rates"),payload);
     await load();
   }catch(err){
@@ -1389,21 +1364,19 @@ async function duplicateRate(id){
     hideLoader();
   }
 }
-$("duplicateBtn").onclick = async ()=>{
+$("duplicateBtn").onclick=async()=>{
   if(!editId) return alert("SELECT A RECORD TO DUPLICATE.");
   await duplicateRate(editId);
 };
 
-/* MIGRATE SEQ */
-$("migrateSeqBtn").onclick = async ()=>{
+/* seq update */
+$("migrateSeqBtn").onclick=async()=>{
   if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return;
   showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
   try{
     for(const r of data){
-      const newSeq = normalizeSeq(r);
-      if(r.seq !== newSeq){
-        await updateDoc(doc(db,"rates",r.id),{seq:newSeq});
-      }
+      const newSeq=normalizeSeq(r);
+      if(r.seq!==newSeq) await updateDoc(doc(db,"rates",r.id),{seq:newSeq});
     }
     await load();
   }catch(err){
@@ -1413,8 +1386,8 @@ $("migrateSeqBtn").onclick = async ()=>{
   }
 };
 
-/* BULK DELETE */
-$("bulkDeleteBtn").onclick = async ()=>{
+/* bulk delete */
+$("bulkDeleteBtn").onclick=async()=>{
   if(!selectedIds.size) return alert("SELECT RECORDS FIRST.");
   if(!confirm(`DELETE ${selectedIds.size} RECORD(S)?`)) return;
   showLoader("DELETING","REMOVING RECORDS");
@@ -1429,21 +1402,12 @@ $("bulkDeleteBtn").onclick = async ()=>{
   }
 };
 
-/* PIN */
+/* pin */
 function pinUnlock(){
-  const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin===PIN){
-    setSession();
-    showApp();
-  }else{
-    alert("INVALID PIN");
-    clearPin();
-  }
+  const pin=[$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
+  if(pin===PIN){setSession();showApp()}else{alert("INVALID PIN");clearPin();}
 }
-function clearPin(){
-  ["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");
-  $("pin1").focus();
-}
+function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");$("pin1").focus()}
 ["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
   $(id).addEventListener("input",e=>{
     e.target.value=e.target.value.replace(/\D/g,"").slice(0,1);
@@ -1454,10 +1418,10 @@ function clearPin(){
     if(e.key==="Enter") pinUnlock();
   });
 });
-$("unlockBtn").onclick = pinUnlock;
-$("clearPinBtn").onclick = clearPin;
+$("unlockBtn").onclick=pinUnlock;
+$("clearPinBtn").onclick=clearPin;
 
-/* COPY with HIDDEN MARKUP */
+/* copy with global + single user markup */
 function showCopyToast(msg="COPIED"){
   const t=document.createElement("div");
   t.className="copy-toast";
@@ -1465,34 +1429,34 @@ function showCopyToast(msg="COPIED"){
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),2000);
 }
-window.copyRate = async (id)=>{
-  const r = data.find(x=>x.id===id);
+function effectiveMu20(){return (mu20||0) + (userMu20||0)}
+function effectiveMu40(){return (mu40||0) + (userMu40||0)}
+window.copyRate=async(id)=>{
+  const r=data.find(x=>x.id===id);
   if(!r) return;
-  const lines = [];
+  const lines=[];
   if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
   if(r.por) lines.push(`POR: ${r.por}`);
   if(r.pol) lines.push(`POL: ${r.pol}`);
   if(r.pod) lines.push(`POD: ${r.pod}`);
   if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
 
-  const routeFrom = r.pol || r.por || "";
-  const routeTo = r.pod || "";
-  const base20 = parseFloat(r.dv20||"") || 0;
-  const base40 = parseFloat(r.hc40||"") || 0;
+  const routeFrom=r.pol || r.por || "";
+  const routeTo=r.pod || "";
+  const base20=parseFloat(r.dv20||"")||0;
+  const base40=parseFloat(r.hc40||"")||0;
+  const eff20=effectiveMu20();
+  const eff40=effectiveMu40();
+  const final20=base20 ? Math.round(base20 * (1 + eff20/100)) : 0;
+  const final40=base40 ? Math.round(base40 * (1 + eff40/100)) : 0;
+  const type20=r.container20Type ? ` (${r.container20Type})` : "";
+  const type40=r.container40Type ? ` (${r.container40Type})` : "";
 
-  const final20 = base20 ? Math.round(base20 * (1 + (mu20/100))) : 0;
-  const final40 = base40 ? Math.round(base40 * (1 + (mu40/100))) : 0;
-
-  const type20 = r.container20Type ? ` (${r.container20Type})` : "";
-  const type40 = r.container40Type ? ` (${r.container40Type})` : "";
-
-  const part20 = final20 ? `USD ${final20}/20DV${type20}` : "";
-  const part40 = final40 ? `USD ${final40}/40HC${type40}` : "";
-
+  const part20=final20 ? `USD ${final20}/20DV${type20}` : "";
+  const part40=final40 ? `USD ${final40}/40HC${type40}` : "";
   if(routeFrom || routeTo || part20 || part40){
     lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${[part20,part40].filter(Boolean).join(" & ")}`);
   }
-
   if(r.ft) lines.push(`F/T: ${r.ft} DAYS`);
   if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
   if(r.tt) lines.push(`TT: ${r.tt} DAYS`);
@@ -1500,32 +1464,26 @@ window.copyRate = async (id)=>{
   if(r.type) lines.push(`TYPE: ${displayType(r.type)}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
-  const text = lines.join("\n");
-  try{
-    await navigator.clipboard.writeText(text);
-  }catch{
+  const text=lines.join("\n");
+  try{await navigator.clipboard.writeText(text);}catch{
     const ta=document.createElement("textarea");
-    ta.value=text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
+    ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
   }
   showCopyToast("RATE COPIED");
 };
 
-/* EDIT / DELETE */
-window.editRate = (id)=>{
-  const r = data.find(x=>x.id===id);
+/* edit/delete */
+window.editRate=(id)=>{
+  const r=data.find(x=>x.id===id);
   if(!r) return;
-  editId = id;
+  editId=id;
   setEditorState(`EDITING ${r.seq || "SELECTED RATE"}`);
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value = r[k] || "");
-  $("container20Type").value = r.container20Type || "";
-  $("container40Type").value = r.container40Type || "";
-  $("rateType").value = r.type === "S" ? "S" : "V";
+  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks"].forEach(k=>$(k).value=r[k]||"");
+  $("container20Type").value=r.container20Type||"";
+  $("container40Type").value=r.container40Type||"";
+  $("rateType").value=r.type==="S"?"S":"V";
 };
-window.delRate = async (id)=>{
+window.delRate=async(id)=>{
   if(!confirm("DELETE THIS RATE?")) return;
   showLoader("DELETING","REMOVING RECORD");
   try{
@@ -1539,46 +1497,55 @@ window.delRate = async (id)=>{
   }
 };
 
-/* MARKUPS */
+/* markups load/save */
+function updateAppliedMarkupsList(){
+  const eff20=effectiveMu20();
+  const eff40=effectiveMu40();
+  let html="";
+  html+=`<div class="applied-markup"><span><strong>GLOBAL 20DV:</strong> ${mu20?`+${mu20}%`:"0%"}</span></div>`;
+  html+=`<div class="applied-markup"><span><strong>GLOBAL 40HC:</strong> ${mu40?`+${mu40}%`:"0%"}</span></div>`;
+  html+=`<div class="applied-markup"><span><strong>USER 20DV:</strong> ${userMu20?`+${userMu20}%`:"0%"}</span></div>`;
+  html+=`<div class="applied-markup"><span><strong>USER 40HC:</strong> ${userMu40?`+${userMu40}%`:"0%"}</span></div>`;
+  html+=`<div class="applied-markup"><span><strong>EFFECTIVE 20DV:</strong> ${eff20?`+${eff20}%`:"0%"}</span></div>`;
+  html+=`<div class="applied-markup"><span><strong>EFFECTIVE 40HC:</strong> ${eff40?`+${eff40}%`:"0%"}</span></div>`;
+  if(!mu20 && !mu40 && !userMu20 && !userMu40){
+    html='<div style="padding:4px;color:var(--muted)">No markup configured. COPY uses base rates.</div>';
+  }
+  $("appliedMarkupsList").innerHTML=html;
+}
 function loadMarkups(){
-  const s20 = localStorage.getItem(MU20_KEY);
-  const s40 = localStorage.getItem(MU40_KEY);
-  if(s20!==null){
-    mu20 = parseFloat(s20)||0;
-    $("mu20").value = s20;
-    $("mu20Status").textContent = mu20 ? `${mu20}%` : "NOT SET";
-  }
-  if(s40!==null){
-    mu40 = parseFloat(s40)||0;
-    $("mu40").value = s40;
-    $("mu40Status").textContent = mu40 ? `${mu40}%` : "NOT SET";
-  }
+  const s20=localStorage.getItem(MU20_KEY);
+  const s40=localStorage.getItem(MU40_KEY);
+  const us20=localStorage.getItem(USER_MU20_KEY);
+  const us40=localStorage.getItem(USER_MU40_KEY);
+
+  mu20=s20!==null?(parseFloat(s20)||0):0;
+  mu40=s40!==null?(parseFloat(s40)||0):0;
+  userMu20=us20!==null?(parseFloat(us20)||0):0;
+  userMu40=us40!==null?(parseFloat(us40)||0):0;
+
+  $("mu20").value = s20 ?? "";
+  $("mu40").value = s40 ?? "";
+  $("userMu20").value = us20 ?? "";
+  $("userMu40").value = us40 ?? "";
+  $("mu20Status").textContent = mu20?`${mu20}%`:"NOT SET";
+  $("mu40Status").textContent = mu40?`${mu40}%`:"NOT SET";
   updateAppliedMarkupsList();
 }
-function updateAppliedMarkupsList(){
-  if(!mu20 && !mu40){
-    $("appliedMarkupsList").innerHTML = '<div style="padding:4px;color:var(--muted)">No markup configured. COPY uses base rates.</div>';
-    return;
-  }
-  let html="";
-  if(mu20) html+=`<div class="applied-markup"><span><strong>20DV:</strong> +${mu20}% (copy only)</span></div>`;
-  if(mu40) html+=`<div class="applied-markup"><span><strong>40HC:</strong> +${mu40}% (copy only)</span></div>`;
-  $("appliedMarkupsList").innerHTML = html;
-}
-$("saveMarkupsBtn").onclick = ()=>{
-  const v20 = parseFloat($("mu20").value||"0")||0;
-  const v40 = parseFloat($("mu40").value||"0")||0;
+
+$("saveMarkupsBtn").onclick=()=>{
+  const v20=parseFloat($("mu20").value||"0")||0;
+  const v40=parseFloat($("mu40").value||"0")||0;
   if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
-  mu20 = v20;
-  mu40 = v40;
+  mu20=v20;mu40=v40;
   localStorage.setItem(MU20_KEY,String(v20));
   localStorage.setItem(MU40_KEY,String(v40));
-  $("mu20Status").textContent = v20 ? `${v20}%` : "NOT SET";
-  $("mu40Status").textContent = v40 ? `${v40}%` : "NOT SET";
+  $("mu20Status").textContent=v20?`${v20}%`:"NOT SET";
+  $("mu40Status").textContent=v40?`${v40}%`:"NOT SET";
   updateAppliedMarkupsList();
-  showCopyToast("MARKUPS SAVED");
+  showCopyToast("GLOBAL MARKUPS SAVED");
 };
-$("clearMarkupsBtn").onclick = ()=>{
+$("clearMarkupsBtn").onclick=()=>{
   mu20=0;mu40=0;
   $("mu20").value="";$("mu40").value="";
   $("mu20Status").textContent="NOT SET";
@@ -1586,10 +1553,29 @@ $("clearMarkupsBtn").onclick = ()=>{
   localStorage.removeItem(MU20_KEY);
   localStorage.removeItem(MU40_KEY);
   updateAppliedMarkupsList();
-  showCopyToast("MARKUPS CLEARED");
+  showCopyToast("GLOBAL MARKUPS CLEARED");
 };
 
-/* EXPORT */
+$("saveUserMarkupBtn").onclick=()=>{
+  const v20=parseFloat($("userMu20").value||"0")||0;
+  const v40=parseFloat($("userMu40").value||"0")||0;
+  if(v20<0 || v40<0) return alert("MARKUPS CANNOT BE NEGATIVE.");
+  userMu20=v20;userMu40=v40;
+  localStorage.setItem(USER_MU20_KEY,String(v20));
+  localStorage.setItem(USER_MU40_KEY,String(v40));
+  updateAppliedMarkupsList();
+  showCopyToast("USER MARKUPS SAVED");
+};
+$("clearUserMarkupBtn").onclick=()=>{
+  userMu20=0;userMu40=0;
+  $("userMu20").value="";$("userMu40").value="";
+  localStorage.removeItem(USER_MU20_KEY);
+  localStorage.removeItem(USER_MU40_KEY);
+  updateAppliedMarkupsList();
+  showCopyToast("USER MARKUPS CLEARED");
+};
+
+/* export */
 function toCSV(rows){
   const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
   const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
@@ -1607,13 +1593,13 @@ function download(name,txt){
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),500);
 }
-$("exportBtn").onclick = ()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
-$("downloadTemplateBtn").onclick = ()=>{
+$("exportBtn").onclick=()=>download(`fr8x_${viewMode}_export.csv`,toCSV(filteredRows()));
+$("downloadTemplateBtn").onclick=()=>{
   const tpl='SEQ,CARRIER,POR,POL,POD,FPOD,20DV,20TYPE,40HC,40TYPE,F/T,DATE,TYPE,TT,ROUTING,REMARKS\n,MSC,DELHI,NHAVA SHEVA,JEBEL ALI,DUBAI,3602,,4284,,6,2026-05-31,V,14,VIA KHOR AL FAKKAN,SAMPLE ROW';
   download("fr8x_upload_template.csv",tpl);
 };
 
-/* UPLOAD */
+/* upload */
 function openUpload(){$("uploadOverlay").classList.remove("hidden");renderUpload()}
 function closeUpload(){$("uploadOverlay").classList.add("hidden")}
 $("openUploadBtn").onclick=openUpload;
@@ -1646,9 +1632,9 @@ function parseCSV(txt){
   });
 }
 function normalizeUploadRow(r){
-  const rawType = upper(r.type || r.vtype || r.stype || "");
-  const typeCode = rawType==="S" || rawType==="SAILING" ? "S" : "V";
-  return {
+  const rawType=upper(r.type || r.vtype || r.stype || "");
+  const typeCode=rawType==="S" || rawType==="SAILING" ? "S" : "V";
+  return{
     seq:r.seq||r.sequence||"",
     carrier:upper(r.carrier),
     por:upper(r.por),
@@ -1668,27 +1654,27 @@ function normalizeUploadRow(r){
   };
 }
 function renderUpload(){
-  $("uploadBody").innerHTML = uploadRows.map((r,i)=>`
+  $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
     <tr>
       <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
-      <td class="pop-cell">${popupField("SEQ",r.seq||i+1,14)}</td>
-      <td class="pop-cell">${popupField("CARRIER",r.carrier||"",14)}</td>
-      <td class="pop-cell">${popupField("POR",r.por||"",12)}</td>
-      <td class="pop-cell">${popupField("POL",r.pol||"",12)}</td>
-      <td class="pop-cell">${popupField("POD",r.pod||"",12)}</td>
-      <td class="pop-cell">${popupField("FPOD",r.fpod||"",12)}</td>
-      <td class="pop-cell">${popupField("20DV",r.dv20||"",10)}</td>
-      <td class="pop-cell">${popupField("40HC",r.hc40||"",10)}</td>
-      <td class="pop-cell">${popupField("F/T",r.ft||"",8)}</td>
-      <td class="pop-cell">${popupField("DATE",fmtDate(r.validity),16)}</td>
-      <td class="pop-cell">${popupField("TYPE",displayType(r.type),10)}</td>
-      <td class="pop-cell">${popupField("TT",r.tt||"",8)}</td>
-      <td class="pop-cell">${popupField("ROUTING",r.via||"",16)}</td>
-      <td class="pop-cell">${popupField("REMARKS",r.remarks||"",16)}</td>
+      <td>${escapeHtml(r.seq||i+1)}</td>
+      <td>${escapeHtml(r.carrier||"")}</td>
+      <td>${escapeHtml(r.por||"")}</td>
+      <td>${escapeHtml(r.pol||"")}</td>
+      <td>${escapeHtml(r.pod||"")}</td>
+      <td>${escapeHtml(r.fpod||"")}</td>
+      <td>${escapeHtml(r.dv20||"")}</td>
+      <td>${escapeHtml(r.hc40||"")}</td>
+      <td>${escapeHtml(r.ft||"")}</td>
+      <td>${escapeHtml(fmtDate(r.validity))}</td>
+      <td>${escapeHtml(displayType(r.type))}</td>
+      <td>${escapeHtml(r.tt||"")}</td>
+      <td>${escapeHtml(r.via||"")}</td>
+      <td>${escapeHtml(r.remarks||"")}</td>
     </tr>
   `).join("");
 
-  $("uploadMobile").innerHTML = uploadRows.map((r,i)=>`
+  $("uploadMobile").innerHTML=uploadRows.map((r,i)=>`
     <div class="mobile-card">
       <div class="mobile-card-head">
         <div>
@@ -1719,8 +1705,8 @@ $("fileInput").addEventListener("change",async e=>{
   if(!f) return;
   showLoader("IMPORTING","READING FILE");
   try{
-    const txt = await f.text();
-    uploadRows = parseCSV(txt).map(normalizeUploadRow);
+    const txt=await f.text();
+    uploadRows=parseCSV(txt).map(normalizeUploadRow);
     selectedUploadRows.clear();
     renderUpload();
   }catch(err){
@@ -1739,21 +1725,20 @@ $("uploadOverlay").addEventListener("change",e=>{
   const cb=e.target.closest("input[data-ui]");
   if(!cb) return;
   const i=Number(cb.dataset.ui);
-  if(cb.checked) selectedUploadRows.add(i);
-  else selectedUploadRows.delete(i);
+  if(cb.checked) selectedUploadRows.add(i); else selectedUploadRows.delete(i);
 });
-$("exportSelectedBtn").onclick = ()=>{
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i)=>selectedUploadRows.has(i)) : filteredRows();
+$("exportSelectedBtn").onclick=()=>{
+  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows();
   download("fr8x_selected_export.csv",toCSV(rows));
 };
-$("applyImportBtn").onclick = async ()=>{
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i)=>selectedUploadRows.has(i)) : uploadRows;
+$("applyImportBtn").onclick=async()=>{
+  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
   if(!rows.length) return alert("NO DATA TO IMPORT.");
   showLoader("IMPORTING","ADDING RECORDS");
   try{
     for(const r of rows){
       if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
-      const now = new Date().toISOString();
+      const now=new Date().toISOString();
       await addDoc(collection(db,"rates"),{
         seq:r.seq||generateSeq(),
         createdAt:now,
@@ -1787,7 +1772,7 @@ $("applyImportBtn").onclick = async ()=>{
   }
 };
 
-/* GLOBAL EVENTS */
+/* events */
 $("globalSearch").addEventListener("input",render);
 document.querySelectorAll(".filter-row input").forEach(inp=>{
   inp.addEventListener("input",e=>{
@@ -1798,7 +1783,6 @@ document.querySelectorAll(".filter-row input").forEach(inp=>{
 document.querySelectorAll(".section-tabs button").forEach(btn=>{
   btn.addEventListener("click",()=>switchView(btn.dataset.view));
 });
-
 document.addEventListener("click",e=>{
   const btn=e.target.closest("button[data-action]");
   if(btn){
@@ -1828,29 +1812,24 @@ document.addEventListener("focusout",e=>{
   const field=e.target.closest(".pop-field");
   if(field) hidePopup();
 });
-
 document.addEventListener("change",e=>{
   const cb=e.target.closest(".row-check[data-id]");
   if(cb){
     const id=cb.dataset.id;
-    if(cb.checked) selectedIds.add(id);
-    else selectedIds.delete(id);
-    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{
-      if(el!==cb) el.checked=cb.checked;
-    });
+    if(cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{if(el!==cb) el.checked=cb.checked;});
     updateSelectedInfo();
   }
 });
 $("selectAllRows").addEventListener("change",e=>{
   document.querySelectorAll("#tbody .row-check[data-id], #mobileRates .row-check[data-id]").forEach(cb=>{
     cb.checked=e.target.checked;
-    if(e.target.checked) selectedIds.add(cb.dataset.id);
-    else selectedIds.delete(cb.dataset.id);
+    if(e.target.checked) selectedIds.add(cb.dataset.id); else selectedIds.delete(cb.dataset.id);
   });
   updateSelectedInfo();
 });
 
-/* INIT */
+/* init */
 setEditorState("CREATE OR UPDATE RATE");
 if(sessionValid()) showApp();
 </script>
