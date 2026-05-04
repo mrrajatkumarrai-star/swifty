@@ -1,196 +1,946 @@
-<!-- GLOBAL HTML -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>GLOBAL RATES</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <style>
 :root{
-  --bg:#f0f4fb;--surface:#fff;--surface-2:#f8fafc;--border:#dbe3ef;--text:#142033;--muted:#66758b;
-  --primary:#2563eb;--primary-2:#1d4ed8;--success:#059669;--danger:#dc2626;--warning:#d97706;
-  --shadow:0 10px 30px rgba(15,23,42,.09);--shadow-soft:0 4px 16px rgba(15,23,42,.06);
+  --bg:#f4f6fb;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --border:#dbe3ef;
+  --text:#0f172a;
+  --muted:#64748b;
+  --primary:#0f172a;
+  --primary-2:#1e293b;
+  --success:#059669;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --radius-sm:10px;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;font-family:Inter,Calibri,"Segoe UI",system-ui,sans-serif;font-size:13px;margin:0;background:var(--bg);color:var(--text)}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Calibri,Segoe UI,system-ui,sans-serif;
+  font-size:12px;
+  color:var(--text);
+  background:var(--bg);
+}
 .hidden{display:none!important}
-.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 20px;box-shadow:var(--shadow-soft)}
-.controls{display:flex;flex-direction:column;gap:10px}
-.search-wrap{position:relative;display:flex;align-items:center}
-.search-wrap input{padding:10px 14px 10px 40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);width:100%;font-size:13px;outline:none;transition:.2s}
-.search-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-.search-icon{position:absolute;left:12px;color:var(--muted);font-size:16px}
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tab{padding:8px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-weight:800;font-size:12px;cursor:pointer;transition:.16s;outline:none}
-.tab:hover{border-color:var(--primary);color:var(--primary)}
-.tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.hero{padding:18px 20px 0}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;gap:4px}
-.stat-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.04em}
-.stat-value{font-size:22px;font-weight:900;letter-spacing:-.02em}
-.stat-value.green{color:var(--success)}.stat-value.red{color:var(--danger)}.stat-value.blue{color:var(--primary)}
-.filters{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
-.filter-pill{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;transition:.15s}
-.filter-pill:hover{border-color:var(--primary);color:var(--primary)}
-.filter-pill.active{border-color:var(--primary);color:var(--primary);background:#eef4ff}
-.rates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;padding:0 20px 28px}
-.rate-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);overflow:hidden;transition:.2s ease;cursor:default}
-.rate-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.rate-card.expired{border-color:#fecaca;opacity:.88}
-.rate-card.expired .rc-header{background:linear-gradient(135deg,#fef2f2,#fff)}
-.rc-header{background:linear-gradient(135deg,#eef4ff,#f8fafc);padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.rc-route{font-size:12px;color:var(--text);font-weight:900;letter-spacing:.01em}
-.rc-badges{display:flex;gap:5px;align-items:flex-start;flex-wrap:wrap}
-.badge{padding:5px 10px;border-radius:999px;font-weight:800;font-size:11px;border:1px solid transparent}
-.badge.green{background:#ecfdf5;color:var(--success);border-color:#a7f3d0}
-.badge.red{background:#fef2f2;color:var(--danger);border-color:#fecaca}
-.badge.orange{background:#fff7ed;color:var(--warning);border-color:#fed7aa}
-.rc-body{padding:14px 16px}
-.rc-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.rc-rate-box{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
-.rc-rate-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin-bottom:4px}
-.rc-rate-val{font-size:18px;font-weight:900;color:var(--primary);line-height:1}
-.rc-rate-type{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px}
-.rc-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.rc-meta-item{display:flex;flex-direction:column;gap:2px}
-.rc-meta-k{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
-.rc-meta-v{font-size:12px;font-weight:700;word-break:break-word}
-.rc-remarks{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:11px;color:var(--muted);line-height:1.5}
-.rc-remarks strong{color:var(--text);font-weight:800}
-.rc-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.rc-seq{font-size:10px;color:var(--muted);font-weight:700}
-.rc-validity{font-size:11px;font-weight:800}
-.rc-validity.green{color:var(--success)}.rc-validity.orange{color:var(--warning)}.rc-validity.red{color:var(--danger)}
-.copy-btn{min-height:32px;padding:0 12px;border-radius:9px;border:1.5px solid var(--primary);background:#eef4ff;color:var(--primary);font-weight:800;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.16s}
-.copy-btn:hover{background:var(--primary);color:#fff}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;color:var(--muted)}
-.empty-icon{font-size:48px;margin-bottom:12px;opacity:.35}
-.empty-text{font-size:15px;font-weight:800;margin-bottom:4px}
-.empty-sub{font-size:12px}
-.overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end;justify-content:center;background:rgba(15,23,42,.25);backdrop-filter:blur(4px);padding:0}
-@media(min-width:600px){.overlay{align-items:center;padding:20px}}
-.modal{background:var(--surface);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:22px 20px 28px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow)}
-@media(min-width:600px){.modal{border-radius:22px}}
-.modal-handle{width:48px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 16px}
-.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}
-.modal-route{font-size:13px;color:var(--text);font-weight:900;line-height:1.5}
-.close-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-.modal-rates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.modal-rate-box{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px}
-.modal-rate-label{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px}
-.modal-rate-val{font-size:24px;font-weight:900;color:var(--primary)}
-.modal-rate-type{font-size:11px;color:var(--muted);font-weight:700;margin-top:3px}
-.modal-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.mf{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px}
-.mf-k{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin-bottom:3px}
-.mf-v{font-size:13px;font-weight:800;word-break:break-word}
-.modal-remarks{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:12px;line-height:1.55;margin-bottom:16px}
-.modal-copy-btn{width:100%;min-height:44px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s}
-.modal-copy-btn:hover{background:var(--primary-2)}
-.tc-wrap{margin:0 20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow-soft)}
-.tc-title{font-size:14px;font-weight:900;margin-bottom:10px}
-.tc-text{font-size:11px;line-height:1.7;color:var(--muted);white-space:pre-wrap}
-.copy-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:11px 20px;border-radius:12px;box-shadow:0 10px 30px rgba(15,23,42,.25);font-weight:800;z-index:1000;animation:toastIn .25s ease;white-space:nowrap}
-@keyframes toastIn{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
-.loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.15);backdrop-filter:blur(4px)}
-.loader.show{display:flex}.loader-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:24px 28px;text-align:center;box-shadow:var(--shadow)}.spinner{width:38px;height:38px;margin:0 auto 10px;border-radius:50%;border:3px solid rgba(37,99,235,.14);border-top-color:var(--primary);animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:600px){.rates-grid{grid-template-columns:1fr;padding:0 12px 24px}.topbar{padding:10px 12px}.hero{padding:14px 12px 0}.filters{padding:0 12px 10px}.tc-wrap{margin:0 12px 24px}.modal-rates,.modal-fields,.rc-rates,.rc-meta{grid-template-columns:1fr}}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.brand-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.brand{
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.note{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.03em;
+}
+.header-tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.search-wrap{
+  flex:1 1 280px;
+  position:relative;
+}
+.search-wrap i{
+  position:absolute;
+  top:50%;
+  left:10px;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:13px;
+}
+.search-wrap input{
+  width:100%;
+  min-height:34px;
+  padding:7px 10px 7px 30px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:12px;
+  outline:none;
+}
+.search-wrap input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 2px rgba(15,23,42,.08);
+}
+.tabs{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.tabs button{
+  min-height:34px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:11px;
+  font-weight:800;
+  padding:0 12px;
+  cursor:pointer;
+}
+.tabs button.active{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+.hero{
+  padding:14px 16px 6px;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  box-shadow:var(--shadow);
+}
+.stat .k{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:800;
+  letter-spacing:.05em;
+}
+.stat .v{
+  font-size:21px;
+  font-weight:900;
+  margin-top:4px;
+}
+.stat .green{color:var(--success)}
+.stat .red{color:var(--danger)}
+
+.container{
+  width:100%;
+  padding:10px 16px 20px;
+}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.section-title{
+  font-size:14px;
+  font-weight:900;
+}
+.section-sub{
+  font-size:11px;
+  color:var(--muted);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:12px;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.card-top{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,#fff,#fafcff);
+}
+.route{
+  font-size:13px;
+  font-weight:900;
+  line-height:1.35;
+  margin-bottom:6px;
+}
+.badges{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.badge{
+  padding:4px 9px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:10px;
+  font-weight:800;
+}
+.badge.success{color:var(--success);border-color:#bbf7d0;background:#ecfdf5}
+.badge.danger{color:var(--danger);border-color:#fecaca;background:#fef2f2}
+.badge.warning{color:var(--warning);border-color:#fed7aa;background:#fff7ed}
+.card-body{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.rate-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.rate-box{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--surface-2);
+  padding:10px;
+}
+.rate-box .rk{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:4px;
+}
+.rate-box .rv{
+  font-size:18px;
+  font-weight:900;
+  line-height:1;
+}
+.rate-box .rt{
+  margin-top:4px;
+  font-size:10px;
+  color:var(--muted);
+  font-weight:700;
+}
+.meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.meta-item{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:8px;
+  background:#fff;
+}
+.meta-item .mk{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:3px;
+}
+.meta-item .mv{
+  font-size:12px;
+  font-weight:800;
+  word-break:break-word;
+}
+.remarks{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:8px;
+  font-size:11px;
+  line-height:1.45;
+  color:var(--text);
+}
+.remarks .rk{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:3px;
+}
+.card-foot{
+  margin-top:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  padding:10px 12px;
+  background:#fcfdff;
+}
+.seq{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:800;
+}
+.validity{
+  font-size:11px;
+  font-weight:800;
+}
+.validity.green{color:var(--success)}
+.validity.red{color:var(--danger)}
+button{
+  min-height:32px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  font-size:12px;
+  font-weight:800;
+  padding:0 10px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+button.primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+button.ghost{
+  background:#fff;
+}
+.empty{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:30px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+.loader{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(15,23,42,.18);
+  backdrop-filter:blur(4px);
+}
+.loader.show{display:flex}
+.loader-box{
+  min-width:220px;
+  padding:16px 18px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:#fff;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.spinner{
+  width:34px;
+  height:34px;
+  margin:0 auto 8px;
+  border-radius:50%;
+  border:3px solid rgba(15,23,42,.12);
+  border-top-color:var(--primary);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:1200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(15,23,42,.22);
+  backdrop-filter:blur(4px);
+  padding:16px;
+}
+.modal{
+  width:min(680px,calc(100% - 12px));
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+  margin-bottom:10px;
+}
+.modal-title{
+  font-size:15px;
+  font-weight:900;
+  line-height:1.4;
+}
+.modal-sub{
+  color:var(--muted);
+  font-size:11px;
+}
+.modal-rates{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:10px;
+}
+.modal-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.modal-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.copy-toast{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  background:var(--primary);
+  color:#fff;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:800;
+  z-index:1300;
+  box-shadow:0 12px 24px rgba(15,23,42,.18);
+}
+.tc-box{
+  margin-top:16px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:var(--shadow);
+}
+.tc-title{
+  font-size:14px;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.tc-text{
+  font-size:11px;
+  line-height:1.65;
+  color:var(--muted);
+  white-space:pre-wrap;
+}
+
+@media (max-width:900px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .container,.hero{padding-left:10px;padding-right:10px}
+  .grid{grid-template-columns:1fr}
+  .rate-grid,.meta,.modal-rates,.modal-meta{grid-template-columns:1fr}
+  .brand{font-size:16px}
+}
 </style>
 </head>
 <body>
 
-<div id="loader" class="loader"><div class="loader-box"><div class="spinner"></div><div style="font-weight:900;font-size:14px">LOADING RATES</div><div style="font-size:11px;color:var(--muted);margin-top:4px">PLEASE WAIT</div></div></div>
+<div id="loader" class="loader">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <div style="font-size:13px;font-weight:900;">LOADING RATES...</div>
+    <div class="note" style="margin-top:4px;">PLEASE WAIT</div>
+  </div>
+</div>
 
-<div class="topbar">
-  <div class="controls">
-    <div class="search-wrap"><i class="bi bi-search search-icon"></i><input id="searchInput" placeholder="Search origin, destination, routing…"></div>
+<div class="header">
+  <div class="brand-row">
+    <div>
+      <div class="brand">GLOBAL RATES</div>
+      <div class="note">LIVE FCL RATE SHOWCASE</div>
+    </div>
+  </div>
+
+  <div class="header-tools">
+    <div class="search-wrap">
+      <i class="bi bi-search"></i>
+      <input id="searchInput" placeholder="Search carrier, POR, POL, POD, FPOD, routing, remarks..." />
+    </div>
+
     <div class="tabs">
-      <button class="tab active" data-view="active">ACTIVE RATES</button>
-      <button class="tab" data-view="expired">EXPIRED RATES</button>
-      <button class="tab" data-view="all">ALL RATES</button>
+      <button class="active" data-view="active" id="tabActive">ACTIVE</button>
+      <button data-view="expired" id="tabExpired">EXPIRED</button>
+      <button data-view="all" id="tabAll">ALL</button>
     </div>
   </div>
 </div>
 
-<div class="hero"><div class="stats-row" id="statsRow"></div></div>
-<div class="filters" id="filterPills"></div>
-<div class="rates-grid" id="ratesGrid"></div>
+<div class="hero">
+  <div class="stats">
+    <div class="stat">
+      <div class="k">TOTAL RATES</div>
+      <div class="v" id="statTotal">0</div>
+    </div>
+    <div class="stat">
+      <div class="k">ACTIVE RATES</div>
+      <div class="v green" id="statActive">0</div>
+    </div>
+    <div class="stat">
+      <div class="k">EXPIRED RATES</div>
+      <div class="v red" id="statExpired">0</div>
+    </div>
+    <div class="stat">
+      <div class="k">VISIBLE NOW</div>
+      <div class="v" id="statVisible">0</div>
+    </div>
+  </div>
+</div>
 
-<div class="tc-wrap">
-  <div class="tc-title">Terms and Conditions</div>
-  <div class="tc-text">1. All quotations are subject to space and equipment availability at the time of booking.
-2. Rates are based on the routing, cargo details, and validity shown in the quote only.
-3. Any change in origin, destination, schedule, cargo details, or equipment may revise the total rate.
-4. Surcharges, local charges, port charges, documentation fees, customs fees, insurance, and other third-party costs are excluded unless specifically mentioned.
-5. Cargo acceptance remains subject to service provider approval, operational feasibility, and regulatory compliance.
-6. Dangerous goods, special equipment, overweight, over-dimension, reefer, and project cargo are subject to separate approval and revised pricing where applicable.
-7. Transit time is indicative only and may vary due to operational, weather, port congestion, blank sailing, customs, or carrier-related reasons.
-8. Detention, demurrage, storage, inspection, amendment, roll-over, or any additional operational cost will be for the shipper or consignee account unless otherwise agreed in writing.
-9. This quotation is non-binding until booking confirmation is issued.
-10. Nil credit on initial booking.
-11. Minimum 20-40 FEUs required for first confirmation.
-12. Final shipment remains subject to standard freight forwarding terms and service provider acceptance.</div>
+<div class="container">
+  <div class="section-head">
+    <div class="section-title" id="sectionTitle">ACTIVE RATES</div>
+    <div class="section-sub">FINAL FREIGHT ONLY</div>
+  </div>
+
+  <div class="grid" id="ratesGrid"></div>
+
+  <div class="tc-box">
+    <div class="tc-title">Terms & Conditions</div>
+    <div class="tc-text">1. Rates are subject to space and equipment availability at the time of booking.
+2. Validity is as mentioned against each offer unless withdrawn earlier.
+3. Routing, transit time, and sailing details are indicative and subject to line schedule.
+4. Detention, demurrage, customs examination, storage, insurance, and destination charges are excluded unless stated otherwise.
+5. All bookings remain subject to final confirmation.</div>
+  </div>
 </div>
 
 <div id="rateModal" class="overlay hidden">
-  <div class="modal" id="modalBox">
-    <div class="modal-handle"></div>
+  <div class="modal">
     <div class="modal-head">
-      <div><div class="modal-route" id="mRoute"></div></div>
-      <div class="close-btn" id="closeModal"><i class="bi bi-x-lg" style="font-size:13px"></i></div>
+      <div>
+        <div class="modal-title" id="modalTitle">RATE DETAIL</div>
+        <div class="modal-sub" id="modalSub">FULL DETAILS</div>
+      </div>
+      <button class="ghost" id="closeModal"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div class="modal-rates" id="mRates"></div>
-    <div class="modal-fields" id="mFields"></div>
-    <div class="modal-remarks" id="mRemarks" style="display:none"></div>
-    <button class="modal-copy-btn" id="mCopyBtn"><i class="bi bi-clipboard"></i> COPY RATE</button>
+
+    <div class="modal-rates" id="modalRates"></div>
+    <div class="modal-meta" id="modalMeta"></div>
+
+    <div class="remarks" id="modalRemarks" style="margin-top:10px;"></div>
+
+    <div class="modal-actions">
+      <button class="primary" id="copyModalBtn"><i class="bi bi-clipboard"></i> COPY RATE</button>
+      <button class="ghost" id="closeModalBtn2"><i class="bi bi-x-circle"></i> CLOSE</button>
+    </div>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-const app = initializeApp({projectId:"swifty-52e05"});
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const app = initializeApp({ projectId: "swifty-52e05" });
 const db = getFirestore(app);
-const $ = id => document.getElementById(id);
-const MU20_KEY = "global_mu20", MU40_KEY = "global_mu40";
-let mu20 = 0, mu40 = 0;
-let allData = [], viewMode = "active", searchQ = "", activeFilter = "";
-let currentRate = null;
-function loadMarkups(){ mu20 = parseFloat(localStorage.getItem(MU20_KEY) || "0") || 0; mu40 = parseFloat(localStorage.getItem(MU40_KEY) || "0") || 0; }
-function escHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function fmtDate(d){if(!d)return ""; const dt=new Date(d); if(isNaN(dt))return String(d).toUpperCase(); return dt.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase()}
-function isoDate(d){if(!d)return ""; const dt=new Date(d); if(isNaN(dt))return ""; return dt.toISOString().slice(0,10)}
-function expired(r){const d=isoDate(r.validity); if(!d)return false; const t=new Date(); t.setHours(0,0,0,0); return new Date(d+"T00:00:00")<t}
-function daysLeft(r){const d=isoDate(r.validity); if(!d)return null; const t=new Date(); t.setHours(0,0,0,0); return Math.round((new Date(d+"T00:00:00")-t)/86400000)}
-function truncate(v="",n=40){const s=String(v); return s.length>n?s.slice(0,n-1)+"…":s}
-function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
-function applyMarkup(base, muPct){ return base ? Math.round(base * (1 + muPct/100)) : 0 }
-function rateDisplay(rawVal, muPct){ const base = parseFloat(rawVal||"") || 0; if(!base) return null; return muPct ? applyMarkup(base, muPct) : Math.round(base); }
-function showLoader(){$("loader").classList.add("show")}
-function hideLoader(){$("loader").classList.remove("show")}
-async function loadRates(){ showLoader(); const snap = await getDocs(collection(db,"rates")); allData = []; snap.forEach(d=>allData.push({id:d.id,...d.data()})); allData.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0)); buildStats(); buildFilterPills(); render(); hideLoader(); }
-function buildStats(){ const active = allData.filter(r=>!expired(r)); const exp = allData.filter(r=>expired(r)); const origins = new Set(allData.map(r=>r.por||r.pol||"").filter(Boolean)); const dests = new Set(allData.map(r=>r.pod||"").filter(Boolean)); $("statsRow").innerHTML = [{label:"ACTIVE RATES", val:active.length, cls:"green"},{label:"EXPIRED RATES", val:exp.length, cls:"red"},{label:"ORIGINS", val:origins.size, cls:"blue"},{label:"DESTINATIONS", val:dests.size, cls:"blue"}].map(s=>`<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value ${s.cls}">${s.val}</div></div>`).join(""); }
-function buildFilterPills(){ const origins = [...new Set(allData.map(r=>r.por||r.pol||"").filter(Boolean))].sort(); $("filterPills").innerHTML = [`<button class="filter-pill ${!activeFilter?'active':''}" data-filter="">ALL ORIGINS</button>`,...origins.map(c=>`<button class="filter-pill ${activeFilter===c?'active':''}" data-filter="${escHtml(c)}">${escHtml(c)}</button>`)].join(""); }
-function filteredRows(){ let rows = [...allData]; if(viewMode==="active") rows = rows.filter(r=>!expired(r)); if(viewMode==="expired") rows = rows.filter(r=>expired(r)); if(activeFilter) rows = rows.filter(r=>(r.por||r.pol||"")===activeFilter); if(searchQ){ const q = searchQ.toUpperCase(); rows = rows.filter(r=>JSON.stringify(r).toUpperCase().includes(q)); } return rows; }
-function validityClass(r){ const dl = daysLeft(r); if(dl === null) return ""; if(dl < 0) return "red"; if(dl <= 7) return "orange"; return "green"; }
-function validityLabel(r){ const dl = daysLeft(r); if(dl === null) return ""; if(dl < 0) return `EXPIRED ${Math.abs(dl)}D AGO`; if(dl === 0) return "EXPIRES TODAY"; return `${dl} DAYS LEFT`; }
-function rateBox(label, rawVal, muPct, containerType){ const val = rateDisplay(rawVal, muPct); if(!val) return `<div class="rc-rate-box"><div class="rc-rate-label">${label}</div><div class="rc-rate-val" style="font-size:13px;color:var(--muted)">—</div></div>`; return `<div class="rc-rate-box"><div class="rc-rate-label">${label}</div><div class="rc-rate-val">USD ${val}</div><div class="rc-rate-type">${containerType||label}</div></div>`; }
-function renderCard(r){ const isExp = expired(r); const vClass = validityClass(r); const vLabel = validityLabel(r); const route = [r.por||r.pol||"", r.pod||""].filter(Boolean).join(" → "); const fpod = r.fpod ? ` → ${r.fpod}` : ""; const meta = [r.ft ? `<div class="rc-meta-item"><div class="rc-meta-k">F/T</div><div class="rc-meta-v">${escHtml(r.ft)} DAYS</div></div>` : "", r.tt ? `<div class="rc-meta-item"><div class="rc-meta-k">TT</div><div class="rc-meta-v">${escHtml(r.tt)} DAYS</div></div>` : "", r.via ? `<div class="rc-meta-item"><div class="rc-meta-k">ROUTING</div><div class="rc-meta-v">${escHtml(truncate(r.via,24))}</div></div>` : "", r.type ? `<div class="rc-meta-item"><div class="rc-meta-k">TYPE</div><div class="rc-meta-v">${escHtml(displayType(r.type))}</div></div>` : ""].filter(Boolean).join(""); return `<div class="rate-card ${isExp?'expired':''}" data-id="${r.id}"><div class="rc-header"><div><div class="rc-route">${escHtml(route + fpod)}</div></div><div class="rc-badges">${isExp?'<span class="badge red">EXPIRED</span>':'<span class="badge green">ACTIVE</span>'}${r.type?`<span class="badge orange">${escHtml(displayType(r.type))}</span>`:''}</div></div><div class="rc-body"><div class="rc-rates">${rateBox("20DV", r.dv20, mu20, r.container20Type||"20DV")}${rateBox("40HC", r.hc40, mu40, r.container40Type||"40HC")}</div>${meta?`<div class="rc-meta">${meta}</div>`:''}${r.remarks?`<div class="rc-remarks"><strong>NOTE:</strong> ${escHtml(truncate(r.remarks,90))}</div>`:''}</div><div class="rc-footer"><div><div class="rc-seq">SEQ ${escHtml(r.seq||r.id.slice(-8).toUpperCase())}</div>${r.validity?`<div class="rc-validity ${vClass}">${escHtml(fmtDate(r.validity))} · ${vLabel}</div>`:''}</div><button class="copy-btn" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button></div></div>`; }
-function render(){ const rows = filteredRows(); if(!rows.length){ $("ratesGrid").innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><i class="bi bi-inbox"></i></div><div class="empty-text">NO RATES FOUND</div><div class="empty-sub">Try adjusting search or filter</div></div>`; return; } $("ratesGrid").innerHTML = rows.map(renderCard).join(""); }
-function openModal(id){ const r = allData.find(x=>x.id===id); if(!r) return; currentRate = r; const route = [r.por||r.pol||"", r.pod||""].filter(Boolean).join(" → "); $("mRoute").textContent = route + (r.fpod ? ` → ${r.fpod}` : ""); const v20 = rateDisplay(r.dv20, mu20), v40 = rateDisplay(r.hc40, mu40); $("mRates").innerHTML = `<div class="modal-rate-box"><div class="modal-rate-label">20DV ${r.container20Type?`(${r.container20Type})`:""}</div><div class="modal-rate-val">${v20?`USD ${v20}`:"—"}</div><div class="modal-rate-type">PER CONTAINER</div></div><div class="modal-rate-box"><div class="modal-rate-label">40HC ${r.container40Type?`(${r.container40Type})`:""}</div><div class="modal-rate-val">${v40?`USD ${v40}`:"—"}</div><div class="modal-rate-type">PER CONTAINER</div></div>`; const fields = [["POR",r.por],["POL",r.pol],["POD",r.pod],["FPOD",r.fpod],["F/T",r.ft?`${r.ft} DAYS`:null],["TT",r.tt?`${r.tt} DAYS`:null],["ROUTING",r.via],["TYPE",displayType(r.type)],["VALIDITY",fmtDate(r.validity)]].filter(([,v])=>v); $("mFields").innerHTML = fields.map(([k,v])=>`<div class="mf"><div class="mf-k">${escHtml(k)}</div><div class="mf-v">${escHtml(v)}</div></div>`).join(""); const rem = $("mRemarks"); if(r.remarks){rem.style.display="block"; rem.innerHTML=`<strong style="font-weight:800">REMARKS:</strong> ${escHtml(r.remarks)}`;} else rem.style.display="none"; $("rateModal").classList.remove("hidden"); document.body.style.overflow="hidden"; }
-function closeModalFn(){$("rateModal").classList.add("hidden"); document.body.style.overflow=""; currentRate=null}
-$("closeModal").onclick=closeModalFn;
-$("rateModal").addEventListener("click",e=>{if(e.target.id==="rateModal") closeModalFn()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape") closeModalFn()});
-function buildCopyText(r){ const lines=[]; const route = [r.por||r.pol||"", r.pod||""].filter(Boolean).join(" TO "); const v20 = rateDisplay(r.dv20, mu20); const v40 = rateDisplay(r.hc40, mu40); if(route) lines.push(route); if(r.fpod) lines.push(`FINAL PLACE: ${r.fpod}`); const parts=[]; if(v20) parts.push(`USD ${v20}/20DV${r.container20Type?` (${r.container20Type})`:""}`); if(v40) parts.push(`USD ${v40}/40HC${r.container40Type?` (${r.container40Type})`:""}`); if(parts.length) lines.push(parts.join(" & ")); if(r.ft) lines.push(`F/T: ${r.ft} DAYS`); if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`); if(r.tt) lines.push(`TT: ${r.tt} DAYS`); if(r.via) lines.push(`ROUTING: ${r.via}`); if(r.type) lines.push(`TYPE: ${displayType(r.type)}`); if(r.remarks) lines.push(`REMARKS: ${r.remarks}`); lines.push(""); lines.push("TERMS AND CONDITIONS:"); lines.push("1. SUBJECT TO SPACE AND EQUIPMENT AVAILABILITY."); lines.push("2. RATES VALID ONLY FOR THE ROUTING, CARGO DETAILS, AND VALIDITY SHOWN."); lines.push("3. SURCHARGES, LOCAL CHARGES, DOCUMENTATION, CUSTOMS, INSURANCE, AND THIRD-PARTY COSTS ARE EXCLUDED UNLESS SPECIFIED."); lines.push("4. TRANSIT TIME IS INDICATIVE ONLY."); lines.push("5. NIL CREDIT ON INITIAL BOOKING."); lines.push("6. MINIMUM 20-40 FEUS REQUIRED FOR FIRST CONFIRMATION."); lines.push("7. BOOKING REMAINS SUBJECT TO FINAL ACCEPTANCE."); return lines.join("\n"); }
-async function doCopy(id){ const r = allData.find(x=>x.id===id); if(!r) return; const text = buildCopyText(r); try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove()} const t=document.createElement("div"); t.className="copy-toast"; t.innerHTML=`<i class="bi bi-check2-circle"></i>&nbsp; TOTAL RATES COPIED`; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
-$("mCopyBtn").onclick=()=>{ if(currentRate) doCopy(currentRate.id); closeModalFn(); };
-document.addEventListener("click",e=>{ const copyBtn = e.target.closest(".copy-btn[data-id]"); if(copyBtn){e.stopPropagation(); doCopy(copyBtn.dataset.id); return;} const card = e.target.closest(".rate-card[data-id]"); if(card){openModal(card.dataset.id); return;} const fp = e.target.closest(".filter-pill[data-filter]"); if(fp){activeFilter = fp.dataset.filter; buildFilterPills(); render(); return;} const tab = e.target.closest(".tab[data-view]"); if(tab){viewMode = tab.dataset.view; document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active")); tab.classList.add("active"); render();}});
-$("searchInput").addEventListener("input",e=>{searchQ=e.target.value; render()});
-loadMarkups();
-loadRates();
+
+const $ = (id) => document.getElementById(id);
+const upper = (v) => (v ?? "").toString().toUpperCase();
+
+let data = [];
+let currentView = "active";
+let currentModalRate = null;
+
+const SLABS = [
+  { min: 0, max: 50, add: 50 },
+  { min: 50, max: 250, add: 75 },
+  { min: 250, max: 740, add: 97 },
+  { min: 740, max: 1000, add: 108 },
+  { min: 1000, max: 1500, add: 125 },
+  { min: 1500, max: 2000, add: 150 },
+  { min: 2000, max: 3000, add: 175 },
+  { min: 3000, max: 4500, add: 225 },
+  { min: 4500, max: 6000, add: 300 },
+  { min: 6000, max: Infinity, add: 350 }
+];
+
+function escapeHtml(v){
+  return String(v ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+function showLoader(){ $("loader").classList.add("show"); }
+function hideLoader(){ $("loader").classList.remove("show"); }
+
+function num(v){
+  const n = parseFloat((v ?? "").toString().replace(/,/g,"").trim());
+  return isNaN(n) ? 0 : n;
+}
+
+function formatUsd(n){
+  return Number(n || 0).toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+
+function getSlabAdd(rate){
+  const base = num(rate);
+  const slab = SLABS.find((s, i) => {
+    if (i === SLABS.length - 1) return base >= s.min;
+    return base >= s.min && base < s.max;
+  });
+  return slab ? slab.add : 0;
+}
+
+function publishedRate(rawVal){
+  const base = num(rawVal);
+  if (!base) return "";
+  return Math.round(base + getSlabAdd(base));
+}
+
+function fmtDate(d){
+  if(!d) return "";
+  const dt = new Date(d);
+  if(isNaN(dt)) return String(d).toUpperCase();
+  return dt.toLocaleDateString("en-GB", {
+    weekday:"short", day:"2-digit", month:"short", year:"numeric"
+  }).toUpperCase();
+}
+
+function isoDate(d){
+  if(!d) return "";
+  const dt = new Date(d);
+  if(isNaN(dt)) return "";
+  return dt.toISOString().slice(0,10);
+}
+
+function expired(r){
+  const d = isoDate(r.validity);
+  if(!d) return false;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return new Date(d + "T00:00:00") < today;
+}
+
+function validityClass(r){
+  return expired(r) ? "red" : "green";
+}
+
+function displayType(v){
+  return v === "V" ? "HANDOVER" : v === "S" ? "SAILING" : (v || "");
+}
+
+function filteredRows(){
+  const q = upper($("searchInput").value);
+  let rows = [...data];
+
+  if(currentView === "active") rows = rows.filter(r => !expired(r));
+  if(currentView === "expired") rows = rows.filter(r => expired(r));
+
+  if(q){
+    rows = rows.filter(r => JSON.stringify(r).toUpperCase().includes(q));
+  }
+
+  return rows.sort((a,b) => {
+    const db = new Date(b.updatedAt || b.createdAt || 0).getTime();
+    const da = new Date(a.updatedAt || a.createdAt || 0).getTime();
+    return db - da;
+  });
+}
+
+function updateStats(){
+  const total = data.length;
+  const ex = data.filter(expired).length;
+  const ac = total - ex;
+  const vis = filteredRows().length;
+
+  $("statTotal").textContent = total;
+  $("statActive").textContent = ac;
+  $("statExpired").textContent = ex;
+  $("statVisible").textContent = vis;
+}
+
+function rateBox(label, rawVal, containerType){
+  const val = publishedRate(rawVal);
+  if(!val){
+    return `
+      <div class="rate-box">
+        <div class="rk">${escapeHtml(label)}</div>
+        <div class="rv">-</div>
+        <div class="rt">${escapeHtml(containerType || label)}</div>
+      </div>
+    `;
+  }
+  return `
+    <div class="rate-box">
+      <div class="rk">${escapeHtml(label)}</div>
+      <div class="rv">USD ${formatUsd(val)}</div>
+      <div class="rt">${escapeHtml(containerType || label)}</div>
+    </div>
+  `;
+}
+
+function metaItem(k,v){
+  if(!v) return "";
+  return `
+    <div class="meta-item">
+      <div class="mk">${escapeHtml(k)}</div>
+      <div class="mv">${escapeHtml(v)}</div>
+    </div>
+  `;
+}
+
+function render(){
+  const rows = filteredRows();
+  $("sectionTitle").textContent =
+    currentView === "active" ? "ACTIVE RATES" :
+    currentView === "expired" ? "EXPIRED RATES" : "ALL RATES";
+
+  updateStats();
+
+  if(!rows.length){
+    $("ratesGrid").innerHTML = `
+      <div class="empty">
+        <div style="font-size:30px;margin-bottom:8px;"><i class="bi bi-inbox"></i></div>
+        <div style="font-size:14px;font-weight:900;margin-bottom:4px;">NO RATES FOUND</div>
+        <div>Try changing search or tab filters.</div>
+      </div>
+    `;
+    return;
+  }
+
+  $("ratesGrid").innerHTML = rows.map(r => `
+    <div class="card" data-id="${escapeHtml(r.id)}">
+      <div class="card-top">
+        <div class="route">
+          ${escapeHtml((r.pol || r.por || "") + " TO " + (r.pod || ""))}${r.fpod ? ` / ${escapeHtml(r.fpod)}` : ""}
+        </div>
+        <div class="badges">
+          <span class="badge ${expired(r) ? "danger" : "success"}">${expired(r) ? "EXPIRED" : "ACTIVE"}</span>
+          ${r.type ? `<span class="badge warning">${escapeHtml(displayType(r.type))}</span>` : ""}
+          ${r.carrier ? `<span class="badge">${escapeHtml(r.carrier)}</span>` : ""}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="rate-grid">
+          ${rateBox("20DV", r.dv20, r.container20Type || "STANDARD")}
+          ${rateBox("40HC", r.hc40, r.container40Type || "STANDARD")}
+        </div>
+
+        <div class="meta">
+          ${metaItem("POR", r.por)}
+          ${metaItem("POL", r.pol)}
+          ${metaItem("POD", r.pod)}
+          ${metaItem("FPOD", r.fpod)}
+          ${metaItem("F/T", r.ft ? r.ft + " DAYS" : "")}
+          ${metaItem("TT", r.tt ? r.tt + " DAYS" : "")}
+          ${metaItem("VALIDITY", fmtDate(r.validity))}
+          ${metaItem("ROUTING", r.via)}
+        </div>
+
+        ${r.remarks ? `
+          <div class="remarks">
+            <div class="rk">REMARKS</div>
+            <div>${escapeHtml(r.remarks)}</div>
+          </div>` : ""
+        }
+      </div>
+
+      <div class="card-foot">
+        <div>
+          <div class="seq">SEQ ${escapeHtml(r.seq || "")}</div>
+          <div class="validity ${validityClass(r)}">${escapeHtml(fmtDate(r.validity))}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="ghost" data-action="view" data-id="${escapeHtml(r.id)}"><i class="bi bi-eye"></i> VIEW</button>
+          <button class="primary" data-action="copy" data-id="${escapeHtml(r.id)}"><i class="bi bi-clipboard"></i> COPY</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function buildCopyText(r){
+  const lines = [];
+
+  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
+  if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pol) lines.push(`POL: ${r.pol}`);
+  if(r.pod) lines.push(`POD: ${r.pod}`);
+  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
+
+  const routeFrom = r.pol || r.por;
+  const routeTo = r.pod;
+  const final20 = publishedRate(r.dv20);
+  const final40 = publishedRate(r.hc40);
+
+  const type20 = r.container20Type ? ` (${r.container20Type})` : "";
+  const type40 = r.container40Type ? ` (${r.container40Type})` : "";
+
+  const part20 = final20 ? `USD ${formatUsd(final20)}/20DV${type20}` : "";
+  const part40 = final40 ? `USD ${formatUsd(final40)}/40HC${type40}` : "";
+
+  if(routeFrom && routeTo && (part20 || part40)){
+    lines.push(`OF FM ${routeFrom} TO ${routeTo} ${[part20, part40].filter(Boolean).join(", ")}`);
+  }
+
+  if(r.ft) lines.push(`FT: ${r.ft} DAYS`);
+  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
+  if(r.tt) lines.push(`TT: ${r.tt} DAYS`);
+  if(r.via) lines.push(`ROUTING: ${r.via}`);
+  if(r.type) lines.push(`TYPE: ${displayType(r.type)}`);
+  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
+
+  return lines.join("\n");
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+}
+
+function showCopyToast(msg="RATE COPIED"){
+  const t = document.createElement("div");
+  t.className = "copy-toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+async function doCopy(id){
+  const r = data.find(x => x.id === id);
+  if(!r) return;
+  await copyText(buildCopyText(r));
+  showCopyToast("RATE COPIED");
+}
+
+function openModal(id){
+  const r = data.find(x => x.id === id);
+  if(!r) return;
+  currentModalRate = r;
+
+  $("modalTitle").textContent = `${r.pol || r.por || ""} TO ${r.pod || ""}${r.fpod ? " / " + r.fpod : ""}`;
+  $("modalSub").textContent = `${r.carrier || "FCL RATE"}${r.type ? " · " + displayType(r.type) : ""}`;
+
+  const v20 = publishedRate(r.dv20);
+  const v40 = publishedRate(r.hc40);
+
+  $("modalRates").innerHTML = `
+    <div class="rate-box">
+      <div class="rk">20DV</div>
+      <div class="rv">${v20 ? `USD ${formatUsd(v20)}` : "-"}</div>
+      <div class="rt">${escapeHtml(r.container20Type || "STANDARD")}</div>
+    </div>
+    <div class="rate-box">
+      <div class="rk">40HC</div>
+      <div class="rv">${v40 ? `USD ${formatUsd(v40)}` : "-"}</div>
+      <div class="rt">${escapeHtml(r.container40Type || "STANDARD")}</div>
+    </div>
+  `;
+
+  $("modalMeta").innerHTML = [
+    metaItem("CARRIER", r.carrier),
+    metaItem("POR", r.por),
+    metaItem("POL", r.pol),
+    metaItem("POD", r.pod),
+    metaItem("FPOD", r.fpod),
+    metaItem("F/T", r.ft ? r.ft + " DAYS" : ""),
+    metaItem("TT", r.tt ? r.tt + " DAYS" : ""),
+    metaItem("VALIDITY", fmtDate(r.validity)),
+    metaItem("TYPE", displayType(r.type)),
+    metaItem("ROUTING", r.via),
+    metaItem("SEQ", r.seq || "")
+  ].join("");
+
+  $("modalRemarks").innerHTML = `
+    <div class="rk">REMARKS</div>
+    <div>${escapeHtml(r.remarks || "NIL")}</div>
+  `;
+
+  $("rateModal").classList.remove("hidden");
+}
+
+function closeModal(){
+  $("rateModal").classList.add("hidden");
+  currentModalRate = null;
+}
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-action]");
+  if(btn){
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    if(action === "copy") await doCopy(id);
+    if(action === "view") openModal(id);
+  }
+});
+
+$("copyModalBtn").addEventListener("click", async () => {
+  if(!currentModalRate) return;
+  await copyText(buildCopyText(currentModalRate));
+  showCopyToast("RATE COPIED");
+});
+
+$("closeModal").addEventListener("click", closeModal);
+$("closeModalBtn2").addEventListener("click", closeModal);
+$("rateModal").addEventListener("click", (e) => {
+  if(e.target.id === "rateModal") closeModal();
+});
+
+$("searchInput").addEventListener("input", render);
+
+document.querySelectorAll(".tabs button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentView = btn.dataset.view;
+    render();
+  });
+});
+
+showLoader();
+onSnapshot(collection(db, "rates"), (snap) => {
+  data = [];
+  snap.forEach(d => data.push({ id:d.id, ...d.data() }));
+  hideLoader();
+  render();
+}, (err) => {
+  console.error(err);
+  hideLoader();
+  $("ratesGrid").innerHTML = `
+    <div class="empty">
+      <div style="font-size:30px;margin-bottom:8px;"><i class="bi bi-exclamation-octagon"></i></div>
+      <div style="font-size:14px;font-weight:900;margin-bottom:4px;">FAILED TO LOAD DATA</div>
+      <div>CHECK FIREBASE CONFIGURATION OR PERMISSIONS.</div>
+    </div>
+  `;
+});
 </script>
 </body>
 </html>
