@@ -480,7 +480,7 @@ button.ghost{
   <div class="header-tools">
     <div class="search-wrap">
       <i class="bi bi-search"></i>
-      <input id="searchInput" placeholder="Search carrier, POR, POL, POD, FPOD, routing, remarks..." />
+      <input id="searchInput" placeholder="Search POR, POL, POD, FPOD, routing, remarks..." />
     </div>
 
     <div class="tabs">
@@ -558,13 +558,7 @@ import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/fi
 
 const app = initializeApp({ projectId: "swifty-52e05" });
 const db = getFirestore(app);
-
 const $ = (id) => document.getElementById(id);
-const upper = (v) => (v ?? "").toString().toUpperCase();
-
-let data = [];
-let currentView = "active";
-let currentModalRate = null;
 
 const SLABS = [
   { min: 0, max: 50, add: 50 },
@@ -578,6 +572,10 @@ const SLABS = [
   { min: 4500, max: 6000, add: 300 },
   { min: 6000, max: Infinity, add: 350 }
 ];
+
+let data = [];
+let currentView = "active";
+let currentModalRate = null;
 
 function escapeHtml(v){
   return String(v ?? "")
@@ -648,7 +646,7 @@ function displayType(v){
 }
 
 function filteredRows(){
-  const q = upper($("searchInput").value);
+  const q = ( $("searchInput").value || "" ).toUpperCase();
   let rows = [...data];
 
   if(currentView === "active") rows = rows.filter(r => !expired(r));
@@ -735,7 +733,6 @@ function render(){
         <div class="badges">
           <span class="badge ${expired(r) ? "danger" : "success"}">${expired(r) ? "EXPIRED" : "ACTIVE"}</span>
           ${r.type ? `<span class="badge warning">${escapeHtml(displayType(r.type))}</span>` : ""}
-          ${r.carrier ? `<span class="badge">${escapeHtml(r.carrier)}</span>` : ""}
         </div>
       </div>
 
@@ -780,8 +777,6 @@ function render(){
 
 function buildCopyText(r){
   const lines = [];
-
-  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
   if(r.por) lines.push(`POR: ${r.por}`);
   if(r.pol) lines.push(`POL: ${r.pol}`);
   if(r.pod) lines.push(`POD: ${r.pod}`);
@@ -846,7 +841,7 @@ function openModal(id){
   currentModalRate = r;
 
   $("modalTitle").textContent = `${r.pol || r.por || ""} TO ${r.pod || ""}${r.fpod ? " / " + r.fpod : ""}`;
-  $("modalSub").textContent = `${r.carrier || "FCL RATE"}${r.type ? " · " + displayType(r.type) : ""}`;
+  $("modalSub").textContent = `${r.type ? displayType(r.type) : "RATE"} · FULL DETAILS`;
 
   const v20 = publishedRate(r.dv20);
   const v40 = publishedRate(r.hc40);
@@ -865,7 +860,6 @@ function openModal(id){
   `;
 
   $("modalMeta").innerHTML = [
-    metaItem("CARRIER", r.carrier),
     metaItem("POR", r.por),
     metaItem("POL", r.pol),
     metaItem("POD", r.pod),
