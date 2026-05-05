@@ -817,9 +817,23 @@ tbody tr:hover{background:#f8fafc}
               <thead>
                 <tr>
                   <th><input type="checkbox" id="selectAllRows"></th>
-                  <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th>
-                  <th>20DV</th><th>20TYPE</th><th>40HC</th><th>40TYPE</th><th>F/T</th><th>DATE</th><th>TYPE</th>
-                  <th>TT</th><th>ROUTING</th><th>REMARKS</th><th>ACTION</th>
+                  <th>SEQ</th>
+                  <th>CARRIER</th>
+                  <th>POR</th>
+                  <th>POL</th>
+                  <th>POD</th>
+                  <th>FPOD</th>
+                  <th>20DV</th>
+                  <th>20TYPE</th>
+                  <th>40HC</th>
+                  <th>40TYPE</th>
+                  <th>F/T</th>
+                  <th>DATE</th>
+                  <th>TYPE</th>
+                  <th>TT</th>
+                  <th>ROUTING</th>
+                  <th>REMARKS</th>
+                  <th>ACTION</th>
                 </tr>
                 <tr class="filter-row">
                   <th></th>
@@ -869,6 +883,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Standard 20' dry for heavy/dense cargo, cartons, pallets, short machinery.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">40GP</div>
               <div class="dim-specs">
@@ -882,6 +897,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Used for longer cargo with same height clearance as 20' dry.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">40HC (HIGH CUBE)</div>
               <div class="dim-specs">
@@ -895,6 +911,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Most common export size; used when cargo needs extra internal height.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">45HC</div>
               <div class="dim-specs">
@@ -908,6 +925,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Used when both extra length and volume are needed. Check service acceptance.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">OPEN TOP 20OT / 40OT</div>
               <div class="dim-specs">
@@ -920,6 +938,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Always confirm removable bows and tarp profile, especially for extreme height.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">FLAT RACK 20FR / 40FR</div>
               <div class="dim-specs">
@@ -931,6 +950,7 @@ tbody tr:hover{background:#f8fafc}
               </div>
               <div class="dim-note">Used for heavy machinery, steel, project cargo; always request lashing plan.</div>
             </div>
+
             <div class="dim-card">
               <div class="dim-card-title">REEFER 20RF / 40RH</div>
               <div class="dim-specs">
@@ -1031,7 +1051,14 @@ const MU40_KEY = "fr8x_mu40";
 const USER_MU20_KEY = "fr8x_user_mu20";
 const USER_MU40_KEY = "fr8x_user_mu40";
 
-function escapeHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
+function escapeHtml(v=""){
+  return String(v)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
 function pad2(n){return String(n).padStart(2,"0")}
 function seqFromDate(dateLike){
   const dt = dateLike ? new Date(dateLike) : new Date();
@@ -1084,12 +1111,18 @@ function isoDate(d){
 function expired(r){
   const d=isoDate(r.validity);
   if(!d) return false;
-  const today=new Date(); today.setHours(0,0,0,0);
+  const today=new Date();
+  today.setHours(0,0,0,0);
   return new Date(d+"T00:00:00")<today;
 }
 function sessionValid(){return Date.now() < sessionUntil}
 function setSession(){sessionUntil = Date.now() + 4*60*60*1000}
-function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups();}
+function showApp(){
+  $("pinGate").classList.add("hidden");
+  $("appShell").classList.remove("hidden");
+  load();
+  loadMarkups();
+}
 function setEditorState(text){$("editorState").textContent=text}
 function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s}
 function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
@@ -1584,9 +1617,11 @@ function parseCSVLine(line,sep=","){
   const out=[]; let cur="", inQuotes=false;
   for(let i=0;i<line.length;i++){
     const ch=line[i];
-    if(ch==='"'){
-      if(inQuotes && line[i+1]==='"'){cur+='"'; i++} else inQuotes=!inQuotes;
-    } else if(ch===sep && !inQuotes){ out.push(cur); cur="" } else cur+=ch;
+    if(ch === '"'){
+      if(inQuotes && line[i+1] === '"'){cur+='"'; i++} else inQuotes=!inQuotes;
+    } else if(ch===sep && !inQuotes){
+      out.push(cur); cur="";
+    } else cur+=ch;
   }
   out.push(cur);
   return out.map(v=>v.trim());
@@ -1738,13 +1773,26 @@ $("applyImportBtn").onclick=async()=>{
   }
 };
 
-/* TEMPLATE */
 $("downloadTemplateBtn").onclick=()=>{
-  const template = [
-    ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"].join(","),
-    ['','MSC','DELHI','NHAVA SHEVA','JEBEL ALI','DUBAI','1200','OT','2200','FR','14','2026-05-31','V','12','VIA MUNDRA','SAMPLE RATE'].join(",")
-  ].join("\n");
-  download("fr8x_import_template.csv", template);
+  const templateRows=[{
+    seq:"",
+    carrier:"MSC",
+    por:"DELHI",
+    pol:"NHAVA SHEVA",
+    pod:"JEBEL ALI",
+    fpod:"DUBAI",
+    dv20:"1000",
+    container20Type:"",
+    hc40:"1800",
+    container40Type:"",
+    ft:"14",
+    validity:isoDate(new Date()),
+    type:"V",
+    tt:"7",
+    via:"DIRECT",
+    remarks:"SAMPLE"
+  }];
+  download("fr8x_template.csv",toCSV(templateRows));
 };
 
 /* SEARCH / FILTERS / EVENTS */
