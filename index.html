@@ -275,6 +275,30 @@ th{
   padding:3px 5px;
   font-size:11px;
 }
+.sort-head{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  width:100%;
+}
+.sort-btn{
+  min-height:18px;
+  height:18px;
+  width:18px;
+  padding:0;
+  border-radius:4px;
+  font-size:10px;
+  line-height:1;
+  background:#fff;
+  border:1px solid var(--border);
+  color:var(--muted);
+}
+.sort-btn.active{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
 tbody tr:hover{background:#f8fafc}
 .actions{
   display:flex;
@@ -817,22 +841,22 @@ tbody tr:hover{background:#f8fafc}
               <thead>
                 <tr>
                   <th><input type="checkbox" id="selectAllRows"></th>
-                  <th>SEQ</th>
-                  <th>CARRIER</th>
-                  <th>POR</th>
-                  <th>POL</th>
-                  <th>POD</th>
-                  <th>FPOD</th>
-                  <th>20DV</th>
-                  <th>20TYPE</th>
-                  <th>40HC</th>
-                  <th>40TYPE</th>
-                  <th>F/T</th>
-                  <th>DATE</th>
-                  <th>TYPE</th>
-                  <th>TT</th>
-                  <th>ROUTING</th>
-                  <th>REMARKS</th>
+                  <th><div class="sort-head"><span>SEQ</span><button class="sort-btn" data-sort="seq" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>CARRIER</span><button class="sort-btn" data-sort="carrier" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>POR</span><button class="sort-btn" data-sort="por" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>POL</span><button class="sort-btn" data-sort="pol" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>POD</span><button class="sort-btn" data-sort="pod" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>FPOD</span><button class="sort-btn" data-sort="fpod" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>20DV</span><button class="sort-btn" data-sort="dv20" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>20TYPE</span><button class="sort-btn" data-sort="container20Type" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>40HC</span><button class="sort-btn" data-sort="hc40" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>40TYPE</span><button class="sort-btn" data-sort="container40Type" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>F/T</span><button class="sort-btn" data-sort="ft" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>DATE</span><button class="sort-btn" data-sort="validity" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>TYPE</span><button class="sort-btn" data-sort="type" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>TT</span><button class="sort-btn" data-sort="tt" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>ROUTING</span><button class="sort-btn" data-sort="via" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>REMARKS</span><button class="sort-btn" data-sort="remarks" title="Sort"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th>ACTION</th>
                 </tr>
                 <tr class="filter-row">
@@ -1045,20 +1069,15 @@ let filterMap = {
   ft:"",validity:"",type:"",tt:"",via:"",remarks:""
 };
 
+let sortState = { key:"", dir:"" };
+
 let mu20 = 0, mu40 = 0, userMu20 = 0, userMu40 = 0;
 const MU20_KEY = "fr8x_mu20";
 const MU40_KEY = "fr8x_mu40";
 const USER_MU20_KEY = "fr8x_user_mu20";
 const USER_MU40_KEY = "fr8x_user_mu40";
 
-function escapeHtml(v=""){
-  return String(v)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
+function escapeHtml(v=""){return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 function pad2(n){return String(n).padStart(2,"0")}
 function seqFromDate(dateLike){
   const dt = dateLike ? new Date(dateLike) : new Date();
@@ -1111,18 +1130,12 @@ function isoDate(d){
 function expired(r){
   const d=isoDate(r.validity);
   if(!d) return false;
-  const today=new Date();
-  today.setHours(0,0,0,0);
+  const today=new Date(); today.setHours(0,0,0,0);
   return new Date(d+"T00:00:00")<today;
 }
 function sessionValid(){return Date.now() < sessionUntil}
 function setSession(){sessionUntil = Date.now() + 4*60*60*1000}
-function showApp(){
-  $("pinGate").classList.add("hidden");
-  $("appShell").classList.remove("hidden");
-  load();
-  loadMarkups();
-}
+function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups();}
 function setEditorState(text){$("editorState").textContent=text}
 function truncate(v="",len=18){const s=String(v); return s.length>len?s.slice(0,len-1)+"…":s}
 function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
@@ -1177,6 +1190,35 @@ function updateCounters(){
   $("expiredCount").textContent = `${ex} EXPIRED`;
   $("activeCount").textContent = `${data.length-ex} ACTIVE`;
 }
+
+function getSortValue(row,key){
+  if(key==="validity") return isoDate(row.validity||"");
+  if(key==="type") return displayType(row.type||"");
+  return row[key] ?? "";
+}
+function compareValues(a,b,key){
+  const va = getSortValue(a,key);
+  const vb = getSortValue(b,key);
+
+  const na = parseFloat(String(va).replace(/[^0-9.\-]/g,""));
+  const nb = parseFloat(String(vb).replace(/[^0-9.\-]/g,""));
+  const isNumA = !isNaN(na) && String(va).trim() !== "";
+  const isNumB = !isNaN(nb) && String(vb).trim() !== "";
+
+  if(isNumA && isNumB){
+    if(na < nb) return -1;
+    if(na > nb) return 1;
+    return 0;
+  }
+
+  const sa = String(va).toUpperCase();
+  const sb = String(vb).toUpperCase();
+
+  if(sa < sb) return -1;
+  if(sa > sb) return 1;
+  return 0;
+}
+
 function filteredRows(){
   const g = ($("globalSearch").value||"").toUpperCase();
   let rows=[...data];
@@ -1192,6 +1234,14 @@ function filteredRows(){
     return true;
   });
   if(g) rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
+
+  if(sortState.key && sortState.dir){
+    rows.sort((a,b)=>{
+      const res = compareValues(a,b,sortState.key);
+      return sortState.dir==="asc" ? res : -res;
+    });
+  }
+
   return rows;
 }
 
@@ -1265,12 +1315,25 @@ function renderMobileRows(rows){
     </div>
   `).join("");
 }
+function updateSortButtons(){
+  document.querySelectorAll(".sort-btn").forEach(btn=>{
+    btn.classList.remove("active");
+    const icon = btn.querySelector("i");
+    if(btn.dataset.sort === sortState.key){
+      btn.classList.add("active");
+      if(icon) icon.className = sortState.dir === "asc" ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill";
+    }else{
+      if(icon) icon.className = "bi bi-caret-down-fill";
+    }
+  });
+}
 function render(){
   const rows=filteredRows();
   $("tbody").innerHTML=renderDesktopRows(rows);
   $("mobileRates").innerHTML=renderMobileRows(rows);
   $("sectionLabel").textContent=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
   updateSelectedInfo();
+  updateSortButtons();
 }
 function updateSelectedInfo(){$("selectedCountInfo").textContent=`${selectedIds.size} SELECTED`}
 function switchView(mode){
@@ -1617,11 +1680,9 @@ function parseCSVLine(line,sep=","){
   const out=[]; let cur="", inQuotes=false;
   for(let i=0;i<line.length;i++){
     const ch=line[i];
-    if(ch === '"'){
-      if(inQuotes && line[i+1] === '"'){cur+='"'; i++} else inQuotes=!inQuotes;
-    } else if(ch===sep && !inQuotes){
-      out.push(cur); cur="";
-    } else cur+=ch;
+    if(ch==='"'){
+      if(inQuotes && line[i+1]==='"'){cur+='"'; i++} else inQuotes=!inQuotes;
+    } else if(ch===sep && !inQuotes){ out.push(cur); cur="" } else cur+=ch;
   }
   out.push(cur);
   return out.map(v=>v.trim());
@@ -1799,6 +1860,18 @@ $("downloadTemplateBtn").onclick=()=>{
 $("globalSearch").addEventListener("input",render);
 document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{
   filterMap[e.target.dataset.col]=e.target.value;
+  render();
+}));
+document.querySelectorAll(".sort-btn").forEach(btn=>btn.addEventListener("click",e=>{
+  e.stopPropagation();
+  const key = btn.dataset.sort;
+  if(sortState.key !== key){
+    sortState = { key, dir:"asc" };
+  }else if(sortState.dir === "asc"){
+    sortState = { key, dir:"desc" };
+  }else{
+    sortState = { key:"", dir:"" };
+  }
   render();
 }));
 document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
