@@ -1738,6 +1738,15 @@ $("applyImportBtn").onclick=async()=>{
   }
 };
 
+/* TEMPLATE */
+$("downloadTemplateBtn").onclick=()=>{
+  const template = [
+    ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"].join(","),
+    ['','MSC','DELHI','NHAVA SHEVA','JEBEL ALI','DUBAI','1200','OT','2200','FR','14','2026-05-31','V','12','VIA MUNDRA','SAMPLE RATE'].join(",")
+  ].join("\n");
+  download("fr8x_import_template.csv", template);
+};
+
 /* SEARCH / FILTERS / EVENTS */
 $("globalSearch").addEventListener("input",render);
 document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{
