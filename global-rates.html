@@ -51,6 +51,9 @@ body{
 }
 button,input{font:inherit}
 button{cursor:pointer}
+button,input,select,textarea{
+  -webkit-tap-highlight-color:transparent;
+}
 .hidden{display:none!important}
 .tabular{font-variant-numeric:tabular-nums lining-nums}
 
@@ -907,7 +910,7 @@ button{cursor:pointer}
     <div class="toolbar">
       <div class="search-wrap">
         <i class="bi bi-search"></i>
-        <input id="searchInput" type="text" placeholder="Search POR, POL, POD, FPOD, routing, remarks..." />
+        <input id="searchInput" type="text" placeholder="Search: Mundra Jeddah, Nhava Dubai, Jebel 40HC..." />
       </div>
 
       <div class="tabs">
@@ -1126,15 +1129,62 @@ function hasValue(v){
   return !(v === undefined || v === null || v === "");
 }
 
+/* ---------- SEARCH HELPERS ---------- */
+function normalizeText(v){
+  return String(v ?? "")
+    .toUpperCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function buildSearchText(r){
+  return normalizeText([
+    r.id,
+    r.seq,
+    r.por,
+    r.pol,
+    r.pod,
+    r.fpod,
+    routeLabel(r),
+    r.via,
+    r.remarks,
+    r.type ? displayType(r.type) : "",
+    r.validity ? fmtDate(r.validity) : "",
+    r.ft ? `${r.ft} DAYS FT` : "",
+    r.tt ? `${r.tt} DAYS TT` : "",
+    r.dv20 ? `20DV USD ${publishedRate(r.dv20)}` : "",
+    r.hc40 ? `40HC USD ${publishedRate(r.hc40)}` : "",
+    r.container20Type,
+    r.container40Type
+  ].filter(Boolean).join(" "));
+}
+
+function matchesSearch(r, query){
+  const q = normalizeText(query);
+  if (!q) return true;
+
+  const haystack = buildSearchText(r);
+  const hayWords = haystack.split(" ").filter(Boolean);
+  const terms = q.split(" ").filter(Boolean);
+
+  return terms.every(term =>
+    haystack.includes(term) || hayWords.some(word => word.includes(term))
+  );
+}
+/* ---------- END SEARCH HELPERS ---------- */
+
 function filteredRows(){
-  const q = ($("searchInput").value || "").toUpperCase().trim();
+  const q = ($("searchInput").value || "").trim();
   let rows = [...data];
 
   if (currentView === "active") rows = rows.filter(r => !expired(r));
   if (currentView === "expired") rows = rows.filter(r => expired(r));
 
   if (q) {
-    rows = rows.filter(r => JSON.stringify(r).toUpperCase().includes(q));
+    rows = rows.filter(r => matchesSearch(r, q));
   }
 
   return rows.sort((a,b) => {
