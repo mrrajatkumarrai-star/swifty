@@ -36,7 +36,6 @@
   --page-pad:clamp(10px,1.4vw,22px);
   --header-pad-y:10px;
   --mobile-font-scale:.76;
-  --mobile-card-pad:10px;
 }
 
 *{box-sizing:border-box}
@@ -76,24 +75,49 @@ mark.hl{
 .topbar{
   position:sticky;
   top:0;
-  z-index:50;
+  z-index:60;
   width:100%;
   background:rgba(255,255,255,.92);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   padding:var(--header-pad-y) var(--page-pad);
-  transition:box-shadow .25s ease, padding .25s ease;
+  transition:padding .3s ease, box-shadow .3s ease;
 }
-.topbar.expanded{
+.topbar.expanded,
+.topbar.intro-complete{
   box-shadow:0 10px 30px rgba(15,23,42,.05);
 }
 
-.brand-row{
-  display:flex;
+.topbar-shell{
+  display:grid;
+  grid-template-columns:1fr auto;
   align-items:center;
-  justify-content:space-between;
   gap:10px;
   min-height:42px;
+}
+
+.brand-cluster{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  overflow:hidden;
+  opacity:1;
+  max-width:480px;
+  transform:translateX(0);
+  transition:
+    opacity .5s ease,
+    transform .55s ease,
+    max-width .55s ease,
+    margin .55s ease;
+}
+
+.topbar.intro-complete .brand-cluster{
+  opacity:0;
+  transform:translateX(-16px);
+  max-width:0;
+  margin-right:0;
+  pointer-events:none;
 }
 
 .brand-wrap{
@@ -135,12 +159,6 @@ mark.hl{
   line-height:1.2;
 }
 
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
 .header-chip{
   display:inline-flex;
   align-items:center;
@@ -154,6 +172,15 @@ mark.hl{
   font-size:calc(11px * var(--font-scale));
   font-weight:700;
   white-space:nowrap;
+  transition:opacity .5s ease, transform .5s ease;
+}
+
+.search-stage{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  min-width:0;
 }
 
 .nav-toggle{
@@ -168,6 +195,7 @@ mark.hl{
   display:grid;
   place-items:center;
   transition:transform .28s ease, box-shadow .28s ease, background .28s ease;
+  flex:0 0 auto;
 }
 .nav-toggle:hover{transform:translateY(-1px)}
 .nav-toggle:active{transform:scale(.96)}
@@ -203,42 +231,52 @@ mark.hl{
   opacity:0;
   transform:rotate(-90deg) scale(.6);
 }
-.topbar.expanded .nav-toggle .icon-search{
+.topbar.expanded .nav-toggle .icon-search,
+.topbar.intro-complete.search-open .nav-toggle .icon-search{
   opacity:0;
   transform:rotate(90deg) scale(.6);
 }
-.topbar.expanded .nav-toggle .icon-close{
+.topbar.expanded .nav-toggle .icon-close,
+.topbar.intro-complete.search-open .nav-toggle .icon-close{
   opacity:1;
   transform:rotate(0deg) scale(1);
 }
 
-.nav-panel{
-  display:grid;
-  grid-template-rows:0fr;
-  opacity:0;
-  transition:grid-template-rows .34s ease, opacity .22s ease, margin-top .22s ease;
-  margin-top:0;
-}
-.nav-panel-inner{
-  overflow:hidden;
-}
-.topbar.expanded .nav-panel{
-  grid-template-rows:1fr;
-  opacity:1;
-  margin-top:10px;
+.inline-search-shell{
+  min-width:0;
+  flex:1 1 auto;
+  display:flex;
+  justify-content:flex-end;
 }
 
-.toolbar{
+.inline-search{
   display:flex;
-  gap:10px;
   align-items:center;
-  flex-wrap:wrap;
-  padding-top:2px;
+  gap:8px;
+  min-width:0;
+  width:min(720px,100%);
+  max-width:56px;
+  opacity:0;
+  transform:translateX(8px);
+  pointer-events:none;
+  transition:
+    max-width .48s cubic-bezier(.2,.8,.2,1),
+    opacity .32s ease,
+    transform .42s ease;
+}
+
+.topbar.intro-complete .inline-search,
+.topbar.expanded .inline-search{
+  max-width:720px;
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
 }
 
 .search-wrap{
   position:relative;
-  flex:1 1 420px;
+  flex:1 1 auto;
+  min-width:0;
 }
 
 .search-wrap i.bi-search{
@@ -286,7 +324,7 @@ mark.hl{
 .tabs{
   display:flex;
   gap:8px;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
 }
 .tabs button{
   min-height:40px;
@@ -298,6 +336,7 @@ mark.hl{
   font-size:calc(12px * var(--font-scale));
   font-weight:800;
   letter-spacing:.02em;
+  white-space:nowrap;
 }
 .tabs button.active{
   background:var(--primary);
@@ -808,11 +847,11 @@ mark.hl{
 }
 
 @media (max-width:1100px){
-  .desktop-extra{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
   .header-chip{
     display:none;
+  }
+  .desktop-extra{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
 }
 
@@ -852,12 +891,29 @@ mark.hl{
     height:38px;
   }
 
-  .topbar.expanded .nav-panel{
-    margin-top:8px;
+  .inline-search{
+    width:100%;
   }
 
-  .toolbar{
-    gap:8px;
+  .tabs{
+    display:none;
+  }
+
+  .topbar.expanded .tabs,
+  .topbar.intro-complete .tabs{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+  }
+
+  .topbar.expanded .inline-search,
+  .topbar.intro-complete .inline-search{
+    flex-wrap:wrap;
+  }
+
+  .search-stage{
+    width:auto;
+    flex:1 1 auto;
   }
 
   .search-wrap input{
@@ -866,14 +922,7 @@ mark.hl{
     border-radius:11px;
   }
 
-  .tabs{
-    width:100%;
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
   .tabs button{
-    width:100%;
     min-height:36px;
     padding:0 8px;
     border-radius:10px;
@@ -1100,47 +1149,47 @@ mark.hl{
   </div>
 
   <header class="topbar" id="topbar">
-    <div class="brand-row">
-      <div class="brand-wrap">
-        <div class="brand-mark">GR</div>
-        <div>
-          <div class="brand-title">Global Rates</div>
-          <div class="brand-sub">Live FCL Rate Showcase</div>
+    <div class="topbar-shell">
+      <div class="brand-cluster" id="brandCluster">
+        <div class="brand-wrap">
+          <div class="brand-mark">GR</div>
+          <div>
+            <div class="brand-title">Global Rates</div>
+            <div class="brand-sub">Live FCL Rate Showcase</div>
+          </div>
         </div>
-      </div>
 
-      <div class="top-actions">
         <div class="header-chip">
           <i class="bi bi-shield-check"></i>
           <span>Final Freight Only</span>
         </div>
+      </div>
 
-        <button id="navToggle" class="nav-toggle" aria-label="Open search and filters" aria-expanded="false" aria-controls="navPanel">
+      <div class="search-stage">
+        <div class="inline-search-shell">
+          <div class="inline-search">
+            <div class="search-wrap">
+              <i class="bi bi-search"></i>
+              <input id="searchInput" type="text" placeholder="Search: Mundra Jeddah, Nhava Dubai, Jebel 40HC..." />
+              <button class="clear-search" id="clearSearch" aria-label="Clear search">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+
+            <div class="tabs">
+              <button class="active" data-view="active" id="tabActive">ACTIVE</button>
+              <button data-view="expired" id="tabExpired">EXPIRED</button>
+              <button data-view="all" id="tabAll">ALL</button>
+            </div>
+          </div>
+        </div>
+
+        <button id="navToggle" class="nav-toggle" aria-label="Open search and filters" aria-expanded="false">
           <span class="icon-wrap">
             <i class="bi bi-search icon-search"></i>
             <i class="bi bi-x-lg icon-close"></i>
           </span>
         </button>
-      </div>
-    </div>
-
-    <div class="nav-panel" id="navPanel">
-      <div class="nav-panel-inner">
-        <div class="toolbar">
-          <div class="search-wrap">
-            <i class="bi bi-search"></i>
-            <input id="searchInput" type="text" placeholder="Search: Mundra Jeddah, Nhava Dubai, Jebel 40HC..." />
-            <button class="clear-search" id="clearSearch" aria-label="Clear search">
-              <i class="bi bi-x"></i>
-            </button>
-          </div>
-
-          <div class="tabs">
-            <button class="active" data-view="active" id="tabActive">ACTIVE</button>
-            <button data-view="expired" id="tabExpired">EXPIRED</button>
-            <button data-view="all" id="tabAll">ALL</button>
-          </div>
-        </div>
       </div>
     </div>
   </header>
@@ -1168,7 +1217,7 @@ mark.hl{
     <section>
       <div class="section-head">
         <div class="section-title" id="sectionTitle">ACTIVE RATES</div>
-        <div class="section-sub">Compact header • more visible area • highlighted search</div>
+        <div class="section-sub">Auto-hide intro → search bar transition</div>
       </div>
 
       <div class="grid" id="ratesGrid"></div>
@@ -1242,6 +1291,8 @@ let data = [];
 let currentView = "active";
 let currentModalRate = null;
 let navOpen = false;
+let introDone = false;
+let introTimer = null;
 
 $("termsTextBox").textContent = TERMS_TEXT;
 
@@ -1452,6 +1503,7 @@ function updateSearchUI(){
 function setNavOpen(open, focusInput = false){
   navOpen = open;
   $("topbar").classList.toggle("expanded", open);
+  $("topbar").classList.toggle("search-open", open);
   $("navToggle").setAttribute("aria-expanded", String(open));
   $("navToggle").setAttribute("aria-label", open ? "Close search and filters" : "Open search and filters");
   if (focusInput && open) {
@@ -1459,7 +1511,22 @@ function setNavOpen(open, focusInput = false){
   }
 }
 
+function completeIntro(autoFocus = false){
+  if (introDone) return;
+  introDone = true;
+  $("topbar").classList.add("intro-complete");
+  setNavOpen(true, autoFocus);
+}
+
+function scheduleIntroHide(){
+  clearTimeout(introTimer);
+  introTimer = setTimeout(() => {
+    if (!introDone) completeIntro(false);
+  }, 3000);
+}
+
 function toggleNav(force){
+  if (!introDone) completeIntro(true);
   const next = typeof force === "boolean" ? force : !navOpen;
   setNavOpen(next, next);
 }
@@ -1731,8 +1798,19 @@ function render(){
   `).join("");
 }
 
-$("navToggle").addEventListener("click", () => toggleNav());
-$("searchInput").addEventListener("focus", () => setNavOpen(true));
+$("navToggle").addEventListener("click", () => {
+  if (!introDone) {
+    completeIntro(true);
+    return;
+  }
+  toggleNav();
+});
+
+$("searchInput").addEventListener("focus", () => {
+  if (!introDone) completeIntro(false);
+  setNavOpen(true);
+});
+
 $("clearSearch").addEventListener("click", () => {
   $("searchInput").value = "";
   render();
@@ -1751,7 +1829,7 @@ document.addEventListener("click", async (e) => {
 
   const insideTopbar = e.target.closest("#topbar");
   const insideModal = e.target.closest(".modal");
-  if (!insideTopbar && !insideModal && navOpen && !($("searchInput").value || "").trim()) {
+  if (!insideTopbar && !insideModal && navOpen && introDone && !($("searchInput").value || "").trim()) {
     setNavOpen(false);
   }
 });
@@ -1775,13 +1853,14 @@ document.addEventListener("keydown", (e) => {
       closeModal();
       return;
     }
-    if (navOpen && !($("searchInput").value || "").trim()) {
+    if (navOpen && introDone && !($("searchInput").value || "").trim()) {
       setNavOpen(false);
     }
   }
 });
 
 $("searchInput").addEventListener("input", () => {
+  if (!introDone) completeIntro(false);
   setNavOpen(true);
   render();
   if (currentModalRate) openModal(currentModalRate.id);
@@ -1789,6 +1868,7 @@ $("searchInput").addEventListener("input", () => {
 
 document.querySelectorAll(".tabs button").forEach(btn => {
   btn.addEventListener("click", () => {
+    if (!introDone) completeIntro(false);
     document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     currentView = btn.dataset.view;
@@ -1797,6 +1877,7 @@ document.querySelectorAll(".tabs button").forEach(btn => {
 });
 
 showLoader();
+scheduleIntroHide();
 
 onSnapshot(
   collection(db, "rates"),
