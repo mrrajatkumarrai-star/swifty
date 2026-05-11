@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>GLOBAL RATES</title>
+<title>GLOBAL RATES & BOOKING</title>
 
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -718,9 +718,193 @@ mark.hl{
   pointer-events:auto;
 }
 
+.booking-modal{
+  width:min(1220px,100%);
+  max-height:94vh;
+  padding:16px;
+}
+
+.booking-note{
+  margin:4px 0 12px;
+  border:1px dashed var(--border);
+  background:#f8fafc;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.booking-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(360px,.8fr);
+  gap:14px;
+}
+
+.booking-form{
+  min-width:0;
+}
+
+.booking-scroll{
+  max-height:calc(94vh - 160px);
+  overflow:auto;
+  padding-right:4px;
+}
+
+.booking-sections{
+  display:grid;
+  gap:12px;
+}
+
+.booking-section{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  padding:12px;
+}
+
+.booking-section h3{
+  margin:0 0 10px;
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+
+.booking-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0;
+}
+
+.field.full{
+  grid-column:1 / -1;
+}
+
+.field-label{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--muted);
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:#fff;
+  color:var(--text);
+  padding:10px 11px;
+  outline:none;
+  min-height:40px;
+}
+
+.field textarea{
+  min-height:84px;
+  resize:vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(15,23,42,.08);
+}
+
+.preview-wrap{
+  min-width:0;
+  display:grid;
+  gap:12px;
+}
+
+.preview-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  padding:12px;
+  min-width:0;
+}
+
+.preview-card h3{
+  margin:0 0 10px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+
+.mono-box{
+  width:100%;
+  min-height:160px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#0f172a;
+  color:#e2e8f0;
+  padding:12px;
+  font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+  white-space:pre-wrap;
+  overflow:auto;
+}
+
+.preview-card textarea.mono-box{
+  resize:vertical;
+}
+
+.list-clean{
+  margin:0;
+  padding-left:18px;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.6;
+}
+
+.inline-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.inline-pills span{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:#f8fafc;
+  font-size:11px;
+  font-weight:800;
+  color:#334155;
+}
+
+.booking-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
 @media (max-width:1100px){
   .desktop-extra{
     grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .booking-layout{
+    grid-template-columns:1fr;
+  }
+  .booking-scroll{
+    max-height:none;
+    overflow:visible;
+    padding-right:0;
   }
 }
 
@@ -953,6 +1137,25 @@ mark.hl{
   .modal-sub{
     font-size:10px;
   }
+
+  .booking-modal{
+    width:100%;
+    max-height:calc(100dvh - 8px);
+    border-radius:18px 18px 0 0;
+    margin-top:auto;
+    padding:12px;
+  }
+  .booking-grid{
+    grid-template-columns:1fr;
+  }
+  .booking-section{
+    padding:10px;
+    border-radius:12px;
+  }
+  .preview-card{
+    padding:10px;
+    border-radius:12px;
+  }
 }
 
 @media (max-width:420px){
@@ -1082,7 +1285,659 @@ mark.hl{
           <i class="bi bi-clipboard"></i>
           <span>Copy Rate</span>
         </button>
+        <button class="btn ghost" id="openBookingFromModal">
+          <i class="bi bi-calendar-check"></i>
+          <span>Booking Form</span>
+        </button>
         <button class="btn ghost" id="closeModalBtn2">
+          <i class="bi bi-x-circle"></i>
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="bookingModal" class="overlay hidden" aria-hidden="true">
+    <div class="modal booking-modal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="bookingModalTitle">EXPORT BOOKING REQUEST</div>
+          <div class="modal-sub" id="bookingModalSub">Expanded booking form with preview outputs</div>
+        </div>
+        <button class="icon-btn" id="closeBookingModal" aria-label="Close booking form">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="booking-note">
+        All fields are optional as requested. Blank cells do not block submission. The Submit button opens a prefilled email draft to mgt@raivega.in.
+      </div>
+
+      <div class="booking-layout">
+        <form id="bookingForm" class="booking-form" onsubmit="return false;">
+          <div class="booking-scroll">
+            <div class="booking-sections">
+
+              <section class="booking-section">
+                <h3>Rate Link</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Source Rate ID</div>
+                    <input type="text" name="sourceRateId" placeholder="RATE-001245" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Source Route</div>
+                    <input type="text" name="sourceRoute" placeholder="NHAVA SHEVA TO JEBEL ALI / DUBAI" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Published 20DV</div>
+                    <input type="text" name="offer20" placeholder="USD 1,250" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Published 40HC</div>
+                    <input type="text" name="offer40" placeholder="USD 2,050" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Shipper Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Shipper Name</div>
+                    <input type="text" name="shipperName" placeholder="ABC Exports Pvt Ltd" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Shipper Contact</div>
+                    <input type="text" name="shipperContact" placeholder="Rahul Sharma" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Shipper Email</div>
+                    <input type="email" name="shipperEmail" placeholder="exports@abcexports.com" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Shipper Phone</div>
+                    <input type="text" name="shipperPhone" placeholder="+91 98100 12345" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Shipper Address</div>
+                    <textarea name="shipperAddress" placeholder="Plot 12, IMT Manesar, Gurugram, Haryana, India"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Consignee Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Consignee Name</div>
+                    <input type="text" name="consigneeName" placeholder="XYZ Trading LLC" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Consignee Contact</div>
+                    <input type="text" name="consigneeContact" placeholder="Ahmed Khan" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Consignee Email</div>
+                    <input type="email" name="consigneeEmail" placeholder="logistics@xyztrading.ae" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Consignee Phone</div>
+                    <input type="text" name="consigneePhone" placeholder="+971 50 123 4567" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Consignee Address</div>
+                    <textarea name="consigneeAddress" placeholder="Warehouse 18, Jebel Ali Free Zone, Dubai, UAE"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Notify Party</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Notify Party Name</div>
+                    <input type="text" name="notifyName" placeholder="XYZ Trading LLC - Shipping Desk" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Notify Contact</div>
+                    <input type="text" name="notifyContact" placeholder="Fatima Noor" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Notify Email</div>
+                    <input type="email" name="notifyEmail" placeholder="shipping@xyztrading.ae" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Notify Phone</div>
+                    <input type="text" name="notifyPhone" placeholder="+971 50 888 9999" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Notify Address</div>
+                    <textarea name="notifyAddress" placeholder="Same as consignee or separate notify party address"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Booking Information</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Booking Party / Customer</div>
+                    <input type="text" name="bookingParty" placeholder="Raivega Logistics Pvt Ltd" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Customer Reference</div>
+                    <input type="text" name="customerRef" placeholder="SO-45821" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Contract / Quotation No.</div>
+                    <input type="text" name="contractNo" placeholder="RVG/ME/0526" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Service Mode</div>
+                    <select name="serviceMode">
+                      <option value="">Select</option>
+                      <option value="Merchant Haulage">Merchant Haulage</option>
+                      <option value="Carrier Haulage">Carrier Haulage</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Requested ETD</div>
+                    <input type="date" name="requestedEtd" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Booking Status Target</div>
+                    <select name="bookingStatusTarget">
+                      <option value="">Select</option>
+                      <option value="Fresh Booking">Fresh Booking</option>
+                      <option value="Amendment">Amendment</option>
+                      <option value="Rollover Request">Rollover Request</option>
+                      <option value="Waitlist">Waitlist</option>
+                    </select>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Port Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">POR</div>
+                    <input type="text" name="por" placeholder="ICD Dadri" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">POL</div>
+                    <input type="text" name="pol" placeholder="Nhava Sheva" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">POD</div>
+                    <input type="text" name="pod" placeholder="Jebel Ali" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Final Destination</div>
+                    <input type="text" name="finalDestination" placeholder="Dubai" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Routing / Via</div>
+                    <input type="text" name="via" placeholder="Direct / via Colombo" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Transit Time</div>
+                    <input type="text" name="transitTime" placeholder="12 Days" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Vessel & Voyage Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Vessel Name</div>
+                    <input type="text" name="vesselName" placeholder="MV EVER GLORY" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Voyage No.</div>
+                    <input type="text" name="voyageNo" placeholder="012W" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">ETD</div>
+                    <input type="date" name="etd" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">ETA</div>
+                    <input type="date" name="eta" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Cargo Description</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Commodity</div>
+                    <input type="text" name="commodity" placeholder="Cotton Home Textiles" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Cargo Nature</div>
+                    <select name="cargoNature">
+                      <option value="">Select</option>
+                      <option value="Dry">Dry</option>
+                      <option value="Hazardous">Hazardous</option>
+                      <option value="Reefer">Reefer</option>
+                      <option value="OOG">OOG</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">HS / HTS / NCM Code</div>
+                    <input type="text" name="hsCode" placeholder="630492 / HTS 6304.92 / NCM sample" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Cargo Value</div>
+                    <input type="text" name="cargoValue" placeholder="USD 38,500" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Detailed Cargo Description</div>
+                    <textarea name="cargoDescription" placeholder="100% cotton made-ups packed in cartons, non-hazardous, export cargo"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Container Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">20DV Qty</div>
+                    <input type="number" name="container20Qty" placeholder="1" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">40HC Qty</div>
+                    <input type="number" name="container40Qty" placeholder="2" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Equipment Type</div>
+                    <input type="text" name="equipmentType" placeholder="20DV / 40HC / RF / OT" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Equipment Ownership</div>
+                    <select name="equipmentOwnership">
+                      <option value="">Select</option>
+                      <option value="COC">COC</option>
+                      <option value="SOC">SOC</option>
+                    </select>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Package Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Package Type</div>
+                    <input type="text" name="packageType" placeholder="Cartons" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Package Count</div>
+                    <input type="number" name="packageCount" placeholder="840" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Marks & Numbers</div>
+                    <textarea name="marksNumbers" placeholder="ABC EXPORTS / DUBAI / PO 45821 / MADE IN INDIA"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Weight & Volume</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Gross Weight KG</div>
+                    <input type="number" step="0.01" name="grossWeightKg" placeholder="18450" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Net Weight KG</div>
+                    <input type="number" step="0.01" name="netWeightKg" placeholder="17620" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Volume CBM</div>
+                    <input type="number" step="0.001" name="volumeCbm" placeholder="62.400" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Weight Per Container KG</div>
+                    <input type="number" step="0.01" name="weightPerContainerKg" placeholder="9225" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Freight Terms</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Freight Term</div>
+                    <select name="freightTerm">
+                      <option value="">Select</option>
+                      <option value="Prepaid">Prepaid</option>
+                      <option value="Collect">Collect</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Payment Terms</div>
+                    <input type="text" name="paymentTerms" placeholder="Freight prepaid at origin" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Incoterms</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Incoterm</div>
+                    <select name="incoterm">
+                      <option value="">Select</option>
+                      <option value="EXW">EXW</option>
+                      <option value="FCA">FCA</option>
+                      <option value="FOB">FOB</option>
+                      <option value="CFR">CFR</option>
+                      <option value="CIF">CIF</option>
+                      <option value="DAP">DAP</option>
+                      <option value="DDP">DDP</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Named Place</div>
+                    <input type="text" name="incotermPlace" placeholder="FOB Nhava Sheva / CIF Jebel Ali" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Dangerous Goods Information</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">DG Cargo</div>
+                    <select name="dgFlag">
+                      <option value="">Select</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">UN No.</div>
+                    <input type="text" name="unNo" placeholder="UN1993" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">IMDG Class</div>
+                    <input type="text" name="imdgClass" placeholder="3" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Packing Group</div>
+                    <input type="text" name="packingGroup" placeholder="II" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Flash Point</div>
+                    <input type="text" name="flashPoint" placeholder="24C" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">DG Contact</div>
+                    <input type="text" name="dgContact" placeholder="Safety team / 24x7 contact" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Reefer Cargo Information</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Reefer Cargo</div>
+                    <select name="reeferFlag">
+                      <option value="">Select</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Set Point</div>
+                    <input type="text" name="reeferSetPoint" placeholder="-18C" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Ventilation</div>
+                    <input type="text" name="reeferVentilation" placeholder="25 CBM/H" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Humidity</div>
+                    <input type="text" name="reeferHumidity" placeholder="65%" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Pre-cooling</div>
+                    <input type="text" name="preCooling" placeholder="Required / Not Required" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Vent / Drain Setting</div>
+                    <input type="text" name="reeferSettings" placeholder="Closed / As per commodity protocol" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Customs & Documentation</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">IEC No.</div>
+                    <input type="text" name="iecNo" placeholder="0512345678" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">GST No.</div>
+                    <input type="text" name="gstNo" placeholder="06ABCDE1234F1Z5" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">EORI No.</div>
+                    <input type="text" name="eoriNo" placeholder="GB123456789000" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">HTS / NCM / Destination Code</div>
+                    <input type="text" name="destinationCode" placeholder="HTS 6304.92 / NCM sample" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Shipping Bill No.</div>
+                    <input type="text" name="shippingBillNo" placeholder="9876543" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Commercial Invoice No.</div>
+                    <input type="text" name="invoiceNo" placeholder="INV-240518" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Packing List No.</div>
+                    <input type="text" name="packingListNo" placeholder="PL-240518" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Certificate / Compliance Ref.</div>
+                    <input type="text" name="complianceRef" placeholder="COO / Fumigation / Phyto / MSDS" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">Destination Documentation Notes</div>
+                    <textarea name="destinationDocs" placeholder="Examples: Enterprise code for China, CTN for Ghana, payer details, EORI/HTS as applicable"></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Bill of Lading Instructions</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">BL Type</div>
+                    <select name="blType">
+                      <option value="">Select</option>
+                      <option value="Original">Original</option>
+                      <option value="Express Release">Express Release</option>
+                      <option value="Sea Waybill">Sea Waybill</option>
+                      <option value="Telex Release">Telex Release</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Original BL Count</div>
+                    <input type="number" name="originalBlCount" placeholder="3" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Freight on BL</div>
+                    <input type="text" name="freightOnBl" placeholder="Freight Prepaid / Freight Collect" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">BL Release Party</div>
+                    <input type="text" name="blReleaseParty" placeholder="At origin / destination / bank release" />
+                  </label>
+                  <label class="field full">
+                    <div class="field-label">BL Instructions</div>
+                    <textarea name="blInstructions" placeholder="Please show shipper, consignee, notify exactly as attached documents. Mention marks and numbers as per packing list."></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>VGM & Compliance Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">VGM Status</div>
+                    <select name="vgmStatus">
+                      <option value="">Select</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Ready">Ready</option>
+                      <option value="To be shared before cutoff">To be shared before cutoff</option>
+                    </select>
+                  </label>
+                  <label class="field">
+                    <div class="field-label">VGM Method</div>
+                    <input type="text" name="vgmMethod" placeholder="Method 1 / Method 2" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">SI Cutoff</div>
+                    <input type="datetime-local" name="siCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">VGM Cutoff</div>
+                    <input type="datetime-local" name="vgmCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Doc Cutoff</div>
+                    <input type="datetime-local" name="docCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Compliance Remarks</div>
+                    <input type="text" name="complianceRemarks" placeholder="MSDS attached / DG approval pending / all docs ready" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Pickup & Stuffing Details</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Pickup Depot</div>
+                    <input type="text" name="pickupDepot" placeholder="NSICT Empty Yard" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Pickup Date & Time</div>
+                    <input type="datetime-local" name="pickupDate" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Stuffing Point</div>
+                    <input type="text" name="stuffingPoint" placeholder="Factory Stuffing / CFS / ICD" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Stuffing Date & Time</div>
+                    <input type="datetime-local" name="stuffingDate" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Factory / Stuffing Address</div>
+                    <input type="text" name="factoryAddress" placeholder="Plot 12, IMT Manesar, Gurugram, Haryana" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Haulage Contact</div>
+                    <input type="text" name="haulageContact" placeholder="Dispatch team +91 98100 11111" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Special Instructions</h3>
+                <div class="booking-grid">
+                  <label class="field full">
+                    <div class="field-label">Special Instructions</div>
+                    <textarea name="specialInstructions" placeholder="Avoid weekend gate-in. Prefer direct service. Share booking confirmation and cutoffs immediately."></textarea>
+                  </label>
+                </div>
+              </section>
+
+              <section class="booking-section">
+                <h3>Operational Cutoffs</h3>
+                <div class="booking-grid">
+                  <label class="field">
+                    <div class="field-label">Cargo Cutoff</div>
+                    <input type="datetime-local" name="cargoCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Gate Cutoff</div>
+                    <input type="datetime-local" name="gateCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Customs Cutoff</div>
+                    <input type="datetime-local" name="customsCutoff" />
+                  </label>
+                  <label class="field">
+                    <div class="field-label">Rollover / Exception Plan</div>
+                    <input type="text" name="rolloverPlan" placeholder="Next available sailing if slot not confirmed" />
+                  </label>
+                </div>
+              </section>
+
+            </div>
+          </div>
+        </form>
+
+        <div class="preview-wrap">
+          <div class="preview-card">
+            <h3>Excel-Friendly Column Structure</h3>
+            <textarea id="bookingCsv" class="mono-box" spellcheck="false"></textarea>
+          </div>
+
+          <div class="preview-card">
+            <h3>Email Booking Request Format</h3>
+            <textarea id="bookingEmailPreview" class="mono-box" spellcheck="false"></textarea>
+          </div>
+
+          <div class="preview-card">
+            <h3>Export Booking Workflow</h3>
+            <ol class="list-clean" id="bookingWorkflow"></ol>
+          </div>
+
+          <div class="preview-card">
+            <h3>Common Validation Checks</h3>
+            <ul class="list-clean" id="bookingChecks"></ul>
+          </div>
+
+          <div class="preview-card">
+            <h3>Shipping Line Operational Terminology</h3>
+            <div class="inline-pills" id="bookingTerms"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-actions">
+        <button class="btn ghost" type="button" id="loadSampleBookingBtn">
+          <i class="bi bi-magic"></i>
+          <span>Load Sample</span>
+        </button>
+        <button class="btn ghost" type="button" id="clearBookingBtn">
+          <i class="bi bi-eraser"></i>
+          <span>Clear</span>
+        </button>
+        <button class="btn ghost" type="button" id="copyBookingEmailBtn">
+          <i class="bi bi-clipboard"></i>
+          <span>Copy Email</span>
+        </button>
+        <button class="btn primary" type="button" id="submitBookingBtn">
+          <i class="bi bi-send"></i>
+          <span>Submit via Email</span>
+        </button>
+        <button class="btn ghost" type="button" id="closeBookingBtn2">
           <i class="bi bi-x-circle"></i>
           <span>Close</span>
         </button>
@@ -1121,9 +1976,254 @@ const SLABS = [
 let data = [];
 let currentView = "active";
 let currentModalRate = null;
+let currentBookingRate = null;
 let searchOpen = false;
 
 $("termsTextBox").textContent = TERMS_TEXT;
+
+const bookingWorkflowItems = [
+  "Share booking request with routing, service mode, cargo, equipment, quantity, weight, and preferred departure.",
+  "Check space, equipment availability, routing, and destination coverage.",
+  "Validate special cargo requirements such as reefer, hazardous, or other compliance needs.",
+  "Confirm documentation, shipping instructions, and destination-specific requirements.",
+  "Monitor SI, VGM, customs, and gate cutoffs before cargo handover.",
+  "Issue booking confirmation and move to stuffing, gate-in, and BL instruction stage."
+];
+
+const bookingTermsList = [
+  "POL = Port of Loading",
+  "POD = Port of Discharge",
+  "POR = Place of Receipt",
+  "MH = Merchant Haulage",
+  "CH = Carrier Haulage",
+  "SI = Shipping Instructions",
+  "VGM = Verified Gross Mass",
+  "DG = Dangerous Goods",
+  "RF = Reefer",
+  "SOC / COC = Shipper / Carrier Owned Container"
+];
+
+const bookingFieldOrder = [
+  "sourceRateId","sourceRoute","offer20","offer40",
+  "shipperName","shipperContact","shipperEmail","shipperPhone","shipperAddress",
+  "consigneeName","consigneeContact","consigneeEmail","consigneePhone","consigneeAddress",
+  "notifyName","notifyContact","notifyEmail","notifyPhone","notifyAddress",
+  "bookingParty","customerRef","contractNo","serviceMode","requestedEtd","bookingStatusTarget",
+  "por","pol","pod","finalDestination","via","transitTime",
+  "vesselName","voyageNo","etd","eta",
+  "commodity","cargoNature","hsCode","cargoValue","cargoDescription",
+  "container20Qty","container40Qty","equipmentType","equipmentOwnership",
+  "packageType","packageCount","marksNumbers",
+  "grossWeightKg","netWeightKg","volumeCbm","weightPerContainerKg",
+  "freightTerm","paymentTerms",
+  "incoterm","incotermPlace",
+  "dgFlag","unNo","imdgClass","packingGroup","flashPoint","dgContact",
+  "reeferFlag","reeferSetPoint","reeferVentilation","reeferHumidity","preCooling","reeferSettings",
+  "iecNo","gstNo","eoriNo","destinationCode","shippingBillNo","invoiceNo","packingListNo","complianceRef","destinationDocs",
+  "blType","originalBlCount","freightOnBl","blReleaseParty","blInstructions",
+  "vgmStatus","vgmMethod","siCutoff","vgmCutoff","docCutoff","complianceRemarks",
+  "pickupDepot","pickupDate","stuffingPoint","stuffingDate","factoryAddress","haulageContact",
+  "specialInstructions",
+  "cargoCutoff","gateCutoff","customsCutoff","rolloverPlan"
+];
+
+const bookingLabels = {
+  sourceRateId:"Source Rate ID",
+  sourceRoute:"Source Route",
+  offer20:"Published 20DV",
+  offer40:"Published 40HC",
+  shipperName:"Shipper Name",
+  shipperContact:"Shipper Contact",
+  shipperEmail:"Shipper Email",
+  shipperPhone:"Shipper Phone",
+  shipperAddress:"Shipper Address",
+  consigneeName:"Consignee Name",
+  consigneeContact:"Consignee Contact",
+  consigneeEmail:"Consignee Email",
+  consigneePhone:"Consignee Phone",
+  consigneeAddress:"Consignee Address",
+  notifyName:"Notify Party Name",
+  notifyContact:"Notify Party Contact",
+  notifyEmail:"Notify Party Email",
+  notifyPhone:"Notify Party Phone",
+  notifyAddress:"Notify Party Address",
+  bookingParty:"Booking Party / Customer",
+  customerRef:"Customer Reference",
+  contractNo:"Contract / Quotation No.",
+  serviceMode:"Service Mode",
+  requestedEtd:"Requested ETD",
+  bookingStatusTarget:"Booking Status Target",
+  por:"POR",
+  pol:"POL",
+  pod:"POD",
+  finalDestination:"Final Destination",
+  via:"Routing / Via",
+  transitTime:"Transit Time",
+  vesselName:"Vessel Name",
+  voyageNo:"Voyage No.",
+  etd:"ETD",
+  eta:"ETA",
+  commodity:"Commodity",
+  cargoNature:"Cargo Nature",
+  hsCode:"HS / HTS / NCM Code",
+  cargoValue:"Cargo Value",
+  cargoDescription:"Detailed Cargo Description",
+  container20Qty:"20DV Qty",
+  container40Qty:"40HC Qty",
+  equipmentType:"Equipment Type",
+  equipmentOwnership:"Equipment Ownership",
+  packageType:"Package Type",
+  packageCount:"Package Count",
+  marksNumbers:"Marks & Numbers",
+  grossWeightKg:"Gross Weight KG",
+  netWeightKg:"Net Weight KG",
+  volumeCbm:"Volume CBM",
+  weightPerContainerKg:"Weight Per Container KG",
+  freightTerm:"Freight Term",
+  paymentTerms:"Payment Terms",
+  incoterm:"Incoterm",
+  incotermPlace:"Named Place",
+  dgFlag:"DG Cargo",
+  unNo:"UN No.",
+  imdgClass:"IMDG Class",
+  packingGroup:"Packing Group",
+  flashPoint:"Flash Point",
+  dgContact:"DG Contact",
+  reeferFlag:"Reefer Cargo",
+  reeferSetPoint:"Set Point",
+  reeferVentilation:"Ventilation",
+  reeferHumidity:"Humidity",
+  preCooling:"Pre-cooling",
+  reeferSettings:"Vent / Drain Setting",
+  iecNo:"IEC No.",
+  gstNo:"GST No.",
+  eoriNo:"EORI No.",
+  destinationCode:"HTS / NCM / Destination Code",
+  shippingBillNo:"Shipping Bill No.",
+  invoiceNo:"Commercial Invoice No.",
+  packingListNo:"Packing List No.",
+  complianceRef:"Certificate / Compliance Ref.",
+  destinationDocs:"Destination Documentation Notes",
+  blType:"BL Type",
+  originalBlCount:"Original BL Count",
+  freightOnBl:"Freight on BL",
+  blReleaseParty:"BL Release Party",
+  blInstructions:"BL Instructions",
+  vgmStatus:"VGM Status",
+  vgmMethod:"VGM Method",
+  siCutoff:"SI Cutoff",
+  vgmCutoff:"VGM Cutoff",
+  docCutoff:"Doc Cutoff",
+  complianceRemarks:"Compliance Remarks",
+  pickupDepot:"Pickup Depot",
+  pickupDate:"Pickup Date & Time",
+  stuffingPoint:"Stuffing Point",
+  stuffingDate:"Stuffing Date & Time",
+  factoryAddress:"Factory / Stuffing Address",
+  haulageContact:"Haulage Contact",
+  specialInstructions:"Special Instructions",
+  cargoCutoff:"Cargo Cutoff",
+  gateCutoff:"Gate Cutoff",
+  customsCutoff:"Customs Cutoff",
+  rolloverPlan:"Rollover / Exception Plan"
+};
+
+const bookingSampleData = {
+  shipperName:"ABC Exports Pvt Ltd",
+  shipperContact:"Rahul Sharma",
+  shipperEmail:"exports@abcexports.com",
+  shipperPhone:"+91 98100 12345",
+  shipperAddress:"Plot 12, IMT Manesar, Gurugram, Haryana, India",
+  consigneeName:"XYZ Trading LLC",
+  consigneeContact:"Ahmed Khan",
+  consigneeEmail:"logistics@xyztrading.ae",
+  consigneePhone:"+971 50 123 4567",
+  consigneeAddress:"Warehouse 18, Jebel Ali Free Zone, Dubai, UAE",
+  notifyName:"XYZ Trading LLC - Shipping Desk",
+  notifyContact:"Fatima Noor",
+  notifyEmail:"shipping@xyztrading.ae",
+  notifyPhone:"+971 50 888 9999",
+  notifyAddress:"Jebel Ali Free Zone, Dubai, UAE",
+  bookingParty:"Raivega Logistics Pvt Ltd",
+  customerRef:"SO-45821",
+  contractNo:"RVG/ME/0526",
+  serviceMode:"Merchant Haulage",
+  requestedEtd:"2026-05-20",
+  bookingStatusTarget:"Fresh Booking",
+  por:"ICD Dadri",
+  pol:"Nhava Sheva",
+  pod:"Jebel Ali",
+  finalDestination:"Dubai",
+  via:"Direct",
+  transitTime:"12 Days",
+  vesselName:"MV EVER GLORY",
+  voyageNo:"012W",
+  etd:"2026-05-20",
+  eta:"2026-06-01",
+  commodity:"Cotton Home Textiles",
+  cargoNature:"Dry",
+  hsCode:"630492",
+  cargoValue:"USD 38,500",
+  cargoDescription:"100% cotton made-ups packed in cartons, non-hazardous export cargo.",
+  container20Qty:"0",
+  container40Qty:"2",
+  equipmentType:"40HC",
+  equipmentOwnership:"COC",
+  packageType:"Cartons",
+  packageCount:"840",
+  marksNumbers:"ABC EXPORTS / DUBAI / PO 45821 / MADE IN INDIA",
+  grossWeightKg:"18450",
+  netWeightKg:"17620",
+  volumeCbm:"62.400",
+  weightPerContainerKg:"9225",
+  freightTerm:"Prepaid",
+  paymentTerms:"Freight prepaid at origin",
+  incoterm:"FOB",
+  incotermPlace:"FOB Nhava Sheva",
+  dgFlag:"No",
+  unNo:"",
+  imdgClass:"",
+  packingGroup:"",
+  flashPoint:"",
+  dgContact:"",
+  reeferFlag:"No",
+  reeferSetPoint:"",
+  reeferVentilation:"",
+  reeferHumidity:"",
+  preCooling:"",
+  reeferSettings:"",
+  iecNo:"0512345678",
+  gstNo:"06ABCDE1234F1Z5",
+  eoriNo:"GB123456789000",
+  destinationCode:"HTS 6304.92",
+  shippingBillNo:"9876543",
+  invoiceNo:"INV-240518",
+  packingListNo:"PL-240518",
+  complianceRef:"COO / Fumigation",
+  destinationDocs:"EORI and HTS to be shown as applicable at destination.",
+  blType:"Original",
+  originalBlCount:"3",
+  freightOnBl:"Freight Prepaid",
+  blReleaseParty:"Release at origin",
+  blInstructions:"Please show shipper / consignee / notify exactly as provided.",
+  vgmStatus:"To be shared before cutoff",
+  vgmMethod:"Method 1",
+  siCutoff:"2026-05-18T17:00",
+  vgmCutoff:"2026-05-19T12:00",
+  docCutoff:"2026-05-18T15:00",
+  complianceRemarks:"All commercial docs ready.",
+  pickupDepot:"NSICT Empty Yard",
+  pickupDate:"2026-05-16T10:00",
+  stuffingPoint:"Factory Stuffing",
+  stuffingDate:"2026-05-17T09:30",
+  factoryAddress:"Plot 12, IMT Manesar, Gurugram, Haryana",
+  haulageContact:"Dispatch Team +91 98100 11111",
+  specialInstructions:"Avoid weekend gate-in. Prefer direct service. Share confirmation and cutoffs immediately.",
+  cargoCutoff:"2026-05-19T18:00",
+  gateCutoff:"2026-05-19T20:00",
+  customsCutoff:"2026-05-19T16:00",
+  rolloverPlan:"Next available sailing if slot not confirmed"
+};
 
 function escapeHtml(value){
   return String(value ?? "")
@@ -1471,6 +2571,236 @@ async function doCopy(id){
   showCopyToast("RATE COPIED");
 }
 
+function bookingField(name){
+  return $("bookingForm")?.elements?.[name] || null;
+}
+
+function setBookingValue(name, value, overwrite = false){
+  const el = bookingField(name);
+  if (!el) return;
+  if (overwrite || !String(el.value || "").trim()) {
+    el.value = value ?? "";
+  }
+}
+
+function escapeCsv(value){
+  const v = String(value ?? "");
+  if (/[",\n]/.test(v)) return `"${v.replace(/"/g, '""')}"`;
+  return v;
+}
+
+function getBookingData(){
+  const fd = new FormData($("bookingForm"));
+  const obj = {};
+  bookingFieldOrder.forEach(k => obj[k] = "");
+  for (const [k, v] of fd.entries()) obj[k] = String(v ?? "").trim();
+
+  if (currentBookingRate) {
+    obj.sourceRateId = obj.sourceRateId || currentBookingRate.id || "";
+    obj.sourceRoute = obj.sourceRoute || routeLabel(currentBookingRate) || "";
+    obj.offer20 = obj.offer20 || (currentBookingRate.dv20 ? `USD ${formatUsd(publishedRate(currentBookingRate.dv20))}` : "");
+    obj.offer40 = obj.offer40 || (currentBookingRate.hc40 ? `USD ${formatUsd(publishedRate(currentBookingRate.hc40))}` : "");
+    obj.pol = obj.pol || currentBookingRate.pol || "";
+    obj.pod = obj.pod || currentBookingRate.pod || "";
+    obj.finalDestination = obj.finalDestination || currentBookingRate.fpod || "";
+    obj.via = obj.via || currentBookingRate.via || "";
+    obj.transitTime = obj.transitTime || (currentBookingRate.tt ? `${currentBookingRate.tt} Days` : "");
+    obj.customerRef = obj.customerRef || currentBookingRate.seq || currentBookingRate.id || "";
+  }
+
+  return obj;
+}
+
+function buildBookingCsv(data){
+  const headers = bookingFieldOrder.map(k => escapeCsv(bookingLabels[k] || k)).join(",");
+  const values = bookingFieldOrder.map(k => escapeCsv(data[k] || "")).join(",");
+  return `${headers}\n${values}`;
+}
+
+function buildBookingEmailSubject(data){
+  const ref = data.customerRef || data.sourceRateId || "BOOKING";
+  const route = `${data.pol || "-"} to ${data.pod || "-"}`;
+  return `Booking Request | ${ref} | ${route}`;
+}
+
+function buildBookingEmailBody(data){
+  const section = (title, keys) => {
+    const lines = keys.map(k => `${bookingLabels[k] || k}: ${data[k] || ""}`);
+    return `${title}\n${"-".repeat(title.length)}\n${lines.join("\n")}`;
+  };
+
+  const advisory = getBookingChecks(data).map(x => `- ${x}`).join("\n");
+  const workflow = bookingWorkflowItems.map((x, i) => `${i + 1}. ${x}`).join("\n");
+
+  return [
+    "Dear Team,",
+    "",
+    "Please find below our export booking request.",
+    "",
+    section("Rate Link", ["sourceRateId","sourceRoute","offer20","offer40"]),
+    "",
+    section("Shipper Details", ["shipperName","shipperContact","shipperEmail","shipperPhone","shipperAddress"]),
+    "",
+    section("Consignee Details", ["consigneeName","consigneeContact","consigneeEmail","consigneePhone","consigneeAddress"]),
+    "",
+    section("Notify Party", ["notifyName","notifyContact","notifyEmail","notifyPhone","notifyAddress"]),
+    "",
+    section("Booking Information", ["bookingParty","customerRef","contractNo","serviceMode","requestedEtd","bookingStatusTarget"]),
+    "",
+    section("Port Details", ["por","pol","pod","finalDestination","via","transitTime"]),
+    "",
+    section("Vessel & Voyage Details", ["vesselName","voyageNo","etd","eta"]),
+    "",
+    section("Cargo Description", ["commodity","cargoNature","hsCode","cargoValue","cargoDescription"]),
+    "",
+    section("Container Details", ["container20Qty","container40Qty","equipmentType","equipmentOwnership"]),
+    "",
+    section("Package Details", ["packageType","packageCount","marksNumbers"]),
+    "",
+    section("Weight & Volume", ["grossWeightKg","netWeightKg","volumeCbm","weightPerContainerKg"]),
+    "",
+    section("Freight Terms", ["freightTerm","paymentTerms"]),
+    "",
+    section("Incoterms", ["incoterm","incotermPlace"]),
+    "",
+    section("Dangerous Goods Information", ["dgFlag","unNo","imdgClass","packingGroup","flashPoint","dgContact"]),
+    "",
+    section("Reefer Cargo Information", ["reeferFlag","reeferSetPoint","reeferVentilation","reeferHumidity","preCooling","reeferSettings"]),
+    "",
+    section("Customs & Documentation", ["iecNo","gstNo","eoriNo","destinationCode","shippingBillNo","invoiceNo","packingListNo","complianceRef","destinationDocs"]),
+    "",
+    section("Bill of Lading Instructions", ["blType","originalBlCount","freightOnBl","blReleaseParty","blInstructions"]),
+    "",
+    section("VGM & Compliance Details", ["vgmStatus","vgmMethod","siCutoff","vgmCutoff","docCutoff","complianceRemarks"]),
+    "",
+    section("Pickup & Stuffing Details", ["pickupDepot","pickupDate","stuffingPoint","stuffingDate","factoryAddress","haulageContact"]),
+    "",
+    section("Special Instructions", ["specialInstructions"]),
+    "",
+    section("Operational Cutoffs", ["cargoCutoff","gateCutoff","customsCutoff","rolloverPlan"]),
+    "",
+    "Export Booking Workflow",
+    "----------------------",
+    workflow,
+    "",
+    "Common Validation Checks",
+    "------------------------",
+    advisory,
+    "",
+    "Regards"
+  ].join("\n");
+}
+
+function getBookingChecks(data){
+  const checks = [];
+
+  if (data.shipperEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.shipperEmail)) {
+    checks.push("Shipper email looks incomplete.");
+  }
+  if (data.consigneeEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.consigneeEmail)) {
+    checks.push("Consignee email looks incomplete.");
+  }
+  if ((data.container20Qty || data.container40Qty) && !data.weightPerContainerKg) {
+    checks.push("Container quantity entered but weight per container is blank.");
+  }
+  if ((data.serviceMode || "").toLowerCase().includes("carrier") && !data.factoryAddress) {
+    checks.push("Carrier haulage selected but factory / stuffing address is blank.");
+  }
+  if ((data.serviceMode || "").toLowerCase().includes("merchant") && !data.pickupDepot) {
+    checks.push("Merchant haulage selected but pickup depot is blank.");
+  }
+  if ((data.dgFlag || "").toLowerCase() === "yes" && (!data.unNo || !data.imdgClass)) {
+    checks.push("DG cargo selected but UN number or IMDG class is blank.");
+  }
+  if ((data.reeferFlag || "").toLowerCase() === "yes" && !data.reeferSetPoint) {
+    checks.push("Reefer cargo selected but set point is blank.");
+  }
+
+  const etd = data.requestedEtd ? new Date(data.requestedEtd) : null;
+  const si = data.siCutoff ? new Date(data.siCutoff) : null;
+  const vgm = data.vgmCutoff ? new Date(data.vgmCutoff) : null;
+
+  if (etd && si && si > etd) checks.push("SI cutoff is later than requested ETD.");
+  if (etd && vgm && vgm > etd) checks.push("VGM cutoff is later than requested ETD.");
+
+  if (!checks.length) {
+    checks.push("No blocking issues. Blank fields are allowed and submission will still work.");
+  }
+
+  return checks;
+}
+
+function renderBookingStaticBlocks(){
+  $("bookingWorkflow").innerHTML = bookingWorkflowItems.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+  $("bookingTerms").innerHTML = bookingTermsList.map(x => `<span>${escapeHtml(x)}</span>`).join("");
+}
+
+function updateBookingPreview(){
+  const data = getBookingData();
+  $("bookingCsv").value = buildBookingCsv(data);
+  $("bookingEmailPreview").value = buildBookingEmailBody(data);
+  $("bookingChecks").innerHTML = getBookingChecks(data).map(x => `<li>${escapeHtml(x)}</li>`).join("");
+}
+
+function fillBookingFromRate(rate){
+  if (!rate) return;
+  setBookingValue("sourceRateId", rate.id || "", true);
+  setBookingValue("sourceRoute", routeLabel(rate) || "", true);
+  setBookingValue("offer20", rate.dv20 ? `USD ${formatUsd(publishedRate(rate.dv20))}` : "", true);
+  setBookingValue("offer40", rate.hc40 ? `USD ${formatUsd(publishedRate(rate.hc40))}` : "", true);
+  setBookingValue("por", rate.por || "");
+  setBookingValue("pol", rate.pol || "");
+  setBookingValue("pod", rate.pod || "");
+  setBookingValue("finalDestination", rate.fpod || "");
+  setBookingValue("via", rate.via || "");
+  setBookingValue("transitTime", rate.tt ? `${rate.tt} Days` : "");
+  setBookingValue("customerRef", rate.seq || rate.id || "");
+  setBookingValue("equipmentType", [rate.container20Type, rate.container40Type].filter(Boolean).join(" / "));
+}
+
+function openBooking(id){
+  currentBookingRate = data.find(x => x.id === id) || currentModalRate || null;
+  $("bookingForm").reset();
+  fillBookingFromRate(currentBookingRate);
+  renderBookingStaticBlocks();
+  updateBookingPreview();
+  $("bookingModal").classList.remove("hidden");
+  $("bookingModal").setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeBooking(){
+  $("bookingModal").classList.add("hidden");
+  $("bookingModal").setAttribute("aria-hidden", "true");
+  if ($("rateModal").classList.contains("hidden")) {
+    document.body.style.overflow = "";
+  }
+}
+
+function loadSampleBooking(){
+  Object.entries(bookingSampleData).forEach(([k, v]) => setBookingValue(k, v, true));
+  if (currentBookingRate) fillBookingFromRate(currentBookingRate);
+  updateBookingPreview();
+}
+
+function clearBookingForm(){
+  $("bookingForm").reset();
+  if (currentBookingRate) fillBookingFromRate(currentBookingRate);
+  updateBookingPreview();
+}
+
+async function copyBookingEmail(){
+  await copyText($("bookingEmailPreview").value || "");
+  showCopyToast("BOOKING EMAIL COPIED");
+}
+
+function submitBookingViaEmail(){
+  const data = getBookingData();
+  const subject = encodeURIComponent(buildBookingEmailSubject(data));
+  const body = encodeURIComponent(buildBookingEmailBody(data));
+  window.location.href = `mailto:mgt@raivega.in?subject=${subject}&body=${body}`;
+}
+
 function openModal(id){
   const r = data.find(x => x.id === id);
   if (!r) return;
@@ -1518,7 +2848,9 @@ function closeModal(){
   $("rateModal").classList.add("hidden");
   $("rateModal").setAttribute("aria-hidden", "true");
   currentModalRate = null;
-  document.body.style.overflow = "";
+  if ($("bookingModal").classList.contains("hidden")) {
+    document.body.style.overflow = "";
+  }
 }
 
 function render(){
@@ -1602,6 +2934,10 @@ function render(){
             <i class="bi bi-clipboard"></i>
             <span>Copy</span>
           </button>
+          <button class="btn ghost" data-action="book" data-id="${escapeHtml(r.id)}">
+            <i class="bi bi-calendar-check"></i>
+            <span>Book</span>
+          </button>
           <button class="btn primary" data-action="view" data-id="${escapeHtml(r.id)}">
             <i class="bi bi-eye"></i>
             <span>Details</span>
@@ -1649,6 +2985,7 @@ document.addEventListener("click", async (e) => {
 
   if (action === "copy") await doCopy(id);
   if (action === "view") openModal(id);
+  if (action === "book") openBooking(id);
 });
 
 $("copyModalBtn").addEventListener("click", async () => {
@@ -1664,8 +3001,30 @@ $("rateModal").addEventListener("click", (e) => {
   if (e.target.id === "rateModal") closeModal();
 });
 
+$("bookingForm").addEventListener("input", updateBookingPreview);
+$("bookingForm").addEventListener("change", updateBookingPreview);
+
+$("closeBookingModal").addEventListener("click", closeBooking);
+$("closeBookingBtn2").addEventListener("click", closeBooking);
+$("loadSampleBookingBtn").addEventListener("click", loadSampleBooking);
+$("clearBookingBtn").addEventListener("click", clearBookingForm);
+$("copyBookingEmailBtn").addEventListener("click", copyBookingEmail);
+$("submitBookingBtn").addEventListener("click", submitBookingViaEmail);
+
+$("bookingModal").addEventListener("click", (e) => {
+  if (e.target.id === "bookingModal") closeBooking();
+});
+
+$("openBookingFromModal").addEventListener("click", () => {
+  if (currentModalRate) openBooking(currentModalRate.id);
+});
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    if (!$("bookingModal").classList.contains("hidden")) {
+      closeBooking();
+      return;
+    }
     if (!$("rateModal").classList.contains("hidden")) {
       closeModal();
       return;
@@ -1696,6 +3055,9 @@ onSnapshot(
     `;
   }
 );
+
+renderBookingStaticBlocks();
+updateBookingPreview();
 </script>
 </body>
 </html>
