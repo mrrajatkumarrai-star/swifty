@@ -11,9 +11,7 @@
   --bg2:#f3e8ff;
   --bg3:#f8fafc;
   --glass:rgba(255,255,255,.58);
-  --glass-2:rgba(255,255,255,.72);
   --border:rgba(255,255,255,.42);
-  --stroke:rgba(148,163,184,.22);
   --text:#0f172a;
   --muted:#64748b;
   --primary:#111827;
@@ -29,7 +27,7 @@
 }
 *{
   box-sizing:border-box;
-  font-weight:normal !important; /* Forces all text to be un-bolded globally */
+  font-weight:normal !important;
 }
 html,body{
   margin:0;
@@ -460,7 +458,7 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   gap:8px;
   margin-bottom:7px;
 }
-.mobile-card-title{font-size:13px;}
+.mobile-card-title{font-size:13px}
 .mobile-card-sub{font-size:12px;color:var(--muted)}
 .mobile-grid{
   display:grid;
@@ -603,7 +601,7 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   margin-bottom:8px;
 }
 .markup-row input{flex:0 0 110px}
-.markup-row label{margin:0;flex:1;font-size:12px;}
+.markup-row label{margin:0;flex:1;font-size:12px}
 .applied-markups{
   margin-top:8px;
   padding:10px;
@@ -1710,6 +1708,8 @@ function normalizeDaysText(v){
   if(!s) return "";
   return /DAY/.test(s) ? s : `${s} DAYS`;
 }
+
+/* UPDATED COPY FUNCTION WITH POR + FPOD + F/T */
 window.copyRate = async (id) => {
   const r = data.find(x => x.id === id);
   if(!r) return;
@@ -1717,22 +1717,33 @@ window.copyRate = async (id) => {
   const rate20 = applyMarkup(r.dv20, effectiveMarkup20()) || r.dv20 || "";
   const rate40 = applyMarkup(r.hc40, effectiveMarkup40()) || r.hc40 || "";
 
+  const type20 = r.container20Type ? ` ${upper(r.container20Type)}` : "";
+  const type40 = r.container40Type ? ` ${upper(r.container40Type)}` : "";
+
   const parts = [];
-  if(rate20) parts.push(`USD ${rate20}/20DV${r.container20Type ? ` ${r.container20Type}` : ""}`);
-  if(rate40) parts.push(`USD ${rate40}/40HC${r.container40Type ? ` ${r.container40Type}` : ""}`);
+  if(rate20) parts.push(`USD ${rate20}/20DV${type20}`);
+  if(rate40) parts.push(`USD ${rate40}/40HC${type40}`);
+
+  const routeFrom = upper(r.pol || r.por || "");
+  const routeTo = upper(r.pod || "");
 
   const lines = [];
+
   if(r.carrier) lines.push(`CARRIER: ${upper(r.carrier)}`);
+  if(r.por) lines.push(`POR: ${upper(r.por)}`);
   if(r.pol) lines.push(`POL: ${upper(r.pol)}`);
   if(r.pod) lines.push(`POD: ${upper(r.pod)}`);
-  if((r.pol || r.por || r.pod) && parts.length){
-    lines.push(`O/F FM ${upper(r.pol || r.por || "")} TO ${upper(r.pod || "")} @ ${parts.join(" & ")}`);
+  if(r.fpod) lines.push(`FPOD: ${upper(r.fpod)}`);
+
+  if(routeFrom || routeTo || parts.length){
+    lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${parts.join(" & ")}`);
   }
-  if(r.validity){
-    lines.push(`VALIDITY: ${fmtDate(r.validity)}${r.type ? ` (${displayType(r.type)})` : ""}`);
-  }
+
+  if(r.ft) lines.push(`F/T: ${normalizeDaysText(r.ft)}`);
+  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
   if(r.tt) lines.push(`TT: ${normalizeDaysText(r.tt)}`);
   if(r.via) lines.push(`ROUTING: ${upper(r.via)}`);
+  if(r.type) lines.push(`TYPE: ${displayType(r.type)}`);
   if(r.remarks) lines.push(`REMARKS: ${upper(r.remarks)}`);
 
   await copyText(lines.join("\n"));
