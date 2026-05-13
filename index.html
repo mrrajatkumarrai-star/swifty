@@ -1293,6 +1293,11 @@ function showPopup(text, target){
 function hidePopup(){
   popupEl.classList.remove("show");
 }
+function appendDays(v){
+  const s = upper(v);
+  if(!s) return "";
+  return /DAY/.test(s) ? s : `${s} DAYS`;
+}
 
 async function load(){
   showLoader("UPDATING DATA","FETCHING RECORDS");
@@ -1569,10 +1574,9 @@ async function duplicateRate(id){
     delete payload.id;
     payload.seq = generateSeq();
     payload.createdAt = new Date().toISOString();
-    payload.updatedAt = new Date().toISOString();
+    payload.updatedAt = payload.createdAt;
     await addDoc(collection(db,"rates"), payload);
     await load();
-    showCopyToast("RATE DUPLICATED");
   }catch(err){
     alert("DUPLICATE FAILED");
     console.error(err);
@@ -1585,6 +1589,21 @@ $("duplicateBtn").onclick = async () => {
   await duplicateRate(editId);
 };
 
+async function deleteRate(id){
+  if(!confirm("DELETE THIS RATE?")) return;
+  showLoader("DELETING","REMOVING RECORD");
+  try{
+    await deleteDoc(doc(db,"rates",id));
+    selectedIds.delete(id);
+    if(editId === id) clearForm(true);
+    await load();
+  }catch(err){
+    alert("DELETE FAILED");
+    console.error(err);
+  }finally{
+    hideLoader();
+  }
+}
 async function bulkDeleteSelected(){
   if(!selectedIds.size) return alert("SELECT RECORDS FIRST.");
   if(!confirm(`DELETE ${selectedIds.size} SELECTED RECORD(S)?`)) return;
@@ -1594,8 +1613,11 @@ async function bulkDeleteSelected(){
       await deleteDoc(doc(db,"rates",id));
     }
     selectedIds.clear();
-    if(editId && !data.find(x => x.id === editId)) clearForm(true);
+    clearForm(true);
     await load();
+  }catch(err){
+    alert("BULK DELETE FAILED");
+    console.error(err);
   }finally{
     hideLoader();
   }
@@ -1607,44 +1629,32 @@ async function migrateAllSequences(){
   showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
   try{
     for(const r of data){
-      const newSeq = r.seq || generateSeq();
+      const source = r.createdAt || r.updatedAt || new Date().toISOString();
+      const newSeq = seqFromDate(source);
       if(r.seq !== newSeq){
         await updateDoc(doc(db,"rates",r.id), { seq:newSeq });
       }
     }
     await load();
+  }catch(err){
+    alert("SEQUENCE UPDATE FAILED");
+    console.error(err);
   }finally{
     hideLoader();
   }
 }
 $("migrateSeqBtn").onclick = migrateAllSequences;
 
-function pinUnlock(){
-  const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin === PIN){
-    setSession();
-    showApp();
-  }else{
-    alert("INVALID PIN");
-    clearPin();
-  }
-}
-function clearPin(){
-  ["pin1","pin2","pin3","pin4"].forEach(id => $(id).value = "");
-  $("pin1").focus();
-}
-["pin1","pin2","pin3","pin4"].forEach((id,i,arr) => {
-  $(id).addEventListener("input",e => {
-    e.target.value = e.target.value.replace(/\D/g,"").slice(0,1);
-    if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
+function copyText(text){
+  return navigator.clipboard.writeText(text).catch(() => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
   });
-  $(id).addEventListener("keydown",e => {
-    if(e.key === "Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
-    if(e.key === "Enter") pinUnlock();
-  });
-});
-$("unlockBtn").onclick = pinUnlock;
-$("clearPinBtn").onclick = clearPin;
+}
 
 function effectiveMarkup20(){ return parseFloat(userMu20 || 0) || 0; }
 function effectiveMarkup40(){ return parseFloat(userMu40 || 0) || 0; }
@@ -1662,12 +1672,12 @@ function updateAppliedMarkupsList(){
   const m20 = effectiveMarkup20();
   const m40 = effectiveMarkup40();
   if(!m20 && !m40){
-    $("appliedMarkupsList").innerHTML = '<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>';
+    $("appliedMarkupsList").innerHTML = `<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>`;
     return;
   }
   let html = "";
-  if(m20) html += `<div class="applied-markup"><span>20DV: +${m20}%</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
-  if(m40) html += `<div class="applied-markup"><span>40HC: +${m40}%</span><i class="bi bi-check-circle" style="color:var(--success)"></i></div>`;
+  if(m20) html += `<div class="applied-markup"><span>20DV</span><span>+${m20}%</span></div>`;
+  if(m40) html += `<div class="applied-markup"><span>40HC</span><span>+${m40}%</span></div>`;
   $("appliedMarkupsList").innerHTML = html;
 }
 $("saveUserMarkupBtn").onclick = () => {
@@ -1686,71 +1696,52 @@ $("clearUserMarkupBtn").onclick = () => {
   showCopyToast("USER MARKUPS CLEARED");
 };
 
-function applyMarkup(value, pct){
-  const n = parseFloat(value || "");
-  if(isNaN(n)) return "";
-  return String(Math.round(n * (1 + ((parseFloat(pct || 0) || 0) / 100))));
-}
-async function copyText(text){
-  try{
-    await navigator.clipboard.writeText(text);
-  }catch{
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-  }
-}
-function normalizeDaysText(v){
-  const s = upper(v || "");
-  if(!s) return "";
-  return /DAY/.test(s) ? s : `${s} DAYS`;
-}
-
-/* UPDATED COPY FUNCTION WITH POR + FPOD + F/T */
 window.copyRate = async (id) => {
   const r = data.find(x => x.id === id);
   if(!r) return;
 
-  const rate20 = applyMarkup(r.dv20, effectiveMarkup20()) || r.dv20 || "";
-  const rate40 = applyMarkup(r.hc40, effectiveMarkup40()) || r.hc40 || "";
-
-  const type20 = r.container20Type ? ` ${upper(r.container20Type)}` : "";
-  const type40 = r.container40Type ? ` ${upper(r.container40Type)}` : "";
-
-  const parts = [];
-  if(rate20) parts.push(`USD ${rate20}/20DV${type20}`);
-  if(rate40) parts.push(`USD ${rate40}/40HC${type40}`);
-
-  const routeFrom = upper(r.pol || r.por || "");
-  const routeTo = upper(r.pod || "");
-
   const lines = [];
 
-  if(r.carrier) lines.push(`CARRIER: ${upper(r.carrier)}`);
-  if(r.por) lines.push(`POR: ${upper(r.por)}`);
-  if(r.pol) lines.push(`POL: ${upper(r.pol)}`);
-  if(r.pod) lines.push(`POD: ${upper(r.pod)}`);
-  if(r.fpod) lines.push(`FPOD: ${upper(r.fpod)}`);
+  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
+  if(r.por) lines.push(`POR: ${r.por}`);
+  if(r.pol) lines.push(`POL: ${r.pol}`);
+  if(r.pod) lines.push(`POD: ${r.pod}`);
+  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
 
-  if(routeFrom || routeTo || parts.length){
-    lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${parts.join(" & ")}`);
+  const routeFrom = r.pol || r.por || "";
+  const routeTo = r.pod || "";
+  const base20 = parseFloat(r.dv20 || "") || 0;
+  const base40 = parseFloat(r.hc40 || "") || 0;
+  const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20() / 100)) : 0;
+  const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40() / 100)) : 0;
+
+  const type20 = r.container20Type ? ` (${r.container20Type})` : "";
+  const type40 = r.container40Type ? ` (${r.container40Type})` : "";
+  const part20 = final20 ? `USD ${final20}/20DV${type20}` : "";
+  const part40 = final40 ? `USD ${final40}/40HC${type40}` : "";
+
+  if(routeFrom || routeTo || part20 || part40){
+    const rateParts = [part20, part40].filter(Boolean).join(" & ");
+    lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${rateParts}`.replace(/\s+/g," ").trim());
   }
 
-  if(r.ft) lines.push(`F/T: ${normalizeDaysText(r.ft)}`);
-  if(r.validity) lines.push(`VALIDITY: ${fmtDate(r.validity)}`);
-  if(r.tt) lines.push(`TT: ${normalizeDaysText(r.tt)}`);
-  if(r.via) lines.push(`ROUTING: ${upper(r.via)}`);
-  if(r.type) lines.push(`TYPE: ${displayType(r.type)}`);
-  if(r.remarks) lines.push(`REMARKS: ${upper(r.remarks)}`);
+  if(r.ft) lines.push(`F/T: ${appendDays(r.ft)}`);
+
+  if(r.validity){
+    const validityText = fmtDate(r.validity);
+    const typeText = displayType(r.type);
+    lines.push(`VALIDITY: ${validityText}${typeText ? ` (${typeText})` : ""}`);
+  }
+
+  if(r.tt) lines.push(`TT: ${appendDays(r.tt)}`);
+  if(r.via) lines.push(`ROUTING: ${r.via}`);
+  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
   await copyText(lines.join("\n"));
   showCopyToast("RATE COPIED");
 };
 
-window.editRate = id => {
+window.editRate = (id) => {
   const r = data.find(x => x.id === id);
   if(!r) return;
   editId = id;
@@ -1761,46 +1752,18 @@ window.editRate = id => {
   $("pod").value = r.pod || "";
   $("fpod").value = r.fpod || "";
   $("dv20").value = r.dv20 || "";
+  $("container20Type").value = r.container20Type || "";
   $("hc40").value = r.hc40 || "";
+  $("container40Type").value = r.container40Type || "";
   $("ft").value = r.ft || "";
-  $("validity").value = inputDateValue(r.validity || "");
+  $("validity").value = inputDateValue(r.validity);
   $("tt").value = r.tt || "";
   $("via").value = r.via || "";
   $("remarks").value = r.remarks || "";
-  $("container20Type").value = r.container20Type || "";
-  $("container40Type").value = r.container40Type || "";
   $("rateType").value = r.type === "S" ? "S" : "V";
 };
-window.delRate = async id => {
-  if(!confirm("DELETE THIS RATE?")) return;
-  showLoader("DELETING","REMOVING RECORD");
-  try{
-    await deleteDoc(doc(db,"rates",id));
-    selectedIds.delete(id);
-    if(editId === id) clearForm(true);
-    await load();
-  }finally{
-    hideLoader();
-  }
-};
 
-function updateFitResult(){
-  const l = parseFloat($("cargoL").value || "");
-  const w = parseFloat($("cargoW").value || "");
-  const h = parseFloat($("cargoH").value || "");
-  if(isNaN(l) || isNaN(w) || isNaN(h)){
-    $("fitResult").innerHTML = `<span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>`;
-    return;
-  }
-  const fits = fitSpecs.filter(s => l <= s.l && w <= s.w && h <= s.h);
-  if(!fits.length){
-    $("fitResult").innerHTML = `<span class="fit-pill bb">RESULT: BREAK BULK</span><span class="fit-pill">CARGO EXCEEDS AVAILABLE CONTAINER SIZE</span>`;
-    return;
-  }
-  $("fitResult").innerHTML = fits.map(s => `<span class="fit-pill ok">${escapeHtml(s.key)} FITS</span>`).join("") + `<span class="fit-pill">IF DOOR / STOWAGE / LINE LIMIT FAILS, TREAT AS BREAK BULK</span>`;
-}
-$("checkFitBtn").onclick = updateFitResult;
-["cargoL","cargoW","cargoH"].forEach(id => $(id).addEventListener("input", updateFitResult));
+window.delRate = deleteRate;
 
 function toCSV(rows){
   const head = ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
@@ -1838,20 +1801,14 @@ function download(name, txt){
 
 function parseCSVLine(line, sep=","){
   const out = [];
-  let cur = "";
-  let inQuotes = false;
+  let cur = "", inQuotes = false;
   for(let i=0;i<line.length;i++){
     const ch = line[i];
     if(ch === '"'){
-      if(inQuotes && line[i+1] === '"'){
-        cur += '"';
-        i++;
-      }else{
-        inQuotes = !inQuotes;
-      }
+      if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
+      else inQuotes = !inQuotes;
     }else if(ch === sep && !inQuotes){
-      out.push(cur);
-      cur = "";
+      out.push(cur); cur = "";
     }else{
       cur += ch;
     }
@@ -1863,40 +1820,40 @@ function parseCSV(txt){
   const lines = txt.split(/\r?\n/).filter(line => line.trim() !== "");
   if(!lines.length) return [];
   const sep = lines[0].includes("\t") ? "\t" : ",";
-  const headers = parseCSVLine(lines[0], sep).map(s => s.trim().toLowerCase());
+  const headers = parseCSVLine(lines[0],sep).map(s => s.trim().toLowerCase());
   return lines.slice(1).map(line => {
-    const cols = parseCSVLine(line, sep);
-    const obj = {};
-    headers.forEach((h,i) => obj[h] = (cols[i] ?? "").trim());
-    return obj;
+    const cols = parseCSVLine(line,sep);
+    const o = {};
+    headers.forEach((h,i) => o[h] = (cols[i] ?? "").trim());
+    return o;
   });
 }
 function normalizeUploadRow(r){
   const rawType = upper(r.type || r.vtype || r.stype || "");
   const typeCode = rawType === "S" || rawType === "SAILING" ? "S" : "V";
   return {
-    seq: r.seq || r.sequence || "",
-    carrier: upper(r.carrier),
-    por: upper(r.por),
-    pol: upper(r.pol),
-    pod: upper(r.pod),
-    fpod: upper(r.fpod),
-    dv20: calc(r.dv20 || r["20dv"] || ""),
-    container20Type: upper(r["20type"] || r.container20type || ""),
-    hc40: calc(r.hc40 || r["40hc"] || ""),
-    container40Type: upper(r["40type"] || r.container40type || ""),
-    ft: upper(r["f/t"] || r.ft || ""),
-    validity: inputDateValue(r.validity || r.date || ""),
-    type: typeCode,
-    tt: upper(r.tt || r["transit time"] || ""),
-    via: upper(r.routing || r.via || r.route || ""),
-    remarks: upper(r.remarks || "")
+    seq:r.seq || r.sequence || "",
+    carrier:upper(r.carrier),
+    por:upper(r.por),
+    pol:upper(r.pol),
+    pod:upper(r.pod),
+    fpod:upper(r.fpod),
+    dv20:calc(r.dv20 || r["20dv"] || ""),
+    container20Type:upper(r["20type"] || r.container20type || ""),
+    hc40:calc(r.hc40 || r["40hc"] || ""),
+    container40Type:upper(r["40type"] || r.container40type || ""),
+    ft:upper(r["f/t"] || r.ft || ""),
+    validity:inputDateValue(r.validity || r.date || ""),
+    type:typeCode,
+    tt:upper(r.tt || r["transit time"] || ""),
+    via:upper(r.routing || r.via || r.route || ""),
+    remarks:upper(r.remarks || "")
   };
 }
 function renderUpload(){
   $("uploadBody").innerHTML = uploadRows.map((r,i) => `
     <tr>
-      <td><input class="row-check" type="checkbox" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}></td>
+      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}></td>
       <td>${escapeHtml(r.seq || i+1)}</td>
       <td>${escapeHtml(r.carrier || "")}</td>
       <td>${escapeHtml(r.por || "")}</td>
@@ -1923,7 +1880,7 @@ function renderUpload(){
           <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
           <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div>
         </div>
-        <label><input class="row-check" type="checkbox" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}> SELECT</label>
+        <label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}> SELECT</label>
       </div>
       <div class="mobile-grid">
         ${mobileItem("POR",r.por)}
@@ -1942,6 +1899,7 @@ function renderUpload(){
     </div>
   `).join("");
 }
+
 function openUpload(){
   $("uploadOverlay").classList.remove("hidden");
   renderUpload();
@@ -1961,19 +1919,18 @@ $("fileInput").addEventListener("change", async e => {
     const txt = await f.text();
     uploadRows = parseCSV(txt).map(normalizeUploadRow);
     selectedUploadRows.clear();
-    $("selectAllUpload").checked = false;
     renderUpload();
+  }catch(err){
+    alert("IMPORT READ FAILED");
+    console.error(err);
   }finally{
     hideLoader();
   }
 });
 
 $("selectAllUpload").addEventListener("change", e => {
-  if(e.target.checked){
-    uploadRows.forEach((_,i) => selectedUploadRows.add(i));
-  }else{
-    selectedUploadRows.clear();
-  }
+  if(e.target.checked) uploadRows.forEach((_,i) => selectedUploadRows.add(i));
+  else selectedUploadRows.clear();
   renderUpload();
 });
 
@@ -1993,9 +1950,62 @@ $("uploadMobile").addEventListener("change", e => {
   renderUpload();
 });
 
+$("exportSelectedBtn").onclick = () => {
+  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : filteredRows();
+  download("fr8x_selected_export.csv", toCSV(rows));
+};
+
+$("applyImportBtn").onclick = async () => {
+  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : uploadRows;
+  if(!rows.length) return alert("NO DATA TO IMPORT.");
+  showLoader("IMPORTING","ADDING RECORDS");
+  try{
+    for(const r of rows){
+      if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
+      await addDoc(collection(db,"rates"), {
+        seq:r.seq || generateSeq(),
+        createdAt:new Date().toISOString(),
+        updatedAt:new Date().toISOString(),
+        carrier:r.carrier,
+        por:r.por,
+        pol:r.pol,
+        pod:r.pod,
+        fpod:r.fpod,
+        dv20:r.dv20,
+        container20Type:r.container20Type,
+        hc40:r.hc40,
+        container40Type:r.container40Type,
+        ft:r.ft,
+        validity:r.validity,
+        type:r.type,
+        tt:r.tt,
+        via:r.via,
+        remarks:r.remarks,
+        localCharges:[],
+        charges20dv:[],
+        charges40hc:[]
+      });
+    }
+    if($("clearImportPreviewAfterApply").checked){
+      uploadRows = [];
+      selectedUploadRows.clear();
+      renderUpload();
+    }
+    if($("clearEditorAfterImport").checked){
+      clearForm(true);
+    }
+    closeUpload();
+    await load();
+  }catch(err){
+    alert("IMPORT APPLY FAILED");
+    console.error(err);
+  }finally{
+    hideLoader();
+  }
+};
+
 $("downloadTemplateBtn").onclick = () => {
-  const today = inputDateValue(new Date());
-  const sample = [{
+  const templateRows = [{
     seq:"",
     carrier:"MSC",
     por:"DELHI",
@@ -2007,100 +2017,106 @@ $("downloadTemplateBtn").onclick = () => {
     hc40:"1800",
     container40Type:"",
     ft:"14",
-    validity:today,
+    validity:inputDateValue(new Date()),
     type:"V",
     tt:"7",
     via:"DIRECT",
     remarks:"SAMPLE"
   }];
-  download("fr8x_template.csv", toCSV(sample));
+  download("fr8x_template.csv", toCSV(templateRows));
 };
-$("exportSelectedBtn").onclick = () => {
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : filteredRows();
-  download("fr8x_selected_export.csv", toCSV(rows));
-};
-$("applyImportBtn").onclick = async () => {
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : uploadRows;
-  if(!rows.length) return alert("NO DATA TO IMPORT.");
-  showLoader("IMPORTING","ADDING RECORDS");
-  try{
-    for(const r of rows){
-      if(!r.carrier && !r.pol && !r.pod && !r.fpod) continue;
-      const now = new Date().toISOString();
-      await addDoc(collection(db,"rates"), {
-        seq: r.seq || generateSeq(),
-        createdAt: now,
-        updatedAt: now,
-        carrier: r.carrier,
-        por: r.por,
-        pol: r.pol,
-        pod: r.pod,
-        fpod: r.fpod,
-        dv20: r.dv20,
-        container20Type: r.container20Type,
-        hc40: r.hc40,
-        container40Type: r.container40Type,
-        ft: r.ft,
-        validity: r.validity,
-        type: r.type,
-        tt: r.tt,
-        via: r.via,
-        remarks: r.remarks,
-        localCharges: [],
-        charges20dv: [],
-        charges40hc: []
-      });
-    }
 
-    if($("clearEditorAfterImport").checked) clearForm(true);
-
-    if($("clearImportPreviewAfterApply").checked){
-      uploadRows = [];
-      selectedUploadRows.clear();
-      $("fileInput").value = "";
-      $("selectAllUpload").checked = false;
-      renderUpload();
-    }
-
-    closeUpload();
-    await load();
-    showCopyToast("IMPORT APPLIED");
-  }finally{
-    hideLoader();
+function checkFit(){
+  const l = parseFloat($("cargoL").value || "");
+  const w = parseFloat($("cargoW").value || "");
+  const h = parseFloat($("cargoH").value || "");
+  if(isNaN(l) || isNaN(w) || isNaN(h)){
+    $("fitResult").innerHTML = `<span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>`;
+    return;
   }
-};
+  const fits = fitSpecs.filter(x => l <= x.l && w <= x.w && h <= x.h).map(x => x.key);
+  if(!fits.length){
+    $("fitResult").innerHTML = `<span class="fit-pill bb">BREAK BULK</span>`;
+    return;
+  }
+  $("fitResult").innerHTML = fits.map(x => `<span class="fit-pill ok">${escapeHtml(x)}</span>`).join("");
+}
+$("checkFitBtn").onclick = checkFit;
 
-document.querySelectorAll(".section-tabs button").forEach(btn => {
-  btn.addEventListener("click", () => switchView(btn.dataset.view));
-});
-document.querySelectorAll(".sort-btn").forEach(btn => {
-  btn.addEventListener("click", e => {
-    e.stopPropagation();
-    const key = btn.dataset.sort;
-    if(sortState.key !== key) sortState = { key, dir:"asc" };
-    else if(sortState.dir === "asc") sortState = { key, dir:"desc" };
-    else sortState = { key:"", dir:"" };
-    render();
+function pinUnlock(){
+  const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
+  if(pin === PIN){
+    setSession();
+    showApp();
+  }else{
+    alert("INVALID PIN");
+    clearPin();
+  }
+}
+function clearPin(){
+  ["pin1","pin2","pin3","pin4"].forEach(id => $(id).value = "");
+  $("pin1").focus();
+}
+["pin1","pin2","pin3","pin4"].forEach((id,i,arr) => {
+  $(id).addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g,"").slice(0,1);
+    if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
+  });
+  $(id).addEventListener("keydown", e => {
+    if(e.key === "Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
+    if(e.key === "Enter") pinUnlock();
   });
 });
-document.querySelectorAll(".filter-row input").forEach(inp => {
-  inp.addEventListener("input", e => {
-    filterMap[e.target.dataset.col] = e.target.value;
-    render();
-  });
-});
+$("unlockBtn").onclick = pinUnlock;
+$("clearPinBtn").onclick = clearPin;
+
 $("globalSearch").addEventListener("input", render);
+document.querySelectorAll(".filter-row input").forEach(inp => inp.addEventListener("input", e => {
+  filterMap[e.target.dataset.col] = e.target.value;
+  render();
+}));
+document.querySelectorAll(".sort-btn").forEach(btn => btn.addEventListener("click", e => {
+  e.stopPropagation();
+  const key = btn.dataset.sort;
+  if(sortState.key !== key){
+    sortState = { key, dir:"asc" };
+  }else if(sortState.dir === "asc"){
+    sortState = { key, dir:"desc" };
+  }else{
+    sortState = { key:"", dir:"" };
+  }
+  render();
+}));
+document.querySelectorAll(".section-tabs button").forEach(btn => btn.addEventListener("click", () => switchView(btn.dataset.view)));
+
+document.addEventListener("mouseover", e => {
+  const pop = e.target.closest(".pop-field");
+  if(pop) showPopup(pop.dataset.value || "", pop);
+});
+document.addEventListener("mouseout", e => {
+  if(e.target.closest(".pop-field")) hidePopup();
+});
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-action]");
+  if(btn){
+    const id = btn.dataset.id;
+    if(btn.dataset.action === "copy") window.copyRate(id);
+    if(btn.dataset.action === "duplicate") duplicateRate(id);
+    if(btn.dataset.action === "edit") window.editRate(id);
+    if(btn.dataset.action === "delete") window.delRate(id);
+  }
+});
 
 document.addEventListener("change", e => {
   const cb = e.target.closest(".row-check[data-id]");
-  if(!cb) return;
-  const id = cb.dataset.id;
-  if(cb.checked) selectedIds.add(id);
-  else selectedIds.delete(id);
-  document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el => {
-    if(el !== cb) el.checked = cb.checked;
-  });
-  updateSelectedInfo();
+  if(cb){
+    const id = cb.dataset.id;
+    if(cb.checked) selectedIds.add(id);
+    else selectedIds.delete(id);
+    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el => { if(el !== cb) el.checked = cb.checked; });
+    updateSelectedInfo();
+  }
 });
 $("selectAllRows").addEventListener("change", e => {
   document.querySelectorAll("#tbody .row-check[data-id]").forEach(cb => {
@@ -2109,28 +2125,6 @@ $("selectAllRows").addEventListener("change", e => {
     else selectedIds.delete(cb.dataset.id);
   });
   updateSelectedInfo();
-});
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest("button[data-action]");
-  if(!btn) return;
-  const id = btn.dataset.id;
-  if(btn.dataset.action === "copy") window.copyRate(id);
-  if(btn.dataset.action === "duplicate") duplicateRate(id);
-  if(btn.dataset.action === "edit") window.editRate(id);
-  if(btn.dataset.action === "delete") window.delRate(id);
-});
-
-document.addEventListener("mouseover", e => {
-  const el = e.target.closest("#tbody .pop-field");
-  if(!el) return;
-  const text = el.dataset.value || "";
-  if(text) showPopup(text, el);
-});
-document.addEventListener("mouseout", e => {
-  const el = e.target.closest("#tbody .pop-field");
-  if(!el) return;
-  hidePopup();
 });
 
 setEditorState("CREATE OR UPDATE RATE");
