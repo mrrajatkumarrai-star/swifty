@@ -1,1330 +1,984 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>FR8X ADMIN</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<style>
-:root{
-  --bg1:#e9f2ff;
-  --bg2:#f3e8ff;
-  --bg3:#f8fafc;
-  --glass:rgba(255,255,255,.58);
-  --border:rgba(255,255,255,.42);
-  --text:#0f172a;
-  --muted:#64748b;
-  --primary:#111827;
-  --success:#059669;
-  --danger:#dc2626;
-  --warning:#d97706;
-  --shadow:0 16px 40px rgba(15,23,42,.12);
-  --shadow-soft:0 8px 24px rgba(15,23,42,.08);
-  --radius:22px;
-  --radius-sm:12px;
-  --header-h:72px;
-  --editor-w:360px;
-}
-*{box-sizing:border-box;font-weight:normal !important}
-html,body{
-  margin:0;min-height:100%;
-  font-family:"Aptos","Segoe UI",Calibri,system-ui,sans-serif;
-  font-size:12px;color:var(--text);overflow-x:hidden;
-  background:
-    radial-gradient(circle at 0% 0%,rgba(255,255,255,.95),transparent 34%),
-    radial-gradient(circle at 100% 20%,rgba(191,219,254,.88),transparent 30%),
-    radial-gradient(circle at 55% 100%,rgba(233,213,255,.86),transparent 34%),
-    linear-gradient(145deg,var(--bg3),var(--bg1) 42%,var(--bg2));
-}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;
-  background:
-    linear-gradient(to bottom,rgba(255,255,255,.18),rgba(255,255,255,.03)),
-    radial-gradient(circle at 16% 8%,rgba(255,255,255,.32),transparent 24%),
-    radial-gradient(circle at 84% 4%,rgba(255,255,255,.28),transparent 24%);
-}
-.hidden{display:none!important}
-button,input,select,textarea{font:inherit}
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Minimal Dual Spiral Visualizer</title>
 
-.glass,.panel,.card,.badge,.bulk-bar,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card,.import-options{
-  background:var(--glass);border:1px solid var(--border);
-  backdrop-filter:blur(22px) saturate(155%);
-  -webkit-backdrop-filter:blur(22px) saturate(155%);
-  box-shadow:var(--shadow-soft);
-}
+  <style>
+    :root {
+      --bg: #05070b;
+      --line: rgba(255,255,255,0.16);
+      --text: rgba(240,246,255,0.96);
+      --muted: rgba(186,198,218,0.72);
+      --blue: #8fd4ff;
+      --transition: 700ms cubic-bezier(.2,.8,.2,1);
+    }
 
-.header{
-  position:sticky;top:0;z-index:40;min-height:var(--header-h);
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  padding:12px 16px;margin:8px;border-radius:20px;
-  background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.5);
-  backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);
-  box-shadow:var(--shadow);
-}
-.brand{font-size:14px;letter-spacing:.08em}
-.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.badge{padding:6px 10px;border-radius:999px;font-size:12px;white-space:nowrap}
+    * { box-sizing: border-box; }
 
-.container{width:100%;padding:10px 12px 16px}
-.topbar,.toolbar,.section-head,.editor-actions,.bulk-bar,.modal-head,.import-options{
-  display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;
-}
-.topbar{margin-bottom:8px}
-.bulk-bar{margin-bottom:10px;padding:9px 11px;border-radius:16px}
-.note{color:var(--muted);font-size:12px;line-height:1.35}
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-.section-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 10px}
-.section-tabs button{min-height:32px;border-radius:11px;padding:0 10px;font-size:12px}
-.section-tabs button.active{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88)}
+    body {
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
 
-/* ── EDITOR INPUT FOCUS ANIMATION ── */
-@keyframes borderRun{
-  0%  {background-position:0% 50%}
-  100%{background-position:200% 50%}
-}
-#editorPanel input:focus,
-#editorPanel select:focus,
-#editorPanel textarea:focus{
-  outline:none;
-  border-color:transparent;
-  background:rgba(255,255,255,.9);
-  box-shadow:none;
-  position:relative;
-}
-#editorPanel .field{position:relative}
-#editorPanel input:focus,
-#editorPanel select:focus,
-#editorPanel textarea:focus{
-  border:2px solid transparent;
-  border-radius:11px;
-  background-clip:padding-box;
-  box-shadow:
-    0 0 0 2px rgba(255,255,255,.9),
-    0 0 0 4px transparent;
-  animation:none;
-}
+    .screen {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.015);
+      filter: blur(8px);
+      transition:
+        opacity var(--transition),
+        transform var(--transition),
+        filter var(--transition);
+    }
 
-/* Running shimmer border using outline trick */
-#editorPanel input,
-#editorPanel select,
-#editorPanel textarea{
-  position:relative;
-  transition:box-shadow .2s;
-}
-#editorPanel input:focus,
-#editorPanel select:focus,
-#editorPanel textarea:focus{
-  border:1px solid rgba(148,163,184,.24);
-  box-shadow:
-    0 0 0 2px rgba(255,255,255,.7),
-    0 0 0 4px rgba(17,24,39,.15),
-    0 0 12px rgba(99,102,241,.18);
-  background:rgba(255,255,255,.95);
-}
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      filter: blur(0);
+    }
 
-/* Pseudo running-edge shimmer via outline animation */
-.editor-field-wrap{position:relative;display:flex;flex-direction:column;gap:4px}
-.editor-field-wrap input:focus ~ .run-border,
-.editor-field-wrap select:focus ~ .run-border,
-.editor-field-wrap textarea:focus ~ .run-border{opacity:1}
-.run-border{
-  display:none;
-}
+    /* ---------------------------
+       Screen 1
+    --------------------------- */
+    #setupScreen {
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,0.05), transparent 20%),
+        linear-gradient(135deg, #04060a 0%, #08111d 55%, #04070c 100%);
+    }
 
-/* Simpler & reliable: CSS gradient animated border using background */
-@keyframes runEdge{
-  0%  {background-position:0% 0%}
-  25% {background-position:100% 0%}
-  50% {background-position:100% 100%}
-  75% {background-position:0% 100%}
-  100%{background-position:0% 0%}
-}
-#editorPanel input:focus,
-#editorPanel select:focus,
-#editorPanel textarea:focus{
-  border:1.5px solid transparent !important;
-  background-image:
-    linear-gradient(rgba(255,255,255,.95),rgba(255,255,255,.95)),
-    linear-gradient(90deg,#6366f1,#0ea5e9,#10b981,#f59e0b,#ef4444,#6366f1);
-  background-origin:border-box;
-  background-clip:padding-box,border-box;
-  background-size:300% 300%;
-  animation:runEdge 2s linear infinite;
-  box-shadow:0 0 0 3px rgba(255,255,255,.5),var(--shadow-soft);
-}
+    .miniForm {
+      width: min(460px, 100%);
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.14);
+    }
 
-input,select,textarea{
-  width:100%;min-height:32px;padding:6px 9px;border-radius:11px;
-  border:1px solid rgba(148,163,184,.24);
-  background:rgba(255,255,255,.76);color:var(--text);font-size:12px;
-  outline:none;backdrop-filter:blur(14px);
-}
-textarea{min-height:66px;resize:vertical}
+    .miniForm h1 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
 
-button{
-  min-height:32px;border-radius:11px;border:1px solid rgba(148,163,184,.22);
-  background:rgba(255,255,255,.76);color:var(--text);font-size:12px;padding:0 11px;
-  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
-  gap:6px;transition:.16s ease;backdrop-filter:blur(12px);
-}
-button:hover{transform:translateY(-1px)}
-button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.primary,.success{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88)}
-.danger{background:rgba(220,38,38,.92);color:#fff;border-color:rgba(220,38,38,.84)}
-.warning{background:rgba(217,119,6,.92);color:#fff;border-color:rgba(217,119,6,.82)}
-.ghost{background:rgba(255,255,255,.68)}
-.icon-only{width:32px;height:32px;padding:0}
-.icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px}
+    .miniForm p {
+      margin: 0 0 14px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
 
-.layout-grid{
-  display:grid;
-  grid-template-columns:var(--editor-w) minmax(0,1fr);
-  gap:12px;align-items:start;
-}
-.panel{border-radius:22px;padding:12px}
-#editorPanel{
-  position:sticky;top:92px;
-  max-height:calc(100vh - 106px);overflow-y:auto;overflow-x:hidden;
-}
-#editorPanel::-webkit-scrollbar{width:6px}
-#editorPanel::-webkit-scrollbar-thumb{background:rgba(148,163,184,.44);border-radius:999px}
+    .fieldGrid {
+      display: grid;
+      gap: 10px;
+    }
 
-.form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px}
-.field{grid-column:span 12;display:flex;flex-direction:column;gap:4px}
-.field label{font-size:12px;color:var(--muted);letter-spacing:.02em}
-.span6{grid-column:span 6}
-.span12{grid-column:span 12}
-.inline-pair{grid-column:span 12;display:grid;grid-template-columns:.92fr 1.08fr;gap:8px}
-.editor-actions button{flex:1}
+    .field {
+      display: grid;
+      gap: 6px;
+    }
 
-.table-wrap{
-  overflow:auto;border-radius:16px;
-  border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.48);
-  max-height:72vh;backdrop-filter:blur(16px);
-}
-table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
-col.col-chk{width:30px}col.col-seq{width:88px}col.col-carrier{width:110px}
-col.col-loc{width:82px}col.col-rate{width:72px}col.col-type{width:78px}
-col.col-date{width:118px}col.col-tt{width:64px}col.col-route{width:118px}
-col.col-rem{width:130px}col.col-act{width:104px}
-th,td{
-  padding:5px;border-bottom:1px solid rgba(148,163,184,.16);
-  text-align:center;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;font-size:12px;line-height:1.18;
-}
-th{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
-.filter-row th{top:33px;background:rgba(248,250,252,.88);z-index:4;padding:3px}
-.filter-row input{min-height:22px;padding:3px 5px;font-size:12px}
-.sort-head{display:flex;align-items:center;justify-content:center;gap:4px;width:100%}
-.sort-btn{min-height:18px;height:18px;width:18px;padding:0;border-radius:4px;font-size:10px;line-height:1}
-.sort-btn.active{background:rgba(17,24,39,.92);color:#fff;border-color:rgba(17,24,39,.88)}
-tbody tr:hover{background:rgba(255,255,255,.42)}
-.actions{display:flex;gap:3px;justify-content:center}
-.row-check{width:14px;height:14px;accent-color:var(--primary)}
+    .field label {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
 
-.section{display:none}
-.section.active{display:block}
+    .field input[type="file"],
+    .field input[type="text"],
+    .field input[type="range"],
+    .field input[type="color"],
+    .field textarea {
+      width: 100%;
+    }
 
-.overlay{
-  position:fixed;inset:0;z-index:999;display:flex;
-  align-items:center;justify-content:center;
-  background:rgba(15,23,42,.16);backdrop-filter:blur(10px);padding:14px;
-}
-.card{
-  width:min(1380px,calc(100% - 14px));max-height:94vh;
-  overflow:auto;padding:14px;border-radius:24px;
-}
-.card.narrow{width:min(520px,calc(100% - 20px))}
-.file-input{display:none}
-.title{font-size:14px;letter-spacing:.03em;text-align:center}
-.subtitle{text-align:center;color:var(--muted);margin:6px 0 10px;font-size:12px}
-.pin-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
-.pin-input{height:44px;text-align:center;font-size:16px}
+    .field input[type="file"],
+    .field input[type="text"],
+    .field input[type="color"] {
+      min-height: 34px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      outline: none;
+    }
 
-.loader{
-  position:fixed;inset:0;z-index:2000;display:none;
-  align-items:center;justify-content:center;
-  background:rgba(15,23,42,.16);backdrop-filter:blur(10px);
-}
-.loader.show{display:flex}
-.loader-box{
-  min-width:220px;padding:14px 16px;border-radius:20px;
-  border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.6);
-  text-align:center;box-shadow:var(--shadow);
-}
-.spinner{
-  width:34px;height:34px;margin:0 auto 8px;border-radius:50%;
-  border:3px solid rgba(148,163,184,.22);border-top-color:#111827;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
+    .field textarea {
+      min-height: 180px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+      font-size: 12px;
+      line-height: 1.5;
+      resize: vertical;
+    }
 
-.copy-toast{
-  position:fixed;right:16px;bottom:16px;z-index:1200;
-  background:rgba(17,24,39,.92);color:#fff;
-  padding:8px 10px;border-radius:12px;font-size:12px;box-shadow:var(--shadow);
-}
-#globalPopup{
-  position:fixed;z-index:1300;min-width:180px;max-width:360px;
-  background:rgba(255,255,255,.9);color:var(--text);
-  border:1px solid rgba(255,255,255,.5);border-radius:12px;
-  padding:8px 10px;font-size:12px;line-height:1.35;white-space:normal;
-  box-shadow:var(--shadow);opacity:0;pointer-events:none;
-  transition:opacity .08s ease;backdrop-filter:blur(16px);
-}
-#globalPopup.show{opacity:1}
-.pop-field{display:block;width:100%;cursor:default}
-.cell-clip{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .field input[type="text"]::placeholder,
+    .field textarea::placeholder {
+      color: rgba(180,190,205,0.42);
+    }
 
-.mobile-list{display:none;gap:8px;flex-direction:column}
-.mobile-card{border-radius:16px;padding:10px}
-.mobile-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:7px}
-.mobile-card-title{font-size:13px}
-.mobile-card-sub{font-size:12px;color:var(--muted)}
-.mobile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:7px}
-.mobile-item{border:1px solid rgba(255,255,255,.46);border-radius:12px;padding:6px;background:rgba(255,255,255,.42)}
-.mobile-item .k{font-size:11px;color:var(--muted);margin-bottom:2px}
-.mobile-item .v{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mobile-actions{display:flex;gap:6px;flex-wrap:wrap}
-.mobile-actions button{flex:1;min-height:30px}
+    .field input[type="color"] {
+      padding: 4px;
+      cursor: pointer;
+    }
 
-.import-options{padding:9px 10px;border-radius:16px;margin-bottom:10px}
-.option-chip{
-  display:inline-flex;align-items:center;gap:7px;padding:6px 10px;
-  border-radius:999px;background:rgba(255,255,255,.46);
-  border:1px solid rgba(255,255,255,.46);font-size:12px;
-}
-.option-chip input{width:auto;min-height:auto;padding:0;margin:0;background:none;border:none}
+    .field input[type="range"] {
+      appearance: none;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      outline: none;
+    }
 
-.fit-card{padding:10px;border-radius:16px;margin-bottom:10px}
-.fit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
-.fit-result{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
-.fit-pill{
-  padding:6px 10px;border-radius:999px;font-size:12px;
-  border:1px solid rgba(255,255,255,.46);background:rgba(255,255,255,.6);
-}
-.fit-pill.ok{color:#065f46}
-.fit-pill.bb{color:#991b1b;background:rgba(254,226,226,.82)}
+    .field input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: #dff5ff;
+      cursor: pointer;
+    }
 
-/* ── DIM GRID: 3 cols responsive ── */
-.dim-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-}
-.dim-card{border-radius:16px;padding:10px;min-width:0}
-.dim-card-title{font-size:13px;margin-bottom:6px}
-.dim-specs{display:flex;flex-direction:column;gap:4px}
-.dim-spec{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  gap:8px;border-bottom:1px solid rgba(148,163,184,.12);padding-bottom:3px;
-}
-.dim-label{font-size:12px;color:var(--muted)}
-.dim-value{font-size:12px;text-align:right}
-.dim-note{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.35}
+    .field input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: #dff5ff;
+      cursor: pointer;
+    }
 
-.info-strip{padding:10px;border-radius:16px;font-size:12px;line-height:1.4;margin-bottom:10px}
-.markup-card{border-radius:16px;padding:10px;margin-bottom:8px}
-.markup-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.markup-row input{flex:0 0 110px}
-.markup-row label{margin:0;flex:1;font-size:12px}
-.applied-markups{
-  margin-top:8px;padding:10px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.46);background:rgba(255,255,255,.45);font-size:12px;
-}
-.applied-markup{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:5px 0;border-bottom:1px solid rgba(148,163,184,.12);
-}
-.applied-markup:last-child{border-bottom:none}
+    .opposite {
+      transform: scaleX(-1);
+    }
 
-@media(max-width:1180px){
-  .layout-grid{grid-template-columns:1fr}
-  #editorPanel{position:static;max-height:none}
-  .dim-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media(max-width:980px){
-  .dim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:860px){
-  .fit-grid{grid-template-columns:1fr 1fr}
-}
-@media(max-width:760px){
-  html,body{font-size:12px}
-  .container{padding:8px}
-  .header{padding:10px 12px;margin:6px}
-  .panel,.card{padding:10px}
-  .table-wrap.desktop-table{display:none}
-  .mobile-list{display:flex}
-  .mobile-grid{grid-template-columns:1fr}
-  .section-tabs button,.editor-actions button{flex:1 1 calc(50% - 6px)}
-  .inline-pair{grid-template-columns:1fr}
-  .fit-grid{grid-template-columns:1fr}
-  .dim-grid{grid-template-columns:1fr}
-}
-</style>
+    .val {
+      font-size: 11px;
+      color: var(--blue);
+    }
+
+    .line2 {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .copyBtn {
+      margin-top: 4px;
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .copyBtn:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .copyFeedback {
+      min-height: 16px;
+      font-size: 11px;
+      color: var(--blue);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .copyFeedback.show {
+      opacity: 1;
+    }
+
+    .submitBtn {
+      margin-top: 12px;
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: transparent;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .submitBtn:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .status {
+      margin-top: 8px;
+      min-height: 16px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ---------------------------
+       Screen 2
+    --------------------------- */
+    #visualizerScreen {
+      overflow: hidden;
+      background: #02040a;
+    }
+
+    .bgDrift {
+      position: absolute;
+      inset: -40%;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(80, 210, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 78% 28%, rgba(113, 133, 255, 0.16), transparent 26%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.06), transparent 18%),
+        linear-gradient(135deg, #02040a 0%, #09121f 48%, #02050a 100%);
+      will-change: transform;
+      animation: driftBg 18s linear infinite;
+    }
+
+    @keyframes driftBg {
+      0%   { transform: scale(1.15) rotate(0deg); }
+      50%  { transform: scale(1.22) rotate(7deg); }
+      100% { transform: scale(1.15) rotate(14deg); }
+    }
+
+    #particleCanvas,
+    #renderCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+
+    #particleCanvas {
+      opacity: 0.82;
+    }
+
+    .centerText {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      pointer-events: none;
+      text-align: center;
+      max-width: min(84vw, 1100px);
+      color: #ffffff;
+      opacity: 0;
+      transition: opacity 220ms ease;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .centerText.visible {
+      opacity: 1;
+    }
+
+    .topActions {
+      position: absolute;
+      top: max(10px, env(safe-area-inset-top));
+      right: max(10px, env(safe-area-inset-right));
+      z-index: 8;
+      display: flex;
+      gap: 8px;
+      opacity: 0.08;
+      transition: opacity 220ms ease;
+    }
+
+    #visualizerScreen:hover .topActions,
+    #visualizerScreen.show-ui .topActions {
+      opacity: 0.78;
+    }
+
+    .iconBtn {
+      width: 24px;
+      height: 24px;
+      border: 0;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .iconBtn:hover,
+    .iconBtn:focus-visible {
+      background: rgba(255,255,255,0.16);
+      outline: none;
+    }
+
+    @media (max-width: 640px) {
+      .miniForm {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <!-- Screen 1 -->
+  <section id="setupScreen" class="screen active">
+    <div class="miniForm">
+      <h1>Spiral Visualizer</h1>
+      <p>PNG or SVG supported. Center text stays fixed while visuals move under it.</p>
 
-<div id="loader" class="loader">
-  <div class="loader-box">
-    <div class="spinner"></div>
-    <div id="loaderText" class="title">UPDATING...</div>
-    <div id="loaderSub" class="note" style="margin-top:4px">PLEASE WAIT</div>
-  </div>
-</div>
-
-<div id="pinGate" class="overlay">
-  <div class="card narrow">
-    <div class="title">FR8X ACCESS</div>
-    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
-    <div class="pin-row">
-      <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin4" maxlength="1" inputmode="numeric" type="password">
-    </div>
-    <div class="toolbar">
-      <button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
-      <button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser-fill"></i> CLEAR</button>
-    </div>
-  </div>
-</div>
-
-<div id="uploadOverlay" class="overlay hidden">
-  <div class="card">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">UPLOAD / EXPORT</div>
-      <button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="note" style="margin-bottom:8px">
-      CSV IMPORT SUPPORTED. TYPE: V = HANDOVER, S = SAILING. ROUTING CAN BE IN ROUTING / VIA / ROUTE.
-    </div>
-    <div class="import-options">
-      <label class="option-chip"><input type="checkbox" id="clearEditorAfterImport"> CLEAR UPDATED RECORD / EDITOR AFTER IMPORT</label>
-      <label class="option-chip"><input type="checkbox" id="clearImportPreviewAfterApply" checked> CLEAR IMPORT PREVIEW AFTER APPLY</label>
-    </div>
-    <div class="toolbar" style="margin-bottom:8px">
-      <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
-      <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
-      <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
-      <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
-    </div>
-    <input type="file" id="fileInput" class="file-input" accept=".csv,.txt" />
-    <div class="table-wrap desktop-table">
-      <table>
-        <colgroup>
-          <col class="col-chk"><col class="col-seq"><col class="col-carrier">
-          <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-          <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-          <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt"><col class="col-route"><col class="col-rem">
-        </colgroup>
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAllUpload"></th>
-            <th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th>
-            <th>20DV</th><th>20 TYPE</th><th>40HC</th><th>40 TYPE</th>
-            <th>F/T</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th>
-          </tr>
-        </thead>
-        <tbody id="uploadBody"></tbody>
-      </table>
-    </div>
-    <div class="mobile-list" id="uploadMobile"></div>
-  </div>
-</div>
-
-<div id="appShell" class="hidden">
-  <div class="header">
-    <div class="brand">FR8X ADMIN</div>
-    <div class="header-right">
-      <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
-      <span class="badge" id="activeCount">0 ACTIVE</span>
-      <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="topbar">
-      <input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:340px">
-      <div class="toolbar">
-        <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
-        <button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
-      </div>
-    </div>
-    <div class="bulk-bar">
-      <div class="note" id="selectedCountInfo">0 SELECTED</div>
-    </div>
-    <div class="section-tabs">
-      <button class="active" id="tabActiveBtn" data-view="active">ACTIVE RATES</button>
-      <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
-      <button id="tabAllBtn" data-view="all">ALL RATES</button>
-      <button id="tabDimBtn" data-view="dimensions">DIMENSIONS</button>
-      <button id="tabMarkupBtn" data-view="markups">MARKUP</button>
-    </div>
-
-    <div class="layout-grid">
-      <!-- LEFT: RATE EDITOR (always visible) -->
-      <div class="panel" id="editorPanel">
-        <div class="section-head">
-          <div>
-            <div style="font-size:13px">RATE EDITOR</div>
-            <div class="note" id="editorState">CREATE OR UPDATE RATE</div>
-          </div>
+      <div class="fieldGrid">
+        <div class="field">
+          <label for="fileA">Image A (PNG/SVG)</label>
+          <input id="fileA" type="file" accept=".png,.svg,image/png,image/svg+xml" />
         </div>
-        <div class="form">
-          <div class="field span12"><label for="carrier">CARRIER</label><input id="carrier" placeholder="Carrier"></div>
-          <div class="field span6"><label for="por">POR</label><input id="por" placeholder="POR"></div>
-          <div class="field span6"><label for="pol">POL</label><input id="pol" placeholder="POL"></div>
-          <div class="field span6"><label for="pod">POD</label><input id="pod" placeholder="POD"></div>
-          <div class="field span6"><label for="fpod">FPOD</label><input id="fpod" placeholder="FPOD"></div>
-          <div class="inline-pair">
-            <div class="field">
-              <label for="container20Type">20DV TYPE</label>
-              <select id="container20Type">
-                <option value="">STANDARD</option><option value="OT">OT</option>
-                <option value="OG">OG</option><option value="FR">FR</option>
-                <option value="DG">DG</option><option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field"><label for="dv20">USD 20DV</label><input id="dv20" placeholder="USD 20DV"></div>
+
+        <div class="field">
+          <label for="fileB">Image B (PNG/SVG)</label>
+          <input id="fileB" type="file" accept=".png,.svg,image/png,image/svg+xml" />
+        </div>
+
+        <div class="field">
+          <div class="line2">
+            <label for="speedA">Image A speed</label>
+            <span id="speedAVal" class="val">42°/s</span>
           </div>
-          <div class="inline-pair">
-            <div class="field">
-              <label for="container40Type">40HC TYPE</label>
-              <select id="container40Type">
-                <option value="">STANDARD</option><option value="OT">OT</option>
-                <option value="OG">OG</option><option value="FR">FR</option>
-                <option value="DG">DG</option><option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field"><label for="hc40">USD 40HC</label><input id="hc40" placeholder="USD 40HC"></div>
+          <input id="speedA" type="range" min="0" max="300" value="42" />
+        </div>
+
+        <div class="field">
+          <div class="line2">
+            <label for="speedB">Image B speed</label>
+            <span id="speedBVal" class="val">56°/s</span>
           </div>
-          <div class="field span6"><label for="ft">F/T</label><input id="ft" placeholder="F/T"></div>
-          <div class="field span6"><label for="validity">VALIDITY</label><input id="validity" type="date"></div>
-          <div class="field span6"><label for="tt">TT</label><input id="tt" placeholder="TT"></div>
-          <div class="field span6"><label for="via">ROUTING</label><input id="via" placeholder="Routing"></div>
-          <div class="field span6">
-            <label for="rateType">TYPE</label>
-            <select id="rateType"><option value="V">HANDOVER</option><option value="S">SAILING</option></select>
+          <input id="speedB" class="opposite" type="range" min="0" max="300" value="56" />
+        </div>
+
+        <div class="field">
+          <label for="centerTextInput">Center text</label>
+          <input id="centerTextInput" type="text" placeholder="Type text for the center" />
+        </div>
+
+        <div class="field">
+          <div class="line2">
+            <label for="fontSizeRange">Text size</label>
+            <span id="fontSizeVal" class="val">72px</span>
           </div>
-          <div class="field span12"><label for="remarks">REMARKS</label><textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea></div>
-          <div class="editor-actions span12">
-            <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
-            <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
-            <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-            <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
-          </div>
+          <input id="fontSizeRange" type="range" min="18" max="180" value="72" />
+        </div>
+
+        <div class="field">
+          <label for="textColorInput">Text color</label>
+          <input id="textColorInput" type="color" value="#ffffff" />
+        </div>
+
+        <div class="field">
+          <label for="rawShippingText">Paste shipping details</label>
+          <textarea id="rawShippingText" placeholder="Paste raw text here (e.g. CARRIER HAPAG...)"></textarea>
+          <button id="copyBtn" class="copyBtn">Copy Formatted</button>
+          <div id="copyFeedback" class="copyFeedback">Copied to clipboard</div>
         </div>
       </div>
 
-      <!-- RIGHT: all sections -->
-      <div id="rightPanel">
-
-        <!-- ACTIVE / EXPIRED / ALL RATES -->
-        <div class="panel section active" id="sectionRates">
-          <div class="section-head">
-            <div class="note" id="sectionLabel">ACTIVE RATES</div>
-            <div class="toolbar">
-              <button class="ghost" id="copySelectedRatesBtn"><i class="bi bi-clipboard-check"></i> COPY SELECTED</button>
-              <div class="note">HOVER OVER ANY CELL TO VIEW FULL TEXT</div>
-            </div>
-          </div>
-          <div class="table-wrap desktop-table">
-            <table>
-              <colgroup>
-                <col class="col-chk"><col class="col-seq"><col class="col-carrier">
-                <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-                <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-                <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt">
-                <col class="col-route"><col class="col-rem"><col class="col-act">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th><input type="checkbox" id="selectAllRows"></th>
-                  <th><div class="sort-head"><span>SEQ</span><button class="sort-btn" data-sort="seq"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>CARRIER</span><button class="sort-btn" data-sort="carrier"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POR</span><button class="sort-btn" data-sort="por"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POL</span><button class="sort-btn" data-sort="pol"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POD</span><button class="sort-btn" data-sort="pod"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>FPOD</span><button class="sort-btn" data-sort="fpod"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>20DV</span><button class="sort-btn" data-sort="dv20"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>20TYPE</span><button class="sort-btn" data-sort="container20Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>40HC</span><button class="sort-btn" data-sort="hc40"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>40TYPE</span><button class="sort-btn" data-sort="container40Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>F/T</span><button class="sort-btn" data-sort="ft"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>DATE</span><button class="sort-btn" data-sort="validity"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>TYPE</span><button class="sort-btn" data-sort="type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>TT</span><button class="sort-btn" data-sort="tt"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>ROUTING</span><button class="sort-btn" data-sort="via"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>REMARKS</span><button class="sort-btn" data-sort="remarks"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th>ACTION</th>
-                </tr>
-                <tr class="filter-row">
-                  <th></th>
-                  <th><input data-col="seq" placeholder="FILTER"></th>
-                  <th><input data-col="carrier" placeholder="FILTER"></th>
-                  <th><input data-col="por" placeholder="FILTER"></th>
-                  <th><input data-col="pol" placeholder="FILTER"></th>
-                  <th><input data-col="pod" placeholder="FILTER"></th>
-                  <th><input data-col="fpod" placeholder="FILTER"></th>
-                  <th><input data-col="dv20" placeholder="FILTER"></th>
-                  <th><input data-col="container20Type" placeholder="FILTER"></th>
-                  <th><input data-col="hc40" placeholder="FILTER"></th>
-                  <th><input data-col="container40Type" placeholder="FILTER"></th>
-                  <th><input data-col="ft" placeholder="FILTER"></th>
-                  <th><input data-col="validity" placeholder="FILTER"></th>
-                  <th><input data-col="type" placeholder="FILTER"></th>
-                  <th><input data-col="tt" placeholder="FILTER"></th>
-                  <th><input data-col="via" placeholder="FILTER"></th>
-                  <th><input data-col="remarks" placeholder="FILTER"></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-          <div class="mobile-list" id="mobileRates"></div>
-        </div>
-
-        <!-- DIMENSIONS — in right panel, beside editor -->
-        <div class="panel section" id="sectionDim">
-          <div style="font-size:13px;margin-bottom:6px">CONTAINER DIMENSIONS</div>
-
-          <div class="fit-card">
-            <div style="font-size:13px;margin-bottom:4px">CARGO FIT ADVISOR</div>
-            <div class="note">ENTER CARGO SIZE. IF IT EXCEEDS CONTAINER LIMITS, TREAT IT AS BREAK BULK.</div>
-            <div class="fit-grid">
-              <div class="field" style="margin:0"><label for="cargoL">LENGTH (M)</label><input id="cargoL" type="number" step="0.01" placeholder="e.g. 5.8"></div>
-              <div class="field" style="margin:0"><label for="cargoW">WIDTH (M)</label><input id="cargoW" type="number" step="0.01" placeholder="e.g. 2.2"></div>
-              <div class="field" style="margin:0"><label for="cargoH">HEIGHT (M)</label><input id="cargoH" type="number" step="0.01" placeholder="e.g. 2.3"></div>
-              <div class="field" style="margin:0;justify-content:flex-end"><label>&nbsp;</label><button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK</button></div>
-            </div>
-            <div class="fit-result" id="fitResult"><span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span></div>
-          </div>
-
-          <div class="info-strip">
-            ALL VALUES BELOW ARE STANDARD REFERENCE FIGURES. FINAL ACCEPTANCE, INTERNAL CLEARANCE, DOOR OPENING, PAYLOAD, OPEN-TOP BOW HEIGHT, FLAT-RACK END WALL CONDITION, AND LINE-SPECIFIC TOLERANCE MUST ALWAYS BE CONFIRMED WITH THE CARRIER. IF CARGO EXCEEDS CONTAINER CAPABILITY, TREAT IT AS BREAK BULK.
-          </div>
-
-          <div class="dim-grid">
-            <div class="dim-card">
-              <div class="dim-card-title">20GP / 20DV</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">6.058 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.900 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">33.2 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~28.25 t</span></div>
-              </div>
-              <div class="dim-note">Standard dry container for dense cargo, pallets, cartons, and short machinery.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">40GP</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">67.7 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.78 t</span></div>
-              </div>
-              <div class="dim-note">Longer dry container with standard height clearance.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">40HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">76.3 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.51 t</span></div>
-              </div>
-              <div class="dim-note">Most common export container when extra internal height is needed.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">45HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">13.716 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">13.556 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">86.0 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">Carrier specific</span></div>
-              </div>
-              <div class="dim-note">For extra volume and length, subject to service acceptance.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">20OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.895 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">5.44 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Bow / tarp height varies</span></div>
-              </div>
-              <div class="dim-note">Useful when cargo cannot be stuffed through standard rear doors.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">40OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.029 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">11.58 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Confirm removable bows</span></div>
-              </div>
-              <div class="dim-note">Used for tall cargo where top loading is required.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">20FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">5.63 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Lashing / point load</span></div>
-              </div>
-              <div class="dim-note">Good for heavy machinery and project cargo with special lashing needs.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">40FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">11.65 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Special stowage may apply</span></div>
-              </div>
-              <div class="dim-note">For long machinery and outsized project cargo.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">20RF</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.45 × 2.29 × 2.26 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Machinery reduces cube</span></div>
-              </div>
-              <div class="dim-note">For chilled or frozen cargo with strict temperature profile.</div>
-            </div>
-            <div class="dim-card">
-              <div class="dim-card-title">40RH</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">11.58 × 2.29 × 2.55 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Do not block air channels</span></div>
-              </div>
-              <div class="dim-note">Most common reefer size for larger temperature-controlled shipments.</div>
-            </div>
-            <div class="dim-card" style="background:rgba(254,242,242,.76)">
-              <div class="dim-card-title">BREAK BULK</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">When to use</span><span class="dim-value">If cargo exceeds container limits</span></div>
-                <div class="dim-spec"><span class="dim-label">Typical cases</span><span class="dim-value">Extreme length / width / height</span></div>
-                <div class="dim-spec"><span class="dim-label">Handling</span><span class="dim-value">Special stowage / lifting / planning</span></div>
-              </div>
-              <div class="dim-note">If it does not safely fit a suitable container type, treat it as break bulk.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- MARKUP -->
-        <div class="panel section" id="sectionMarkup">
-          <div style="font-size:13px;margin-bottom:6px">COPY MARKUP SETTINGS</div>
-          <div class="note" style="margin-bottom:8px">BASE ADMIN RATES STAY EXACTLY AS ENTERED. ONLY USER MARKUP IS APPLIED WHEN YOU PRESS COPY.</div>
-          <div class="markup-card">
-            <div class="markup-row">
-              <label>USER 20DV MARKUP</label>
-              <input type="number" id="userMu20" step="0.01" placeholder="e.g. 1">
-              <span class="badge" id="userMu20Status">NOT SET</span>
-            </div>
-            <div class="markup-row" style="margin-bottom:0">
-              <label>USER 40HC MARKUP</label>
-              <input type="number" id="userMu40" step="0.01" placeholder="e.g. 2">
-              <span class="badge" id="userMu40Status">NOT SET</span>
-            </div>
-            <div class="toolbar" style="margin-top:8px">
-              <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
-              <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
-            </div>
-            <div class="applied-markups">
-              <div style="margin-bottom:4px">CURRENT COPY CALCULATION</div>
-              <div id="appliedMarkupsList">
-                <div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /rightPanel -->
-    </div><!-- /layout-grid -->
-  </div><!-- /container -->
-</div><!-- /appShell -->
-
-<div id="globalPopup"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-const app = initializeApp({ projectId:"swifty-52e05" });
-const db  = getFirestore(app);
-
-const $ = id => document.getElementById(id);
-const upper = v => (v ?? "").toString().trim().toUpperCase();
-const popupEl = $("globalPopup");
-const PIN = "2710";
-
-let sessionUntil = 0;
-let data = [];
-let editId = null;
-let viewMode = "active";
-let uploadRows = [];
-let selectedUploadRows = new Set();
-let selectedIds = new Set();
-let sortState = { key:"", dir:"" };
-let filterMap = {
-  seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",
-  dv20:"",container20Type:"",hc40:"",container40Type:"",
-  ft:"",validity:"",type:"",tt:"",via:"",remarks:""
-};
-let userMu20 = 0, userMu40 = 0;
-const USER_MU20_KEY = "fr8x_user_mu20";
-const USER_MU40_KEY = "fr8x_user_mu40";
-
-const fitSpecs = [
-  {key:"20DV",l:5.90, w:2.352,h:2.393},
-  {key:"40GP",l:12.032,w:2.352,h:2.393},
-  {key:"40HC",l:12.032,w:2.352,h:2.698},
-  {key:"45HC",l:13.556,w:2.352,h:2.698},
-  {key:"20OT",l:5.895,w:2.350,h:2.350},
-  {key:"40OT",l:12.029,w:2.350,h:2.350},
-  {key:"20RF",l:5.45, w:2.29, h:2.26},
-  {key:"40RH",l:11.58,w:2.29, h:2.55}
-];
-
-function escapeHtml(v=""){
-  return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-}
-function pad2(n){return String(n).padStart(2,"0")}
-function seqFromDate(d){
-  const dt=d?new Date(d):new Date();
-  const y=String(dt.getFullYear()).slice(-2);
-  return `${y}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}${pad2(dt.getHours())}${pad2(dt.getMinutes())}${pad2(dt.getSeconds())}`;
-}
-function generateSeq(){return seqFromDate(new Date())}
-function localDateFromInput(v){
-  if(!v)return null;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(v)){const[y,m,d]=v.split("-").map(Number);return new Date(y,m-1,d);}
-  const d=new Date(v);return isNaN(d)?null:d;
-}
-function inputDateValue(v){
-  if(!v)return"";
-  if(/^\d{4}-\d{2}-\d{2}$/.test(v))return v;
-  const d=new Date(v);if(isNaN(d))return"";
-  return`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-}
-function fmtDate(v){
-  const d=localDateFromInput(v);if(!d)return"";
-  return d.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
-}
-function expired(r){
-  const d=localDateFromInput(r.validity);if(!d)return false;
-  const today=new Date();today.setHours(0,0,0,0);d.setHours(0,0,0,0);return d<today;
-}
-function showLoader(t="UPDATING...",s="PLEASE WAIT"){$("loaderText").textContent=t;$("loaderSub").textContent=s;$("loader").classList.add("show")}
-function hideLoader(){$("loader").classList.remove("show")}
-function calc(v){
-  v=(v??"").toString().trim();if(!v)return"";
-  if(/[+\s]/.test(v)){const sum=v.split(/[+\s]+/).filter(Boolean).map(Number).reduce((a,b)=>a+(isNaN(b)?0:b),0);return sum?String(sum):"";}
-  return v;
-}
-function displayType(v){return v==="V"?"HANDOVER":v==="S"?"SAILING":(v||"")}
-function truncate(v="",len=18){const s=String(v);return s.length>len?s.slice(0,len-1)+"…":s}
-function showCopyToast(msg="COPIED"){
-  const t=document.createElement("div");t.className="copy-toast";t.textContent=msg;
-  document.body.appendChild(t);setTimeout(()=>t.remove(),1800);
-}
-function setEditorState(text){$("editorState").textContent=text}
-function sessionValid(){return Date.now()<sessionUntil}
-function setSession(){sessionUntil=Date.now()+4*60*60*1000}
-function showApp(){$("pinGate").classList.add("hidden");$("appShell").classList.remove("hidden");load();loadMarkups()}
-function showPopup(text,target){
-  if(!text)return;
-  popupEl.textContent=text;popupEl.classList.add("show");
-  const rect=target.getBoundingClientRect(),pr=popupEl.getBoundingClientRect();
-  let left=rect.left+rect.width/2-pr.width/2,top=rect.top-pr.height-6;
-  if(left<6)left=6;if(left+pr.width>window.innerWidth-6)left=window.innerWidth-pr.width-6;
-  if(top<6)top=rect.bottom+6;
-  popupEl.style.left=left+"px";popupEl.style.top=top+"px";
-}
-function hidePopup(){popupEl.classList.remove("show")}
-function appendDays(v){const s=upper(v);if(!s)return"";return/DAY/.test(s)?s:`${s} DAYS`}
-
-async function load(){
-  showLoader("UPDATING DATA","FETCHING RECORDS");
-  try{
-    const snap=await getDocs(collection(db,"rates"));
-    data=[];snap.forEach(d=>data.push({id:d.id,...d.data()}));
-    data.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
-    updateCounters();render();
-  }catch(err){alert("FAILED TO LOAD DATA");console.error(err);}
-  finally{hideLoader();}
-}
-function updateCounters(){
-  const ex=data.filter(expired).length;
-  $("expiredCount").textContent=`${ex} EXPIRED`;
-  $("activeCount").textContent=`${data.length-ex} ACTIVE`;
-}
-function getSortValue(row,key){
-  if(key==="validity")return inputDateValue(row.validity||"");
-  if(key==="type")return displayType(row.type||"");
-  return row[key]??"";
-}
-function compareValues(a,b,key){
-  const va=getSortValue(a,key),vb=getSortValue(b,key);
-  const na=parseFloat(String(va).replace(/[^0-9.\-]/g,"")),nb=parseFloat(String(vb).replace(/[^0-9.\-]/g,""));
-  const isA=!isNaN(na)&&String(va).trim()!=="",isB=!isNaN(nb)&&String(vb).trim()!=="";
-  if(isA&&isB){if(na<nb)return-1;if(na>nb)return 1;return 0;}
-  const sa=String(va).toUpperCase(),sb=String(vb).toUpperCase();
-  if(sa<sb)return-1;if(sa>sb)return 1;return 0;
-}
-function filteredRows(){
-  const g=$("globalSearch").value.toUpperCase();
-  let rows=[...data];
-  if(viewMode==="active")rows=rows.filter(r=>!expired(r));
-  if(viewMode==="expired")rows=rows.filter(r=>expired(r));
-  rows=rows.filter(r=>{
-    for(const k in filterMap){
-      const q=(filterMap[k]||"").trim().toUpperCase();if(!q)continue;
-      const val=(k==="validity"?fmtDate(r[k]):(r[k]||"")).toString().toUpperCase();
-      if(!val.includes(q))return false;
-    }return true;
-  });
-  if(g)rows=rows.filter(r=>JSON.stringify(r).toUpperCase().includes(g));
-  if(sortState.key&&sortState.dir)rows.sort((a,b)=>{const res=compareValues(a,b,sortState.key);return sortState.dir==="asc"?res:-res;});
-  return rows;
-}
-function updateSelectedInfo(){$("selectedCountInfo").textContent=`${selectedIds.size} SELECTED`}
-
-function switchView(mode){
-  viewMode=mode;
-  ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn"].forEach(id=>$(id).classList.remove("active"));
-  ["sectionRates","sectionDim","sectionMarkup"].forEach(id=>$(id).classList.remove("active"));
-  $("editorPanel").classList.remove("hidden");
-
-  if(mode==="active"){$("tabActiveBtn").classList.add("active");$("sectionRates").classList.add("active");}
-  if(mode==="expired"){$("tabExpiredBtn").classList.add("active");$("sectionRates").classList.add("active");}
-  if(mode==="all"){$("tabAllBtn").classList.add("active");$("sectionRates").classList.add("active");}
-  if(mode==="dimensions"){$("tabDimBtn").classList.add("active");$("sectionDim").classList.add("active");}
-  if(mode==="markups"){
-    $("tabMarkupBtn").classList.add("active");
-    $("sectionMarkup").classList.add("active");
-    $("editorPanel").classList.add("hidden");
-  }
-  if(["active","expired","all"].includes(mode))render();
-}
-
-function updateSortButtons(){
-  document.querySelectorAll(".sort-btn").forEach(btn=>{
-    btn.classList.remove("active");
-    const icon=btn.querySelector("i");
-    if(btn.dataset.sort===sortState.key){
-      btn.classList.add("active");
-      if(icon)icon.className=sortState.dir==="asc"?"bi bi-caret-up-fill":"bi bi-caret-down-fill";
-    }else{if(icon)icon.className="bi bi-caret-down-fill";}
-  });
-}
-function popupField(label,value,shortLen=14){
-  const full=value??"",clip=truncate(full,shortLen)||"—";
-  return`<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`;
-}
-function mobileItem(label,value){
-  return`<div class="mobile-item"><div class="k">${escapeHtml(label)}</div><div class="v">${escapeHtml(truncate(value||"",26)||"—")}</div></div>`;
-}
-function renderDesktopRows(rows){
-  return rows.map((r,i)=>`
-  <tr>
-    <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}></td>
-    <td>${escapeHtml(r.seq||i+1)}</td>
-    <td>${popupField("CARRIER",r.carrier,16)}</td>
-    <td>${popupField("POR",r.por,12)}</td>
-    <td>${popupField("POL",r.pol,12)}</td>
-    <td>${popupField("POD",r.pod,12)}</td>
-    <td>${popupField("FPOD",r.fpod,12)}</td>
-    <td>${popupField("20DV",r.dv20,10)}</td>
-    <td>${popupField("20 TYPE",r.container20Type,10)}</td>
-    <td>${popupField("40HC",r.hc40,10)}</td>
-    <td>${popupField("40 TYPE",r.container40Type,10)}</td>
-    <td>${popupField("F/T",r.ft,8)}</td>
-    <td>${popupField("DATE",fmtDate(r.validity),18)}</td>
-    <td>${popupField("TYPE",displayType(r.type),10)}</td>
-    <td>${popupField("TT",r.tt,10)}</td>
-    <td>${popupField("ROUTING",r.via,16)}</td>
-    <td>${popupField("REMARKS",r.remarks,18)}</td>
-    <td class="actions">
-      <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
-      <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
-      <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
-      <button class="icon-btn" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
-    </td>
-  </tr>`).join("");
-}
-function renderMobileRows(rows){
-  return rows.map(r=>`
-  <div class="mobile-card">
-    <div class="mobile-card-head">
-      <div><div class="mobile-card-title">${escapeHtml(r.carrier||"NO CARRIER")}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq||"")}</div></div>
-      <label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}> SELECT</label>
+      <button id="submitBtn" class="submitBtn">Submit</button>
+      <div id="status" class="status"></div>
     </div>
-    <div class="mobile-grid">
-      ${mobileItem("POR",r.por)}${mobileItem("POL",r.pol)}${mobileItem("POD",r.pod)}${mobileItem("FPOD",r.fpod)}
-      ${mobileItem("20DV",`${r.dv20||""} ${r.container20Type||""}`.trim())}
-      ${mobileItem("40HC",`${r.hc40||""} ${r.container40Type||""}`.trim())}
-      ${mobileItem("F/T",r.ft)}${mobileItem("DATE",fmtDate(r.validity))}
-      ${mobileItem("TYPE",displayType(r.type))}${mobileItem("TT",r.tt)}
-      ${mobileItem("ROUTING",r.via)}${mobileItem("REMARKS",r.remarks)}
+  </section>
+
+  <!-- Screen 2 -->
+  <section id="visualizerScreen" class="screen" aria-hidden="true">
+    <div class="bgDrift"></div>
+    <canvas id="particleCanvas"></canvas>
+    <canvas id="renderCanvas"></canvas>
+
+    <div id="centerTextLayer" class="centerText"></div>
+
+    <div class="topActions">
+      <button id="fullscreenBtn" class="iconBtn" title="Toggle fullscreen" aria-label="Toggle fullscreen">⤢</button>
+      <button id="closeBtn" class="iconBtn" title="Close" aria-label="Close">✕</button>
     </div>
-    <div class="mobile-actions">
-      <button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
-      <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
-      <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
-      <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
-    </div>
-  </div>`).join("");
-}
-function render(){
-  const rows=filteredRows();
-  $("tbody").innerHTML=renderDesktopRows(rows);
-  $("mobileRates").innerHTML=renderMobileRows(rows);
-  $("sectionLabel").textContent=viewMode==="active"?"ACTIVE RATES":viewMode==="expired"?"EXPIRED RATES":"ALL RATES";
-  updateSelectedInfo();updateSortButtons();
-}
-function clearForm(resetEdit=true){
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id=>$(id).value="");
-  $("rateType").value="V";
-  if(resetEdit){editId=null;setEditorState("CREATE OR UPDATE RATE");}
-}
-function editorPayload(existing={}){
-  return{
-    seq:existing.seq||generateSeq(),
-    createdAt:existing.createdAt||new Date().toISOString(),
-    updatedAt:new Date().toISOString(),
-    carrier:upper($("carrier").value),por:upper($("por").value),pol:upper($("pol").value),
-    pod:upper($("pod").value),fpod:upper($("fpod").value),
-    dv20:calc($("dv20").value),container20Type:upper($("container20Type").value),
-    hc40:calc($("hc40").value),container40Type:upper($("container40Type").value),
-    ft:upper($("ft").value),validity:inputDateValue($("validity").value),
-    tt:upper($("tt").value),via:upper($("via").value),remarks:upper($("remarks").value),
-    type:$("rateType").value,
-    localCharges:existing.localCharges||[],charges20dv:existing.charges20dv||[],charges40hc:existing.charges40hc||[]
-  };
-}
+  </section>
 
-$("clear").onclick=()=>clearForm(true);
-$("save").onclick=async()=>{
-  showLoader("SAVING","CREATING NEW RECORD");
-  try{await addDoc(collection(db,"rates"),editorPayload());clearForm(true);await load();}
-  catch(err){alert("SAVE FAILED");console.error(err);}finally{hideLoader();}
-};
-$("update").onclick=async()=>{
-  if(!editId)return alert("SELECT A RECORD TO UPDATE.");
-  showLoader("UPDATING","SAVING CHANGES");
-  try{const cur=data.find(x=>x.id===editId)||{};await updateDoc(doc(db,"rates",editId),editorPayload(cur));clearForm(true);await load();}
-  catch(err){alert("UPDATE FAILED");console.error(err);}finally{hideLoader();}
-};
-async function duplicateRate(id){
-  const r=data.find(x=>x.id===id);if(!r)return;
-  showLoader("DUPLICATING","CREATING COPY");
-  try{const p={...r};delete p.id;p.seq=generateSeq();p.createdAt=new Date().toISOString();p.updatedAt=p.createdAt;await addDoc(collection(db,"rates"),p);await load();}
-  catch(err){alert("DUPLICATE FAILED");console.error(err);}finally{hideLoader();}
-}
-$("duplicateBtn").onclick=async()=>{if(!editId)return alert("SELECT A RECORD TO DUPLICATE.");await duplicateRate(editId);};
-async function deleteRate(id){
-  if(!confirm("DELETE THIS RATE?"))return;
-  showLoader("DELETING","REMOVING RECORD");
-  try{await deleteDoc(doc(db,"rates",id));selectedIds.delete(id);if(editId===id)clearForm(true);await load();}
-  catch(err){alert("DELETE FAILED");console.error(err);}finally{hideLoader();}
-}
-async function bulkDeleteSelected(){
-  if(!selectedIds.size)return alert("SELECT RECORDS FIRST.");
-  if(!confirm(`DELETE ${selectedIds.size} SELECTED RECORD(S)?`))return;
-  showLoader("DELETING","REMOVING SELECTED RECORDS");
-  try{for(const id of[...selectedIds])await deleteDoc(doc(db,"rates",id));selectedIds.clear();clearForm(true);await load();}
-  catch(err){alert("BULK DELETE FAILED");console.error(err);}finally{hideLoader();}
-}
-$("bulkDeleteBtn").onclick=bulkDeleteSelected;
-async function migrateAllSequences(){
-  if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?"))return;
-  showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
-  try{for(const r of data){const src=r.createdAt||r.updatedAt||new Date().toISOString();const ns=seqFromDate(src);if(r.seq!==ns)await updateDoc(doc(db,"rates",r.id),{seq:ns});}await load();}
-  catch(err){alert("SEQUENCE UPDATE FAILED");console.error(err);}finally{hideLoader();}
-}
-$("migrateSeqBtn").onclick=migrateAllSequences;
+  <script>
+    (() => {
+      const ui = {
+        setupScreen: document.getElementById('setupScreen'),
+        visualizerScreen: document.getElementById('visualizerScreen'),
+        fileA: document.getElementById('fileA'),
+        fileB: document.getElementById('fileB'),
+        speedA: document.getElementById('speedA'),
+        speedB: document.getElementById('speedB'),
+        speedAVal: document.getElementById('speedAVal'),
+        speedBVal: document.getElementById('speedBVal'),
+        centerTextInput: document.getElementById('centerTextInput'),
+        fontSizeRange: document.getElementById('fontSizeRange'),
+        fontSizeVal: document.getElementById('fontSizeVal'),
+        textColorInput: document.getElementById('textColorInput'),
+        submitBtn: document.getElementById('submitBtn'),
+        status: document.getElementById('status'),
+        fullscreenBtn: document.getElementById('fullscreenBtn'),
+        closeBtn: document.getElementById('closeBtn'),
+        centerTextLayer: document.getElementById('centerTextLayer'),
+        renderCanvas: document.getElementById('renderCanvas'),
+        particleCanvas: document.getElementById('particleCanvas'),
+        rawShippingText: document.getElementById('rawShippingText'),
+        copyBtn: document.getElementById('copyBtn'),
+        copyFeedback: document.getElementById('copyFeedback')
+      };
 
-function copyText(text){
-  return navigator.clipboard.writeText(text).catch(()=>{
-    const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
-  });
-}
-function effectiveMarkup20(){return parseFloat(userMu20||0)||0}
-function effectiveMarkup40(){return parseFloat(userMu40||0)||0}
-function loadMarkups(){
-  userMu20=parseFloat(localStorage.getItem(USER_MU20_KEY)||"0")||0;
-  userMu40=parseFloat(localStorage.getItem(USER_MU40_KEY)||"0")||0;
-  $("userMu20").value=localStorage.getItem(USER_MU20_KEY)||"";
-  $("userMu40").value=localStorage.getItem(USER_MU40_KEY)||"";
-  $("userMu20Status").textContent=userMu20?`${userMu20}%`:"NOT SET";
-  $("userMu40Status").textContent=userMu40?`${userMu40}%`:"NOT SET";
-  updateAppliedMarkupsList();
-}
-function updateAppliedMarkupsList(){
-  const m20=effectiveMarkup20(),m40=effectiveMarkup40();
-  if(!m20&&!m40){$("appliedMarkupsList").innerHTML=`<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>`;return;}
-  let html="";
-  if(m20)html+=`<div class="applied-markup"><span>20DV</span><span>+${m20}%</span></div>`;
-  if(m40)html+=`<div class="applied-markup"><span>40HC</span><span>+${m40}%</span></div>`;
-  $("appliedMarkupsList").innerHTML=html;
-}
-$("saveUserMarkupBtn").onclick=()=>{
-  const v20=parseFloat($("userMu20").value||"0")||0,v40=parseFloat($("userMu40").value||"0")||0;
-  if(v20<0||v40<0)return alert("MARKUPS CANNOT BE NEGATIVE.");
-  localStorage.setItem(USER_MU20_KEY,String(v20));localStorage.setItem(USER_MU40_KEY,String(v40));
-  loadMarkups();showCopyToast("USER MARKUPS SAVED");
-};
-$("clearUserMarkupBtn").onclick=()=>{
-  localStorage.removeItem(USER_MU20_KEY);localStorage.removeItem(USER_MU40_KEY);
-  loadMarkups();showCopyToast("USER MARKUPS CLEARED");
-};
+      const renderCtx = ui.renderCanvas.getContext('2d', { alpha: true, desynchronized: true });
+      const particleCtx = ui.particleCanvas.getContext('2d', { alpha: true, desynchronized: true });
 
-function buildRateCopyText(r){
-  if(!r)return"";const lines=[];
-  if(r.carrier)lines.push(`CARRIER ${r.carrier}`);
-  if(r.por)lines.push(`POR ${r.por}`);
-  if(r.pol)lines.push(`POL ${r.pol}`);
-  if(r.pod)lines.push(`POD ${r.pod}`);
-  if(r.fpod)lines.push(`FPOD ${r.fpod}`);
-  const base20=parseFloat(r.dv20||"")||0,base40=parseFloat(r.hc40||"")||0;
-  const final20=base20?Math.round(base20*(1+effectiveMarkup20()/100)):0;
-  const final40=base40?Math.round(base40*(1+effectiveMarkup40()/100)):0;
-  const t20=r.container20Type?` ${r.container20Type}`:"",t40=r.container40Type?` ${r.container40Type}`:"";
-  const p20=final20?`USD ${final20} 20DV${t20}`:"",p40=final40?`USD ${final40} 40HC${t40}`:"";
-  const routeFrom=r.pol||r.por||"",routeTo=r.pod||"";
-  if(routeFrom||routeTo||p20||p40){
-    const rp=[p20,p40].filter(Boolean).join(" / ");
-    lines.push(`OF FM ${routeFrom} TO ${routeTo} ${rp}`.replace(/\s+/g," ").trim());
-  }
-  if(r.ft)lines.push(`FT ${appendDays(r.ft)}`);
-  if(r.validity){const vt=fmtDate(r.validity),tt=displayType(r.type);lines.push(`VALIDITY ${vt}${tt?` ${tt}`:""}`);}
-  if(r.tt)lines.push(`TT ${appendDays(r.tt)}`);
-  if(r.via)lines.push(`ROUTING ${r.via}`);
-  if(r.remarks)lines.push(`REMARKS ${r.remarks}`);
-  return lines.join("\n");
-}
-window.copyRate=async(id)=>{const r=data.find(x=>x.id===id);if(!r)return;await copyText(buildRateCopyText(r));showCopyToast("RATE COPIED");};
-async function copySelectedRates(){
-  const rows=filteredRows().filter(r=>selectedIds.has(r.id));
-  if(!rows.length)return alert("SELECT RECORDS FIRST.");
-  await copyText(rows.map(buildRateCopyText).filter(Boolean).join("\n\n"));
-  showCopyToast(`${rows.length} RATE(S) COPIED`);
-}
-$("copySelectedRatesBtn").onclick=copySelectedRates;
+      const state = {
+        active: false,
+        rafId: 0,
+        startTime: 0,
+        uiTimer: 0,
+        width: 0,
+        height: 0,
+        cx: 0,
+        cy: 0,
+        dpr: 1,
+        diag: 0,
+        renderBox: 0,
+        particleSprite: null,
+        glowA: null,
+        glowB: null,
+        particles: [],
+        uploads: [
+          { source: null, url: null, name: '' },
+          { source: null, url: null, name: '' }
+        ]
+      };
 
-window.editRate=(id)=>{
-  const r=data.find(x=>x.id===id);if(!r)return;
-  editId=id;setEditorState(`EDITING ${r.seq||"SELECTED RATE"}`);
-  $("carrier").value=r.carrier||"";$("por").value=r.por||"";$("pol").value=r.pol||"";
-  $("pod").value=r.pod||"";$("fpod").value=r.fpod||"";$("dv20").value=r.dv20||"";
-  $("container20Type").value=r.container20Type||"";$("hc40").value=r.hc40||"";
-  $("container40Type").value=r.container40Type||"";$("ft").value=r.ft||"";
-  $("validity").value=inputDateValue(r.validity);$("tt").value=r.tt||"";
-  $("via").value=r.via||"";$("remarks").value=r.remarks||"";
-  $("rateType").value=r.type==="S"?"S":"V";
-};
-window.delRate=deleteRate;
+      const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
-function toCSV(rows){
-  const head=["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","FT","DATE","TYPE","TT","ROUTING","REMARKS"];
-  const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  return[head.join(","),...rows.map((r,i)=>[
-    esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),
-    esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),
-    esc(r.ft),esc(inputDateValue(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)
-  ].join(","))].join("\n");
-}
-function download(name,txt){
-  const a=document.createElement("a"),blob=new Blob([txt],{type:"text/csv;charset=utf-8"});
-  a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);
-}
-function parseCSVLine(line,sep=","){
-  const out=[];let cur="",inQ=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(ch==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
-    else if(ch===sep&&!inQ){out.push(cur);cur="";}
-    else cur+=ch;
-  }
-  out.push(cur);return out.map(v=>v.trim());
-}
-function parseCSV(txt){
-  const lines=txt.split(/\r?\n/).filter(l=>l.trim()!=="");if(!lines.length)return[];
-  const sep=lines[0].includes("\t")?"\t":",";
-  const headers=parseCSVLine(lines[0],sep).map(s=>s.trim().toLowerCase());
-  return lines.slice(1).map(line=>{
-    const cols=parseCSVLine(line,sep);const o={};
-    headers.forEach((h,i)=>o[h]=(cols[i]??"").trim());return o;
-  });
-}
-function normalizeUploadRow(r){
-  const rawType=upper(r.type||r.vtype||r.stype||"");
-  const typeCode=rawType==="S"||rawType==="SAILING"?"S":"V";
-  return{
-    seq:r.seq||r.sequence||"",carrier:upper(r.carrier),por:upper(r.por),pol:upper(r.pol),
-    pod:upper(r.pod),fpod:upper(r.fpod),dv20:calc(r.dv20||r["20dv"]||""),
-    container20Type:upper(r["20type"]||r.container20type||""),
-    hc40:calc(r.hc40||r["40hc"]||""),container40Type:upper(r["40type"]||r.container40type||""),
-    ft:upper(r["f/t"]||r.ft||""),validity:inputDateValue(r.validity||r.date||""),
-    type:typeCode,tt:upper(r.tt||r["transit time"]||""),
-    via:upper(r.routing||r.via||r.route||""),remarks:upper(r.remarks||"")
-  };
-}
-function renderUpload(){
-  $("uploadBody").innerHTML=uploadRows.map((r,i)=>`
-  <tr>
-    <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}></td>
-    <td>${escapeHtml(r.seq||i+1)}</td><td>${escapeHtml(r.carrier||"")}</td>
-    <td>${escapeHtml(r.por||"")}</td><td>${escapeHtml(r.pol||"")}</td>
-    <td>${escapeHtml(r.pod||"")}</td><td>${escapeHtml(r.fpod||"")}</td>
-    <td>${escapeHtml(r.dv20||"")}</td><td>${escapeHtml(r.container20Type||"")}</td>
-    <td>${escapeHtml(r.hc40||"")}</td><td>${escapeHtml(r.container40Type||"")}</td>
-    <td>${escapeHtml(r.ft||"")}</td><td>${escapeHtml(fmtDate(r.validity))}</td>
-    <td>${escapeHtml(displayType(r.type))}</td><td>${escapeHtml(r.tt||"")}</td>
-    <td>${escapeHtml(r.via||"")}</td><td>${escapeHtml(r.remarks||"")}</td>
-  </tr>`).join("");
-  $("uploadMobile").innerHTML=uploadRows.map((r,i)=>`
-  <div class="mobile-card">
-    <div class="mobile-card-head">
-      <div><div class="mobile-card-title">${escapeHtml(r.carrier||"NO CARRIER")}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq||"")}</div></div>
-      <label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i)?"checked":""}> SELECT</label>
-    </div>
-    <div class="mobile-grid">
-      ${mobileItem("POR",r.por)}${mobileItem("POL",r.pol)}${mobileItem("POD",r.pod)}${mobileItem("FPOD",r.fpod)}
-      ${mobileItem("20DV",`${r.dv20||""} ${r.container20Type||""}`.trim())}
-      ${mobileItem("40HC",`${r.hc40||""} ${r.container40Type||""}`.trim())}
-      ${mobileItem("F/T",r.ft)}${mobileItem("DATE",fmtDate(r.validity))}
-      ${mobileItem("TYPE",displayType(r.type))}${mobileItem("TT",r.tt)}
-      ${mobileItem("ROUTING",r.via)}${mobileItem("REMARKS",r.remarks)}
-    </div>
-  </div>`).join("");
-}
-function openUpload(){$("uploadOverlay").classList.remove("hidden");renderUpload();}
-function closeUpload(){$("uploadOverlay").classList.add("hidden");}
-$("openUploadBtn").onclick=openUpload;
-$("closeUploadBtn").onclick=closeUpload;
-$("pickFileBtn").onclick=()=>$("fileInput").click();
-$("fileInput").addEventListener("change",async e=>{
-  const f=e.target.files?.[0];if(!f)return;
-  showLoader("IMPORTING","READING FILE");
-  try{const txt=await f.text();uploadRows=parseCSV(txt).map(normalizeUploadRow);selectedUploadRows.clear();renderUpload();}
-  catch(err){alert("IMPORT READ FAILED");console.error(err);}finally{hideLoader();}
-});
-$("selectAllUpload").addEventListener("change",e=>{
-  if(e.target.checked)uploadRows.forEach((_,i)=>selectedUploadRows.add(i));else selectedUploadRows.clear();renderUpload();
-});
-$("uploadBody").addEventListener("change",e=>{
-  const cb=e.target.closest("input[data-ui]");if(!cb)return;
-  const i=Number(cb.dataset.ui);if(cb.checked)selectedUploadRows.add(i);else selectedUploadRows.delete(i);
-});
-$("uploadMobile").addEventListener("change",e=>{
-  const cb=e.target.closest("input[data-ui]");if(!cb)return;
-  const i=Number(cb.dataset.ui);if(cb.checked)selectedUploadRows.add(i);else selectedUploadRows.delete(i);renderUpload();
-});
-$("exportSelectedBtn").onclick=()=>{
-  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):filteredRows();
-  download("fr8x_selected_export.csv",toCSV(rows));
-};
-$("applyImportBtn").onclick=async()=>{
-  const rows=selectedUploadRows.size?uploadRows.filter((_,i)=>selectedUploadRows.has(i)):uploadRows;
-  if(!rows.length)return alert("NO DATA TO IMPORT.");
-  showLoader("IMPORTING","ADDING RECORDS");
-  try{
-    for(const r of rows){
-      if(!r.carrier&&!r.pod&&!r.fpod&&!r.pol)continue;
-      await addDoc(collection(db,"rates"),{
-        seq:r.seq||generateSeq(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),
-        carrier:r.carrier,por:r.por,pol:r.pol,pod:r.pod,fpod:r.fpod,
-        dv20:r.dv20,container20Type:r.container20Type,hc40:r.hc40,container40Type:r.container40Type,
-        ft:r.ft,validity:r.validity,type:r.type,tt:r.tt,via:r.via,remarks:r.remarks,
-        localCharges:[],charges20dv:[],charges40hc:[]
-      });
-    }
-    if($("clearImportPreviewAfterApply").checked){uploadRows=[];selectedUploadRows.clear();renderUpload();}
-    if($("clearEditorAfterImport").checked)clearForm(true);
-    closeUpload();await load();
-  }catch(err){alert("IMPORT APPLY FAILED");console.error(err);}finally{hideLoader();}
-};
-$("downloadTemplateBtn").onclick=()=>{
-  download("fr8x_template.csv",toCSV([{seq:"",carrier:"MSC",por:"DELHI",pol:"NHAVA SHEVA",pod:"JEBEL ALI",fpod:"DUBAI",dv20:"1000",container20Type:"",hc40:"1800",container40Type:"",ft:"14",validity:inputDateValue(new Date()),type:"V",tt:"7",via:"DIRECT",remarks:"SAMPLE"}]));
-};
+      function setStatus(message = '') {
+        ui.status.textContent = message;
+      }
 
-function checkFit(){
-  const l=parseFloat($("cargoL").value||""),w=parseFloat($("cargoW").value||""),h=parseFloat($("cargoH").value||"");
-  if(isNaN(l)||isNaN(w)||isNaN(h)){$("fitResult").innerHTML=`<span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>`;return;}
-  const fits=fitSpecs.filter(x=>l<=x.l&&w<=x.w&&h<=x.h).map(x=>x.key);
-  $("fitResult").innerHTML=fits.length?fits.map(x=>`<span class="fit-pill ok">${escapeHtml(x)}</span>`).join(""):`<span class="fit-pill bb">BREAK BULK</span>`;
-}
-$("checkFitBtn").onclick=checkFit;
+      function hexToRgb(hex) {
+        const clean = hex.replace('#', '');
+        const full = clean.length === 3
+          ? clean.split('').map(c => c + c).join('')
+          : clean;
+        const value = parseInt(full, 16);
+        return {
+          r: (value >> 16) & 255,
+          g: (value >> 8) & 255,
+          b: value & 255
+        };
+      }
 
-function pinUnlock(){
-  const pin=["pin1","pin2","pin3","pin4"].map(id=>$(id).value).join("");
-  if(pin===PIN){setSession();showApp();}else{alert("INVALID PIN");clearPin();}
-}
-function clearPin(){["pin1","pin2","pin3","pin4"].forEach(id=>$(id).value="");$("pin1").focus();}
-["pin1","pin2","pin3","pin4"].forEach((id,i,arr)=>{
-  $(id).addEventListener("input",e=>{
-    e.target.value=e.target.value.replace(/\D/g,"").slice(0,1);
-    if(e.target.value&&arr[i+1])$(arr[i+1]).focus();
-  });
-  $(id).addEventListener("keydown",e=>{
-    if(e.key==="Backspace"&&!e.target.value&&arr[i-1])$(arr[i-1]).focus();
-    if(e.key==="Enter")pinUnlock();
-  });
-});
-$("unlockBtn").onclick=pinUnlock;
-$("clearPinBtn").onclick=clearPin;
+      function rgba(hex, alpha) {
+        const c = hexToRgb(hex);
+        return `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha})`;
+      }
 
-$("globalSearch").addEventListener("input",render);
-document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input",e=>{filterMap[e.target.dataset.col]=e.target.value;render();}));
-document.querySelectorAll(".sort-btn").forEach(btn=>btn.addEventListener("click",e=>{
-  e.stopPropagation();const key=btn.dataset.sort;
-  if(sortState.key!==key)sortState={key,dir:"asc"};
-  else if(sortState.dir==="asc")sortState={key,dir:"desc"};
-  else sortState={key:"",dir:""};
-  render();
-}));
-document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
-document.addEventListener("mouseover",e=>{const p=e.target.closest(".pop-field");if(p)showPopup(p.dataset.value||"",p);});
-document.addEventListener("mouseout",e=>{if(e.target.closest(".pop-field"))hidePopup();});
-document.addEventListener("click",e=>{
-  const btn=e.target.closest("button[data-action]");if(!btn)return;
-  const id=btn.dataset.id;
-  if(btn.dataset.action==="copy")window.copyRate(id);
-  if(btn.dataset.action==="duplicate")duplicateRate(id);
-  if(btn.dataset.action==="edit")window.editRate(id);
-  if(btn.dataset.action==="delete")window.delRate(id);
-});
-document.addEventListener("change",e=>{
-  const cb=e.target.closest(".row-check[data-id]");if(!cb)return;
-  const id=cb.dataset.id;
-  if(cb.checked)selectedIds.add(id);else selectedIds.delete(id);
-  document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el=>{if(el!==cb)el.checked=cb.checked;});
-  updateSelectedInfo();
-});
-$("selectAllRows").addEventListener("change",e=>{
-  document.querySelectorAll("#tbody .row-check[data-id]").forEach(cb=>{
-    cb.checked=e.target.checked;
-    if(e.target.checked)selectedIds.add(cb.dataset.id);else selectedIds.delete(cb.dataset.id);
-  });updateSelectedInfo();
-});
+      function updateLabels() {
+        ui.speedAVal.textContent = `${ui.speedA.value}°/s`;
+        ui.speedBVal.textContent = `${ui.speedB.value}°/s`;
+        ui.fontSizeVal.textContent = `${ui.fontSizeRange.value}px`;
+      }
 
-setEditorState("CREATE OR UPDATE RATE");
-if(sessionValid())showApp();
-</script>
+      function updateCenterText() {
+        const text = ui.centerTextInput.value.trim();
+        const color = ui.textColorInput.value;
+        const glow1 = rgba(color, 0.38);
+        const glow2 = rgba(color, 0.20);
+        const glow3 = rgba(color, 0.12);
+
+        ui.centerTextLayer.textContent = text;
+        ui.centerTextLayer.style.fontSize = `${ui.fontSizeRange.value}px`;
+        ui.centerTextLayer.style.color = color;
+        ui.centerTextLayer.style.webkitTextStroke = `1px ${rgba(color, 0.75)}`;
+        ui.centerTextLayer.style.textShadow = `
+          0 0 2px ${rgba(color, 0.95)},
+          0 0 10px ${glow1},
+          0 0 22px ${glow2},
+          0 0 44px ${glow3}
+        `;
+        ui.centerTextLayer.classList.toggle('visible', text.length > 0);
+      }
+
+      function pingUI() {
+        ui.visualizerScreen.classList.add('show-ui');
+        clearTimeout(state.uiTimer);
+        state.uiTimer = setTimeout(() => {
+          ui.visualizerScreen.classList.remove('show-ui');
+        }, 1600);
+      }
+
+      function revokeUpload(index) {
+        if (state.uploads[index].url) {
+          URL.revokeObjectURL(state.uploads[index].url);
+          state.uploads[index].url = null;
+        }
+      }
+
+      function clearUpload(index) {
+        revokeUpload(index);
+        state.uploads[index].source = null;
+        state.uploads[index].name = '';
+      }
+
+      async function loadRenderableFile(file) {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = url;
+        await img.decode();
+        return { element: img, url };
+      }
+
+      async function onFileSelected(file, index) {
+        if (!file) {
+          clearUpload(index);
+          return;
+        }
+
+        if (!['image/png', 'image/svg+xml'].includes(file.type)) {
+          setStatus('Please use PNG or SVG files only.');
+          return;
+        }
+
+        try {
+          setStatus('Loading image…');
+          revokeUpload(index);
+
+          const loaded = await loadRenderableFile(file);
+          state.uploads[index].source = loaded.element;
+          state.uploads[index].url = loaded.url;
+          state.uploads[index].name = file.name;
+          setStatus('');
+        } catch (err) {
+          clearUpload(index);
+          setStatus('Could not load that image.');
+        }
+      }
+
+      function createRadialSprite(size, stops) {
+        const c = document.createElement('canvas');
+        c.width = size;
+        c.height = size;
+        const ctx = c.getContext('2d');
+
+        const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+        stops.forEach(([stop, color]) => g.addColorStop(stop, color));
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, size, size);
+
+        return c;
+      }
+
+      function initSprites() {
+        state.particleSprite = createRadialSprite(64, [
+          [0, 'rgba(255,255,255,1)'],
+          [0.25, 'rgba(145,220,255,0.9)'],
+          [0.6, 'rgba(110,145,255,0.28)'],
+          [1, 'rgba(0,0,0,0)']
+        ]);
+
+        state.glowA = createRadialSprite(512, [
+          [0, 'rgba(130,220,255,0.30)'],
+          [0.4, 'rgba(90,130,255,0.12)'],
+          [1, 'rgba(0,0,0,0)']
+        ]);
+
+        state.glowB = createRadialSprite(512, [
+          [0, 'rgba(120,150,255,0.28)'],
+          [0.42, 'rgba(120,220,255,0.10)'],
+          [1, 'rgba(0,0,0,0)']
+        ]);
+      }
+
+      function resizeAll() {
+        state.dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+        state.width = window.innerWidth;
+        state.height = window.innerHeight;
+        state.cx = state.width * 0.5;
+        state.cy = state.height * 0.5;
+        state.diag = Math.hypot(state.width, state.height);
+
+        ui.renderCanvas.width = Math.round(state.width * state.dpr);
+        ui.renderCanvas.height = Math.round(state.height * state.dpr);
+        ui.renderCanvas.style.width = `${state.width}px`;
+        ui.renderCanvas.style.height = `${state.height}px`;
+
+        ui.particleCanvas.width = Math.round(state.width * state.dpr);
+        ui.particleCanvas.height = Math.round(state.height * state.dpr);
+        ui.particleCanvas.style.width = `${state.width}px`;
+        ui.particleCanvas.style.height = `${state.height}px`;
+
+        renderCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        particleCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+
+        renderCtx.imageSmoothingEnabled = true;
+        renderCtx.imageSmoothingQuality = 'high';
+        particleCtx.imageSmoothingEnabled = true;
+        particleCtx.imageSmoothingQuality = 'low';
+
+        state.renderBox = Math.max(state.diag * 1.18, 1400);
+
+        initParticles();
+        updateCenterText();
+      }
+
+      function initParticles() {
+        const count = Math.max(18, Math.min(36, Math.floor((state.width * state.height) / 65000)));
+        state.particles = Array.from({ length: count }, () => ({
+          angle: Math.random() * Math.PI * 2,
+          radius: Math.random() * Math.max(state.width, state.height) * 0.55,
+          size: 0.7 + Math.random() * 1.4,
+          speed: 0.00014 + Math.random() * 0.00028,
+          alpha: 0.04 + Math.random() * 0.10,
+          phase: Math.random() * Math.PI * 2
+        }));
+      }
+
+      function drawParticles(time) {
+        particleCtx.clearRect(0, 0, state.width, state.height);
+        particleCtx.globalCompositeOperation = 'screen';
+
+        for (let i = 0; i < state.particles.length; i++) {
+          const p = state.particles[i];
+          const a = p.angle + time * p.speed;
+          const r = p.radius * (0.95 + 0.05 * Math.sin(time * 0.001 + p.phase));
+          const x = state.cx + Math.cos(a) * r;
+          const y = state.cy + Math.sin(a * 1.04) * r * 0.94;
+          const size = p.size * 26;
+
+          particleCtx.globalAlpha = p.alpha * (0.65 + 0.35 * Math.sin(time * 0.0012 + p.phase));
+          particleCtx.drawImage(state.particleSprite, x - size / 2, y - size / 2, size, size);
+        }
+
+        particleCtx.globalAlpha = 1;
+        particleCtx.globalCompositeOperation = 'source-over';
+      }
+
+      function coverSizeForSource(source, box, extraScale = 1) {
+        const sw = source.naturalWidth || source.width;
+        const sh = source.naturalHeight || source.height;
+        const scale = Math.max(box / sw, box / sh) * extraScale;
+        return {
+          width: sw * scale,
+          height: sh * scale
+        };
+      }
+
+      function drawVisualLayer(source, glow, cx, cy, radians, scalePulse, alpha) {
+        const fitted = coverSizeForSource(source, state.renderBox, scalePulse);
+
+        renderCtx.save();
+        renderCtx.translate(cx, cy);
+        renderCtx.rotate(radians);
+
+        renderCtx.globalCompositeOperation = 'screen';
+        renderCtx.globalAlpha = alpha * 0.52;
+        renderCtx.drawImage(glow, -state.renderBox * 0.62, -state.renderBox * 0.62, state.renderBox * 1.24, state.renderBox * 1.24);
+
+        renderCtx.globalCompositeOperation = 'source-over';
+        renderCtx.globalAlpha = alpha;
+        renderCtx.drawImage(
+          source,
+          -fitted.width / 2,
+          -fitted.height / 2,
+          fitted.width,
+          fitted.height
+        );
+
+        renderCtx.restore();
+      }
+
+      function render(time) {
+        if (!state.startTime) state.startTime = time;
+
+        if (state.active) {
+          const elapsed = (time - state.startTime) / 1000;
+          const minSide = Math.min(state.width, state.height);
+
+          drawParticles(time);
+          renderCtx.clearRect(0, 0, state.width, state.height);
+
+          const speedA = Number(ui.speedA.value);
+          const speedB = Number(ui.speedB.value);
+
+          const orbit = minSide * 0.017;
+          const orbitA = orbit * (0.86 + 0.14 * Math.sin(elapsed * 0.9));
+          const orbitB = orbit * (0.86 + 0.14 * Math.cos(elapsed * 0.86));
+
+          const ax =
+            Math.cos(elapsed * 0.7) * orbitA * 0.74 +
+            Math.sin(elapsed * 1.7) * orbitA * 0.11;
+
+          const ay =
+            Math.sin(elapsed * 0.74) * orbitA * 0.74 +
+            Math.cos(elapsed * 1.46) * orbitA * 0.10;
+
+          const bx =
+            Math.cos(elapsed * 0.7 + Math.PI) * orbitB * 0.74 +
+            Math.sin(elapsed * 1.58 + Math.PI) * orbitB * 0.10;
+
+          const by =
+            Math.sin(elapsed * 0.74 + Math.PI) * orbitB * 0.74 +
+            Math.cos(elapsed * 1.62 + Math.PI) * orbitB * 0.10;
+
+          const pulse = 1 + 0.012 * Math.sin(elapsed * 1.15);
+          const pulseA = pulse * (1 + 0.005 * Math.sin(elapsed * 2.1));
+          const pulseB = pulse * (1 - 0.005 * Math.sin(elapsed * 1.9));
+
+          if (state.uploads[0].source) {
+            drawVisualLayer(
+              state.uploads[0].source,
+              state.glowA,
+              state.cx + ax,
+              state.cy + ay,
+              elapsed * speedA * Math.PI / 180,
+              pulseA,
+              0.95
+            );
+          }
+
+          if (state.uploads[1].source) {
+            drawVisualLayer(
+              state.uploads[1].source,
+              state.glowB,
+              state.cx + bx,
+              state.cy + by,
+              -elapsed * speedB * Math.PI / 180,
+              pulseB,
+              0.93
+            );
+          }
+        }
+
+        state.rafId = requestAnimationFrame(render);
+      }
+
+      function openVisualizer() {
+        ui.setupScreen.classList.remove('active');
+        ui.visualizerScreen.classList.add('active');
+        ui.visualizerScreen.setAttribute('aria-hidden', 'false');
+        state.active = true;
+        state.startTime = 0;
+        updateCenterText();
+        pingUI();
+      }
+
+      async function closeVisualizer() {
+        state.active = false;
+
+        if (document.fullscreenElement) {
+          try {
+            await document.exitFullscreen();
+          } catch (e) {}
+        }
+
+        ui.visualizerScreen.classList.remove('active');
+        ui.setupScreen.classList.add('active');
+        ui.visualizerScreen.setAttribute('aria-hidden', 'true');
+      }
+
+      async function toggleFullscreen() {
+        try {
+          if (!document.fullscreenElement) {
+            await ui.visualizerScreen.requestFullscreen();
+          } else {
+            await document.exitFullscreen();
+          }
+        } catch (e) {}
+      }
+
+      /* =========================================
+         SHIPPING TEXT FORMATTER & COPY
+      ========================================= */
+      function formatShippingText(raw) {
+        const lines = raw.trim().split(/\r?\n/);
+        const out = [];
+
+        for (let line of lines) {
+          line = line.trim();
+          if (!line) continue;
+
+          // CARRIER HAPAG → CARRIER:  HAPAG
+          if (line.startsWith('CARRIER ')) {
+            out.push('CARRIER:  ' + line.substring(8).trim());
+            continue;
+          }
+
+          // POL NHAVA SHEVA → POL : NHAVA SHEVA
+          if (line.startsWith('POL ')) {
+            out.push('POL : ' + line.substring(4).trim());
+            continue;
+          }
+
+          // POD DAKAR → POD:  DAKAR
+          if (line.startsWith('POD ')) {
+            out.push('POD:  ' + line.substring(4).trim());
+            continue;
+          }
+
+          // OF FM NHAVA SHEVA TO DAKAR ... → O/F FM NHAVA SHEVA TO DAKAR ...
+          if (line.startsWith('OF ')) {
+            let rest = line.substring(3).trim();
+            // USD 2924 20DV / USD 3929 40HC → USD 2924/20DV & USD 3929/40HC
+            rest = rest.replace(
+              /USD\s+(\d+)\s+20DV\s*\/\s*USD\s+(\d+)\s+40HC/,
+              'USD $1/20DV & USD $2/40HC'
+            );
+            out.push('O/F ' + rest);
+            continue;
+          }
+
+          // FT 10 DAYS → FT: 10 DAYS
+          if (line.startsWith('FT ')) {
+            out.push('FT: ' + line.substring(3).trim());
+            continue;
+          }
+
+          // VALIDITY SUN, 31 MAY 2026 SAILING → VALIDITY: SUN, 31 MAY 2026 (SAILING)
+          if (line.startsWith('VALIDITY ')) {
+            let rest = line.substring(9).trim();
+            rest = rest.replace(/\s+SAILING\b/, ' (SAILING)');
+            out.push('VALIDITY: ' + rest);
+            continue;
+          }
+
+          // TT 28-43 DAYS → TT: 28-43 DAYS
+          if (line.startsWith('TT ')) {
+            out.push('TT: ' + line.substring(3).trim());
+            continue;
+          }
+
+          // ROUTING VIA TANGER MED , MA → ROUTING: VIA TANGER MED , MA
+          if (line.startsWith('ROUTING ')) {
+            out.push('ROUTING: ' + line.substring(8).trim());
+            continue;
+          }
+
+          // REMARKS TOTAL 14 DAYS ... → REMARKS:  TOTAL 14 DAYS ...
+          if (line.startsWith('REMARKS ')) {
+            out.push('REMARKS:  ' + line.substring(8).trim());
+            continue;
+          }
+
+          // Fallback: keep line as-is
+          out.push(line);
+        }
+
+        return out.join('\n');
+      }
+
+      async function copyFormattedShipping() {
+        const raw = ui.rawShippingText.value.trim();
+        if (!raw) {
+          ui.copyFeedback.textContent = 'Nothing to copy';
+          ui.copyFeedback.classList.add('show');
+          setTimeout(() => ui.copyFeedback.classList.remove('show'), 1600);
+          return;
+        }
+
+        const formatted = formatShippingText(raw);
+
+        try {
+          await navigator.clipboard.writeText(formatted);
+          ui.copyFeedback.textContent = 'Copied to clipboard';
+          ui.copyFeedback.classList.add('show');
+          setTimeout(() => ui.copyFeedback.classList.remove('show'), 1600);
+        } catch (err) {
+          ui.copyFeedback.textContent = 'Copy failed';
+          ui.copyFeedback.classList.add('show');
+          setTimeout(() => ui.copyFeedback.classList.remove('show'), 1600);
+        }
+      }
+
+      function bindEvents() {
+        ui.fileA.addEventListener('change', (e) => onFileSelected(e.target.files[0], 0));
+        ui.fileB.addEventListener('change', (e) => onFileSelected(e.target.files[0], 1));
+
+        ui.speedA.addEventListener('input', updateLabels);
+        ui.speedB.addEventListener('input', updateLabels);
+
+        ui.centerTextInput.addEventListener('input', updateCenterText);
+        ui.fontSizeRange.addEventListener('input', () => {
+          updateLabels();
+          updateCenterText();
+        });
+        ui.textColorInput.addEventListener('input', updateCenterText);
+
+        ui.submitBtn.addEventListener('click', openVisualizer);
+        ui.fullscreenBtn.addEventListener('click', toggleFullscreen);
+        ui.closeBtn.addEventListener('click', closeVisualizer);
+
+        ui.copyBtn.addEventListener('click', copyFormattedShipping);
+
+        ui.visualizerScreen.addEventListener('mousemove', pingUI);
+        ui.visualizerScreen.addEventListener('touchstart', pingUI, { passive: true });
+
+        window.addEventListener('resize', resizeAll, { passive: true });
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden && state.rafId) {
+            cancelAnimationFrame(state.rafId);
+            state.rafId = 0;
+          } else if (!document.hidden && !state.rafId) {
+            state.rafId = requestAnimationFrame(render);
+          }
+        });
+      }
+
+      function init() {
+        initSprites();
+        resizeAll();
+        updateLabels();
+        updateCenterText();
+        bindEvents();
+        state.rafId = requestAnimationFrame(render);
+      }
+
+      init();
+    })();
+  </script>
 </body>
 </html>
