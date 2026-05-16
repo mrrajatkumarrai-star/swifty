@@ -24,6 +24,10 @@
   --radius-sm:12px;
   --header-h:72px;
   --editor-w:360px;
+  --reflect:#2563eb;
+  --reflect-soft:rgba(37,99,235,.10);
+  --reflect-soft-2:rgba(37,99,235,.18);
+  --edit-row:rgba(16,185,129,.08);
 }
 *{
   box-sizing:border-box;
@@ -115,10 +119,29 @@ button,input,select,textarea{font:inherit}
   padding:9px 11px;
   border-radius:16px;
 }
+.bulk-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+.bulk-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
 .note{
   color:var(--muted);
   font-size:12px;
   line-height:1.35;
+}
+#activeCellInfo{
+  max-width:520px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .section-tabs{
   display:flex;
@@ -266,7 +289,7 @@ col.col-date{width:118px}
 col.col-tt{width:64px}
 col.col-route{width:118px}
 col.col-rem{width:130px}
-col.col-act{width:104px}
+col.col-act{width:124px}
 th,td{
   padding:5px 5px;
   border-bottom:1px solid rgba(148,163,184,.16);
@@ -326,6 +349,27 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   width:14px;
   height:14px;
   accent-color:var(--primary);
+}
+.reflect-cell{
+  cursor:pointer;
+  position:relative;
+  transition:background .14s ease, box-shadow .14s ease, transform .14s ease;
+}
+.reflect-cell:hover{
+  background:var(--reflect-soft);
+}
+.reflect-cell.active-cell{
+  background:var(--reflect-soft-2) !important;
+  box-shadow:inset 0 0 0 1px rgba(37,99,235,.42), 0 0 0 2px rgba(37,99,235,.12);
+}
+tr.active-row td{
+  background:rgba(37,99,235,.04);
+}
+tr.editing-row td{
+  background:var(--edit-row);
+}
+tr.editing-row td:last-child{
+  box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);
 }
 
 .section{display:none}
@@ -471,6 +515,15 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   border-radius:12px;
   padding:6px;
   background:rgba(255,255,255,.42);
+  cursor:pointer;
+  transition:background .14s ease, box-shadow .14s ease;
+}
+.mobile-item:hover{
+  background:var(--reflect-soft);
+}
+.mobile-item.active-cell{
+  background:var(--reflect-soft-2);
+  box-shadow:inset 0 0 0 1px rgba(37,99,235,.42), 0 0 0 2px rgba(37,99,235,.12);
 }
 .mobile-item .k{
   font-size:11px;
@@ -482,6 +535,9 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+}
+.mobile-card.active-row{
+  box-shadow:inset 0 0 0 1px rgba(37,99,235,.22), 0 8px 24px rgba(37,99,235,.10);
 }
 .mobile-actions{
   display:flex;
@@ -637,6 +693,8 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
   .section-tabs button,.editor-actions button{flex:1 1 calc(50% - 6px)}
   .inline-pair{grid-template-columns:1fr}
   .fit-grid{grid-template-columns:1fr}
+  .bulk-bar{align-items:flex-start}
+  #activeCellInfo{max-width:100%}
 }
 </style>
 </head>
@@ -752,12 +810,19 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
       <input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:340px">
       <div class="toolbar">
         <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
+        <button class="primary" id="copySelectedRatesBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
         <button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
       </div>
     </div>
 
     <div class="bulk-bar">
-      <div class="note" id="selectedCountInfo">0 SELECTED</div>
+      <div class="bulk-info">
+        <div class="note" id="selectedCountInfo">0 SELECTED</div>
+        <div class="note" id="activeCellInfo">NO ACTIVE CELL</div>
+      </div>
+      <div class="bulk-actions">
+        <button class="ghost" id="clearActiveCellBtn"><i class="bi bi-grid-3x3-gap"></i> CLEAR ACTIVE CELL</button>
+      </div>
     </div>
 
     <div class="section-tabs">
@@ -881,7 +946,7 @@ tbody tr:hover{background:rgba(255,255,255,.42)}
         <div class="panel section active" id="sectionRates">
           <div class="section-head">
             <div class="note" id="sectionLabel">ACTIVE RATES</div>
-            <div class="note">HOVER OVER ANY CELL TO VIEW FULL TEXT</div>
+            <div class="note">CLICK ANY CELL TO REFLECT IT. HOVER TO VIEW FULL TEXT.</div>
           </div>
 
           <div class="table-wrap desktop-table">
@@ -1168,6 +1233,9 @@ let filterMap = {
   ft:"", validity:"", type:"", tt:"", via:"", remarks:""
 };
 
+let activeCellKey = "";
+let activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
+
 let userMu20 = 0;
 let userMu40 = 0;
 const USER_MU20_KEY = "fr8x_user_mu20";
@@ -1193,6 +1261,9 @@ function escapeHtml(v=""){
     .replace(/'/g,"&#39;");
 }
 function pad2(n){ return String(n).padStart(2,"0"); }
+function safeAttr(v=""){
+  return String(v).replace(/\\/g,"\\\\").replace(/"/g,'\\"');
+}
 function seqFromDate(dateLike){
   const dt = dateLike ? new Date(dateLike) : new Date();
   const y = String(dt.getFullYear()).slice(-2);
@@ -1251,7 +1322,7 @@ function displayType(v){
 }
 function truncate(v="", len=18){
   const s = String(v);
-  return s.length > len ? s.slice(0, len - 1) + "..." : s;
+  return s.length > len ? s.slice(0, len - 3) + "..." : s;
 }
 function showCopyToast(msg="COPIED"){
   const t = document.createElement("div");
@@ -1296,6 +1367,41 @@ function appendDays(v){
   const s = upper(v);
   if(!s) return "";
   return /DAY/.test(s) ? s : `${s} DAYS`;
+}
+function updateActiveCellInfo(){
+  if(!activeCellKey){
+    $("activeCellInfo").textContent = "NO ACTIVE CELL";
+    return;
+  }
+  const valueText = activeCellState.value ? activeCellState.value : "-";
+  $("activeCellInfo").textContent = `ACTIVE CELL · ${activeCellState.label}${activeCellState.seq ? ` · SEQ ${activeCellState.seq}` : ""} · ${valueText}`;
+}
+function syncActiveCellClasses(){
+  document.querySelectorAll(".active-cell").forEach(el => el.classList.remove("active-cell"));
+  document.querySelectorAll(".active-row").forEach(el => el.classList.remove("active-row"));
+  if(!activeCellKey) return;
+  document.querySelectorAll(`[data-cellkey="${safeAttr(activeCellKey)}"]`).forEach(el => el.classList.add("active-cell"));
+  if(activeCellState.id){
+    document.querySelectorAll(`[data-rowid="${safeAttr(activeCellState.id)}"]`).forEach(el => el.classList.add("active-row"));
+  }
+}
+function setActiveCell(el){
+  activeCellKey = el.dataset.cellkey || "";
+  activeCellState = {
+    id: el.dataset.id || "",
+    seq: el.dataset.seq || "",
+    key: el.dataset.fieldkey || "",
+    label: el.dataset.label || "",
+    value: el.dataset.value || ""
+  };
+  updateActiveCellInfo();
+  syncActiveCellClasses();
+}
+function clearActiveCell(){
+  activeCellKey = "";
+  activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
+  updateActiveCellInfo();
+  syncActiveCellClasses();
 }
 
 async function load(){
@@ -1374,6 +1480,7 @@ function filteredRows(){
 }
 function updateSelectedInfo(){
   $("selectedCountInfo").textContent = `${selectedIds.size} SELECTED`;
+  $("copySelectedRatesBtn").disabled = !selectedIds.size;
 }
 function switchView(mode){
   viewMode = mode;
@@ -1415,44 +1522,63 @@ function updateSortButtons(){
   });
 }
 
-/* FIXED HERE */
 function popupField(label, value, shortLen=14){
   const full = (value ?? "").toString().trim();
   const clip = full ? truncate(full, shortLen) : "-";
   return `<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`;
 }
-
-/* FIXED HERE */
-function mobileItem(label, value){
+function desktopCell(id, seq, fieldKey, label, value, shortLen=14){
+  return `
+    <td
+      class="reflect-cell ${activeCellKey === `${id}|${fieldKey}` ? "active-cell" : ""}"
+      data-rowid="${escapeHtml(id)}"
+      data-id="${escapeHtml(id)}"
+      data-seq="${escapeHtml(seq || "")}"
+      data-fieldkey="${escapeHtml(fieldKey)}"
+      data-cellkey="${escapeHtml(`${id}|${fieldKey}`)}"
+      data-label="${escapeHtml(label)}"
+      data-value="${escapeHtml((value ?? "").toString().trim())}"
+    >${popupField(label, value, shortLen)}</td>
+  `;
+}
+function mobileItem(rowId, seq, fieldKey, label, value){
   const full = (value ?? "").toString().trim();
   return `
-    <div class="mobile-item">
+    <div
+      class="mobile-item ${activeCellKey === `${rowId}|${fieldKey}` ? "active-cell" : ""}"
+      data-rowid="${escapeHtml(rowId)}"
+      data-id="${escapeHtml(rowId)}"
+      data-seq="${escapeHtml(seq || "")}"
+      data-fieldkey="${escapeHtml(fieldKey)}"
+      data-cellkey="${escapeHtml(`${rowId}|${fieldKey}`)}"
+      data-label="${escapeHtml(label)}"
+      data-value="${escapeHtml(full)}"
+    >
       <div class="k">${escapeHtml(label)}</div>
       <div class="v">${escapeHtml(full ? truncate(full, 26) : "-")}</div>
     </div>
   `;
 }
-
 function renderDesktopRows(rows){
   return rows.map((r,i) => `
-    <tr>
+    <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? "active-row" : ""} ${editId === r.id ? "editing-row" : ""}">
       <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}></td>
-      <td>${escapeHtml(r.seq || i+1)}</td>
-      <td>${popupField("CARRIER",r.carrier,16)}</td>
-      <td>${popupField("POR",r.por,12)}</td>
-      <td>${popupField("POL",r.pol,12)}</td>
-      <td>${popupField("POD",r.pod,12)}</td>
-      <td>${popupField("FPOD",r.fpod,12)}</td>
-      <td>${popupField("20DV",r.dv20,10)}</td>
-      <td>${popupField("20 TYPE",r.container20Type,10)}</td>
-      <td>${popupField("40HC",r.hc40,10)}</td>
-      <td>${popupField("40 TYPE",r.container40Type,10)}</td>
-      <td>${popupField("F/T",r.ft,8)}</td>
-      <td>${popupField("DATE",fmtDate(r.validity),18)}</td>
-      <td>${popupField("TYPE",displayType(r.type),10)}</td>
-      <td>${popupField("TT",r.tt,10)}</td>
-      <td>${popupField("ROUTING",r.via,16)}</td>
-      <td>${popupField("REMARKS",r.remarks,18)}</td>
+      ${desktopCell(r.id, r.seq || i+1, "seq", "SEQ", r.seq || i+1, 14)}
+      ${desktopCell(r.id, r.seq || i+1, "carrier", "CARRIER", r.carrier, 16)}
+      ${desktopCell(r.id, r.seq || i+1, "por", "POR", r.por, 12)}
+      ${desktopCell(r.id, r.seq || i+1, "pol", "POL", r.pol, 12)}
+      ${desktopCell(r.id, r.seq || i+1, "pod", "POD", r.pod, 12)}
+      ${desktopCell(r.id, r.seq || i+1, "fpod", "FPOD", r.fpod, 12)}
+      ${desktopCell(r.id, r.seq || i+1, "dv20", "20DV", r.dv20, 10)}
+      ${desktopCell(r.id, r.seq || i+1, "container20Type", "20 TYPE", r.container20Type, 10)}
+      ${desktopCell(r.id, r.seq || i+1, "hc40", "40HC", r.hc40, 10)}
+      ${desktopCell(r.id, r.seq || i+1, "container40Type", "40 TYPE", r.container40Type, 10)}
+      ${desktopCell(r.id, r.seq || i+1, "ft", "F/T", r.ft, 8)}
+      ${desktopCell(r.id, r.seq || i+1, "validity", "DATE", fmtDate(r.validity), 18)}
+      ${desktopCell(r.id, r.seq || i+1, "type", "TYPE", displayType(r.type), 10)}
+      ${desktopCell(r.id, r.seq || i+1, "tt", "TT", r.tt, 10)}
+      ${desktopCell(r.id, r.seq || i+1, "via", "ROUTING", r.via, 16)}
+      ${desktopCell(r.id, r.seq || i+1, "remarks", "REMARKS", r.remarks, 18)}
       <td class="actions">
         <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
@@ -1464,7 +1590,7 @@ function renderDesktopRows(rows){
 }
 function renderMobileRows(rows){
   return rows.map(r => `
-    <div class="mobile-card">
+    <div class="mobile-card ${activeCellState.id === r.id ? "active-row" : ""}" data-rowid="${escapeHtml(r.id)}">
       <div class="mobile-card-head">
         <div>
           <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
@@ -1473,18 +1599,18 @@ function renderMobileRows(rows){
         <label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}> SELECT</label>
       </div>
       <div class="mobile-grid">
-        ${mobileItem("POR",r.por)}
-        ${mobileItem("POL",r.pol)}
-        ${mobileItem("POD",r.pod)}
-        ${mobileItem("FPOD",r.fpod)}
-        ${mobileItem("20DV",`${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
-        ${mobileItem("40HC",`${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
-        ${mobileItem("F/T",r.ft)}
-        ${mobileItem("DATE",fmtDate(r.validity))}
-        ${mobileItem("TYPE",displayType(r.type))}
-        ${mobileItem("TT",r.tt)}
-        ${mobileItem("ROUTING",r.via)}
-        ${mobileItem("REMARKS",r.remarks)}
+        ${mobileItem(r.id, r.seq, "por", "POR", r.por)}
+        ${mobileItem(r.id, r.seq, "pol", "POL", r.pol)}
+        ${mobileItem(r.id, r.seq, "pod", "POD", r.pod)}
+        ${mobileItem(r.id, r.seq, "fpod", "FPOD", r.fpod)}
+        ${mobileItem(r.id, r.seq, "dv20", "20DV", `${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
+        ${mobileItem(r.id, r.seq, "hc40", "40HC", `${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
+        ${mobileItem(r.id, r.seq, "ft", "F/T", r.ft)}
+        ${mobileItem(r.id, r.seq, "validity", "DATE", fmtDate(r.validity))}
+        ${mobileItem(r.id, r.seq, "type", "TYPE", displayType(r.type))}
+        ${mobileItem(r.id, r.seq, "tt", "TT", r.tt)}
+        ${mobileItem(r.id, r.seq, "via", "ROUTING", r.via)}
+        ${mobileItem(r.id, r.seq, "remarks", "REMARKS", r.remarks)}
       </div>
       <div class="mobile-actions">
         <button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
@@ -1504,6 +1630,8 @@ function render(){
     viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES";
   updateSelectedInfo();
   updateSortButtons();
+  updateActiveCellInfo();
+  syncActiveCellClasses();
 }
 
 function clearForm(resetEdit=true){
@@ -1511,6 +1639,7 @@ function clearForm(resetEdit=true){
   $("rateType").value = "V";
   if(resetEdit) editId = null;
   setEditorState("CREATE OR UPDATE RATE");
+  render();
 }
 function editorPayload(existing={}){
   return {
@@ -1601,6 +1730,7 @@ async function deleteRate(id){
     await deleteDoc(doc(db,"rates",id));
     selectedIds.delete(id);
     if(editId === id) clearForm(true);
+    if(activeCellState.id === id) clearActiveCell();
     await load();
   }catch(err){
     alert("DELETE FAILED");
@@ -1619,6 +1749,7 @@ async function bulkDeleteSelected(){
     }
     selectedIds.clear();
     clearForm(true);
+    clearActiveCell();
     await load();
   }catch(err){
     alert("BULK DELETE FAILED");
@@ -1701,10 +1832,7 @@ $("clearUserMarkupBtn").onclick = () => {
   showCopyToast("USER MARKUPS CLEARED");
 };
 
-window.copyRate = async (id) => {
-  const r = data.find(x => x.id === id);
-  if(!r) return;
-
+function buildRateCopyText(r){
   const lines = [];
 
   if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
@@ -1742,9 +1870,26 @@ window.copyRate = async (id) => {
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
-  await copyText(lines.join("\n"));
+  return lines.join("\n");
+}
+
+window.copyRate = async (id) => {
+  const r = data.find(x => x.id === id);
+  if(!r) return;
+  const text = buildRateCopyText(r);
+  await copyText(text);
   showCopyToast("RATE COPIED");
 };
+
+async function copySelectedRates(){
+  let rows = filteredRows().filter(r => selectedIds.has(r.id));
+  if(!rows.length) rows = data.filter(r => selectedIds.has(r.id));
+  if(!rows.length) return alert("SELECT RECORDS FIRST.");
+  const combined = rows.map(buildRateCopyText).filter(Boolean).join("\n\n--------------------\n\n");
+  await copyText(combined);
+  showCopyToast(`${rows.length} RATE(S) COPIED`);
+}
+$("copySelectedRatesBtn").onclick = copySelectedRates;
 
 window.editRate = (id) => {
   const r = data.find(x => x.id === id);
@@ -1766,6 +1911,7 @@ window.editRate = (id) => {
   $("via").value = r.via || "";
   $("remarks").value = r.remarks || "";
   $("rateType").value = r.type === "S" ? "S" : "V";
+  render();
 };
 
 window.delRate = deleteRate;
@@ -1888,18 +2034,18 @@ function renderUpload(){
         <label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}> SELECT</label>
       </div>
       <div class="mobile-grid">
-        ${mobileItem("POR",r.por)}
-        ${mobileItem("POL",r.pol)}
-        ${mobileItem("POD",r.pod)}
-        ${mobileItem("FPOD",r.fpod)}
-        ${mobileItem("20DV",`${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
-        ${mobileItem("40HC",`${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
-        ${mobileItem("F/T",r.ft)}
-        ${mobileItem("DATE",fmtDate(r.validity))}
-        ${mobileItem("TYPE",displayType(r.type))}
-        ${mobileItem("TT",r.tt)}
-        ${mobileItem("ROUTING",r.via)}
-        ${mobileItem("REMARKS",r.remarks)}
+        ${mobileItem(`upload-${i}`, r.seq, "por", "POR", r.por)}
+        ${mobileItem(`upload-${i}`, r.seq, "pol", "POL", r.pol)}
+        ${mobileItem(`upload-${i}`, r.seq, "pod", "POD", r.pod)}
+        ${mobileItem(`upload-${i}`, r.seq, "fpod", "FPOD", r.fpod)}
+        ${mobileItem(`upload-${i}`, r.seq, "dv20", "20DV", `${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
+        ${mobileItem(`upload-${i}`, r.seq, "hc40", "40HC", `${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
+        ${mobileItem(`upload-${i}`, r.seq, "ft", "F/T", r.ft)}
+        ${mobileItem(`upload-${i}`, r.seq, "validity", "DATE", fmtDate(r.validity))}
+        ${mobileItem(`upload-${i}`, r.seq, "type", "TYPE", displayType(r.type))}
+        ${mobileItem(`upload-${i}`, r.seq, "tt", "TT", r.tt)}
+        ${mobileItem(`upload-${i}`, r.seq, "via", "ROUTING", r.via)}
+        ${mobileItem(`upload-${i}`, r.seq, "remarks", "REMARKS", r.remarks)}
       </div>
     </div>
   `).join("");
@@ -2110,6 +2256,13 @@ document.addEventListener("click", e => {
     if(btn.dataset.action === "duplicate") duplicateRate(id);
     if(btn.dataset.action === "edit") window.editRate(id);
     if(btn.dataset.action === "delete") window.delRate(id);
+    return;
+  }
+
+  const reflectTarget = e.target.closest(".reflect-cell, .mobile-item");
+  if(reflectTarget && !e.target.closest("button") && !e.target.closest("input")){
+    setActiveCell(reflectTarget);
+    return;
   }
 });
 
@@ -2119,12 +2272,12 @@ document.addEventListener("change", e => {
     const id = cb.dataset.id;
     if(cb.checked) selectedIds.add(id);
     else selectedIds.delete(id);
-    document.querySelectorAll(`.row-check[data-id="${id}"]`).forEach(el => { if(el !== cb) el.checked = cb.checked; });
+    document.querySelectorAll(`.row-check[data-id="${safeAttr(id)}"]`).forEach(el => { if(el !== cb) el.checked = cb.checked; });
     updateSelectedInfo();
   }
 });
 $("selectAllRows").addEventListener("change", e => {
-  document.querySelectorAll("#tbody .row-check[data-id]").forEach(cb => {
+  document.querySelectorAll(".row-check[data-id]").forEach(cb => {
     cb.checked = e.target.checked;
     if(e.target.checked) selectedIds.add(cb.dataset.id);
     else selectedIds.delete(cb.dataset.id);
@@ -2132,7 +2285,11 @@ $("selectAllRows").addEventListener("change", e => {
   updateSelectedInfo();
 });
 
+$("clearActiveCellBtn").onclick = clearActiveCell;
+
 setEditorState("CREATE OR UPDATE RATE");
+updateActiveCellInfo();
+updateSelectedInfo();
 if(sessionValid()) showApp();
 </script>
 </body>
