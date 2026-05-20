@@ -675,6 +675,72 @@ tr.editing-row td:last-child{
 }
 .applied-markup:last-child{border-bottom:none}
 
+
+.auto-grid,.fx-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:8px;
+  margin-top:8px;
+}
+.fx-result,.auto-result{
+  margin-top:10px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.46);
+  background:rgba(255,255,255,.5);
+  font-size:12px;
+  line-height:1.45;
+}
+.modal-table-wrap{
+  overflow:auto;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.42);
+  background:rgba(255,255,255,.46);
+  margin-top:10px;
+  max-height:48vh;
+}
+.modal-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:auto;
+}
+.modal-table th,.modal-table td{
+  padding:6px;
+  border-bottom:1px solid rgba(148,163,184,.16);
+  text-align:left;
+  white-space:nowrap;
+  overflow:visible;
+  text-overflow:clip;
+}
+.modal-table th{
+  position:sticky;
+  top:0;
+  background:rgba(255,255,255,.88);
+  z-index:2;
+}
+.modal-table input,.modal-table select{
+  min-width:110px;
+}
+.table-mini-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.charge-copy-box{
+  margin-top:10px;
+  padding:10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.46);
+  background:rgba(255,255,255,.45);
+  font-size:12px;
+  line-height:1.45;
+  white-space:pre-wrap;
+}
+.charge-summary-badge{
+  margin-left:auto;
+}
+
 @media (max-width:1180px){
   .layout-grid{grid-template-columns:1fr}
   #editorPanel{position:static;max-height:none}
@@ -938,6 +1004,9 @@ tr.editing-row td:last-child{
             <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
             <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
             <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
+            <button class="ghost" id="autoCalcBtn"><i class="bi bi-calculator"></i> AUTO CALC</button>
+            <button class="ghost" id="exchangeRateBtn"><i class="bi bi-currency-exchange"></i> EXCHANGE RATE</button>
+            <button class="ghost" id="localChargesBtn"><i class="bi bi-receipt"></i> LOCAL CHARGES</button>
           </div>
         </div>
       </div>
@@ -1205,8 +1274,109 @@ tr.editing-row td:last-child{
   </div>
 </div>
 
+
+<div id="autoCalcOverlay" class="overlay hidden">
+  <div class="card narrow">
+    <div class="modal-head">
+      <div class="title" style="text-align:left">AUTO CALCULATION</div>
+      <button class="ghost icon-only" id="closeAutoCalcBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="note">ENTER VALUES WITH + OR SPACE. USE APPLY TO PUSH THE CALCULATED RESULT INTO THE EDITOR.</div>
+    <div class="auto-grid">
+      <div class="field" style="margin:0">
+        <label for="autoCalc20">20DV</label>
+        <input id="autoCalc20" placeholder="e.g. 500+25+75">
+      </div>
+      <div class="field" style="margin:0">
+        <label for="autoCalc40">40HC</label>
+        <input id="autoCalc40" placeholder="e.g. 900+50+120">
+      </div>
+      <div class="field" style="margin:0">
+        <label for="autoCalcFt">F/T</label>
+        <input id="autoCalcFt" placeholder="e.g. 10+4">
+      </div>
+      <div class="field" style="margin:0">
+        <label for="autoCalcTt">TT</label>
+        <input id="autoCalcTt" placeholder="e.g. 7+2">
+      </div>
+    </div>
+    <div class="toolbar" style="margin-top:10px">
+      <button class="primary" id="runAutoCalcBtn" style="flex:1"><i class="bi bi-play-circle"></i> CALCULATE</button>
+      <button class="success" id="applyAutoCalcBtn" style="flex:1"><i class="bi bi-check2-circle"></i> APPLY</button>
+      <button class="ghost" id="clearAutoCalcBtn" style="flex:1"><i class="bi bi-eraser"></i> CLEAR</button>
+    </div>
+    <div class="auto-result" id="autoCalcResult">READY TO CALCULATE.</div>
+  </div>
+</div>
+
+<div id="exchangeOverlay" class="overlay hidden">
+  <div class="card narrow">
+    <div class="modal-head">
+      <div class="title" style="text-align:left">LIVE EXCHANGE RATE</div>
+      <button class="ghost icon-only" id="closeExchangeBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="note">LIVE RATE IS FETCHED ONLINE USING AXIOS CDN.</div>
+    <div class="fx-grid">
+      <div class="field" style="margin:0">
+        <label for="fxBase">FROM</label>
+        <input id="fxBase" value="USD" maxlength="3" placeholder="USD">
+      </div>
+      <div class="field" style="margin:0">
+        <label for="fxTarget">TO</label>
+        <input id="fxTarget" value="INR" maxlength="3" placeholder="INR">
+      </div>
+      <div class="field" style="margin:0">
+        <label for="fxAmount">AMOUNT</label>
+        <input id="fxAmount" type="number" step="0.01" value="1" placeholder="1">
+      </div>
+    </div>
+    <div class="toolbar" style="margin-top:10px">
+      <button class="primary" id="fetchExchangeBtn" style="flex:1"><i class="bi bi-arrow-repeat"></i> GET RATE</button>
+      <button class="ghost" id="swapExchangeBtn" style="flex:1"><i class="bi bi-arrow-left-right"></i> SWAP</button>
+    </div>
+    <div class="fx-result" id="exchangeResult">READY TO FETCH LIVE RATE.</div>
+  </div>
+</div>
+
+<div id="localChargesOverlay" class="overlay hidden">
+  <div class="card">
+    <div class="modal-head">
+      <div class="title" style="text-align:left">LOCAL CHARGES</div>
+      <span class="badge charge-summary-badge" id="localChargesCount">0 RECORDS</span>
+      <button class="ghost icon-only" id="closeLocalChargesBtn"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="note">SAVE CHARGES WITH THE CURRENT RATE. YOU CAN ADD RECORDS, COPY THEM, AND REOPEN THIS TABLE ANYTIME.</div>
+    <div class="toolbar" style="margin-top:10px">
+      <button class="primary" id="addChargeRowBtn"><i class="bi bi-plus-circle"></i> ADD RECORD</button>
+      <button class="success" id="saveLocalChargesBtn"><i class="bi bi-floppy-fill"></i> SAVE CHARGES</button>
+      <button class="ghost" id="copyLocalChargesBtn"><i class="bi bi-clipboard"></i> COPY</button>
+      <button class="ghost" id="clearLocalChargesBtn"><i class="bi bi-eraser"></i> CLEAR</button>
+    </div>
+    <div class="modal-table-wrap">
+      <table class="modal-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>CHARGE</th>
+            <th>CURRENCY</th>
+            <th>20DV</th>
+            <th>40HC</th>
+            <th>BASIS</th>
+            <th>REMARKS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="localChargesBody"></tbody>
+      </table>
+    </div>
+    <div class="charge-copy-box" id="localChargesPreview">NO LOCAL CHARGES SAVED.</div>
+  </div>
+</div>
+
 <div id="globalPopup"></div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -1238,6 +1408,8 @@ let activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
 
 let userMu20 = 0;
 let userMu40 = 0;
+let pendingLocalCharges = [];
+let savedLocalChargesBuffer = [];
 const USER_MU20_KEY = "fr8x_user_mu20";
 const USER_MU40_KEY = "fr8x_user_mu40";
 
@@ -1402,6 +1574,137 @@ function clearActiveCell(){
   activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
   updateActiveCellInfo();
   syncActiveCellClasses();
+}
+
+function chargeBlankRow(){
+  return { name:"", currency:"USD", amount20:"", amount40:"", basis:"PER CONTAINER", remarks:"" };
+}
+function normalizeChargeRows(rows=[]){
+  if(!Array.isArray(rows)) return [];
+  return rows.map(r => ({
+    name: upper(r.name || r.charge || ""),
+    currency: upper(r.currency || "USD") || "USD",
+    amount20: calc(r.amount20 ?? r.dv20 ?? r.amount ?? ""),
+    amount40: calc(r.amount40 ?? r.hc40 ?? r.amount ?? ""),
+    basis: upper(r.basis || "PER CONTAINER"),
+    remarks: upper(r.remarks || "")
+  })).filter(r => r.name || r.amount20 || r.amount40 || r.remarks);
+}
+function collectLocalChargeRows(){
+  return [...document.querySelectorAll('#localChargesBody tr')].map(tr => ({
+    name: upper(tr.querySelector('[data-key="name"]')?.value || ""),
+    currency: upper(tr.querySelector('[data-key="currency"]')?.value || "USD") || "USD",
+    amount20: calc(tr.querySelector('[data-key="amount20"]')?.value || ""),
+    amount40: calc(tr.querySelector('[data-key="amount40"]')?.value || ""),
+    basis: upper(tr.querySelector('[data-key="basis"]')?.value || "PER CONTAINER"),
+    remarks: upper(tr.querySelector('[data-key="remarks"]')?.value || "")
+  })).filter(r => r.name || r.amount20 || r.amount40 || r.remarks);
+}
+function setLocalChargesBadge(){
+  $('localChargesCount').textContent = `${pendingLocalCharges.length} RECORD${pendingLocalCharges.length === 1 ? '' : 'S'}`;
+}
+function buildLocalChargesCopyText(rows=pendingLocalCharges){
+  if(!rows.length) return 'NO LOCAL CHARGES SAVED.';
+  return rows.map((r,i) => [
+    `${i+1}. ${r.name || 'LOCAL CHARGE'}`,
+    `CURRENCY: ${r.currency || 'USD'}`,
+    `20DV: ${r.amount20 || '-'}`,
+    `40HC: ${r.amount40 || '-'}`,
+    `BASIS: ${r.basis || '-'}`,
+    `REMARKS: ${r.remarks || '-'}`
+  ].join(' | ')).join('
+');
+}
+function updateLocalChargesPreview(){
+  $('localChargesPreview').textContent = buildLocalChargesCopyText();
+  setLocalChargesBadge();
+}
+function renderLocalChargesTable(){
+  const rows = pendingLocalCharges.length ? pendingLocalCharges : [chargeBlankRow()];
+  $('localChargesBody').innerHTML = rows.map((r,i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><input data-key="name" value="${escapeHtml(r.name || '')}" placeholder="THC"></td>
+      <td><input data-key="currency" value="${escapeHtml(r.currency || 'USD')}" maxlength="6" placeholder="USD"></td>
+      <td><input data-key="amount20" value="${escapeHtml(r.amount20 || '')}" placeholder="100"></td>
+      <td><input data-key="amount40" value="${escapeHtml(r.amount40 || '')}" placeholder="150"></td>
+      <td><input data-key="basis" value="${escapeHtml(r.basis || 'PER CONTAINER')}" placeholder="PER CONTAINER"></td>
+      <td><input data-key="remarks" value="${escapeHtml(r.remarks || '')}" placeholder="OPTIONAL"></td>
+      <td><div class="table-mini-actions"><button class="danger icon-btn" type="button" data-charge-remove="${i}" title="Delete"><i class="bi bi-trash3"></i></button></div></td>
+    </tr>
+  `).join('');
+  updateLocalChargesPreview();
+}
+function syncPendingLocalChargesFromTable(){
+  pendingLocalCharges = normalizeChargeRows(collectLocalChargeRows());
+  if(!pendingLocalCharges.length && document.querySelectorAll('#localChargesBody tr').length === 1){
+    const only = collectLocalChargeRows();
+    if(only.length) pendingLocalCharges = normalizeChargeRows(only);
+  }
+  updateLocalChargesPreview();
+}
+function openLocalCharges(){
+  renderLocalChargesTable();
+  $('localChargesOverlay').classList.remove('hidden');
+}
+function closeLocalCharges(){
+  $('localChargesOverlay').classList.add('hidden');
+}
+function openAutoCalc(){
+  $('autoCalc20').value = $('dv20').value || '';
+  $('autoCalc40').value = $('hc40').value || '';
+  $('autoCalcFt').value = $('ft').value || '';
+  $('autoCalcTt').value = $('tt').value || '';
+  $('autoCalcResult').textContent = 'READY TO CALCULATE.';
+  $('autoCalcOverlay').classList.remove('hidden');
+}
+function closeAutoCalc(){
+  $('autoCalcOverlay').classList.add('hidden');
+}
+function runAutoCalculation(){
+  const result = {
+    dv20: calc($('autoCalc20').value),
+    hc40: calc($('autoCalc40').value),
+    ft: calc($('autoCalcFt').value),
+    tt: calc($('autoCalcTt').value)
+  };
+  savedLocalChargesBuffer = result;
+  $('autoCalcResult').innerHTML = `20DV: <b>${escapeHtml(result.dv20 || '-')}</b><br>40HC: <b>${escapeHtml(result.hc40 || '-')}</b><br>F/T: <b>${escapeHtml(result.ft || '-')}</b><br>TT: <b>${escapeHtml(result.tt || '-')}</b>`;
+  return result;
+}
+function applyAutoCalculation(){
+  const result = runAutoCalculation();
+  $('dv20').value = result.dv20 || $('dv20').value;
+  $('hc40').value = result.hc40 || $('hc40').value;
+  $('ft').value = result.ft || $('ft').value;
+  $('tt').value = result.tt || $('tt').value;
+  showCopyToast('AUTO CALC APPLIED');
+}
+function openExchangePopup(){
+  $('exchangeResult').textContent = 'READY TO FETCH LIVE RATE.';
+  $('exchangeOverlay').classList.remove('hidden');
+}
+function closeExchangePopup(){
+  $('exchangeOverlay').classList.add('hidden');
+}
+async function fetchLiveExchangeRate(){
+  const base = upper($('fxBase').value || 'USD').slice(0,3);
+  const target = upper($('fxTarget').value || 'INR').slice(0,3);
+  const amount = parseFloat($('fxAmount').value || '1') || 1;
+  $('fxBase').value = base;
+  $('fxTarget').value = target;
+  $('exchangeResult').textContent = 'FETCHING LIVE RATE...';
+  try{
+    const res = await axios.get(`https://open.er-api.com/v6/latest/${encodeURIComponent(base)}`);
+    const rate = res?.data?.rates?.[target];
+    if(!rate) throw new Error('RATE_NOT_FOUND');
+    const converted = amount * Number(rate);
+    const updated = res?.data?.time_last_update_utc || 'LIVE';
+    $('exchangeResult').innerHTML = `${escapeHtml(base)} 1 = ${escapeHtml(String(Number(rate).toFixed(4)))} ${escapeHtml(target)}<br>${escapeHtml(String(amount))} ${escapeHtml(base)} = ${escapeHtml(String(converted.toFixed(2)))} ${escapeHtml(target)}<br>UPDATED: ${escapeHtml(updated)}`;
+  }catch(err){
+    $('exchangeResult').textContent = 'LIVE RATE NOT AVAILABLE RIGHT NOW.';
+    console.error(err);
+  }
 }
 
 async function load(){
@@ -1637,6 +1940,8 @@ function render(){
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = "");
   $("rateType").value = "V";
+  pendingLocalCharges = [];
+  updateLocalChargesPreview();
   if(resetEdit) editId = null;
   setEditorState("CREATE OR UPDATE RATE");
   render();
@@ -1661,7 +1966,7 @@ function editorPayload(existing={}){
     via: upper($("via").value),
     remarks: upper($("remarks").value),
     type: $("rateType").value,
-    localCharges: existing.localCharges || [],
+    localCharges: normalizeChargeRows(pendingLocalCharges.length ? pendingLocalCharges : (existing.localCharges || [])),
     charges20dv: existing.charges20dv || [],
     charges40hc: existing.charges40hc || []
   };
@@ -1870,6 +2175,10 @@ function buildRateCopyText(r){
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
+  const localChargeText = buildLocalChargesCopyText(normalizeChargeRows(r.localCharges || []));
+  if(localChargeText && localChargeText !== "NO LOCAL CHARGES SAVED.") lines.push(`LOCAL CHARGES:
+${localChargeText}`);
+
   return lines.join("\n");
 }
 
@@ -1911,6 +2220,8 @@ window.editRate = (id) => {
   $("via").value = r.via || "";
   $("remarks").value = r.remarks || "";
   $("rateType").value = r.type === "S" ? "S" : "V";
+  pendingLocalCharges = normalizeChargeRows(r.localCharges || []);
+  updateLocalChargesPreview();
   render();
 };
 
@@ -2286,6 +2597,83 @@ $("selectAllRows").addEventListener("change", e => {
 });
 
 $("clearActiveCellBtn").onclick = clearActiveCell;
+
+
+$('autoCalcBtn').onclick = openAutoCalc;
+$('closeAutoCalcBtn').onclick = closeAutoCalc;
+$('runAutoCalcBtn').onclick = runAutoCalculation;
+$('applyAutoCalcBtn').onclick = applyAutoCalculation;
+$('clearAutoCalcBtn').onclick = () => {
+  ['autoCalc20','autoCalc40','autoCalcFt','autoCalcTt'].forEach(id => $(id).value = '');
+  $('autoCalcResult').textContent = 'CLEARED.';
+};
+$('exchangeRateBtn').onclick = openExchangePopup;
+$('closeExchangeBtn').onclick = closeExchangePopup;
+$('fetchExchangeBtn').onclick = fetchLiveExchangeRate;
+$('swapExchangeBtn').onclick = () => {
+  const a = $('fxBase').value;
+  $('fxBase').value = $('fxTarget').value;
+  $('fxTarget').value = a;
+};
+$('localChargesBtn').onclick = openLocalCharges;
+$('closeLocalChargesBtn').onclick = () => {
+  syncPendingLocalChargesFromTable();
+  closeLocalCharges();
+};
+$('addChargeRowBtn').onclick = () => {
+  syncPendingLocalChargesFromTable();
+  pendingLocalCharges.push(chargeBlankRow());
+  renderLocalChargesTable();
+};
+$('clearLocalChargesBtn').onclick = () => {
+  pendingLocalCharges = [];
+  renderLocalChargesTable();
+};
+$('saveLocalChargesBtn').onclick = async () => {
+  syncPendingLocalChargesFromTable();
+  if(editId){
+    showLoader('SAVING CHARGES','UPDATING LOCAL CHARGES');
+    try{
+      await updateDoc(doc(db,'rates',editId), { localCharges: normalizeChargeRows(pendingLocalCharges), updatedAt: new Date().toISOString() });
+      showCopyToast('LOCAL CHARGES SAVED');
+      await load();
+    }catch(err){
+      alert('LOCAL CHARGES SAVE FAILED');
+      console.error(err);
+    }finally{
+      hideLoader();
+    }
+  }else{
+    showCopyToast('LOCAL CHARGES KEPT IN EDITOR');
+  }
+  closeLocalCharges();
+};
+$('copyLocalChargesBtn').onclick = async () => {
+  syncPendingLocalChargesFromTable();
+  await copyText(buildLocalChargesCopyText());
+  showCopyToast('LOCAL CHARGES COPIED');
+};
+$('localChargesBody').addEventListener('input', () => {
+  syncPendingLocalChargesFromTable();
+});
+$('localChargesBody').addEventListener('click', e => {
+  const btn = e.target.closest('[data-charge-remove]');
+  if(!btn) return;
+  syncPendingLocalChargesFromTable();
+  pendingLocalCharges.splice(Number(btn.dataset.chargeRemove), 1);
+  renderLocalChargesTable();
+});
+['autoCalcOverlay','exchangeOverlay','localChargesOverlay'].forEach(id => {
+  $(id).addEventListener('click', e => {
+    if(e.target.id !== id) return;
+    if(id === 'autoCalcOverlay') closeAutoCalc();
+    if(id === 'exchangeOverlay') closeExchangePopup();
+    if(id === 'localChargesOverlay'){
+      syncPendingLocalChargesFromTable();
+      closeLocalCharges();
+    }
+  });
+});
 
 setEditorState("CREATE OR UPDATE RATE");
 updateActiveCellInfo();
