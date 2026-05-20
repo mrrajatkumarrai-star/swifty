@@ -697,183 +697,265 @@ tr.editing-row td:last-child{
   #activeCellInfo{max-width:100%}
 }
 
-/* ===== NEW FEATURES: CALC + FX + LOCAL CHARGES ===== */
+/* ================================================================
+   iOS 26 / Tahoe-style Glass Design + New Features
+   ================================================================ */
 
-/* Draggable popup base */
+/* ---- PIN GATE: remove border, cursor pointer on inputs ---- */
+#pinGate .card.narrow {
+  border: none !important;
+  box-shadow: 0 24px 60px rgba(15,23,42,.16), 0 2px 0 rgba(255,255,255,.7) inset;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+}
+.pin-row { cursor: pointer; }
+.pin-input {
+  cursor: pointer !important;
+  caret-color: #111827;
+  border: none !important;
+  background: rgba(255,255,255,.55) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 2px 8px rgba(15,23,42,.07) !important;
+  border-radius: 14px !important;
+  text-align: center;
+  font-size: 20px;
+  transition: box-shadow .16s, background .16s;
+}
+.pin-input:focus {
+  background: rgba(255,255,255,.9) !important;
+  box-shadow: 0 0 0 2.5px rgba(17,24,39,.18), 0 2px 12px rgba(15,23,42,.08) !important;
+  border: none !important;
+  outline: none !important;
+}
+/* Make entire pin card a click-through pointer target */
+#pinGate .card.narrow * { cursor: pointer; }
+#pinGate .card.narrow input { cursor: text !important; }
+
+/* ---- iOS 26 / Tahoe-style glass buttons + panels ---- */
+.glass-ios {
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 2px 0 rgba(255,255,255,.7) inset,
+              0 12px 32px rgba(15,23,42,.09),
+              0 1px 0 rgba(255,255,255,.6);
+  border-radius: 18px;
+}
+
+/* ---- Draggable popup — Tahoe glass style ---- */
 .draggable-popup {
-  position:fixed;
-  z-index:1100;
-  background:var(--glass);
-  border:1px solid var(--border);
-  backdrop-filter:blur(22px) saturate(155%);
-  -webkit-backdrop-filter:blur(22px) saturate(155%);
-  box-shadow:var(--shadow);
-  border-radius:22px;
-  padding:0;
-  min-width:320px;
-  max-height:92vh;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  top:80px;
-  left:50%;
-  transform:translateX(-50%);
-  user-select:none;
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  max-height: 92vh;
+  overflow: hidden;
+  background: rgba(245,247,252,.72);
+  border: 1px solid rgba(255,255,255,.78);
+  backdrop-filter: blur(36px) saturate(200%) brightness(1.04);
+  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.04);
+  box-shadow: 0 2px 0 rgba(255,255,255,.72) inset,
+              0 24px 56px rgba(15,23,42,.14),
+              0 1px 0 rgba(255,255,255,.6);
+  border-radius: 22px;
+  user-select: none;
+  /* Tahoe spring open animation */
+  transform-origin: top center;
+  transition: opacity .22s cubic-bezier(.4,0,.2,1),
+              transform .28s cubic-bezier(.34,1.52,.64,1);
 }
-.draggable-popup.hidden{display:none!important}
+.draggable-popup.hidden {
+  display: none !important;
+}
+.draggable-popup.tahoe-opening {
+  animation: tahoeOpen .3s cubic-bezier(.34,1.48,.64,1) forwards;
+}
+.draggable-popup.tahoe-closing {
+  animation: tahoeClose .22s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes tahoeOpen {
+  from { opacity:0; transform: scale(.88) translateY(-14px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+@keyframes tahoeClose {
+  from { opacity:1; transform: scale(1) translateY(0); }
+  to   { opacity:0; transform: scale(.88) translateY(-10px); }
+}
+
 .dp-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:10px 12px 8px;
-  cursor:grab;
-  border-bottom:1px solid rgba(148,163,184,.14);
-  flex-shrink:0;
-  background:rgba(255,255,255,.38);
-  border-radius:22px 22px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 14px 9px;
+  cursor: grab;
+  border-bottom: 1px solid rgba(148,163,184,.13);
+  flex-shrink: 0;
+  background: rgba(255,255,255,.35);
+  border-radius: 22px 22px 0 0;
 }
-.dp-header:active{cursor:grabbing}
-.dp-header-title{font-size:13px;letter-spacing:.03em}
-.dp-header-close{cursor:pointer}
+.dp-header:active { cursor: grabbing; }
+.dp-header-title { font-size: 13px; letter-spacing: .03em; }
 .dp-body {
-  overflow-y:auto;
-  padding:10px 12px 14px;
-  flex:1;
+  overflow-y: auto;
+  padding: 10px 12px 14px;
+  flex: 1;
 }
-.dp-body::-webkit-scrollbar{width:5px}
-.dp-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:999px}
+.dp-body::-webkit-scrollbar { width: 5px; }
+.dp-body::-webkit-scrollbar-thumb { background: rgba(148,163,184,.38); border-radius: 999px; }
 
-/* Calc popup */
-#calcPopup { width:min(560px,calc(100vw - 20px)); }
-.calc-result-banner {
-  background:rgba(17,24,39,.06);
-  border:1px solid rgba(148,163,184,.18);
-  border-radius:14px;
-  padding:10px 14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-  flex-shrink:0;
+/* ---- CALC POPUP — blank notepad style ---- */
+#calcPopup { width: min(480px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
+.calc-tape {
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(148,163,184,.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+  min-height: 80px;
+  max-height: 45vh;
+  overflow-y: auto;
+  font-family: 'SF Mono', 'Consolas', 'Fira Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 8px;
 }
-.calc-result-banner .res-label{font-size:11px;color:var(--muted)}
-.calc-result-banner .res-val{font-size:16px;letter-spacing:.02em}
-.calc-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin:8px 0;
+.calc-tape::-webkit-scrollbar { width: 4px; }
+.calc-tape::-webkit-scrollbar-thumb { background: rgba(148,163,184,.3); border-radius: 999px; }
+.tape-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1px 0;
+  border-bottom: 1px solid rgba(148,163,184,.08);
+  gap: 10px;
 }
-.calc-breakdown {
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(255,255,255,.46);
-  border-radius:12px;
-  padding:8px 10px;
-  margin-top:6px;
+.tape-line:last-child { border-bottom: none; }
+.tape-expr { color: var(--muted); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tape-val  { font-size: 13px; white-space: nowrap; }
+.tape-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 12px;
+  background: rgba(17,24,39,.06);
+  border-radius: 10px;
+  margin-bottom: 8px;
 }
-.calc-line {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:4px 0;
-  border-bottom:1px solid rgba(148,163,184,.10);
-  font-size:12px;
+.tape-total .lbl { font-size: 11px; color: var(--muted); }
+.tape-total .val { font-size: 16px; letter-spacing: .02em; }
+.calc-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
-.calc-line:last-child{border-bottom:none}
-.calc-line .lbl{color:var(--muted)}
-.calc-line .val{font-size:12px;}
+.calc-notepad-input {
+  flex: 1;
+  font-family: 'SF Mono','Consolas',monospace;
+  font-size: 13px;
+  border-radius: 11px;
+  border: 1px solid rgba(148,163,184,.2);
+  background: rgba(255,255,255,.8);
+  padding: 7px 10px;
+  min-height: 34px;
+}
+.calc-notepad-input:focus {
+  border-color: rgba(17,24,39,.3);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.5), 0 0 0 5px rgba(148,163,184,.1);
+}
 
-/* FX popup */
-#fxPopup { width:min(600px,calc(100vw - 20px)); }
+/* ---- FX Popup ---- */
+#fxPopup { width: min(600px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
 .fx-rate-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:7px;
-  margin-top:8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 7px;
+  margin-top: 8px;
 }
 .fx-rate-pill {
-  background:rgba(255,255,255,.6);
-  border:1px solid rgba(255,255,255,.46);
-  border-radius:11px;
-  padding:7px 9px;
-  text-align:center;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 12px;
+  padding: 7px 9px;
+  text-align: center;
+  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset;
 }
-.fx-rate-pill .cur{font-size:11px;color:var(--muted);margin-bottom:1px}
-.fx-rate-pill .rate{font-size:13px;}
+.fx-rate-pill .cur  { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+.fx-rate-pill .rate { font-size: 13px; }
 
-/* LC popup - wide */
-#lcPopup { width:min(980px,calc(100vw - 20px)); }
-
-/* LC by-rate table */
-.lc-rate-section {
-  border:1px solid rgba(148,163,184,.14);
-  border-radius:14px;
-  margin-bottom:10px;
-  overflow:hidden;
+/* ---- LOCAL CHARGES RECORD ---- */
+#lcPopup { width: min(1000px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
+.lc-seq-section {
+  border: 1px solid rgba(148,163,184,.14);
+  border-radius: 14px;
+  margin-bottom: 9px;
+  overflow: hidden;
 }
-.lc-rate-section-head {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:7px 10px;
-  background:rgba(255,255,255,.52);
-  border-bottom:1px solid rgba(148,163,184,.12);
-  flex-wrap:wrap;
+.lc-seq-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 11px;
+  background: rgba(255,255,255,.50);
+  border-bottom: 1px solid rgba(148,163,184,.11);
+  flex-wrap: wrap;
 }
-.lc-rate-section-title{font-size:12px;letter-spacing:.02em}
-.lc-rate-uid{font-size:11px;color:var(--muted);font-family:monospace}
-.lc-rate-actions{display:flex;gap:5px;align-items:center}
-
-.lc-rate-table{width:100%;border-collapse:collapse;font-size:12px}
-.lc-rate-table th{
-  background:rgba(248,250,252,.8);
-  padding:4px 8px;
-  text-align:left;
-  border-bottom:1px solid rgba(148,163,184,.14);
-  font-size:11px;
-  color:var(--muted);
-  position:sticky;top:0;
+.lc-seq-title { font-size: 12px; letter-spacing: .02em; }
+.lc-seq-sub   { font-size: 11px; color: var(--muted); }
+.lc-seq-actions { display: flex; gap: 5px; align-items: center; }
+.lc-seq-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.lc-seq-table th {
+  background: rgba(248,250,252,.8);
+  padding: 4px 8px; text-align: left;
+  border-bottom: 1px solid rgba(148,163,184,.12);
+  font-size: 11px; color: var(--muted);
 }
-.lc-rate-table td{
-  padding:4px 8px;
-  border-bottom:1px solid rgba(148,163,184,.07);
+.lc-seq-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(148,163,184,.07);
 }
-.lc-rate-table tr:last-child td{border-bottom:none}
-.lc-rate-table tbody tr:hover{background:rgba(255,255,255,.4)}
-
+.lc-seq-table tbody tr:last-child td { border-bottom: none; }
+.lc-seq-table tbody tr:hover { background: rgba(255,255,255,.42); }
 .lc-add-form {
-  background:rgba(255,255,255,.44);
-  border:1px solid rgba(148,163,184,.14);
-  border-radius:14px;
-  padding:10px;
-  margin-bottom:10px;
+  background: rgba(255,255,255,.44);
+  border: 1px solid rgba(148,163,184,.13);
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
-.lc-form-row {
-  display:grid;
-  grid-template-columns:1.8fr 1fr 70px 80px 1fr auto;
-  gap:6px;
-  align-items:end;
+.lc-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 70px 80px 1fr auto;
+  gap: 6px;
+  align-items: end;
 }
-.lc-form-row .field{margin:0}
-.lc-form-row input,.lc-form-row select{min-height:30px}
+.lc-form-grid .field { margin: 0; }
+.lc-records-wrap { max-height: 52vh; overflow-y: auto; }
+.lc-records-wrap::-webkit-scrollbar { width: 5px; }
+.lc-records-wrap::-webkit-scrollbar-thumb { background: rgba(148,163,184,.36); border-radius: 999px; }
 
-.lc-records-wrap {
-  max-height:50vh;
-  overflow-y:auto;
+/* iOS-style header buttons */
+.ios-btn {
+  background: rgba(255,255,255,.62);
+  border: 1px solid rgba(255,255,255,.74);
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(255,255,255,.72) inset, 0 4px 12px rgba(15,23,42,.07);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: .16s ease;
 }
-.lc-records-wrap::-webkit-scrollbar{width:5px}
-.lc-records-wrap::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:999px}
-
-/* Calc LC profile select inside calc */
-#calcLcProfile{min-height:30px}
+.ios-btn:hover {
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 6px 16px rgba(15,23,42,.10);
+  transform: translateY(-1px);
+}
 
 @media(max-width:640px){
-  .calc-grid{grid-template-columns:1fr}
-  .lc-form-row{grid-template-columns:1fr 1fr;gap:5px}
-  #lcPopup{width:calc(100vw - 16px)}
+  .lc-form-grid { grid-template-columns: 1fr 1fr; }
+  #lcPopup { width: calc(100vw - 14px); }
 }
 
 </style>
@@ -892,7 +974,7 @@ tr.editing-row td:last-child{
   <div class="card narrow">
     <div class="title">FR8X ACCESS</div>
     <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
-    <div class="pin-row">
+    <div class="pin-row" onclick="this.querySelector('input:not(:placeholder-shown) ~ input, input:first-child').focus()">
       <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
@@ -981,9 +1063,9 @@ tr.editing-row td:last-child{
     <div class="header-right">
       <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
       <span class="badge" id="activeCount">0 ACTIVE</span>
-      <button class="ghost icon-only" id="openCalcBtn" title="AUTO CALCULATE"><i class="bi bi-calculator-fill"></i></button>
-      <button class="ghost icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
-      <button class="ghost icon-only" id="openLcBtn" title="LOCAL CHARGES"><i class="bi bi-list-check"></i></button>
+      <button class="ghost ios-btn icon-only" id="openCalcBtn" title="AUTO CALCULATION"><i class="bi bi-calculator-fill"></i></button>
+      <button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
+      <button class="ghost ios-btn icon-only" id="openLcBtn" title="LOCAL CHARGES RECORD"><i class="bi bi-receipt"></i></button>
       <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
     </div>
   </div>
@@ -1111,13 +1193,13 @@ tr.editing-row td:last-child{
             </select>
           </div>
 
+          <div class="field span12" style="margin-bottom:0">
+            <button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px" title="LOCAL CHARGES RECORD FOR THIS RATE"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</button>
+          </div>
+
           <div class="field span12">
             <label for="remarks">REMARKS</label>
             <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
-          </div>
-
-          <div class="field span12" style="margin-bottom:0">
-            <button class="ghost" id="openLcEditorBtn" style="width:100%" title="MANAGE LOCAL CHARGES FOR THIS RATE"><i class="bi bi-list-check"></i> LOCAL CHARGES</button>
           </div>
 
           <div class="editor-actions span12">
@@ -2481,28 +2563,45 @@ if(sessionValid()) showApp();
 
 
 // ================================================================
-//  NEW FEATURES: AUTO CALC | EXCHANGE RATE | LOCAL CHARGES BY RATE
+//  V3 FEATURES: CALC TAPE | FX RATES | LOCAL CHARGES RECORD BY SEQ
 // ================================================================
+
+// ---- TAHOE ANIMATION OPEN/CLOSE ----
+function tahoeOpen(el) {
+  el.classList.remove('hidden', 'tahoe-closing');
+  void el.offsetWidth; // reflow
+  el.classList.add('tahoe-opening');
+  el.addEventListener('animationend', () => el.classList.remove('tahoe-opening'), { once: true });
+}
+function tahoeClose(el) {
+  el.classList.add('tahoe-closing');
+  el.addEventListener('animationend', () => {
+    el.classList.remove('tahoe-closing');
+    el.classList.add('hidden');
+  }, { once: true });
+}
 
 // ---- DRAG HELPER ----
 function makeDraggable(popup, handle) {
-  let ox=0, oy=0, dragging=false;
-  handle.addEventListener('mousedown', e => {
-    if(e.button !== 0) return;
-    dragging = true;
-    // Snap to fixed position first time
-    if(popup.style.left === '' || popup.style.transform.includes('translateX')) {
+  let ox = 0, oy = 0, dragging = false;
+  function snapToFixed() {
+    if (!popup.style.left || popup.style.transform.includes('translateX')) {
       const r = popup.getBoundingClientRect();
       popup.style.left = r.left + 'px';
       popup.style.top  = r.top  + 'px';
       popup.style.transform = 'none';
     }
+  }
+  handle.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    snapToFixed();
+    dragging = true;
     ox = e.clientX - popup.getBoundingClientRect().left;
     oy = e.clientY - popup.getBoundingClientRect().top;
     document.body.style.userSelect = 'none';
   });
   document.addEventListener('mousemove', e => {
-    if(!dragging) return;
+    if (!dragging) return;
     let nx = e.clientX - ox;
     let ny = e.clientY - oy;
     nx = Math.max(0, Math.min(nx, window.innerWidth  - popup.offsetWidth));
@@ -2510,189 +2609,97 @@ function makeDraggable(popup, handle) {
     popup.style.left = nx + 'px';
     popup.style.top  = ny + 'px';
   });
-  document.addEventListener('mouseup', () => { dragging=false; document.body.style.userSelect=''; });
+  document.addEventListener('mouseup', () => { dragging = false; document.body.style.userSelect = ''; });
 }
 makeDraggable($('calcPopup'), $('calcPopupHeader'));
 makeDraggable($('fxPopup'),   $('fxPopupHeader'));
 makeDraggable($('lcPopup'),   $('lcPopupHeader'));
 
 // ---- SMART NUMBER PARSER ----
-// Handles: 1,925 | 1925 | 1925.00 | 1000 925 | 1000+925 | (500) | 500x2
 function parseSmartNumber(raw) {
-  if(!raw && raw !== 0) return 0;
+  if (!raw && raw !== 0) return 0;
   let s = String(raw).trim();
-  // Remove commas (thousand separators): 1,925 -> 1925
-  s = s.replace(/,/g, '');
-  // Parentheses mean addition: (500) -> 500
-  s = s.replace(/\(([^)]+)\)/g, '+$1');
-  // x means multiply: 500x2 -> 500*2
-  s = s.replace(/x/gi, '*');
-  // Spaces between numbers = addition: "1000 925" -> "1000+925"
-  s = s.replace(/(\d)\s+(\d)/g, '$1+$2');
-  // Remove leading +
+  s = s.replace(/,/g, '');                          // 1,925 -> 1925
+  s = s.replace(/\(([^)]+)\)/g, '+$1');             // (500) -> +500
+  s = s.replace(/[xX×]/g, '*');                     // x/× -> *
+  s = s.replace(/(\d)\s+(\d)/g, '$1+$2');           // "1000 925" -> "1000+925"
   s = s.replace(/^\+/, '');
-  // Only allow digits, +, -, *, /, ., (, )
   s = s.replace(/[^0-9+\-*/.()]/g, '');
-  if(!s) return 0;
-  try { const v = Function('"use strict"; return (' + s + ')')(); return isNaN(v) ? 0 : Number(v); }
-  catch(e) { return parseFloat(s) || 0; }
+  if (!s) return 0;
+  try {
+    const v = Function('"use strict"; return (' + s + ')')();
+    return isNaN(v) ? 0 : +v;
+  } catch(e) { return parseFloat(s) || 0; }
 }
 
-// ---- LOCAL CHARGES STORAGE ----
-const LC_KEY = 'fr8x_lc_v2';
-// Structure: { [rateId]: { rateSeq, rateLabel, lines: [{id, desc, type, currency, amount, appliesTo}] } }
-let lcStore = {};
+// ================================================================
+//  CALC TAPE — NOTEPAD STYLE
+// ================================================================
+let calcTapeLines = [];   // [{expr, val}]
+let calcRunningTotal = 0;
 
-function lcLoad() {
-  try { lcStore = JSON.parse(localStorage.getItem(LC_KEY) || '{}'); } catch(e) { lcStore = {}; }
-  lcRenderAll();
-  lcUpdateCalcSelect();
-  lcPopulateRateSelect();
-}
-function lcSave() {
-  localStorage.setItem(LC_KEY, JSON.stringify(lcStore));
-}
-
-function lcRateLabel(r) {
-  const parts = [r.seq, r.carrier, r.pol||r.por, '→', r.pod||r.fpod].filter(Boolean);
-  return parts.join(' ');
-}
-
-// Populate "attach to rate" dropdown from main data
-function lcPopulateRateSelect() {
-  const sel = $('lcRateSelect');
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">-- SELECT RATE --</option>' +
-    data.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(lcRateLabel(r))}</option>`).join('');
-  if(prev) sel.value = prev;
-}
-
-// Add charge line to a rate
-$('addLcLineBtn').onclick = () => {
-  const rateId = $('lcRateSelect').value;
-  if(!rateId) return alert('SELECT A RATE FIRST.');
-  const desc    = $('lcDesc').value.trim().toUpperCase();
-  const type    = $('lcType').value;
-  const currency= $('lcCur').value;
-  const amount  = parseFloat($('lcAmount').value || '0') || 0;
-  const app     = $('lcAppliesTo').value;
-  if(!desc || !amount) return alert('ENTER DESCRIPTION AND AMOUNT.');
-
-  if(!lcStore[rateId]) {
-    const r = data.find(x => x.id === rateId);
-    lcStore[rateId] = { rateSeq: r ? (r.seq||'') : '', rateLabel: r ? lcRateLabel(r) : rateId, lines: [] };
-  }
-  const lineId = 'lc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  lcStore[rateId].lines.push({ id: lineId, desc, type, currency, amount, appliesTo: app });
-  lcSave();
-  lcRenderAll();
-  lcUpdateCalcSelect();
-  $('lcDesc').value = ''; $('lcAmount').value = '';
-  showCopyToast('CHARGE ADDED');
-};
-
-window.lcDeleteLine = function(rateId, lineId) {
-  if(!lcStore[rateId]) return;
-  lcStore[rateId].lines = lcStore[rateId].lines.filter(l => l.id !== lineId);
-  if(!lcStore[rateId].lines.length) delete lcStore[rateId];
-  lcSave(); lcRenderAll(); lcUpdateCalcSelect();
-};
-
-window.lcDeleteRate = function(rateId) {
-  if(!confirm('DELETE ALL LOCAL CHARGES FOR THIS RATE?')) return;
-  delete lcStore[rateId];
-  lcSave(); lcRenderAll(); lcUpdateCalcSelect();
-};
-
-window.lcCopyRate = function(rateId) {
-  const entry = lcStore[rateId];
-  if(!entry) return;
-  const r = data.find(x => x.id === rateId);
-  // Use unique rateId as identifier in copy
-  let lines = [`LOCAL CHARGES — ${entry.rateLabel}`, `RATE ID: ${rateId}`];
-  entry.lines.forEach(l => {
-    lines.push(`${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo.toUpperCase()})`);
-  });
-  copyText(lines.join('\n'));
-  showCopyToast('LOCAL CHARGES COPIED');
-};
-
-function lcRenderAll() {
-  const wrap = $('lcRecordsWrap');
-  const keys = Object.keys(lcStore);
-  if(!keys.length) {
-    wrap.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px">NO LOCAL CHARGES SAVED YET.</div>';
+function calcTapeRender() {
+  const tape = $('calcTape');
+  if (!calcTapeLines.length) {
+    tape.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:10px 0">TYPE A VALUE BELOW AND PRESS ENTER OR +</div>';
+    $('calcTotalVal').textContent = '0';
+    calcRunningTotal = 0;
     return;
   }
-  wrap.innerHTML = keys.map(rateId => {
-    const entry = lcStore[rateId];
-    const r = data.find(x => x.id === rateId);
-    const lbl = r ? lcRateLabel(r) : entry.rateLabel;
-    return `
-    <div class="lc-rate-section">
-      <div class="lc-rate-section-head">
-        <div>
-          <div class="lc-rate-section-title">${escapeHtml(lbl)}</div>
-          <div class="lc-rate-uid">ID: ${escapeHtml(rateId)}</div>
-        </div>
-        <div class="lc-rate-actions">
-          <button class="ghost" onclick="lcCopyRate('${escapeHtml(rateId)}')" title="Copy all charges">
-            <i class="bi bi-clipboard"></i> COPY
-          </button>
-          <button class="icon-btn danger" onclick="lcDeleteRate('${escapeHtml(rateId)}')" title="Delete all">
-            <i class="bi bi-x-square"></i>
-          </button>
-        </div>
-      </div>
-      <table class="lc-rate-table">
-        <thead>
-          <tr>
-            <th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${entry.lines.map(l => `
-            <tr>
-              <td>${escapeHtml(l.desc)}</td>
-              <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
-              <td>${escapeHtml(l.currency)}</td>
-              <td>${escapeHtml(String(l.amount))}</td>
-              <td>${escapeHtml(l.appliesTo === 'both' ? 'BOTH' : l.appliesTo.toUpperCase())}</td>
-              <td>
-                <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(rateId)}','${escapeHtml(l.id)}')" title="Delete">
-                  <i class="bi bi-x"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>`;
-  }).join('');
+  calcRunningTotal = calcTapeLines.reduce((s, l) => s + l.val, 0);
+  tape.innerHTML = calcTapeLines.map((l, i) =>
+    `<div class="tape-line">
+      <span class="tape-expr">${escapeHtml(l.expr)}</span>
+      <span class="tape-val">${l.val.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+    </div>`
+  ).join('');
+  $('calcTotalVal').textContent = calcRunningTotal.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  tape.scrollTop = tape.scrollHeight;
 }
 
-function lcUpdateCalcSelect() {
-  const sel = $('calcLcProfile');
-  const prev = sel.value;
-  const keys = Object.keys(lcStore);
-  sel.innerHTML = '<option value="">-- NONE --</option>' +
-    keys.map(rid => {
-      const e = lcStore[rid];
-      const r = data.find(x => x.id === rid);
-      const lbl = r ? lcRateLabel(r) : e.rateLabel;
-      return `<option value="${escapeHtml(rid)}">${escapeHtml(lbl)}</option>`;
-    }).join('');
-  if(prev) sel.value = prev;
+function calcTapeAdd() {
+  const inp = $('calcNotepadInput');
+  const raw = inp.value.trim();
+  if (!raw) return;
+  const val = parseSmartNumber(raw);
+  calcTapeLines.push({ expr: raw, val });
+  inp.value = '';
+  calcTapeRender();
+  inp.focus();
 }
 
-// Open/close LC popup
-$('openLcBtn').onclick = () => {
-  lcLoad();
-  $('lcPopup').classList.remove('hidden');
+$('calcAddBtn').onclick = calcTapeAdd;
+$('calcNotepadInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === '+') { e.preventDefault(); calcTapeAdd(); }
+  if (e.key === 'Backspace' && $('calcNotepadInput').value === '') { calcTapeUndo(); }
+});
+$('calcUndoBtn').onclick    = calcTapeUndo;
+$('calcClearTapeBtn').onclick = () => { calcTapeLines = []; calcTapeRender(); };
+
+function calcTapeUndo() {
+  if (!calcTapeLines.length) return;
+  calcTapeLines.pop();
+  calcTapeRender();
+}
+
+$('copyCalcBtn').onclick = () => {
+  if (!calcTapeLines.length) { showCopyToast('TAPE IS EMPTY'); return; }
+  const lines = calcTapeLines.map(l => `${l.expr}  =  ${l.val.toFixed(2)}`);
+  lines.push(`------`);
+  lines.push(`TOTAL  =  ${calcRunningTotal.toFixed(2)}`);
+  copyText(lines.join('\n'));
+  showCopyToast('TAPE COPIED');
 };
-$('closeLcBtn').onclick = () => $('lcPopup').classList.add('hidden');
 
-// ---- EXCHANGE RATE ----
+$('openCalcBtn').onclick = () => {
+  tahoeOpen($('calcPopup'));
+  $('calcNotepadInput').focus();
+};
+$('closeCalcBtn').onclick = () => tahoeClose($('calcPopup'));
+
+// ================================================================
+//  EXCHANGE RATES
+// ================================================================
 let fxRates = {};
 const FX_CURRENCIES = ['INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD','BDT','PKR','LKR','THB','MYR'];
 
@@ -2702,7 +2709,7 @@ async function fetchFxRates() {
   try {
     const res  = await fetch('https://open.er-api.com/v6/latest/USD');
     const json = await res.json();
-    if(json.result === 'success') {
+    if (json.result === 'success') {
       fxRates = json.rates || {};
       renderFxRates();
       $('fxTimestamp').textContent = 'UPDATED: ' + new Date().toLocaleTimeString();
@@ -2717,224 +2724,230 @@ async function fetchFxRates() {
 }
 
 function renderFxRates() {
-  $('fxRateGrid').innerHTML = ['USD',...FX_CURRENCIES].map(cur => {
+  $('fxRateGrid').innerHTML = ['USD', ...FX_CURRENCIES].map(cur => {
     const rate = cur === 'USD' ? 1 : (fxRates[cur] || '-');
-    return `<div class="fx-rate-pill" title="1 USD = ${rate} ${cur}">
+    return `<div class="fx-rate-pill">
       <div class="cur">${escapeHtml(cur)}</div>
-      <div class="rate">${cur==='USD'?'1.0000':(typeof rate==='number'?rate.toFixed(4):rate)}</div>
+      <div class="rate">${cur === 'USD' ? '1.0000' : (typeof rate === 'number' ? rate.toFixed(4) : rate)}</div>
     </div>`;
   }).join('');
 }
+
 $('refreshFxBtn').onclick = fetchFxRates;
 $('openFxBtn').onclick = () => {
-  $('fxPopup').classList.remove('hidden');
-  if(!Object.keys(fxRates).length) fetchFxRates();
+  tahoeOpen($('fxPopup'));
+  if (!Object.keys(fxRates).length) fetchFxRates();
 };
-$('closeFxBtn').onclick = () => $('fxPopup').classList.add('hidden');
+$('closeFxBtn').onclick = () => tahoeClose($('fxPopup'));
 
-// ---- AUTO CALC ----
-// Real-time: recalculate on any input change
-function calcGetInputs() {
-  const baseRaw  = $('calcBaseRate').value;
-  const base     = parseSmartNumber(baseRaw);
-  const qty      = Math.max(1, parseFloat($('calcQty').value||'1')||1);
-  const mkPct    = parseFloat($('calcMarkupPct').value||'0')||0;
-  const exRate   = parseFloat($('calcExRate').value||'1')||1;
-  const currency = $('calcCurrency').value;
-  const contType = $('calcContType').value;
-  const lcRateId = $('calcLcProfile').value;
-  return { base, qty, mkPct, exRate, currency, contType, lcRateId };
+// ================================================================
+//  LOCAL CHARGES RECORD — SEQ-BASED
+// ================================================================
+const LC_KEY = 'fr8x_lc_v3';
+// Structure: { [seq]: { seq, carrier, route, lines:[{id,desc,type,currency,amount,appliesTo}] } }
+let lcStore = {};
+
+function lcLoad() {
+  try { lcStore = JSON.parse(localStorage.getItem(LC_KEY) || '{}'); } catch(e) { lcStore = {}; }
+  lcPopulateSeqDatalist();
+  lcRenderAll();
+}
+function lcSave() {
+  localStorage.setItem(LC_KEY, JSON.stringify(lcStore));
 }
 
-function calcRun() {
-  const { base, qty, mkPct, exRate, currency, contType, lcRateId } = calcGetInputs();
-  if(!base) {
-    $('calcGrandTotal').textContent = '—';
-    $('calcBreakdown').innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:6px 0">FILL RATE ABOVE TO SEE BREAKDOWN</div>';
-    window._lastCalcResult = null;
+// Populate datalist from existing store + live data
+function lcPopulateSeqDatalist() {
+  const dl = $('lcSeqDatalist');
+  const fromData = data.map(r => r.seq).filter(Boolean);
+  const fromStore = Object.keys(lcStore);
+  const all = [...new Set([...fromData, ...fromStore])].sort();
+  dl.innerHTML = all.map(s => `<option value="${escapeHtml(s)}">`).join('');
+}
+
+// Auto-fill carrier when SEQ is typed/selected
+$('lcSeqInput').addEventListener('change', lcAutoFillCarrier);
+$('lcSeqInput').addEventListener('blur',   lcAutoFillCarrier);
+function lcAutoFillCarrier() {
+  const seq = $('lcSeqInput').value.trim().toUpperCase();
+  if (!seq) return;
+  // Check live rates first
+  const r = data.find(x => (x.seq||'').toUpperCase() === seq);
+  if (r) {
+    const parts = [r.carrier, r.pol || r.por, '→', r.pod || r.fpod].filter(Boolean);
+    $('lcCarrierInput').value = parts.join(' ');
+  } else if (lcStore[seq]) {
+    $('lcCarrierInput').value = lcStore[seq].carrier || '';
+  }
+}
+
+$('addLcLineBtn').onclick = () => {
+  const seq      = $('lcSeqInput').value.trim().toUpperCase();
+  const carrier  = $('lcCarrierInput').value.trim().toUpperCase() || seq;
+  const desc     = $('lcDesc').value.trim().toUpperCase();
+  const type     = $('lcType').value;
+  const currency = $('lcCur').value;
+  const amount   = parseFloat($('lcAmount').value || '0') || 0;
+  const app      = $('lcAppliesTo').value;
+  if (!seq)    return alert('ENTER A SEQ NUMBER.');
+  if (!desc)   return alert('ENTER DESCRIPTION.');
+  if (!amount) return alert('ENTER AMOUNT > 0.');
+
+  if (!lcStore[seq]) {
+    lcStore[seq] = { seq, carrier, lines: [] };
+  } else {
+    // Update carrier label if given
+    if (carrier) lcStore[seq].carrier = carrier;
+  }
+  const lineId = 'lc' + Date.now() + Math.random().toString(36).slice(2,6);
+  lcStore[seq].lines.push({ id: lineId, desc, type, currency, amount, appliesTo: app });
+  lcSave();
+  lcLoad();
+  $('lcDesc').value = ''; $('lcAmount').value = '';
+  showCopyToast('CHARGE ADDED TO SEQ ' + seq);
+};
+
+window.lcDeleteLine = function(seq, lineId) {
+  if (!lcStore[seq]) return;
+  lcStore[seq].lines = lcStore[seq].lines.filter(l => l.id !== lineId);
+  if (!lcStore[seq].lines.length) delete lcStore[seq];
+  lcSave(); lcLoad();
+};
+window.lcDeleteSeq = function(seq) {
+  if (!confirm('DELETE ALL CHARGES FOR SEQ ' + seq + '?')) return;
+  delete lcStore[seq];
+  lcSave(); lcLoad();
+};
+window.lcCopySeq = function(seq) {
+  const entry = lcStore[seq];
+  if (!entry) return;
+  let lines = [`LOCAL CHARGES — SEQ: ${seq}`, `CARRIER/ROUTE: ${entry.carrier || '—'}`, `UID: ${seq}`];
+  entry.lines.forEach(l =>
+    lines.push(`${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo.toUpperCase()})`)
+  );
+  copyText(lines.join('\n'));
+  showCopyToast('CHARGES FOR SEQ ' + seq + ' COPIED');
+};
+
+function lcRenderAll() {
+  const wrap = $('lcRecordsWrap');
+  const seqs = Object.keys(lcStore).sort();
+  if (!seqs.length) {
+    wrap.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:10px">NO LOCAL CHARGES RECORDS YET.</div>';
     return;
   }
-  const mkAmt   = base * mkPct / 100;
-  const rateAMk = base + mkAmt;
-  const ofTotal = rateAMk * qty;
-
-  let lcTotal = 0, lcDetails = [];
-  if(lcRateId && lcStore[lcRateId]) {
-    lcStore[lcRateId].lines.filter(l => l.appliesTo==='both'||l.appliesTo===contType).forEach(l => {
-      let usd = l.amount;
-      if(l.currency !== 'USD' && fxRates[l.currency]) usd = l.amount / fxRates[l.currency];
-      const tot = l.type==='per_bl' ? usd : usd*qty;
-      lcTotal += tot;
-      lcDetails.push({ desc:l.desc, type:l.type, currency:l.currency, amount:l.amount, totalUsd:tot });
-    });
-  }
-
-  const grand   = ofTotal + lcTotal;
-  const grandLC = grand * exRate;
-  const fmtUSD  = v => `USD ${v.toFixed(2)}`;
-  const fmtDisp = v => currency==='USD' ? fmtUSD(v) : `${currency} ${(v*exRate).toFixed(2)}`;
-
-  let html = '';
-  html += `<div class="calc-line"><span class="lbl">BASE O/F RATE</span><span class="val">${fmtUSD(base)}</span></div>`;
-  if(mkPct) html += `<div class="calc-line"><span class="lbl">MARKUP (${mkPct}%)</span><span class="val">${fmtUSD(mkAmt)}</span></div>`;
-  html += `<div class="calc-line"><span class="lbl">RATE AFTER MARKUP</span><span class="val">${fmtUSD(rateAMk)}</span></div>`;
-  html += `<div class="calc-line"><span class="lbl">× ${qty} UNIT(S) — ${contType.toUpperCase()}</span><span class="val">${fmtUSD(ofTotal)}</span></div>`;
-  if(lcDetails.length) {
-    html += `<div class="calc-line" style="padding-top:6px"><span class="lbl" style="color:#059669">LOCAL CHARGES</span></div>`;
-    lcDetails.forEach(l => {
-      html += `<div class="calc-line"><span class="lbl">${escapeHtml(l.desc)} <span style="opacity:.65">(${l.currency}${l.amount})</span></span><span class="val">${fmtUSD(l.totalUsd)}</span></div>`;
-    });
-    html += `<div class="calc-line"><span class="lbl">TOTAL LOCAL</span><span class="val">${fmtUSD(lcTotal)}</span></div>`;
-  }
-  $('calcBreakdown').innerHTML = html;
-
-  const display = currency==='USD' ? fmtUSD(grand) : `${currency} ${grandLC.toFixed(2)}  (${fmtUSD(grand)})`;
-  $('calcGrandTotal').textContent = display;
-  window._lastCalcResult = { base, qty, mkPct, mkAmt, rateAMk, ofTotal, lcTotal, grand, currency, exRate, contType, lcDetails, display };
+  wrap.innerHTML = seqs.map(seq => {
+    const entry = lcStore[seq];
+    return `
+    <div class="lc-seq-section">
+      <div class="lc-seq-head">
+        <div>
+          <div class="lc-seq-title">SEQ: ${escapeHtml(seq)}</div>
+          <div class="lc-seq-sub">${escapeHtml(entry.carrier || '—')}</div>
+        </div>
+        <div class="lc-seq-actions">
+          <button class="ghost ios-btn" style="font-size:11px;min-height:28px;padding:0 8px" onclick="lcCopySeq('${escapeHtml(seq)}')">
+            <i class="bi bi-clipboard"></i> COPY
+          </button>
+          <button class="icon-btn danger" onclick="lcDeleteSeq('${escapeHtml(seq)}')"><i class="bi bi-x-square"></i></button>
+        </div>
+      </div>
+      <table class="lc-seq-table">
+        <thead>
+          <tr><th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th></tr>
+        </thead>
+        <tbody>
+          ${entry.lines.map(l => `
+            <tr>
+              <td>${escapeHtml(l.desc)}</td>
+              <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
+              <td>${escapeHtml(l.currency)}</td>
+              <td>${escapeHtml(String(l.amount))}</td>
+              <td>${escapeHtml(l.appliesTo === 'both' ? 'BOTH' : l.appliesTo.toUpperCase())}</td>
+              <td>
+                <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(seq)}','${escapeHtml(l.id)}')" title="Remove">
+                  <i class="bi bi-x"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }).join('');
 }
 
-// Watch all calc inputs
-['calcBaseRate','calcQty','calcMarkupPct','calcExRate','calcContType','calcCurrency','calcLcProfile']
-  .forEach(id => {
-    const el = $(id);
-    if(!el) return;
-    el.addEventListener('input',  calcRun);
-    el.addEventListener('change', calcRun);
-  });
+// Button wiring
+$('openLcBtn').onclick = () => { lcLoad(); tahoeOpen($('lcPopup')); };
+$('closeLcBtn').onclick = () => tahoeClose($('lcPopup'));
 
-// Copy calc result
-$('copyCalcBtn').onclick = () => {
-  const r = window._lastCalcResult;
-  if(!r) { showCopyToast('RUN CALCULATION FIRST'); return; }
-  const lines = [
-    'AUTO CALC RESULT',
-    `CONTAINER: ${r.qty}x ${r.contType.toUpperCase()}`,
-    `BASE O/F: USD ${r.base.toFixed(2)}`,
-  ];
-  if(r.mkPct) lines.push(`MARKUP (${r.mkPct}%): USD ${r.mkAmt.toFixed(2)}`);
-  lines.push(`RATE AFTER MARKUP: USD ${r.rateAMk.toFixed(2)}`);
-  lines.push(`O/F SUBTOTAL: USD ${r.ofTotal.toFixed(2)}`);
-  if(r.lcDetails && r.lcDetails.length) {
-    lines.push('LOCAL CHARGES:');
-    r.lcDetails.forEach(l => lines.push(`  ${l.desc}: USD ${l.totalUsd.toFixed(2)}`));
-    lines.push(`LOCAL TOTAL: USD ${r.lcTotal.toFixed(2)}`);
-  }
-  lines.push(`GRAND TOTAL: ${r.display}`);
-  copyText(lines.join('\n'));
-  showCopyToast('CALC RESULT COPIED');
-};
-
-// Open calc popup — pre-fill from editor
-$('openCalcBtn').onclick = () => {
-  lcLoad();
-  const base20 = parseFloat($('dv20').value || '') || 0;
-  const base40 = parseFloat($('hc40').value || '') || 0;
-  if(base20) { $('calcBaseRate').value = String(base20); $('calcContType').value = '20dv'; }
-  else if(base40) { $('calcBaseRate').value = String(base40); $('calcContType').value = '40hc'; }
-  const cur = $('calcCurrency').value;
-  if(cur !== 'USD' && fxRates[cur]) $('calcExRate').value = fxRates[cur].toFixed(4);
-  $('calcPopup').classList.remove('hidden');
-  calcRun();
-};
-$('closeCalcBtn').onclick = () => $('calcPopup').classList.add('hidden');
-
-// Sync exchange rate when display currency changes
-$('calcCurrency').addEventListener('change', () => {
-  const cur = $('calcCurrency').value;
-  if(cur==='USD') { $('calcExRate').value = '1'; }
-  else if(fxRates[cur]) { $('calcExRate').value = fxRates[cur].toFixed(4); }
-  calcRun();
-});
-
-// Initial LC load
-lcLoad();
-
-
-// Wire the in-editor local charges button
+// Local Charges button inside editor — pre-fill SEQ from active rate
 const _lcEditorBtn = document.getElementById('openLcEditorBtn');
-if(_lcEditorBtn) {
+if (_lcEditorBtn) {
   _lcEditorBtn.onclick = () => {
     lcLoad();
-    // Pre-select the currently editing rate
-    if(editId) { setTimeout(()=>{ $('lcRateSelect').value = editId; }, 50); }
-    $('lcPopup').classList.remove('hidden');
+    // Try to prefill from current editor SEQ
+    const currentSeq = (document.getElementById('carrier') && editId)
+      ? (data.find(r => r.id === editId) || {}).seq || ''
+      : '';
+    if (currentSeq) {
+      $('lcSeqInput').value = currentSeq;
+      lcAutoFillCarrier();
+    }
+    tahoeOpen($('lcPopup'));
   };
 }
 
+// Initial load
+lcLoad();
+
 </script>
 
-<!-- ======= AUTO CALC POPUP (Draggable) ======= -->
+<!-- ============================================================
+     AUTO CALCULATION — Notepad Style (Draggable)
+     ============================================================ -->
 <div id="calcPopup" class="draggable-popup hidden">
   <div class="dp-header" id="calcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i> AUTO CALCULATION</div>
-    <button class="ghost icon-only dp-header-close" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
+    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; AUTO CALCULATION</div>
+    <button class="ghost icon-only dp-header-close" id="closeCalcBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
   </div>
-  <!-- Result banner always on top -->
-  <div class="calc-result-banner" id="calcResultBanner">
-    <div>
-      <div class="res-label">GRAND TOTAL</div>
-      <div class="res-val" id="calcGrandTotal">—</div>
+  <div class="dp-body" style="padding-top:8px">
+    <!-- TOTAL BANNER always on top -->
+    <div class="tape-total" id="calcTapeTotal">
+      <span class="lbl">TOTAL</span>
+      <span class="val" id="calcTotalVal">0</span>
     </div>
-    <button class="ghost" id="copyCalcBtn" style="flex-shrink:0"><i class="bi bi-clipboard"></i> COPY</button>
-  </div>
-  <div class="dp-body">
-    <div class="note" style="margin-bottom:6px">RATES AUTO-FILL FROM EDITOR. RESULT UPDATES IN REAL-TIME.</div>
-    <div class="calc-grid">
-      <div class="field">
-        <label>CONTAINER TYPE</label>
-        <select id="calcContType">
-          <option value="20dv">20DV</option>
-          <option value="40hc">40HC</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>NO. OF CONTAINERS</label>
-        <input id="calcQty" type="number" value="1" min="1">
-      </div>
-      <div class="field">
-        <label>BASE O/F RATE (USD)</label>
-        <input id="calcBaseRate" type="text" placeholder="e.g. 1,925 or 1925 or 1000+925">
-      </div>
-      <div class="field">
-        <label>MARKUP (%)</label>
-        <input id="calcMarkupPct" type="number" placeholder="0" value="0">
-      </div>
-      <div class="field">
-        <label>DISPLAY CURRENCY</label>
-        <select id="calcCurrency">
-          <option value="USD">USD</option>
-          <option value="INR">INR</option>
-          <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
-          <option value="AED">AED</option>
-          <option value="CNY">CNY</option>
-          <option value="SGD">SGD</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>EXCHANGE RATE (1 USD =)</label>
-        <input id="calcExRate" type="number" placeholder="1" value="1">
-      </div>
+    <!-- TAPE — running list of entries -->
+    <div class="calc-tape" id="calcTape">
+      <div style="color:var(--muted);font-size:12px;text-align:center;padding:10px 0">TYPE A VALUE BELOW AND PRESS ENTER OR +</div>
     </div>
-    <div class="field" style="margin-bottom:8px">
-      <label>LOCAL CHARGES PROFILE</label>
-      <select id="calcLcProfile"><option value="">-- NONE --</option></select>
+    <!-- INPUT ROW -->
+    <div class="calc-input-row">
+      <input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g.  1,925  or  500+200  or  (300)x2" autocomplete="off" spellcheck="false">
+      <button class="primary" id="calcAddBtn" style="min-width:64px"><i class="bi bi-plus-lg"></i> ADD</button>
+      <button class="ghost" id="calcUndoBtn" title="Undo last"><i class="bi bi-arrow-counterclockwise"></i></button>
+      <button class="ghost" id="calcClearTapeBtn" title="Clear tape"><i class="bi bi-trash3"></i></button>
     </div>
-    <div class="calc-breakdown" id="calcBreakdown">
-      <div style="color:var(--muted);font-size:12px;text-align:center;padding:6px 0">FILL RATE ABOVE TO SEE BREAKDOWN</div>
+    <div style="display:flex;gap:6px;margin-top:6px">
+      <button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY RESULT</button>
+    </div>
+    <div class="note" style="margin-top:6px">
+      ACCEPTS: <b>1,925</b> &nbsp;|&nbsp; <b>1925.00</b> &nbsp;|&nbsp; <b>500+200</b> &nbsp;|&nbsp; <b>1000 925</b> &nbsp;|&nbsp; <b>(300)</b> &nbsp;|&nbsp; <b>500x2</b> &nbsp;|&nbsp; spaces treated as +
     </div>
   </div>
 </div>
 
-<!-- ======= EXCHANGE RATE POPUP (Draggable) ======= -->
+<!-- ============================================================
+     LIVE EXCHANGE RATES (Draggable)
+     ============================================================ -->
 <div id="fxPopup" class="draggable-popup hidden">
   <div class="dp-header" id="fxPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-currency-exchange"></i> LIVE EXCHANGE RATES</div>
-    <button class="ghost icon-only dp-header-close" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
+    <div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div>
+    <button class="ghost icon-only dp-header-close" id="closeFxBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="dp-body">
-    <div class="toolbar" style="margin-bottom:6px">
-      <button class="primary" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+    <div class="toolbar" style="margin-bottom:8px">
+      <button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
       <span class="badge" id="fxTimestamp">NOT LOADED</span>
       <span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span>
     </div>
@@ -2945,26 +2958,35 @@ if(_lcEditorBtn) {
   </div>
 </div>
 
-<!-- ======= LOCAL CHARGES POPUP (Draggable) ======= -->
+<!-- ============================================================
+     LOCAL CHARGES RECORD — SEQ-BASED (Draggable)
+     ============================================================ -->
 <div id="lcPopup" class="draggable-popup hidden">
   <div class="dp-header" id="lcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-list-check"></i> LOCAL CHARGES MANAGER</div>
-    <button class="ghost icon-only dp-header-close" id="closeLcBtn"><i class="bi bi-x-lg"></i></button>
+    <div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div>
+    <button class="ghost icon-only dp-header-close" id="closeLcBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="dp-body">
-    <div class="note" style="margin-bottom:8px">CHARGES ARE GROUPED BY RATE (SEQ/CARRIER). COPY USES UNIQUE ID. CLOSE BUTTON IS THE ONLY WAY TO CLOSE.</div>
+    <div class="note" style="margin-bottom:8px">CHARGES ARE LINKED TO RATES BY SEQ. SELECT EXISTING SEQ OR TYPE A NEW ONE.</div>
 
-    <!-- ADD NEW LINE FORM -->
+    <!-- ADD CHARGE FORM -->
     <div class="lc-add-form">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">ADD CHARGE — SELECT RATE FIRST</div>
-      <div class="field" style="margin-bottom:6px">
-        <label>ATTACH TO RATE (SEQ)</label>
-        <select id="lcRateSelect"><option value="">-- SELECT RATE --</option></select>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em">ADD / LINK CHARGE TO SEQ</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+        <div class="field" style="margin:0">
+          <label>SEQ (EXISTING OR NEW)</label>
+          <input id="lcSeqInput" list="lcSeqDatalist" placeholder="e.g. FR001 or new-001" autocomplete="off">
+          <datalist id="lcSeqDatalist"></datalist>
+        </div>
+        <div class="field" style="margin:0">
+          <label>CARRIER / LABEL</label>
+          <input id="lcCarrierInput" placeholder="Auto-fills from rate or enter manually" autocomplete="off">
+        </div>
       </div>
-      <div class="lc-form-row">
+      <div class="lc-form-grid">
         <div class="field">
           <label>DESCRIPTION</label>
-          <input id="lcDesc" placeholder="e.g. THC, BL FEE">
+          <input id="lcDesc" placeholder="e.g. THC, BL FEE, DO FEE">
         </div>
         <div class="field">
           <label>TYPE</label>
@@ -3006,10 +3028,10 @@ if(_lcEditorBtn) {
       </div>
     </div>
 
-    <!-- CHARGES BY RATE -->
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">SAVED CHARGES BY RATE</div>
+    <!-- RECORDS BY SEQ -->
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em">RECORDS BY SEQ</div>
     <div class="lc-records-wrap" id="lcRecordsWrap">
-      <div style="color:var(--muted);font-size:12px;padding:8px">NO LOCAL CHARGES SAVED YET.</div>
+      <div style="color:var(--muted);font-size:12px;padding:10px">NO LOCAL CHARGES RECORDS YET.</div>
     </div>
   </div>
 </div>
