@@ -675,72 +675,6 @@ tr.editing-row td:last-child{
 }
 .applied-markup:last-child{border-bottom:none}
 
-
-.auto-grid,.fx-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:8px;
-  margin-top:8px;
-}
-.fx-result,.auto-result{
-  margin-top:10px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.46);
-  background:rgba(255,255,255,.5);
-  font-size:12px;
-  line-height:1.45;
-}
-.modal-table-wrap{
-  overflow:auto;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.42);
-  background:rgba(255,255,255,.46);
-  margin-top:10px;
-  max-height:48vh;
-}
-.modal-table{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0;
-  table-layout:auto;
-}
-.modal-table th,.modal-table td{
-  padding:6px;
-  border-bottom:1px solid rgba(148,163,184,.16);
-  text-align:left;
-  white-space:nowrap;
-  overflow:visible;
-  text-overflow:clip;
-}
-.modal-table th{
-  position:sticky;
-  top:0;
-  background:rgba(255,255,255,.88);
-  z-index:2;
-}
-.modal-table input,.modal-table select{
-  min-width:110px;
-}
-.table-mini-actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-.charge-copy-box{
-  margin-top:10px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.46);
-  background:rgba(255,255,255,.45);
-  font-size:12px;
-  line-height:1.45;
-  white-space:pre-wrap;
-}
-.charge-summary-badge{
-  margin-left:auto;
-}
-
 @media (max-width:1180px){
   .layout-grid{grid-template-columns:1fr}
   #editorPanel{position:static;max-height:none}
@@ -762,6 +696,186 @@ tr.editing-row td:last-child{
   .bulk-bar{align-items:flex-start}
   #activeCellInfo{max-width:100%}
 }
+
+/* ===== NEW FEATURES: CALC + FX + LOCAL CHARGES ===== */
+
+/* Draggable popup base */
+.draggable-popup {
+  position:fixed;
+  z-index:1100;
+  background:var(--glass);
+  border:1px solid var(--border);
+  backdrop-filter:blur(22px) saturate(155%);
+  -webkit-backdrop-filter:blur(22px) saturate(155%);
+  box-shadow:var(--shadow);
+  border-radius:22px;
+  padding:0;
+  min-width:320px;
+  max-height:92vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  top:80px;
+  left:50%;
+  transform:translateX(-50%);
+  user-select:none;
+}
+.draggable-popup.hidden{display:none!important}
+.dp-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px 12px 8px;
+  cursor:grab;
+  border-bottom:1px solid rgba(148,163,184,.14);
+  flex-shrink:0;
+  background:rgba(255,255,255,.38);
+  border-radius:22px 22px 0 0;
+}
+.dp-header:active{cursor:grabbing}
+.dp-header-title{font-size:13px;letter-spacing:.03em}
+.dp-header-close{cursor:pointer}
+.dp-body {
+  overflow-y:auto;
+  padding:10px 12px 14px;
+  flex:1;
+}
+.dp-body::-webkit-scrollbar{width:5px}
+.dp-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:999px}
+
+/* Calc popup */
+#calcPopup { width:min(560px,calc(100vw - 20px)); }
+.calc-result-banner {
+  background:rgba(17,24,39,.06);
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:14px;
+  padding:10px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+  flex-shrink:0;
+}
+.calc-result-banner .res-label{font-size:11px;color:var(--muted)}
+.calc-result-banner .res-val{font-size:16px;letter-spacing:.02em}
+.calc-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin:8px 0;
+}
+.calc-breakdown {
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(255,255,255,.46);
+  border-radius:12px;
+  padding:8px 10px;
+  margin-top:6px;
+}
+.calc-line {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:4px 0;
+  border-bottom:1px solid rgba(148,163,184,.10);
+  font-size:12px;
+}
+.calc-line:last-child{border-bottom:none}
+.calc-line .lbl{color:var(--muted)}
+.calc-line .val{font-size:12px;}
+
+/* FX popup */
+#fxPopup { width:min(600px,calc(100vw - 20px)); }
+.fx-rate-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:7px;
+  margin-top:8px;
+}
+.fx-rate-pill {
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.46);
+  border-radius:11px;
+  padding:7px 9px;
+  text-align:center;
+}
+.fx-rate-pill .cur{font-size:11px;color:var(--muted);margin-bottom:1px}
+.fx-rate-pill .rate{font-size:13px;}
+
+/* LC popup - wide */
+#lcPopup { width:min(980px,calc(100vw - 20px)); }
+
+/* LC by-rate table */
+.lc-rate-section {
+  border:1px solid rgba(148,163,184,.14);
+  border-radius:14px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.lc-rate-section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:7px 10px;
+  background:rgba(255,255,255,.52);
+  border-bottom:1px solid rgba(148,163,184,.12);
+  flex-wrap:wrap;
+}
+.lc-rate-section-title{font-size:12px;letter-spacing:.02em}
+.lc-rate-uid{font-size:11px;color:var(--muted);font-family:monospace}
+.lc-rate-actions{display:flex;gap:5px;align-items:center}
+
+.lc-rate-table{width:100%;border-collapse:collapse;font-size:12px}
+.lc-rate-table th{
+  background:rgba(248,250,252,.8);
+  padding:4px 8px;
+  text-align:left;
+  border-bottom:1px solid rgba(148,163,184,.14);
+  font-size:11px;
+  color:var(--muted);
+  position:sticky;top:0;
+}
+.lc-rate-table td{
+  padding:4px 8px;
+  border-bottom:1px solid rgba(148,163,184,.07);
+}
+.lc-rate-table tr:last-child td{border-bottom:none}
+.lc-rate-table tbody tr:hover{background:rgba(255,255,255,.4)}
+
+.lc-add-form {
+  background:rgba(255,255,255,.44);
+  border:1px solid rgba(148,163,184,.14);
+  border-radius:14px;
+  padding:10px;
+  margin-bottom:10px;
+}
+.lc-form-row {
+  display:grid;
+  grid-template-columns:1.8fr 1fr 70px 80px 1fr auto;
+  gap:6px;
+  align-items:end;
+}
+.lc-form-row .field{margin:0}
+.lc-form-row input,.lc-form-row select{min-height:30px}
+
+.lc-records-wrap {
+  max-height:50vh;
+  overflow-y:auto;
+}
+.lc-records-wrap::-webkit-scrollbar{width:5px}
+.lc-records-wrap::-webkit-scrollbar-thumb{background:rgba(148,163,184,.4);border-radius:999px}
+
+/* Calc LC profile select inside calc */
+#calcLcProfile{min-height:30px}
+
+@media(max-width:640px){
+  .calc-grid{grid-template-columns:1fr}
+  .lc-form-row{grid-template-columns:1fr 1fr;gap:5px}
+  #lcPopup{width:calc(100vw - 16px)}
+}
+
 </style>
 </head>
 <body>
@@ -867,6 +981,9 @@ tr.editing-row td:last-child{
     <div class="header-right">
       <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
       <span class="badge" id="activeCount">0 ACTIVE</span>
+      <button class="ghost icon-only" id="openCalcBtn" title="AUTO CALCULATE"><i class="bi bi-calculator-fill"></i></button>
+      <button class="ghost icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
+      <button class="ghost icon-only" id="openLcBtn" title="LOCAL CHARGES"><i class="bi bi-list-check"></i></button>
       <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
     </div>
   </div>
@@ -999,14 +1116,15 @@ tr.editing-row td:last-child{
             <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
           </div>
 
+          <div class="field span12" style="margin-bottom:0">
+            <button class="ghost" id="openLcEditorBtn" style="width:100%" title="MANAGE LOCAL CHARGES FOR THIS RATE"><i class="bi bi-list-check"></i> LOCAL CHARGES</button>
+          </div>
+
           <div class="editor-actions span12">
             <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
             <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
             <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
             <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
-            <button class="ghost" id="autoCalcBtn"><i class="bi bi-calculator"></i> AUTO CALC</button>
-            <button class="ghost" id="exchangeRateBtn"><i class="bi bi-currency-exchange"></i> EXCHANGE RATE</button>
-            <button class="ghost" id="localChargesBtn"><i class="bi bi-receipt"></i> LOCAL CHARGES</button>
           </div>
         </div>
       </div>
@@ -1274,109 +1392,8 @@ tr.editing-row td:last-child{
   </div>
 </div>
 
-
-<div id="autoCalcOverlay" class="overlay hidden">
-  <div class="card narrow">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">AUTO CALCULATION</div>
-      <button class="ghost icon-only" id="closeAutoCalcBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="note">ENTER VALUES WITH + OR SPACE. USE APPLY TO PUSH THE CALCULATED RESULT INTO THE EDITOR.</div>
-    <div class="auto-grid">
-      <div class="field" style="margin:0">
-        <label for="autoCalc20">20DV</label>
-        <input id="autoCalc20" placeholder="e.g. 500+25+75">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="autoCalc40">40HC</label>
-        <input id="autoCalc40" placeholder="e.g. 900+50+120">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="autoCalcFt">F/T</label>
-        <input id="autoCalcFt" placeholder="e.g. 10+4">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="autoCalcTt">TT</label>
-        <input id="autoCalcTt" placeholder="e.g. 7+2">
-      </div>
-    </div>
-    <div class="toolbar" style="margin-top:10px">
-      <button class="primary" id="runAutoCalcBtn" style="flex:1"><i class="bi bi-play-circle"></i> CALCULATE</button>
-      <button class="success" id="applyAutoCalcBtn" style="flex:1"><i class="bi bi-check2-circle"></i> APPLY</button>
-      <button class="ghost" id="clearAutoCalcBtn" style="flex:1"><i class="bi bi-eraser"></i> CLEAR</button>
-    </div>
-    <div class="auto-result" id="autoCalcResult">READY TO CALCULATE.</div>
-  </div>
-</div>
-
-<div id="exchangeOverlay" class="overlay hidden">
-  <div class="card narrow">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">LIVE EXCHANGE RATE</div>
-      <button class="ghost icon-only" id="closeExchangeBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="note">LIVE RATE IS FETCHED ONLINE USING AXIOS CDN.</div>
-    <div class="fx-grid">
-      <div class="field" style="margin:0">
-        <label for="fxBase">FROM</label>
-        <input id="fxBase" value="USD" maxlength="3" placeholder="USD">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="fxTarget">TO</label>
-        <input id="fxTarget" value="INR" maxlength="3" placeholder="INR">
-      </div>
-      <div class="field" style="margin:0">
-        <label for="fxAmount">AMOUNT</label>
-        <input id="fxAmount" type="number" step="0.01" value="1" placeholder="1">
-      </div>
-    </div>
-    <div class="toolbar" style="margin-top:10px">
-      <button class="primary" id="fetchExchangeBtn" style="flex:1"><i class="bi bi-arrow-repeat"></i> GET RATE</button>
-      <button class="ghost" id="swapExchangeBtn" style="flex:1"><i class="bi bi-arrow-left-right"></i> SWAP</button>
-    </div>
-    <div class="fx-result" id="exchangeResult">READY TO FETCH LIVE RATE.</div>
-  </div>
-</div>
-
-<div id="localChargesOverlay" class="overlay hidden">
-  <div class="card">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">LOCAL CHARGES</div>
-      <span class="badge charge-summary-badge" id="localChargesCount">0 RECORDS</span>
-      <button class="ghost icon-only" id="closeLocalChargesBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="note">SAVE CHARGES WITH THE CURRENT RATE. YOU CAN ADD RECORDS, COPY THEM, AND REOPEN THIS TABLE ANYTIME.</div>
-    <div class="toolbar" style="margin-top:10px">
-      <button class="primary" id="addChargeRowBtn"><i class="bi bi-plus-circle"></i> ADD RECORD</button>
-      <button class="success" id="saveLocalChargesBtn"><i class="bi bi-floppy-fill"></i> SAVE CHARGES</button>
-      <button class="ghost" id="copyLocalChargesBtn"><i class="bi bi-clipboard"></i> COPY</button>
-      <button class="ghost" id="clearLocalChargesBtn"><i class="bi bi-eraser"></i> CLEAR</button>
-    </div>
-    <div class="modal-table-wrap">
-      <table class="modal-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>CHARGE</th>
-            <th>CURRENCY</th>
-            <th>20DV</th>
-            <th>40HC</th>
-            <th>BASIS</th>
-            <th>REMARKS</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody id="localChargesBody"></tbody>
-      </table>
-    </div>
-    <div class="charge-copy-box" id="localChargesPreview">NO LOCAL CHARGES SAVED.</div>
-  </div>
-</div>
-
 <div id="globalPopup"></div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -1408,8 +1425,6 @@ let activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
 
 let userMu20 = 0;
 let userMu40 = 0;
-let pendingLocalCharges = [];
-let savedLocalChargesBuffer = [];
 const USER_MU20_KEY = "fr8x_user_mu20";
 const USER_MU40_KEY = "fr8x_user_mu40";
 
@@ -1574,137 +1589,6 @@ function clearActiveCell(){
   activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
   updateActiveCellInfo();
   syncActiveCellClasses();
-}
-
-function chargeBlankRow(){
-  return { name:"", currency:"USD", amount20:"", amount40:"", basis:"PER CONTAINER", remarks:"" };
-}
-function normalizeChargeRows(rows=[]){
-  if(!Array.isArray(rows)) return [];
-  return rows.map(r => ({
-    name: upper(r.name || r.charge || ""),
-    currency: upper(r.currency || "USD") || "USD",
-    amount20: calc(r.amount20 ?? r.dv20 ?? r.amount ?? ""),
-    amount40: calc(r.amount40 ?? r.hc40 ?? r.amount ?? ""),
-    basis: upper(r.basis || "PER CONTAINER"),
-    remarks: upper(r.remarks || "")
-  })).filter(r => r.name || r.amount20 || r.amount40 || r.remarks);
-}
-function collectLocalChargeRows(){
-  return [...document.querySelectorAll('#localChargesBody tr')].map(tr => ({
-    name: upper(tr.querySelector('[data-key="name"]')?.value || ""),
-    currency: upper(tr.querySelector('[data-key="currency"]')?.value || "USD") || "USD",
-    amount20: calc(tr.querySelector('[data-key="amount20"]')?.value || ""),
-    amount40: calc(tr.querySelector('[data-key="amount40"]')?.value || ""),
-    basis: upper(tr.querySelector('[data-key="basis"]')?.value || "PER CONTAINER"),
-    remarks: upper(tr.querySelector('[data-key="remarks"]')?.value || "")
-  })).filter(r => r.name || r.amount20 || r.amount40 || r.remarks);
-}
-function setLocalChargesBadge(){
-  $('localChargesCount').textContent = `${pendingLocalCharges.length} RECORD${pendingLocalCharges.length === 1 ? '' : 'S'}`;
-}
-function buildLocalChargesCopyText(rows=pendingLocalCharges){
-  if(!rows.length) return 'NO LOCAL CHARGES SAVED.';
-  return rows.map((r,i) => [
-    `${i+1}. ${r.name || 'LOCAL CHARGE'}`,
-    `CURRENCY: ${r.currency || 'USD'}`,
-    `20DV: ${r.amount20 || '-'}`,
-    `40HC: ${r.amount40 || '-'}`,
-    `BASIS: ${r.basis || '-'}`,
-    `REMARKS: ${r.remarks || '-'}`
-  ].join(' | ')).join('
-');
-}
-function updateLocalChargesPreview(){
-  $('localChargesPreview').textContent = buildLocalChargesCopyText();
-  setLocalChargesBadge();
-}
-function renderLocalChargesTable(){
-  const rows = pendingLocalCharges.length ? pendingLocalCharges : [chargeBlankRow()];
-  $('localChargesBody').innerHTML = rows.map((r,i) => `
-    <tr>
-      <td>${i+1}</td>
-      <td><input data-key="name" value="${escapeHtml(r.name || '')}" placeholder="THC"></td>
-      <td><input data-key="currency" value="${escapeHtml(r.currency || 'USD')}" maxlength="6" placeholder="USD"></td>
-      <td><input data-key="amount20" value="${escapeHtml(r.amount20 || '')}" placeholder="100"></td>
-      <td><input data-key="amount40" value="${escapeHtml(r.amount40 || '')}" placeholder="150"></td>
-      <td><input data-key="basis" value="${escapeHtml(r.basis || 'PER CONTAINER')}" placeholder="PER CONTAINER"></td>
-      <td><input data-key="remarks" value="${escapeHtml(r.remarks || '')}" placeholder="OPTIONAL"></td>
-      <td><div class="table-mini-actions"><button class="danger icon-btn" type="button" data-charge-remove="${i}" title="Delete"><i class="bi bi-trash3"></i></button></div></td>
-    </tr>
-  `).join('');
-  updateLocalChargesPreview();
-}
-function syncPendingLocalChargesFromTable(){
-  pendingLocalCharges = normalizeChargeRows(collectLocalChargeRows());
-  if(!pendingLocalCharges.length && document.querySelectorAll('#localChargesBody tr').length === 1){
-    const only = collectLocalChargeRows();
-    if(only.length) pendingLocalCharges = normalizeChargeRows(only);
-  }
-  updateLocalChargesPreview();
-}
-function openLocalCharges(){
-  renderLocalChargesTable();
-  $('localChargesOverlay').classList.remove('hidden');
-}
-function closeLocalCharges(){
-  $('localChargesOverlay').classList.add('hidden');
-}
-function openAutoCalc(){
-  $('autoCalc20').value = $('dv20').value || '';
-  $('autoCalc40').value = $('hc40').value || '';
-  $('autoCalcFt').value = $('ft').value || '';
-  $('autoCalcTt').value = $('tt').value || '';
-  $('autoCalcResult').textContent = 'READY TO CALCULATE.';
-  $('autoCalcOverlay').classList.remove('hidden');
-}
-function closeAutoCalc(){
-  $('autoCalcOverlay').classList.add('hidden');
-}
-function runAutoCalculation(){
-  const result = {
-    dv20: calc($('autoCalc20').value),
-    hc40: calc($('autoCalc40').value),
-    ft: calc($('autoCalcFt').value),
-    tt: calc($('autoCalcTt').value)
-  };
-  savedLocalChargesBuffer = result;
-  $('autoCalcResult').innerHTML = `20DV: <b>${escapeHtml(result.dv20 || '-')}</b><br>40HC: <b>${escapeHtml(result.hc40 || '-')}</b><br>F/T: <b>${escapeHtml(result.ft || '-')}</b><br>TT: <b>${escapeHtml(result.tt || '-')}</b>`;
-  return result;
-}
-function applyAutoCalculation(){
-  const result = runAutoCalculation();
-  $('dv20').value = result.dv20 || $('dv20').value;
-  $('hc40').value = result.hc40 || $('hc40').value;
-  $('ft').value = result.ft || $('ft').value;
-  $('tt').value = result.tt || $('tt').value;
-  showCopyToast('AUTO CALC APPLIED');
-}
-function openExchangePopup(){
-  $('exchangeResult').textContent = 'READY TO FETCH LIVE RATE.';
-  $('exchangeOverlay').classList.remove('hidden');
-}
-function closeExchangePopup(){
-  $('exchangeOverlay').classList.add('hidden');
-}
-async function fetchLiveExchangeRate(){
-  const base = upper($('fxBase').value || 'USD').slice(0,3);
-  const target = upper($('fxTarget').value || 'INR').slice(0,3);
-  const amount = parseFloat($('fxAmount').value || '1') || 1;
-  $('fxBase').value = base;
-  $('fxTarget').value = target;
-  $('exchangeResult').textContent = 'FETCHING LIVE RATE...';
-  try{
-    const res = await axios.get(`https://open.er-api.com/v6/latest/${encodeURIComponent(base)}`);
-    const rate = res?.data?.rates?.[target];
-    if(!rate) throw new Error('RATE_NOT_FOUND');
-    const converted = amount * Number(rate);
-    const updated = res?.data?.time_last_update_utc || 'LIVE';
-    $('exchangeResult').innerHTML = `${escapeHtml(base)} 1 = ${escapeHtml(String(Number(rate).toFixed(4)))} ${escapeHtml(target)}<br>${escapeHtml(String(amount))} ${escapeHtml(base)} = ${escapeHtml(String(converted.toFixed(2)))} ${escapeHtml(target)}<br>UPDATED: ${escapeHtml(updated)}`;
-  }catch(err){
-    $('exchangeResult').textContent = 'LIVE RATE NOT AVAILABLE RIGHT NOW.';
-    console.error(err);
-  }
 }
 
 async function load(){
@@ -1940,8 +1824,6 @@ function render(){
 function clearForm(resetEdit=true){
   ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = "");
   $("rateType").value = "V";
-  pendingLocalCharges = [];
-  updateLocalChargesPreview();
   if(resetEdit) editId = null;
   setEditorState("CREATE OR UPDATE RATE");
   render();
@@ -1966,7 +1848,7 @@ function editorPayload(existing={}){
     via: upper($("via").value),
     remarks: upper($("remarks").value),
     type: $("rateType").value,
-    localCharges: normalizeChargeRows(pendingLocalCharges.length ? pendingLocalCharges : (existing.localCharges || [])),
+    localCharges: existing.localCharges || [],
     charges20dv: existing.charges20dv || [],
     charges40hc: existing.charges40hc || []
   };
@@ -2175,10 +2057,6 @@ function buildRateCopyText(r){
   if(r.via) lines.push(`ROUTING: ${r.via}`);
   if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
 
-  const localChargeText = buildLocalChargesCopyText(normalizeChargeRows(r.localCharges || []));
-  if(localChargeText && localChargeText !== "NO LOCAL CHARGES SAVED.") lines.push(`LOCAL CHARGES:
-${localChargeText}`);
-
   return lines.join("\n");
 }
 
@@ -2220,8 +2098,6 @@ window.editRate = (id) => {
   $("via").value = r.via || "";
   $("remarks").value = r.remarks || "";
   $("rateType").value = r.type === "S" ? "S" : "V";
-  pendingLocalCharges = normalizeChargeRows(r.localCharges || []);
-  updateLocalChargesPreview();
   render();
 };
 
@@ -2598,87 +2474,545 @@ $("selectAllRows").addEventListener("change", e => {
 
 $("clearActiveCellBtn").onclick = clearActiveCell;
 
-
-$('autoCalcBtn').onclick = openAutoCalc;
-$('closeAutoCalcBtn').onclick = closeAutoCalc;
-$('runAutoCalcBtn').onclick = runAutoCalculation;
-$('applyAutoCalcBtn').onclick = applyAutoCalculation;
-$('clearAutoCalcBtn').onclick = () => {
-  ['autoCalc20','autoCalc40','autoCalcFt','autoCalcTt'].forEach(id => $(id).value = '');
-  $('autoCalcResult').textContent = 'CLEARED.';
-};
-$('exchangeRateBtn').onclick = openExchangePopup;
-$('closeExchangeBtn').onclick = closeExchangePopup;
-$('fetchExchangeBtn').onclick = fetchLiveExchangeRate;
-$('swapExchangeBtn').onclick = () => {
-  const a = $('fxBase').value;
-  $('fxBase').value = $('fxTarget').value;
-  $('fxTarget').value = a;
-};
-$('localChargesBtn').onclick = openLocalCharges;
-$('closeLocalChargesBtn').onclick = () => {
-  syncPendingLocalChargesFromTable();
-  closeLocalCharges();
-};
-$('addChargeRowBtn').onclick = () => {
-  syncPendingLocalChargesFromTable();
-  pendingLocalCharges.push(chargeBlankRow());
-  renderLocalChargesTable();
-};
-$('clearLocalChargesBtn').onclick = () => {
-  pendingLocalCharges = [];
-  renderLocalChargesTable();
-};
-$('saveLocalChargesBtn').onclick = async () => {
-  syncPendingLocalChargesFromTable();
-  if(editId){
-    showLoader('SAVING CHARGES','UPDATING LOCAL CHARGES');
-    try{
-      await updateDoc(doc(db,'rates',editId), { localCharges: normalizeChargeRows(pendingLocalCharges), updatedAt: new Date().toISOString() });
-      showCopyToast('LOCAL CHARGES SAVED');
-      await load();
-    }catch(err){
-      alert('LOCAL CHARGES SAVE FAILED');
-      console.error(err);
-    }finally{
-      hideLoader();
-    }
-  }else{
-    showCopyToast('LOCAL CHARGES KEPT IN EDITOR');
-  }
-  closeLocalCharges();
-};
-$('copyLocalChargesBtn').onclick = async () => {
-  syncPendingLocalChargesFromTable();
-  await copyText(buildLocalChargesCopyText());
-  showCopyToast('LOCAL CHARGES COPIED');
-};
-$('localChargesBody').addEventListener('input', () => {
-  syncPendingLocalChargesFromTable();
-});
-$('localChargesBody').addEventListener('click', e => {
-  const btn = e.target.closest('[data-charge-remove]');
-  if(!btn) return;
-  syncPendingLocalChargesFromTable();
-  pendingLocalCharges.splice(Number(btn.dataset.chargeRemove), 1);
-  renderLocalChargesTable();
-});
-['autoCalcOverlay','exchangeOverlay','localChargesOverlay'].forEach(id => {
-  $(id).addEventListener('click', e => {
-    if(e.target.id !== id) return;
-    if(id === 'autoCalcOverlay') closeAutoCalc();
-    if(id === 'exchangeOverlay') closeExchangePopup();
-    if(id === 'localChargesOverlay'){
-      syncPendingLocalChargesFromTable();
-      closeLocalCharges();
-    }
-  });
-});
-
 setEditorState("CREATE OR UPDATE RATE");
 updateActiveCellInfo();
 updateSelectedInfo();
 if(sessionValid()) showApp();
+
+
+// ================================================================
+//  NEW FEATURES: AUTO CALC | EXCHANGE RATE | LOCAL CHARGES BY RATE
+// ================================================================
+
+// ---- DRAG HELPER ----
+function makeDraggable(popup, handle) {
+  let ox=0, oy=0, dragging=false;
+  handle.addEventListener('mousedown', e => {
+    if(e.button !== 0) return;
+    dragging = true;
+    // Snap to fixed position first time
+    if(popup.style.left === '' || popup.style.transform.includes('translateX')) {
+      const r = popup.getBoundingClientRect();
+      popup.style.left = r.left + 'px';
+      popup.style.top  = r.top  + 'px';
+      popup.style.transform = 'none';
+    }
+    ox = e.clientX - popup.getBoundingClientRect().left;
+    oy = e.clientY - popup.getBoundingClientRect().top;
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', e => {
+    if(!dragging) return;
+    let nx = e.clientX - ox;
+    let ny = e.clientY - oy;
+    nx = Math.max(0, Math.min(nx, window.innerWidth  - popup.offsetWidth));
+    ny = Math.max(0, Math.min(ny, window.innerHeight - popup.offsetHeight));
+    popup.style.left = nx + 'px';
+    popup.style.top  = ny + 'px';
+  });
+  document.addEventListener('mouseup', () => { dragging=false; document.body.style.userSelect=''; });
+}
+makeDraggable($('calcPopup'), $('calcPopupHeader'));
+makeDraggable($('fxPopup'),   $('fxPopupHeader'));
+makeDraggable($('lcPopup'),   $('lcPopupHeader'));
+
+// ---- SMART NUMBER PARSER ----
+// Handles: 1,925 | 1925 | 1925.00 | 1000 925 | 1000+925 | (500) | 500x2
+function parseSmartNumber(raw) {
+  if(!raw && raw !== 0) return 0;
+  let s = String(raw).trim();
+  // Remove commas (thousand separators): 1,925 -> 1925
+  s = s.replace(/,/g, '');
+  // Parentheses mean addition: (500) -> 500
+  s = s.replace(/\(([^)]+)\)/g, '+$1');
+  // x means multiply: 500x2 -> 500*2
+  s = s.replace(/x/gi, '*');
+  // Spaces between numbers = addition: "1000 925" -> "1000+925"
+  s = s.replace(/(\d)\s+(\d)/g, '$1+$2');
+  // Remove leading +
+  s = s.replace(/^\+/, '');
+  // Only allow digits, +, -, *, /, ., (, )
+  s = s.replace(/[^0-9+\-*/.()]/g, '');
+  if(!s) return 0;
+  try { const v = Function('"use strict"; return (' + s + ')')(); return isNaN(v) ? 0 : Number(v); }
+  catch(e) { return parseFloat(s) || 0; }
+}
+
+// ---- LOCAL CHARGES STORAGE ----
+const LC_KEY = 'fr8x_lc_v2';
+// Structure: { [rateId]: { rateSeq, rateLabel, lines: [{id, desc, type, currency, amount, appliesTo}] } }
+let lcStore = {};
+
+function lcLoad() {
+  try { lcStore = JSON.parse(localStorage.getItem(LC_KEY) || '{}'); } catch(e) { lcStore = {}; }
+  lcRenderAll();
+  lcUpdateCalcSelect();
+  lcPopulateRateSelect();
+}
+function lcSave() {
+  localStorage.setItem(LC_KEY, JSON.stringify(lcStore));
+}
+
+function lcRateLabel(r) {
+  const parts = [r.seq, r.carrier, r.pol||r.por, '→', r.pod||r.fpod].filter(Boolean);
+  return parts.join(' ');
+}
+
+// Populate "attach to rate" dropdown from main data
+function lcPopulateRateSelect() {
+  const sel = $('lcRateSelect');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">-- SELECT RATE --</option>' +
+    data.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(lcRateLabel(r))}</option>`).join('');
+  if(prev) sel.value = prev;
+}
+
+// Add charge line to a rate
+$('addLcLineBtn').onclick = () => {
+  const rateId = $('lcRateSelect').value;
+  if(!rateId) return alert('SELECT A RATE FIRST.');
+  const desc    = $('lcDesc').value.trim().toUpperCase();
+  const type    = $('lcType').value;
+  const currency= $('lcCur').value;
+  const amount  = parseFloat($('lcAmount').value || '0') || 0;
+  const app     = $('lcAppliesTo').value;
+  if(!desc || !amount) return alert('ENTER DESCRIPTION AND AMOUNT.');
+
+  if(!lcStore[rateId]) {
+    const r = data.find(x => x.id === rateId);
+    lcStore[rateId] = { rateSeq: r ? (r.seq||'') : '', rateLabel: r ? lcRateLabel(r) : rateId, lines: [] };
+  }
+  const lineId = 'lc_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  lcStore[rateId].lines.push({ id: lineId, desc, type, currency, amount, appliesTo: app });
+  lcSave();
+  lcRenderAll();
+  lcUpdateCalcSelect();
+  $('lcDesc').value = ''; $('lcAmount').value = '';
+  showCopyToast('CHARGE ADDED');
+};
+
+window.lcDeleteLine = function(rateId, lineId) {
+  if(!lcStore[rateId]) return;
+  lcStore[rateId].lines = lcStore[rateId].lines.filter(l => l.id !== lineId);
+  if(!lcStore[rateId].lines.length) delete lcStore[rateId];
+  lcSave(); lcRenderAll(); lcUpdateCalcSelect();
+};
+
+window.lcDeleteRate = function(rateId) {
+  if(!confirm('DELETE ALL LOCAL CHARGES FOR THIS RATE?')) return;
+  delete lcStore[rateId];
+  lcSave(); lcRenderAll(); lcUpdateCalcSelect();
+};
+
+window.lcCopyRate = function(rateId) {
+  const entry = lcStore[rateId];
+  if(!entry) return;
+  const r = data.find(x => x.id === rateId);
+  // Use unique rateId as identifier in copy
+  let lines = [`LOCAL CHARGES — ${entry.rateLabel}`, `RATE ID: ${rateId}`];
+  entry.lines.forEach(l => {
+    lines.push(`${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo.toUpperCase()})`);
+  });
+  copyText(lines.join('\n'));
+  showCopyToast('LOCAL CHARGES COPIED');
+};
+
+function lcRenderAll() {
+  const wrap = $('lcRecordsWrap');
+  const keys = Object.keys(lcStore);
+  if(!keys.length) {
+    wrap.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px">NO LOCAL CHARGES SAVED YET.</div>';
+    return;
+  }
+  wrap.innerHTML = keys.map(rateId => {
+    const entry = lcStore[rateId];
+    const r = data.find(x => x.id === rateId);
+    const lbl = r ? lcRateLabel(r) : entry.rateLabel;
+    return `
+    <div class="lc-rate-section">
+      <div class="lc-rate-section-head">
+        <div>
+          <div class="lc-rate-section-title">${escapeHtml(lbl)}</div>
+          <div class="lc-rate-uid">ID: ${escapeHtml(rateId)}</div>
+        </div>
+        <div class="lc-rate-actions">
+          <button class="ghost" onclick="lcCopyRate('${escapeHtml(rateId)}')" title="Copy all charges">
+            <i class="bi bi-clipboard"></i> COPY
+          </button>
+          <button class="icon-btn danger" onclick="lcDeleteRate('${escapeHtml(rateId)}')" title="Delete all">
+            <i class="bi bi-x-square"></i>
+          </button>
+        </div>
+      </div>
+      <table class="lc-rate-table">
+        <thead>
+          <tr>
+            <th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${entry.lines.map(l => `
+            <tr>
+              <td>${escapeHtml(l.desc)}</td>
+              <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
+              <td>${escapeHtml(l.currency)}</td>
+              <td>${escapeHtml(String(l.amount))}</td>
+              <td>${escapeHtml(l.appliesTo === 'both' ? 'BOTH' : l.appliesTo.toUpperCase())}</td>
+              <td>
+                <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(rateId)}','${escapeHtml(l.id)}')" title="Delete">
+                  <i class="bi bi-x"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }).join('');
+}
+
+function lcUpdateCalcSelect() {
+  const sel = $('calcLcProfile');
+  const prev = sel.value;
+  const keys = Object.keys(lcStore);
+  sel.innerHTML = '<option value="">-- NONE --</option>' +
+    keys.map(rid => {
+      const e = lcStore[rid];
+      const r = data.find(x => x.id === rid);
+      const lbl = r ? lcRateLabel(r) : e.rateLabel;
+      return `<option value="${escapeHtml(rid)}">${escapeHtml(lbl)}</option>`;
+    }).join('');
+  if(prev) sel.value = prev;
+}
+
+// Open/close LC popup
+$('openLcBtn').onclick = () => {
+  lcLoad();
+  $('lcPopup').classList.remove('hidden');
+};
+$('closeLcBtn').onclick = () => $('lcPopup').classList.add('hidden');
+
+// ---- EXCHANGE RATE ----
+let fxRates = {};
+const FX_CURRENCIES = ['INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD','BDT','PKR','LKR','THB','MYR'];
+
+async function fetchFxRates() {
+  $('fxStatusMsg').textContent = 'FETCHING...';
+  $('refreshFxBtn').disabled = true;
+  try {
+    const res  = await fetch('https://open.er-api.com/v6/latest/USD');
+    const json = await res.json();
+    if(json.result === 'success') {
+      fxRates = json.rates || {};
+      renderFxRates();
+      $('fxTimestamp').textContent = 'UPDATED: ' + new Date().toLocaleTimeString();
+      $('fxStatusMsg').textContent = '';
+    } else {
+      $('fxStatusMsg').textContent = 'API ERROR';
+    }
+  } catch(err) {
+    $('fxStatusMsg').textContent = 'NETWORK ERROR';
+  }
+  $('refreshFxBtn').disabled = false;
+}
+
+function renderFxRates() {
+  $('fxRateGrid').innerHTML = ['USD',...FX_CURRENCIES].map(cur => {
+    const rate = cur === 'USD' ? 1 : (fxRates[cur] || '-');
+    return `<div class="fx-rate-pill" title="1 USD = ${rate} ${cur}">
+      <div class="cur">${escapeHtml(cur)}</div>
+      <div class="rate">${cur==='USD'?'1.0000':(typeof rate==='number'?rate.toFixed(4):rate)}</div>
+    </div>`;
+  }).join('');
+}
+$('refreshFxBtn').onclick = fetchFxRates;
+$('openFxBtn').onclick = () => {
+  $('fxPopup').classList.remove('hidden');
+  if(!Object.keys(fxRates).length) fetchFxRates();
+};
+$('closeFxBtn').onclick = () => $('fxPopup').classList.add('hidden');
+
+// ---- AUTO CALC ----
+// Real-time: recalculate on any input change
+function calcGetInputs() {
+  const baseRaw  = $('calcBaseRate').value;
+  const base     = parseSmartNumber(baseRaw);
+  const qty      = Math.max(1, parseFloat($('calcQty').value||'1')||1);
+  const mkPct    = parseFloat($('calcMarkupPct').value||'0')||0;
+  const exRate   = parseFloat($('calcExRate').value||'1')||1;
+  const currency = $('calcCurrency').value;
+  const contType = $('calcContType').value;
+  const lcRateId = $('calcLcProfile').value;
+  return { base, qty, mkPct, exRate, currency, contType, lcRateId };
+}
+
+function calcRun() {
+  const { base, qty, mkPct, exRate, currency, contType, lcRateId } = calcGetInputs();
+  if(!base) {
+    $('calcGrandTotal').textContent = '—';
+    $('calcBreakdown').innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:6px 0">FILL RATE ABOVE TO SEE BREAKDOWN</div>';
+    window._lastCalcResult = null;
+    return;
+  }
+  const mkAmt   = base * mkPct / 100;
+  const rateAMk = base + mkAmt;
+  const ofTotal = rateAMk * qty;
+
+  let lcTotal = 0, lcDetails = [];
+  if(lcRateId && lcStore[lcRateId]) {
+    lcStore[lcRateId].lines.filter(l => l.appliesTo==='both'||l.appliesTo===contType).forEach(l => {
+      let usd = l.amount;
+      if(l.currency !== 'USD' && fxRates[l.currency]) usd = l.amount / fxRates[l.currency];
+      const tot = l.type==='per_bl' ? usd : usd*qty;
+      lcTotal += tot;
+      lcDetails.push({ desc:l.desc, type:l.type, currency:l.currency, amount:l.amount, totalUsd:tot });
+    });
+  }
+
+  const grand   = ofTotal + lcTotal;
+  const grandLC = grand * exRate;
+  const fmtUSD  = v => `USD ${v.toFixed(2)}`;
+  const fmtDisp = v => currency==='USD' ? fmtUSD(v) : `${currency} ${(v*exRate).toFixed(2)}`;
+
+  let html = '';
+  html += `<div class="calc-line"><span class="lbl">BASE O/F RATE</span><span class="val">${fmtUSD(base)}</span></div>`;
+  if(mkPct) html += `<div class="calc-line"><span class="lbl">MARKUP (${mkPct}%)</span><span class="val">${fmtUSD(mkAmt)}</span></div>`;
+  html += `<div class="calc-line"><span class="lbl">RATE AFTER MARKUP</span><span class="val">${fmtUSD(rateAMk)}</span></div>`;
+  html += `<div class="calc-line"><span class="lbl">× ${qty} UNIT(S) — ${contType.toUpperCase()}</span><span class="val">${fmtUSD(ofTotal)}</span></div>`;
+  if(lcDetails.length) {
+    html += `<div class="calc-line" style="padding-top:6px"><span class="lbl" style="color:#059669">LOCAL CHARGES</span></div>`;
+    lcDetails.forEach(l => {
+      html += `<div class="calc-line"><span class="lbl">${escapeHtml(l.desc)} <span style="opacity:.65">(${l.currency}${l.amount})</span></span><span class="val">${fmtUSD(l.totalUsd)}</span></div>`;
+    });
+    html += `<div class="calc-line"><span class="lbl">TOTAL LOCAL</span><span class="val">${fmtUSD(lcTotal)}</span></div>`;
+  }
+  $('calcBreakdown').innerHTML = html;
+
+  const display = currency==='USD' ? fmtUSD(grand) : `${currency} ${grandLC.toFixed(2)}  (${fmtUSD(grand)})`;
+  $('calcGrandTotal').textContent = display;
+  window._lastCalcResult = { base, qty, mkPct, mkAmt, rateAMk, ofTotal, lcTotal, grand, currency, exRate, contType, lcDetails, display };
+}
+
+// Watch all calc inputs
+['calcBaseRate','calcQty','calcMarkupPct','calcExRate','calcContType','calcCurrency','calcLcProfile']
+  .forEach(id => {
+    const el = $(id);
+    if(!el) return;
+    el.addEventListener('input',  calcRun);
+    el.addEventListener('change', calcRun);
+  });
+
+// Copy calc result
+$('copyCalcBtn').onclick = () => {
+  const r = window._lastCalcResult;
+  if(!r) { showCopyToast('RUN CALCULATION FIRST'); return; }
+  const lines = [
+    'AUTO CALC RESULT',
+    `CONTAINER: ${r.qty}x ${r.contType.toUpperCase()}`,
+    `BASE O/F: USD ${r.base.toFixed(2)}`,
+  ];
+  if(r.mkPct) lines.push(`MARKUP (${r.mkPct}%): USD ${r.mkAmt.toFixed(2)}`);
+  lines.push(`RATE AFTER MARKUP: USD ${r.rateAMk.toFixed(2)}`);
+  lines.push(`O/F SUBTOTAL: USD ${r.ofTotal.toFixed(2)}`);
+  if(r.lcDetails && r.lcDetails.length) {
+    lines.push('LOCAL CHARGES:');
+    r.lcDetails.forEach(l => lines.push(`  ${l.desc}: USD ${l.totalUsd.toFixed(2)}`));
+    lines.push(`LOCAL TOTAL: USD ${r.lcTotal.toFixed(2)}`);
+  }
+  lines.push(`GRAND TOTAL: ${r.display}`);
+  copyText(lines.join('\n'));
+  showCopyToast('CALC RESULT COPIED');
+};
+
+// Open calc popup — pre-fill from editor
+$('openCalcBtn').onclick = () => {
+  lcLoad();
+  const base20 = parseFloat($('dv20').value || '') || 0;
+  const base40 = parseFloat($('hc40').value || '') || 0;
+  if(base20) { $('calcBaseRate').value = String(base20); $('calcContType').value = '20dv'; }
+  else if(base40) { $('calcBaseRate').value = String(base40); $('calcContType').value = '40hc'; }
+  const cur = $('calcCurrency').value;
+  if(cur !== 'USD' && fxRates[cur]) $('calcExRate').value = fxRates[cur].toFixed(4);
+  $('calcPopup').classList.remove('hidden');
+  calcRun();
+};
+$('closeCalcBtn').onclick = () => $('calcPopup').classList.add('hidden');
+
+// Sync exchange rate when display currency changes
+$('calcCurrency').addEventListener('change', () => {
+  const cur = $('calcCurrency').value;
+  if(cur==='USD') { $('calcExRate').value = '1'; }
+  else if(fxRates[cur]) { $('calcExRate').value = fxRates[cur].toFixed(4); }
+  calcRun();
+});
+
+// Initial LC load
+lcLoad();
+
+
+// Wire the in-editor local charges button
+const _lcEditorBtn = document.getElementById('openLcEditorBtn');
+if(_lcEditorBtn) {
+  _lcEditorBtn.onclick = () => {
+    lcLoad();
+    // Pre-select the currently editing rate
+    if(editId) { setTimeout(()=>{ $('lcRateSelect').value = editId; }, 50); }
+    $('lcPopup').classList.remove('hidden');
+  };
+}
+
 </script>
+
+<!-- ======= AUTO CALC POPUP (Draggable) ======= -->
+<div id="calcPopup" class="draggable-popup hidden">
+  <div class="dp-header" id="calcPopupHeader">
+    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i> AUTO CALCULATION</div>
+    <button class="ghost icon-only dp-header-close" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <!-- Result banner always on top -->
+  <div class="calc-result-banner" id="calcResultBanner">
+    <div>
+      <div class="res-label">GRAND TOTAL</div>
+      <div class="res-val" id="calcGrandTotal">—</div>
+    </div>
+    <button class="ghost" id="copyCalcBtn" style="flex-shrink:0"><i class="bi bi-clipboard"></i> COPY</button>
+  </div>
+  <div class="dp-body">
+    <div class="note" style="margin-bottom:6px">RATES AUTO-FILL FROM EDITOR. RESULT UPDATES IN REAL-TIME.</div>
+    <div class="calc-grid">
+      <div class="field">
+        <label>CONTAINER TYPE</label>
+        <select id="calcContType">
+          <option value="20dv">20DV</option>
+          <option value="40hc">40HC</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>NO. OF CONTAINERS</label>
+        <input id="calcQty" type="number" value="1" min="1">
+      </div>
+      <div class="field">
+        <label>BASE O/F RATE (USD)</label>
+        <input id="calcBaseRate" type="text" placeholder="e.g. 1,925 or 1925 or 1000+925">
+      </div>
+      <div class="field">
+        <label>MARKUP (%)</label>
+        <input id="calcMarkupPct" type="number" placeholder="0" value="0">
+      </div>
+      <div class="field">
+        <label>DISPLAY CURRENCY</label>
+        <select id="calcCurrency">
+          <option value="USD">USD</option>
+          <option value="INR">INR</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="AED">AED</option>
+          <option value="CNY">CNY</option>
+          <option value="SGD">SGD</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>EXCHANGE RATE (1 USD =)</label>
+        <input id="calcExRate" type="number" placeholder="1" value="1">
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:8px">
+      <label>LOCAL CHARGES PROFILE</label>
+      <select id="calcLcProfile"><option value="">-- NONE --</option></select>
+    </div>
+    <div class="calc-breakdown" id="calcBreakdown">
+      <div style="color:var(--muted);font-size:12px;text-align:center;padding:6px 0">FILL RATE ABOVE TO SEE BREAKDOWN</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= EXCHANGE RATE POPUP (Draggable) ======= -->
+<div id="fxPopup" class="draggable-popup hidden">
+  <div class="dp-header" id="fxPopupHeader">
+    <div class="dp-header-title"><i class="bi bi-currency-exchange"></i> LIVE EXCHANGE RATES</div>
+    <button class="ghost icon-only dp-header-close" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="dp-body">
+    <div class="toolbar" style="margin-bottom:6px">
+      <button class="primary" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+      <span class="badge" id="fxTimestamp">NOT LOADED</span>
+      <span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span>
+    </div>
+    <div id="fxRateGrid" class="fx-rate-grid">
+      <div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
+  </div>
+</div>
+
+<!-- ======= LOCAL CHARGES POPUP (Draggable) ======= -->
+<div id="lcPopup" class="draggable-popup hidden">
+  <div class="dp-header" id="lcPopupHeader">
+    <div class="dp-header-title"><i class="bi bi-list-check"></i> LOCAL CHARGES MANAGER</div>
+    <button class="ghost icon-only dp-header-close" id="closeLcBtn"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="dp-body">
+    <div class="note" style="margin-bottom:8px">CHARGES ARE GROUPED BY RATE (SEQ/CARRIER). COPY USES UNIQUE ID. CLOSE BUTTON IS THE ONLY WAY TO CLOSE.</div>
+
+    <!-- ADD NEW LINE FORM -->
+    <div class="lc-add-form">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">ADD CHARGE — SELECT RATE FIRST</div>
+      <div class="field" style="margin-bottom:6px">
+        <label>ATTACH TO RATE (SEQ)</label>
+        <select id="lcRateSelect"><option value="">-- SELECT RATE --</option></select>
+      </div>
+      <div class="lc-form-row">
+        <div class="field">
+          <label>DESCRIPTION</label>
+          <input id="lcDesc" placeholder="e.g. THC, BL FEE">
+        </div>
+        <div class="field">
+          <label>TYPE</label>
+          <select id="lcType">
+            <option value="per_container">PER CONTAINER</option>
+            <option value="per_bl">PER B/L</option>
+            <option value="per_cbm">PER CBM</option>
+            <option value="per_ton">PER TON</option>
+            <option value="lumpsum">LUMPSUM</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>CUR</label>
+          <select id="lcCur">
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+            <option value="EUR">EUR</option>
+            <option value="AED">AED</option>
+            <option value="GBP">GBP</option>
+            <option value="CNY">CNY</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>AMOUNT</label>
+          <input id="lcAmount" type="number" placeholder="0">
+        </div>
+        <div class="field">
+          <label>APPLIES TO</label>
+          <select id="lcAppliesTo">
+            <option value="both">BOTH</option>
+            <option value="20dv">20DV ONLY</option>
+            <option value="40hc">40HC ONLY</option>
+          </select>
+        </div>
+        <div class="field" style="justify-content:flex-end">
+          <label>&nbsp;</label>
+          <button class="success" id="addLcLineBtn"><i class="bi bi-plus-lg"></i> ADD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARGES BY RATE -->
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">SAVED CHARGES BY RATE</div>
+    <div class="lc-records-wrap" id="lcRecordsWrap">
+      <div style="color:var(--muted);font-size:12px;padding:8px">NO LOCAL CHARGES SAVED YET.</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
