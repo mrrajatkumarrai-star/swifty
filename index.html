@@ -958,6 +958,123 @@ tr.editing-row td:last-child{
   #lcPopup { width: calc(100vw - 14px); }
 }
 
+
+/* ---- Action column alignment ---- */
+td.actions {
+  display:table-cell!important;
+  vertical-align:middle!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  padding:3px 4px!important;
+}
+.actions {
+  display:inline-flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:2px!important;
+  flex-wrap:nowrap!important;
+}
+.icon-btn {
+  width:24px!important;
+  height:24px!important;
+  min-height:24px!important;
+  padding:0!important;
+  font-size:11px!important;
+  flex-shrink:0!important;
+  border-radius:7px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+col.col-act { width:132px!important; }
+
+/* LC action button — teal */
+.icon-btn.lc-act {
+  background:rgba(5,150,105,.10)!important;
+  border-color:rgba(5,150,105,.26)!important;
+  color:#065f46!important;
+}
+.icon-btn.lc-act:hover { background:rgba(5,150,105,.22)!important; transform:translateY(-1px); }
+
+/* ---- FX Converter section ---- */
+.fx-converter {
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.fx-conv-row {
+  display:grid;
+  grid-template-columns:70px 1fr 18px 60px 1fr;
+  gap:6px;
+  align-items:center;
+  margin-bottom:7px;
+}
+.fx-conv-arrow { text-align:center; color:var(--muted); font-size:13px; }
+.fx-conv-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:4px;
+}
+.fx-conv-pill {
+  padding:4px 9px;
+  border-radius:999px;
+  font-size:12px;
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.55);
+  white-space:nowrap;
+}
+.fx-conv-pill .c { color:var(--muted); font-size:10px; margin-right:3px; }
+
+/* ---- LC Per-Quote Popup ---- */
+#lcQuotePopup { width:min(700px,calc(100vw - 20px)); top:90px; left:50%; transform:translateX(-50%); }
+.lcq-rate-banner {
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(148,163,184,.13);
+  border-radius:12px;
+  padding:8px 12px;
+  margin-bottom:8px;
+  font-size:12px;
+}
+.lcq-rate-banner .rb-title { font-size:13px; margin-bottom:2px; }
+.lcq-rate-banner .rb-sub   { color:var(--muted); font-size:11px; }
+.lcq-add-row {
+  display:grid;
+  grid-template-columns:1.8fr 1fr 68px 80px 1fr auto;
+  gap:5px;
+  align-items:end;
+  margin-bottom:8px;
+}
+.lcq-add-row .field { margin:0; }
+.lcq-add-row input,.lcq-add-row select { min-height:30px; }
+.lcq-table-wrap {
+  max-height:42vh;
+  overflow-y:auto;
+  border-radius:12px;
+  border:1px solid rgba(148,163,184,.13);
+  background:rgba(255,255,255,.44);
+  margin-bottom:8px;
+}
+.lcq-table-wrap::-webkit-scrollbar { width:5px; }
+.lcq-table-wrap::-webkit-scrollbar-thumb { background:rgba(148,163,184,.36); border-radius:999px; }
+.lcq-table { width:100%; border-collapse:collapse; font-size:12px; }
+.lcq-table th {
+  background:rgba(248,250,252,.88);
+  padding:4px 8px;
+  text-align:left;
+  border-bottom:1px solid rgba(148,163,184,.13);
+  font-size:11px;
+  color:var(--muted);
+  position:sticky; top:0; z-index:2;
+}
+.lcq-table td { padding:5px 8px; border-bottom:1px solid rgba(148,163,184,.07); }
+.lcq-table tbody tr:last-child td { border-bottom:none; }
+.lcq-table tbody tr:hover { background:rgba(255,255,255,.44); }
+
 </style>
 </head>
 <body>
@@ -1849,10 +1966,11 @@ function renderDesktopRows(rows){
       ${desktopCell(r.id, r.seq || i+1, "via", "ROUTING", r.via, 16)}
       ${desktopCell(r.id, r.seq || i+1, "remarks", "REMARKS", r.remarks, 18)}
       <td class="actions">
-        <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy"><i class="bi bi-clipboard"></i></button>
+        <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button>
+        <button class="icon-btn lc-act" data-action="lc" data-id="${r.id}" title="Local Charges"><i class="bi bi-receipt-cutoff"></i></button>
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
         <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
-        <button class="icon-btn" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
+        <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
       </td>
     </tr>
   `).join("");
@@ -1883,6 +2001,7 @@ function renderMobileRows(rows){
       </div>
       <div class="mobile-actions">
         <button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
+        <button class="lc-act" data-action="lc" data-id="${r.id}"><i class="bi bi-receipt-cutoff"></i> LC</button>
         <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
         <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
         <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
@@ -2522,6 +2641,7 @@ document.addEventListener("click", e => {
   if(btn){
     const id = btn.dataset.id;
     if(btn.dataset.action === "copy") window.copyRate(id);
+    if(btn.dataset.action === "lc")   window.openLcQuote(id);
     if(btn.dataset.action === "duplicate") duplicateRate(id);
     if(btn.dataset.action === "edit") window.editRate(id);
     if(btn.dataset.action === "delete") window.delRate(id);
@@ -2901,6 +3021,190 @@ if (_lcEditorBtn) {
 // Initial load
 lcLoad();
 
+
+
+// ================================================================
+//  V4 NEW JS: LC PER-QUOTE | FX CONVERTER | COPY RATE+LC
+// ================================================================
+
+// ---- LC PER-QUOTE STORAGE ----
+// { [rateId]: { lines:[{id,desc,type,currency,amount,appliesTo}] } }
+const LCQ_KEY = 'fr8x_lcq_v1';
+let lcqStore = {};
+let lcqActiveRateId = null;
+
+function lcqLoad() {
+  try { lcqStore = JSON.parse(localStorage.getItem(LCQ_KEY)||'{}'); } catch(e){ lcqStore={}; }
+}
+function lcqSave() {
+  localStorage.setItem(LCQ_KEY, JSON.stringify(lcqStore));
+}
+
+function lcqGetLines(rateId) {
+  return (lcqStore[rateId]||{}).lines || [];
+}
+
+function lcqRender(rateId) {
+  const lines = lcqGetLines(rateId);
+  const tbody = $('lcqTbody');
+  if (!lines.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES ADDED YET — ADD ONE ABOVE</td></tr>';
+    return;
+  }
+  tbody.innerHTML = lines.map(l => `
+    <tr>
+      <td>${escapeHtml(l.desc)}</td>
+      <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
+      <td>${escapeHtml(l.currency)}</td>
+      <td>${escapeHtml(String(l.amount))}</td>
+      <td>${escapeHtml(l.appliesTo==='both'?'BOTH':l.appliesTo.toUpperCase())}</td>
+      <td>
+        <button class="icon-btn danger" onclick="lcqDeleteLine('${escapeHtml(rateId)}','${escapeHtml(l.id)}')" title="Remove">
+          <i class="bi bi-x"></i>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+window.lcqDeleteLine = function(rateId, lineId) {
+  if (!lcqStore[rateId]) return;
+  lcqStore[rateId].lines = lcqStore[rateId].lines.filter(l => l.id !== lineId);
+  lcqSave(); lcqRender(rateId);
+};
+
+$('lcqAddBtn').onclick = () => {
+  const rateId = lcqActiveRateId;
+  if (!rateId) return alert('NO RATE SELECTED.');
+  const desc    = $('lcqDesc').value.trim().toUpperCase();
+  const type    = $('lcqType').value;
+  const currency= $('lcqCur').value;
+  const amount  = parseFloat($('lcqAmount').value||'0')||0;
+  const app     = $('lcqAppliesTo').value;
+  if (!desc || !amount) return alert('ENTER DESCRIPTION AND AMOUNT.');
+  if (!lcqStore[rateId]) lcqStore[rateId] = { lines:[] };
+  const lineId = 'lcq'+Date.now()+Math.random().toString(36).slice(2,6);
+  lcqStore[rateId].lines.push({ id:lineId, desc, type, currency, amount, appliesTo:app });
+  lcqSave(); lcqRender(rateId);
+  $('lcqDesc').value=''; $('lcqAmount').value='';
+  showCopyToast('CHARGE ADDED');
+};
+
+// Build LC text block for a rate (for copying)
+function buildLcText(rateId) {
+  const lines = lcqGetLines(rateId);
+  if (!lines.length) return '';
+  const parts = ['LOCAL CHARGES:'];
+  lines.forEach(l => {
+    parts.push(`  ${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo==='both'?'BOTH':l.appliesTo.toUpperCase()})`);
+  });
+  return parts.join('\n');
+}
+
+// COPY RATE + LOCAL CHARGES
+$('lcqCopyRateAndLcBtn').onclick = async () => {
+  const rateId = lcqActiveRateId;
+  if (!rateId) return;
+  const r = data.find(x => x.id === rateId);
+  if (!r) return;
+  const rateText = buildRateCopyText(r);
+  const lcText   = buildLcText(rateId);
+  const combined = lcText ? rateText + '\n' + lcText : rateText;
+  await copyText(combined);
+  showCopyToast('RATE + LOCAL CHARGES COPIED');
+};
+
+// COPY LC ONLY
+$('lcqCopyLcOnlyBtn').onclick = async () => {
+  const rateId = lcqActiveRateId;
+  if (!rateId) return;
+  const lcText = buildLcText(rateId);
+  if (!lcText) { showCopyToast('NO CHARGES TO COPY'); return; }
+  await copyText(lcText);
+  showCopyToast('LOCAL CHARGES COPIED');
+};
+
+// OPEN LC QUOTE POPUP for a rate
+window.openLcQuote = function(rateId) {
+  lcqLoad();
+  lcqActiveRateId = rateId;
+  const r = data.find(x => x.id === rateId);
+  if (r) {
+    const routeFrom = r.pol || r.por || '';
+    const routeTo   = r.pod || r.fpod || '';
+    $('lcqRateTitle').textContent = [r.carrier, routeFrom && routeTo ? routeFrom+'→'+routeTo : routeFrom||routeTo].filter(Boolean).join(' | ') || '—';
+    $('lcqRateSub').textContent   = ['SEQ: '+(r.seq||'—'), r.dv20?'20DV: USD '+r.dv20:'', r.hc40?'40HC: USD '+r.hc40:'', r.validity?'VALIDITY: '+r.validity:''].filter(Boolean).join('  ·  ');
+  } else {
+    $('lcqRateTitle').textContent = 'RATE ID: ' + rateId;
+    $('lcqRateSub').textContent   = '';
+  }
+  lcqRender(rateId);
+  tahoeOpen($('lcQuotePopup'));
+};
+$('closeLcQuoteBtn').onclick = () => tahoeClose($('lcQuotePopup'));
+makeDraggable($('lcQuotePopup'), $('lcQuotePopupHeader'));
+
+// ---- PATCH: copyRate also appends LC if present ----
+// Override the existing copyRate to include LC if exists
+const _origCopyRate = window.copyRate;
+window.copyRate = async function(id) {
+  lcqLoad();
+  const r = data.find(x => x.id === id);
+  if (!r) return;
+  const rateText = buildRateCopyText(r);
+  const lcText   = buildLcText(id);
+  const combined = lcText ? rateText + '\n' + lcText : rateText;
+  await copyText(combined);
+  showCopyToast(lcText ? 'RATE + LOCAL CHARGES COPIED' : 'RATE COPIED');
+};
+
+// Also patch copySelectedRates to include LC
+const _origCopySel = window.copySelectedRates || null;
+// We patch it directly
+document.getElementById('copySelectedRatesBtn').onclick = async function() {
+  lcqLoad();
+  let rows = filteredRows ? filteredRows().filter(r => selectedIds.has(r.id)) : [];
+  if (!rows.length) rows = data.filter(r => selectedIds.has(r.id));
+  if (!rows.length) return alert('SELECT RECORDS FIRST.');
+  const combined = rows.map(r => {
+    const rateText = buildRateCopyText(r);
+    const lcText   = buildLcText(r.id);
+    return lcText ? rateText + '\n' + lcText : rateText;
+  }).filter(Boolean).join('\n\n--------------------\n\n');
+  await copyText(combined);
+  showCopyToast(rows.length + ' RATE(S) COPIED');
+};
+
+// ---- FX CONVERTER ----
+$('fxConvBtn').onclick = fxConvert;
+$('fxConvAmt').addEventListener('keydown', e => { if(e.key==='Enter') fxConvert(); });
+$('fxConvFrom').addEventListener('change', fxConvert);
+$('fxConvTo').addEventListener('change',   fxConvert);
+
+function fxConvert() {
+  const amt  = parseFloat($('fxConvAmt').value||'0')||0;
+  const from = $('fxConvFrom').value;
+  const to   = $('fxConvTo').value;
+  const res  = $('fxConvResult');
+  if (!amt) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">ENTER AN AMOUNT</span>'; return; }
+  if (!Object.keys(fxRates).length) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">REFRESH RATES FIRST</span>'; return; }
+
+  // Convert amt from->USD->to
+  const amtUSD  = from === 'USD' ? amt : amt / fxRates[from];
+  const showCurs = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD'];
+  const results  = showCurs.map(cur => {
+    const val = cur === 'USD' ? amtUSD : amtUSD * fxRates[cur];
+    return { cur, val };
+  });
+
+  res.innerHTML = results.map(x =>
+    `<span class="fx-conv-pill"><span class="c">${escapeHtml(x.cur)}</span>${x.val.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
+  ).join('');
+}
+
+// Initial load
+lcqLoad();
+
 </script>
 
 <!-- ============================================================
@@ -2955,6 +3259,55 @@ lcLoad();
       <div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div>
     </div>
     <div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
+
+    <!-- FX CONVERTER -->
+    <div class="fx-converter">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em">AMOUNT CONVERTER</div>
+      <div class="fx-conv-row">
+        <div class="field" style="margin:0">
+          <label style="font-size:11px">AMOUNT</label>
+          <input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px">
+        </div>
+        <div class="field" style="margin:0">
+          <label style="font-size:11px">FROM</label>
+          <select id="fxConvFrom" style="min-height:30px">
+            <option value="USD">USD</option>
+            <option value="INR">INR</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="AED">AED</option>
+            <option value="CNY">CNY</option>
+            <option value="SGD">SGD</option>
+            <option value="JPY">JPY</option>
+            <option value="CAD">CAD</option>
+            <option value="AUD">AUD</option>
+          </select>
+        </div>
+        <div class="fx-conv-arrow">&#8594;</div>
+        <div class="field" style="margin:0">
+          <label style="font-size:11px">TO</label>
+          <select id="fxConvTo" style="min-height:30px">
+            <option value="INR">INR</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="AED">AED</option>
+            <option value="CNY">CNY</option>
+            <option value="SGD">SGD</option>
+            <option value="JPY">JPY</option>
+            <option value="CAD">CAD</option>
+            <option value="AUD">AUD</option>
+          </select>
+        </div>
+        <div class="field" style="margin:0;justify-content:flex-end">
+          <label style="font-size:11px">&nbsp;</label>
+          <button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-calculator"></i> CONVERT</button>
+        </div>
+      </div>
+      <div class="fx-conv-pills" id="fxConvResult">
+        <span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3032,6 +3385,95 @@ lcLoad();
     <div style="font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em">RECORDS BY SEQ</div>
     <div class="lc-records-wrap" id="lcRecordsWrap">
       <div style="color:var(--muted);font-size:12px;padding:10px">NO LOCAL CHARGES RECORDS YET.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     LOCAL CHARGES — PER QUOTE POPUP (Draggable)
+     ============================================================ -->
+<div id="lcQuotePopup" class="draggable-popup hidden">
+  <div class="dp-header" id="lcQuotePopupHeader">
+    <div class="dp-header-title"><i class="bi bi-receipt-cutoff"></i>&nbsp; LOCAL CHARGES — PER QUOTE</div>
+    <button class="ghost icon-only dp-header-close" id="closeLcQuoteBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div class="dp-body">
+    <!-- Rate banner shows which rate these charges belong to -->
+    <div class="lcq-rate-banner" id="lcqRateBanner">
+      <div class="rb-title" id="lcqRateTitle">—</div>
+      <div class="rb-sub" id="lcqRateSub">SELECT A RATE TO ATTACH CHARGES</div>
+    </div>
+
+    <div class="note" style="margin-bottom:8px">CHARGES SAVED HERE ARE LINKED TO THIS RATE. REOPEN ANYTIME TO VIEW OR EDIT.</div>
+
+    <!-- ADD CHARGE LINE -->
+    <div class="lcq-add-row">
+      <div class="field">
+        <label>DESCRIPTION</label>
+        <input id="lcqDesc" placeholder="e.g. THC, BL FEE, DO FEE">
+      </div>
+      <div class="field">
+        <label>TYPE</label>
+        <select id="lcqType">
+          <option value="per_container">PER CONTAINER</option>
+          <option value="per_bl">PER B/L</option>
+          <option value="per_cbm">PER CBM</option>
+          <option value="per_ton">PER TON</option>
+          <option value="lumpsum">LUMPSUM</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>CUR</label>
+        <select id="lcqCur">
+          <option value="USD">USD</option>
+          <option value="INR">INR</option>
+          <option value="EUR">EUR</option>
+          <option value="AED">AED</option>
+          <option value="GBP">GBP</option>
+          <option value="CNY">CNY</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>AMOUNT</label>
+        <input id="lcqAmount" type="number" placeholder="0">
+      </div>
+      <div class="field">
+        <label>APPLIES TO</label>
+        <select id="lcqAppliesTo">
+          <option value="both">BOTH</option>
+          <option value="20dv">20DV ONLY</option>
+          <option value="40hc">40HC ONLY</option>
+        </select>
+      </div>
+      <div class="field" style="justify-content:flex-end">
+        <label>&nbsp;</label>
+        <button class="success" id="lcqAddBtn"><i class="bi bi-plus-lg"></i> ADD</button>
+      </div>
+    </div>
+
+    <!-- CHARGES TABLE -->
+    <div class="lcq-table-wrap">
+      <table class="lcq-table">
+        <thead>
+          <tr>
+            <th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="lcqTbody">
+          <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES ADDED YET</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ACTIONS -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="primary" id="lcqCopyRateAndLcBtn" style="flex:1">
+        <i class="bi bi-clipboard2-check-fill"></i> COPY RATE + LOCAL CHARGES
+      </button>
+      <button class="ghost" id="lcqCopyLcOnlyBtn" style="flex:1">
+        <i class="bi bi-clipboard"></i> COPY LOCAL CHARGES ONLY
+      </button>
     </div>
   </div>
 </div>
