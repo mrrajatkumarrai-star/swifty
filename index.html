@@ -698,276 +698,60 @@ tr.editing-row td:last-child{
 }
 
 /* ================================================================
-   iOS 26 / Tahoe-style Glass Design + New Features
+   FR8X v5 — iOS Glass + Tahoe Animations + Feature Styles
    ================================================================ */
 
-/* ---- PIN GATE: remove border, cursor pointer on inputs ---- */
+/* PIN gate — borderless glass, pointer cursor */
 #pinGate .card.narrow {
-  border: none !important;
-  box-shadow: 0 24px 60px rgba(15,23,42,.16), 0 2px 0 rgba(255,255,255,.7) inset;
-  background: rgba(255,255,255,.62);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border:none!important;
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(40px) saturate(200%);
+  -webkit-backdrop-filter:blur(40px) saturate(200%);
+  box-shadow:0 24px 60px rgba(15,23,42,.16),0 2px 0 rgba(255,255,255,.7) inset;
+  cursor:pointer;
 }
-.pin-row { cursor: pointer; }
-.pin-input {
-  cursor: pointer !important;
-  caret-color: #111827;
-  border: none !important;
-  background: rgba(255,255,255,.55) !important;
-  box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 2px 8px rgba(15,23,42,.07) !important;
-  border-radius: 14px !important;
-  text-align: center;
-  font-size: 20px;
-  transition: box-shadow .16s, background .16s;
+#pinGate .card.narrow *{cursor:pointer}
+#pinGate .card.narrow input{cursor:text!important}
+.pin-input{
+  border:none!important;
+  background:rgba(255,255,255,.55)!important;
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 8px rgba(15,23,42,.07)!important;
+  border-radius:14px!important;
+  font-size:20px;
+  transition:box-shadow .16s,background .16s;
 }
-.pin-input:focus {
-  background: rgba(255,255,255,.9) !important;
-  box-shadow: 0 0 0 2.5px rgba(17,24,39,.18), 0 2px 12px rgba(15,23,42,.08) !important;
-  border: none !important;
-  outline: none !important;
-}
-/* Make entire pin card a click-through pointer target */
-#pinGate .card.narrow * { cursor: pointer; }
-#pinGate .card.narrow input { cursor: text !important; }
-
-/* ---- iOS 26 / Tahoe-style glass buttons + panels ---- */
-.glass-ios {
-  background: rgba(255,255,255,.55);
-  border: 1px solid rgba(255,255,255,.72);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  box-shadow: 0 2px 0 rgba(255,255,255,.7) inset,
-              0 12px 32px rgba(15,23,42,.09),
-              0 1px 0 rgba(255,255,255,.6);
-  border-radius: 18px;
+.pin-input:focus{
+  background:rgba(255,255,255,.9)!important;
+  box-shadow:0 0 0 2.5px rgba(17,24,39,.18),0 2px 12px rgba(15,23,42,.08)!important;
+  outline:none!important;
+  border:none!important;
 }
 
-/* ---- Draggable popup — Tahoe glass style ---- */
-.draggable-popup {
-  position: fixed;
-  z-index: 1100;
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
-  max-height: 92vh;
-  overflow: hidden;
-  background: rgba(245,247,252,.72);
-  border: 1px solid rgba(255,255,255,.78);
-  backdrop-filter: blur(36px) saturate(200%) brightness(1.04);
-  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.04);
-  box-shadow: 0 2px 0 rgba(255,255,255,.72) inset,
-              0 24px 56px rgba(15,23,42,.14),
-              0 1px 0 rgba(255,255,255,.6);
-  border-radius: 22px;
-  user-select: none;
-  /* Tahoe spring open animation */
-  transform-origin: top center;
-  transition: opacity .22s cubic-bezier(.4,0,.2,1),
-              transform .28s cubic-bezier(.34,1.52,.64,1);
+/* Header iOS buttons */
+.ios-btn{
+  background:rgba(255,255,255,.62)!important;
+  border:1px solid rgba(255,255,255,.74)!important;
+  border-radius:14px!important;
+  box-shadow:0 1px 0 rgba(255,255,255,.72) inset,0 4px 12px rgba(15,23,42,.07)!important;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:.16s ease!important;
 }
-.draggable-popup.hidden {
-  display: none !important;
-}
-.draggable-popup.tahoe-opening {
-  animation: tahoeOpen .3s cubic-bezier(.34,1.48,.64,1) forwards;
-}
-.draggable-popup.tahoe-closing {
-  animation: tahoeClose .22s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes tahoeOpen {
-  from { opacity:0; transform: scale(.88) translateY(-14px); }
-  to   { opacity:1; transform: scale(1) translateY(0); }
-}
-@keyframes tahoeClose {
-  from { opacity:1; transform: scale(1) translateY(0); }
-  to   { opacity:0; transform: scale(.88) translateY(-10px); }
+.ios-btn:hover{
+  background:rgba(255,255,255,.82)!important;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 6px 16px rgba(15,23,42,.10)!important;
+  transform:translateY(-1px);
 }
 
-.dp-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 11px 14px 9px;
-  cursor: grab;
-  border-bottom: 1px solid rgba(148,163,184,.13);
-  flex-shrink: 0;
-  background: rgba(255,255,255,.35);
-  border-radius: 22px 22px 0 0;
-}
-.dp-header:active { cursor: grabbing; }
-.dp-header-title { font-size: 13px; letter-spacing: .03em; }
-.dp-body {
-  overflow-y: auto;
-  padding: 10px 12px 14px;
-  flex: 1;
-}
-.dp-body::-webkit-scrollbar { width: 5px; }
-.dp-body::-webkit-scrollbar-thumb { background: rgba(148,163,184,.38); border-radius: 999px; }
-
-/* ---- CALC POPUP — blank notepad style ---- */
-#calcPopup { width: min(480px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
-.calc-tape {
-  background: rgba(255,255,255,.7);
-  border: 1px solid rgba(148,163,184,.14);
-  border-radius: 14px;
-  padding: 10px 12px;
-  min-height: 80px;
-  max-height: 45vh;
-  overflow-y: auto;
-  font-family: 'SF Mono', 'Consolas', 'Fira Mono', monospace;
-  font-size: 13px;
-  line-height: 1.7;
-  margin-bottom: 8px;
-}
-.calc-tape::-webkit-scrollbar { width: 4px; }
-.calc-tape::-webkit-scrollbar-thumb { background: rgba(148,163,184,.3); border-radius: 999px; }
-.tape-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 1px 0;
-  border-bottom: 1px solid rgba(148,163,184,.08);
-  gap: 10px;
-}
-.tape-line:last-child { border-bottom: none; }
-.tape-expr { color: var(--muted); font-size: 12px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tape-val  { font-size: 13px; white-space: nowrap; }
-.tape-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 12px;
-  background: rgba(17,24,39,.06);
-  border-radius: 10px;
-  margin-bottom: 8px;
-}
-.tape-total .lbl { font-size: 11px; color: var(--muted); }
-.tape-total .val { font-size: 16px; letter-spacing: .02em; }
-.calc-input-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.calc-notepad-input {
-  flex: 1;
-  font-family: 'SF Mono','Consolas',monospace;
-  font-size: 13px;
-  border-radius: 11px;
-  border: 1px solid rgba(148,163,184,.2);
-  background: rgba(255,255,255,.8);
-  padding: 7px 10px;
-  min-height: 34px;
-}
-.calc-notepad-input:focus {
-  border-color: rgba(17,24,39,.3);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,.5), 0 0 0 5px rgba(148,163,184,.1);
-}
-
-/* ---- FX Popup ---- */
-#fxPopup { width: min(600px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
-.fx-rate-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
-  gap: 7px;
-  margin-top: 8px;
-}
-.fx-rate-pill {
-  background: rgba(255,255,255,.6);
-  border: 1px solid rgba(255,255,255,.5);
-  border-radius: 12px;
-  padding: 7px 9px;
-  text-align: center;
-  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset;
-}
-.fx-rate-pill .cur  { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
-.fx-rate-pill .rate { font-size: 13px; }
-
-/* ---- LOCAL CHARGES RECORD ---- */
-#lcPopup { width: min(1000px, calc(100vw - 20px)); top: 90px; left: 50%; transform: translateX(-50%); }
-.lc-seq-section {
-  border: 1px solid rgba(148,163,184,.14);
-  border-radius: 14px;
-  margin-bottom: 9px;
-  overflow: hidden;
-}
-.lc-seq-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 7px 11px;
-  background: rgba(255,255,255,.50);
-  border-bottom: 1px solid rgba(148,163,184,.11);
-  flex-wrap: wrap;
-}
-.lc-seq-title { font-size: 12px; letter-spacing: .02em; }
-.lc-seq-sub   { font-size: 11px; color: var(--muted); }
-.lc-seq-actions { display: flex; gap: 5px; align-items: center; }
-.lc-seq-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.lc-seq-table th {
-  background: rgba(248,250,252,.8);
-  padding: 4px 8px; text-align: left;
-  border-bottom: 1px solid rgba(148,163,184,.12);
-  font-size: 11px; color: var(--muted);
-}
-.lc-seq-table td {
-  padding: 4px 8px;
-  border-bottom: 1px solid rgba(148,163,184,.07);
-}
-.lc-seq-table tbody tr:last-child td { border-bottom: none; }
-.lc-seq-table tbody tr:hover { background: rgba(255,255,255,.42); }
-.lc-add-form {
-  background: rgba(255,255,255,.44);
-  border: 1px solid rgba(148,163,184,.13);
-  border-radius: 14px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.lc-form-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 70px 80px 1fr auto;
-  gap: 6px;
-  align-items: end;
-}
-.lc-form-grid .field { margin: 0; }
-.lc-records-wrap { max-height: 52vh; overflow-y: auto; }
-.lc-records-wrap::-webkit-scrollbar { width: 5px; }
-.lc-records-wrap::-webkit-scrollbar-thumb { background: rgba(148,163,184,.36); border-radius: 999px; }
-
-/* iOS-style header buttons */
-.ios-btn {
-  background: rgba(255,255,255,.62);
-  border: 1px solid rgba(255,255,255,.74);
-  border-radius: 14px;
-  box-shadow: 0 1px 0 rgba(255,255,255,.72) inset, 0 4px 12px rgba(15,23,42,.07);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  transition: .16s ease;
-}
-.ios-btn:hover {
-  background: rgba(255,255,255,.82);
-  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 6px 16px rgba(15,23,42,.10);
-  transform: translateY(-1px);
-}
-
-@media(max-width:640px){
-  .lc-form-grid { grid-template-columns: 1fr 1fr; }
-  #lcPopup { width: calc(100vw - 14px); }
-}
-
-
-/* ---- Action column alignment ---- */
-td.actions {
+/* Action column alignment */
+td.actions{
   display:table-cell!important;
   vertical-align:middle!important;
   text-align:center!important;
   white-space:nowrap!important;
   padding:3px 4px!important;
 }
-.actions {
+.actions{
   display:inline-flex!important;
   flex-direction:row!important;
   align-items:center!important;
@@ -975,105 +759,152 @@ td.actions {
   gap:2px!important;
   flex-wrap:nowrap!important;
 }
-.icon-btn {
-  width:24px!important;
-  height:24px!important;
-  min-height:24px!important;
-  padding:0!important;
-  font-size:11px!important;
-  flex-shrink:0!important;
-  border-radius:7px!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
+.icon-btn{
+  width:24px!important;height:24px!important;min-height:24px!important;
+  padding:0!important;font-size:11px!important;flex-shrink:0!important;
+  border-radius:7px!important;display:inline-flex!important;
+  align-items:center!important;justify-content:center!important;
 }
-col.col-act { width:132px!important; }
-
-/* LC action button — teal */
-.icon-btn.lc-act {
+col.col-act{width:140px!important}
+.icon-btn.lc-act{
   background:rgba(5,150,105,.10)!important;
   border-color:rgba(5,150,105,.26)!important;
   color:#065f46!important;
 }
-.icon-btn.lc-act:hover { background:rgba(5,150,105,.22)!important; transform:translateY(-1px); }
+.icon-btn.lc-act:hover{background:rgba(5,150,105,.22)!important;transform:translateY(-1px)}
 
-/* ---- FX Converter section ---- */
-.fx-converter {
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(255,255,255,.55);
-  border:1px solid rgba(255,255,255,.6);
+/* Draggable popup — Tahoe glass */
+.draggable-popup{
+  position:fixed;z-index:1100;
+  display:flex;flex-direction:column;
+  min-width:300px;max-height:92vh;overflow:hidden;
+  background:rgba(245,247,252,.76);
+  border:1px solid rgba(255,255,255,.80);
+  backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
+  -webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
+  box-shadow:0 2px 0 rgba(255,255,255,.72) inset,0 24px 56px rgba(15,23,42,.15),0 1px 0 rgba(255,255,255,.6);
+  border-radius:22px;
+  user-select:none;
+  top:80px;left:50%;transform:translateX(-50%);
+}
+.draggable-popup.hidden{display:none!important}
+@keyframes tahoeOpen{from{opacity:0;transform:scale(.88) translateY(-14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes tahoeClose{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.88) translateY(-10px)}}
+.tahoe-opening{animation:tahoeOpen .28s cubic-bezier(.34,1.48,.64,1) forwards}
+.tahoe-closing{animation:tahoeClose .2s cubic-bezier(.4,0,.2,1) forwards}
+
+.dp-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;padding:11px 14px 9px;cursor:grab;
+  border-bottom:1px solid rgba(148,163,184,.13);flex-shrink:0;
+  background:rgba(255,255,255,.35);border-radius:22px 22px 0 0;
+}
+.dp-header:active{cursor:grabbing}
+.dp-header-title{font-size:13px;letter-spacing:.03em}
+.dp-body{overflow-y:auto;padding:10px 12px 14px;flex:1}
+.dp-body::-webkit-scrollbar{width:5px}
+.dp-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.38);border-radius:999px}
+.dp-close-btn{
+  background:rgba(220,38,38,.12)!important;
+  border-color:rgba(220,38,38,.22)!important;
+  color:#dc2626!important;
+}
+
+/* ---- CALC TAPE ---- */
+#calcPopup{width:min(480px,calc(100vw - 20px))}
+.calc-total-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:8px 12px;margin-bottom:8px;flex-shrink:0;
+  background:rgba(17,24,39,.06);border-radius:12px;
+  border:1px solid rgba(148,163,184,.13);
+}
+.calc-total-row .lbl{font-size:11px;color:var(--muted)}
+.calc-total-row .val{font-size:18px;letter-spacing:.02em;font-family:'SF Mono','Consolas',monospace}
+.calc-tape{
+  background:rgba(255,255,255,.65);border:1px solid rgba(148,163,184,.14);
+  border-radius:12px;padding:8px 10px;min-height:70px;max-height:40vh;
+  overflow-y:auto;font-family:'SF Mono','Consolas',monospace;
+  font-size:12px;line-height:1.8;margin-bottom:8px;
+}
+.calc-tape::-webkit-scrollbar{width:4px}
+.calc-tape::-webkit-scrollbar-thumb{background:rgba(148,163,184,.3);border-radius:999px}
+.tape-line{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:1px 0;border-bottom:1px solid rgba(148,163,184,.07);gap:10px;
+}
+.tape-line:last-child{border-bottom:none}
+.tape-expr{color:var(--muted);font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tape-val{font-size:12px;white-space:nowrap}
+.calc-input-row{display:flex;gap:5px;align-items:center;margin-bottom:6px}
+.calc-notepad-input{
+  flex:1;font-family:'SF Mono','Consolas',monospace;font-size:13px;
+  border-radius:11px;border:1px solid rgba(148,163,184,.2);
+  background:rgba(255,255,255,.8);padding:7px 10px;min-height:34px;
+}
+.calc-notepad-input:focus{border-color:rgba(17,24,39,.3);outline:none;
+  box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 0 5px rgba(148,163,184,.1)}
+
+/* ---- FX ---- */
+#fxPopup{width:min(620px,calc(100vw - 20px))}
+.fx-rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:8px}
+.fx-rate-pill{
+  background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5);
+  border-radius:11px;padding:7px 9px;text-align:center;
   box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
 }
-.fx-conv-row {
-  display:grid;
-  grid-template-columns:70px 1fr 18px 60px 1fr;
-  gap:6px;
-  align-items:center;
-  margin-bottom:7px;
+.fx-rate-pill .cur{font-size:11px;color:var(--muted);margin-bottom:2px}
+.fx-rate-pill .rate{font-size:13px}
+.fx-converter{
+  margin-top:10px;padding:10px 12px;border-radius:14px;
+  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
 }
-.fx-conv-arrow { text-align:center; color:var(--muted); font-size:13px; }
-.fx-conv-pills {
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  margin-top:4px;
+.fx-conv-grid{display:grid;grid-template-columns:1fr 80px 1fr auto;gap:6px;align-items:end;margin-bottom:7px}
+.fx-conv-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.fx-conv-pill{
+  padding:4px 9px;border-radius:999px;font-size:12px;
+  background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.55);white-space:nowrap;
 }
-.fx-conv-pill {
-  padding:4px 9px;
-  border-radius:999px;
-  font-size:12px;
-  background:rgba(255,255,255,.6);
-  border:1px solid rgba(255,255,255,.55);
-  white-space:nowrap;
-}
-.fx-conv-pill .c { color:var(--muted); font-size:10px; margin-right:3px; }
+.fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
 
-/* ---- LC Per-Quote Popup ---- */
-#lcQuotePopup { width:min(700px,calc(100vw - 20px)); top:90px; left:50%; transform:translateX(-50%); }
-.lcq-rate-banner {
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(148,163,184,.13);
-  border-radius:12px;
-  padding:8px 12px;
-  margin-bottom:8px;
-  font-size:12px;
+/* ---- LOCAL CHARGES ---- */
+#lcPopup{width:min(860px,calc(100vw - 20px))}
+.lc-header-row{
+  display:grid;grid-template-columns:1fr 80px 80px 90px 90px auto;
+  gap:6px;align-items:end;margin-bottom:8px;
+  padding:10px;border-radius:14px;
+  background:rgba(255,255,255,.44);border:1px solid rgba(148,163,184,.13);
 }
-.lcq-rate-banner .rb-title { font-size:13px; margin-bottom:2px; }
-.lcq-rate-banner .rb-sub   { color:var(--muted); font-size:11px; }
-.lcq-add-row {
-  display:grid;
-  grid-template-columns:1.8fr 1fr 68px 80px 1fr auto;
-  gap:5px;
-  align-items:end;
-  margin-bottom:8px;
+.lc-header-row .field{margin:0}
+.lc-header-row input,.lc-header-row select{min-height:30px}
+.lc-table-scroll{
+  max-height:55vh;overflow-y:auto;border-radius:12px;
+  border:1px solid rgba(148,163,184,.13);background:rgba(255,255,255,.44);
 }
-.lcq-add-row .field { margin:0; }
-.lcq-add-row input,.lcq-add-row select { min-height:30px; }
-.lcq-table-wrap {
-  max-height:42vh;
-  overflow-y:auto;
-  border-radius:12px;
-  border:1px solid rgba(148,163,184,.13);
-  background:rgba(255,255,255,.44);
-  margin-bottom:8px;
+.lc-table-scroll::-webkit-scrollbar{width:5px}
+.lc-table-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.36);border-radius:999px}
+.lc-main-table{width:100%;border-collapse:collapse;font-size:12px}
+.lc-main-table th{
+  background:rgba(248,250,252,.88);padding:5px 8px;text-align:left;
+  border-bottom:1px solid rgba(148,163,184,.13);font-size:11px;color:var(--muted);
+  position:sticky;top:0;z-index:2;
 }
-.lcq-table-wrap::-webkit-scrollbar { width:5px; }
-.lcq-table-wrap::-webkit-scrollbar-thumb { background:rgba(148,163,184,.36); border-radius:999px; }
-.lcq-table { width:100%; border-collapse:collapse; font-size:12px; }
-.lcq-table th {
-  background:rgba(248,250,252,.88);
-  padding:4px 8px;
-  text-align:left;
-  border-bottom:1px solid rgba(148,163,184,.13);
-  font-size:11px;
-  color:var(--muted);
-  position:sticky; top:0; z-index:2;
+.lc-main-table td{padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.07)}
+.lc-main-table tbody tr:last-child td{border-bottom:none}
+.lc-main-table tbody tr:hover{background:rgba(255,255,255,.44)}
+.lc-main-table td input,.lc-main-table td select{
+  min-height:26px!important;padding:3px 6px!important;font-size:11px!important;
+  border-radius:7px!important;
 }
-.lcq-table td { padding:5px 8px; border-bottom:1px solid rgba(148,163,184,.07); }
-.lcq-table tbody tr:last-child td { border-bottom:none; }
-.lcq-table tbody tr:hover { background:rgba(255,255,255,.44); }
+.lc-group-head td{
+  background:rgba(17,24,39,.04)!important;
+  font-size:11px!important;color:var(--muted)!important;
+  padding:4px 8px!important;border-top:1px solid rgba(148,163,184,.14)!important;
+}
+@media(max-width:640px){
+  .lc-header-row{grid-template-columns:1fr 1fr}
+  #fxPopup,#lcPopup{width:calc(100vw - 14px)}
+}
 
 </style>
 </head>
@@ -1091,7 +922,7 @@ col.col-act { width:132px!important; }
   <div class="card narrow">
     <div class="title">FR8X ACCESS</div>
     <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
-    <div class="pin-row" onclick="this.querySelector('input:not(:placeholder-shown) ~ input, input:first-child').focus()">
+    <div class="pin-row">
       <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
       <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
@@ -1180,7 +1011,7 @@ col.col-act { width:132px!important; }
     <div class="header-right">
       <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
       <span class="badge" id="activeCount">0 ACTIVE</span>
-      <button class="ghost ios-btn icon-only" id="openCalcBtn" title="AUTO CALCULATION"><i class="bi bi-calculator-fill"></i></button>
+      <button class="ghost ios-btn icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
       <button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
       <button class="ghost ios-btn icon-only" id="openLcBtn" title="LOCAL CHARGES RECORD"><i class="bi bi-receipt"></i></button>
       <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
@@ -1311,7 +1142,7 @@ col.col-act { width:132px!important; }
           </div>
 
           <div class="field span12" style="margin-bottom:0">
-            <button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px" title="LOCAL CHARGES RECORD FOR THIS RATE"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</button>
+            <button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES FOR THIS RATE</button>
           </div>
 
           <div class="field span12">
@@ -2641,7 +2472,7 @@ document.addEventListener("click", e => {
   if(btn){
     const id = btn.dataset.id;
     if(btn.dataset.action === "copy") window.copyRate(id);
-    if(btn.dataset.action === "lc")   window.openLcQuote(id);
+    if(btn.dataset.action === "lc")   window.openLcForRate(id);
     if(btn.dataset.action === "duplicate") duplicateRate(id);
     if(btn.dataset.action === "edit") window.editRate(id);
     if(btn.dataset.action === "delete") window.delRate(id);
@@ -2683,13 +2514,13 @@ if(sessionValid()) showApp();
 
 
 // ================================================================
-//  V3 FEATURES: CALC TAPE | FX RATES | LOCAL CHARGES RECORD BY SEQ
+//  FR8X v5 FEATURES — CALCULATOR | FX RATES | LOCAL CHARGES
 // ================================================================
 
-// ---- TAHOE ANIMATION OPEN/CLOSE ----
+// ---- TAHOE OPEN/CLOSE ----
 function tahoeOpen(el) {
-  el.classList.remove('hidden', 'tahoe-closing');
-  void el.offsetWidth; // reflow
+  el.classList.remove('hidden','tahoe-closing');
+  void el.offsetWidth;
   el.classList.add('tahoe-opening');
   el.addEventListener('animationend', () => el.classList.remove('tahoe-opening'), { once: true });
 }
@@ -2701,20 +2532,17 @@ function tahoeClose(el) {
   }, { once: true });
 }
 
-// ---- DRAG HELPER ----
+// ---- DRAG ----
 function makeDraggable(popup, handle) {
-  let ox = 0, oy = 0, dragging = false;
-  function snapToFixed() {
-    if (!popup.style.left || popup.style.transform.includes('translateX')) {
+  let ox=0, oy=0, dragging=false;
+  handle.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    if (popup.style.transform && popup.style.transform.includes('translateX')) {
       const r = popup.getBoundingClientRect();
       popup.style.left = r.left + 'px';
       popup.style.top  = r.top  + 'px';
       popup.style.transform = 'none';
     }
-  }
-  handle.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
-    snapToFixed();
     dragging = true;
     ox = e.clientX - popup.getBoundingClientRect().left;
     oy = e.clientY - popup.getBoundingClientRect().top;
@@ -2722,106 +2550,90 @@ function makeDraggable(popup, handle) {
   });
   document.addEventListener('mousemove', e => {
     if (!dragging) return;
-    let nx = e.clientX - ox;
-    let ny = e.clientY - oy;
-    nx = Math.max(0, Math.min(nx, window.innerWidth  - popup.offsetWidth));
-    ny = Math.max(0, Math.min(ny, window.innerHeight - popup.offsetHeight));
+    let nx = Math.max(0, Math.min(e.clientX - ox, window.innerWidth  - popup.offsetWidth));
+    let ny = Math.max(0, Math.min(e.clientY - oy, window.innerHeight - popup.offsetHeight));
     popup.style.left = nx + 'px';
     popup.style.top  = ny + 'px';
   });
-  document.addEventListener('mouseup', () => { dragging = false; document.body.style.userSelect = ''; });
+  document.addEventListener('mouseup', () => { dragging=false; document.body.style.userSelect=''; });
 }
 makeDraggable($('calcPopup'), $('calcPopupHeader'));
 makeDraggable($('fxPopup'),   $('fxPopupHeader'));
 makeDraggable($('lcPopup'),   $('lcPopupHeader'));
 
 // ---- SMART NUMBER PARSER ----
-function parseSmartNumber(raw) {
+function parseSmartNum(raw) {
   if (!raw && raw !== 0) return 0;
-  let s = String(raw).trim();
-  s = s.replace(/,/g, '');                          // 1,925 -> 1925
-  s = s.replace(/\(([^)]+)\)/g, '+$1');             // (500) -> +500
-  s = s.replace(/[xX×]/g, '*');                     // x/× -> *
-  s = s.replace(/(\d)\s+(\d)/g, '$1+$2');           // "1000 925" -> "1000+925"
-  s = s.replace(/^\+/, '');
-  s = s.replace(/[^0-9+\-*/.()]/g, '');
+  let s = String(raw).trim()
+    .replace(/,/g, '')           // 1,925 → 1925
+    .replace(/\(([^)]+)\)/g, '+$1')  // (500) → +500
+    .replace(/[xX×]/g, '*')     // x → *
+    .replace(/(\d)\s+(\d)/g, '$1+$2') // space → +
+    .replace(/^\+/, '')
+    .replace(/[^0-9+\-*/.()]/g, '');
   if (!s) return 0;
-  try {
-    const v = Function('"use strict"; return (' + s + ')')();
-    return isNaN(v) ? 0 : +v;
-  } catch(e) { return parseFloat(s) || 0; }
+  try { const v = Function('"use strict";return(' + s + ')')(); return isNaN(v) ? 0 : +v; }
+  catch(e) { return parseFloat(s) || 0; }
 }
 
 // ================================================================
-//  CALC TAPE — NOTEPAD STYLE
+//  CALCULATOR TAPE
 // ================================================================
-let calcTapeLines = [];   // [{expr, val}]
-let calcRunningTotal = 0;
+let _tape = [];
 
-function calcTapeRender() {
-  const tape = $('calcTape');
-  if (!calcTapeLines.length) {
-    tape.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:10px 0">TYPE A VALUE BELOW AND PRESS ENTER OR +</div>';
-    $('calcTotalVal').textContent = '0';
-    calcRunningTotal = 0;
+function _tapeRender() {
+  const el = $('calcTape');
+  if (!_tape.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR +</div>';
+    $('calcTotalVal').textContent = '0.00';
     return;
   }
-  calcRunningTotal = calcTapeLines.reduce((s, l) => s + l.val, 0);
-  tape.innerHTML = calcTapeLines.map((l, i) =>
+  const total = _tape.reduce((s, l) => s + l.v, 0);
+  el.innerHTML = _tape.map(l =>
     `<div class="tape-line">
-      <span class="tape-expr">${escapeHtml(l.expr)}</span>
-      <span class="tape-val">${l.val.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2})}</span>
+      <span class="tape-expr">${escapeHtml(l.e)}</span>
+      <span class="tape-val">${l.v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
     </div>`
   ).join('');
-  $('calcTotalVal').textContent = calcRunningTotal.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-  tape.scrollTop = tape.scrollHeight;
+  $('calcTotalVal').textContent = total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  el.scrollTop = el.scrollHeight;
 }
 
-function calcTapeAdd() {
+function _tapeAdd() {
   const inp = $('calcNotepadInput');
   const raw = inp.value.trim();
   if (!raw) return;
-  const val = parseSmartNumber(raw);
-  calcTapeLines.push({ expr: raw, val });
+  _tape.push({ e: raw, v: parseSmartNum(raw) });
   inp.value = '';
-  calcTapeRender();
+  _tapeRender();
   inp.focus();
 }
 
-$('calcAddBtn').onclick = calcTapeAdd;
+$('calcAddBtn').onclick = _tapeAdd;
 $('calcNotepadInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === '+') { e.preventDefault(); calcTapeAdd(); }
-  if (e.key === 'Backspace' && $('calcNotepadInput').value === '') { calcTapeUndo(); }
+  if (e.key === 'Enter') { e.preventDefault(); _tapeAdd(); }
+  if (e.key === '+' && !e.shiftKey) { e.preventDefault(); _tapeAdd(); }
+  if (e.key === 'Backspace' && !$('calcNotepadInput').value) { _tape.pop(); _tapeRender(); }
 });
-$('calcUndoBtn').onclick    = calcTapeUndo;
-$('calcClearTapeBtn').onclick = () => { calcTapeLines = []; calcTapeRender(); };
-
-function calcTapeUndo() {
-  if (!calcTapeLines.length) return;
-  calcTapeLines.pop();
-  calcTapeRender();
-}
-
-$('copyCalcBtn').onclick = () => {
-  if (!calcTapeLines.length) { showCopyToast('TAPE IS EMPTY'); return; }
-  const lines = calcTapeLines.map(l => `${l.expr}  =  ${l.val.toFixed(2)}`);
-  lines.push(`------`);
-  lines.push(`TOTAL  =  ${calcRunningTotal.toFixed(2)}`);
-  copyText(lines.join('\n'));
+$('calcUndoBtn').onclick  = () => { _tape.pop(); _tapeRender(); };
+$('calcClearBtn').onclick = () => { _tape = []; _tapeRender(); };
+$('copyCalcBtn').onclick  = async () => {
+  if (!_tape.length) { showCopyToast('TAPE IS EMPTY'); return; }
+  const total = _tape.reduce((s,l)=>s+l.v,0);
+  const lines = _tape.map(l=>`${l.e}  =  ${l.v.toFixed(2)}`);
+  lines.push('──────────────');
+  lines.push(`TOTAL  =  ${total.toFixed(2)}`);
+  await copyText(lines.join('\n'));
   showCopyToast('TAPE COPIED');
 };
-
-$('openCalcBtn').onclick = () => {
-  tahoeOpen($('calcPopup'));
-  $('calcNotepadInput').focus();
-};
+$('openCalcBtn').onclick  = () => { tahoeOpen($('calcPopup')); setTimeout(()=>$('calcNotepadInput').focus(),80); };
 $('closeCalcBtn').onclick = () => tahoeClose($('calcPopup'));
 
 // ================================================================
 //  EXCHANGE RATES
 // ================================================================
 let fxRates = {};
-const FX_CURRENCIES = ['INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD','BDT','PKR','LKR','THB','MYR'];
+const FX_SHOW = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD','BDT','PKR','THB','MYR'];
 
 async function fetchFxRates() {
   $('fxStatusMsg').textContent = 'FETCHING...';
@@ -2831,423 +2643,364 @@ async function fetchFxRates() {
     const json = await res.json();
     if (json.result === 'success') {
       fxRates = json.rates || {};
-      renderFxRates();
+      _renderFxGrid();
       $('fxTimestamp').textContent = 'UPDATED: ' + new Date().toLocaleTimeString();
       $('fxStatusMsg').textContent = '';
-    } else {
-      $('fxStatusMsg').textContent = 'API ERROR';
-    }
-  } catch(err) {
-    $('fxStatusMsg').textContent = 'NETWORK ERROR';
-  }
+    } else { $('fxStatusMsg').textContent = 'API ERROR'; }
+  } catch(e) { $('fxStatusMsg').textContent = 'NETWORK ERROR'; }
   $('refreshFxBtn').disabled = false;
 }
 
-function renderFxRates() {
-  $('fxRateGrid').innerHTML = ['USD', ...FX_CURRENCIES].map(cur => {
+function _renderFxGrid() {
+  $('fxRateGrid').innerHTML = FX_SHOW.map(cur => {
     const rate = cur === 'USD' ? 1 : (fxRates[cur] || '-');
     return `<div class="fx-rate-pill">
-      <div class="cur">${escapeHtml(cur)}</div>
-      <div class="rate">${cur === 'USD' ? '1.0000' : (typeof rate === 'number' ? rate.toFixed(4) : rate)}</div>
+      <div class="cur">${cur}</div>
+      <div class="rate">${cur==='USD'?'1.0000':(typeof rate==='number'?rate.toFixed(4):rate)}</div>
     </div>`;
+  }).join('');
+}
+
+function fxConvert() {
+  const amt = parseFloat($('fxConvAmt').value||'0')||0;
+  const from = $('fxConvFrom').value;
+  const res  = $('fxConvResult');
+  if (!amt) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">ENTER AN AMOUNT</span>'; return; }
+  if (!Object.keys(fxRates).length) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">REFRESH RATES FIRST</span>'; return; }
+  const amtUSD = from === 'USD' ? amt : amt / fxRates[from];
+  res.innerHTML = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD'].map(cur => {
+    const val = cur === 'USD' ? amtUSD : amtUSD * fxRates[cur];
+    return `<span class="fx-conv-pill"><span class="c">${cur}</span>${val.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
   }).join('');
 }
 
 $('refreshFxBtn').onclick = fetchFxRates;
-$('openFxBtn').onclick = () => {
-  tahoeOpen($('fxPopup'));
-  if (!Object.keys(fxRates).length) fetchFxRates();
-};
-$('closeFxBtn').onclick = () => tahoeClose($('fxPopup'));
+$('fxConvBtn').onclick    = fxConvert;
+$('fxConvAmt').addEventListener('keydown', e => { if(e.key==='Enter') fxConvert(); });
+$('openFxBtn').onclick    = () => { tahoeOpen($('fxPopup')); if(!Object.keys(fxRates).length) fetchFxRates(); };
+$('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
 
 // ================================================================
-//  LOCAL CHARGES RECORD — SEQ-BASED
+//  LOCAL CHARGES — PER RATE, SEQ-BASED, EDITABLE
 // ================================================================
-const LC_KEY = 'fr8x_lc_v3';
-// Structure: { [seq]: { seq, carrier, route, lines:[{id,desc,type,currency,amount,appliesTo}] } }
-let lcStore = {};
+const LC_STORE_KEY = 'fr8x_lc_v5';
+// lcDB = { [seq]: { seq, carrier, pol, pod, dv20, hc40, lines:[{id,desc,type,cur,amt,app}] } }
+let lcDB = {};
+let lcActiveSeq = null;
 
-function lcLoad() {
-  try { lcStore = JSON.parse(localStorage.getItem(LC_KEY) || '{}'); } catch(e) { lcStore = {}; }
-  lcPopulateSeqDatalist();
-  lcRenderAll();
-}
-function lcSave() {
-  localStorage.setItem(LC_KEY, JSON.stringify(lcStore));
-}
+function lcDbLoad() { try { lcDB = JSON.parse(localStorage.getItem(LC_STORE_KEY)||'{}'); } catch(e){ lcDB={}; } }
+function lcDbSave() { localStorage.setItem(LC_STORE_KEY, JSON.stringify(lcDB)); }
 
-// Populate datalist from existing store + live data
-function lcPopulateSeqDatalist() {
-  const dl = $('lcSeqDatalist');
-  const fromData = data.map(r => r.seq).filter(Boolean);
-  const fromStore = Object.keys(lcStore);
-  const all = [...new Set([...fromData, ...fromStore])].sort();
-  dl.innerHTML = all.map(s => `<option value="${escapeHtml(s)}">`).join('');
+// Populate SEQ datalist from live rates + stored keys
+function lcPopulateSeqList() {
+  const dl = $('lcSeqList');
+  const fromRates  = data.map(r => r.seq).filter(Boolean);
+  const fromStored = Object.keys(lcDB);
+  const all = [...new Set([...fromRates, ...fromStored])].sort();
+  dl.innerHTML = all.map(s=>`<option value="${escapeHtml(s)}">`).join('');
 }
 
-// Auto-fill carrier when SEQ is typed/selected
-$('lcSeqInput').addEventListener('change', lcAutoFillCarrier);
-$('lcSeqInput').addEventListener('blur',   lcAutoFillCarrier);
-function lcAutoFillCarrier() {
-  const seq = $('lcSeqInput').value.trim().toUpperCase();
-  if (!seq) return;
-  // Check live rates first
+// Fetch rate info from live data by SEQ
+function lcFetchRate() {
+  const seq = $('lcSeqPick').value.trim().toUpperCase();
+  if (!seq) { alert('ENTER A SEQ NUMBER FIRST.'); return; }
+  lcActiveSeq = seq;
+
+  // Try to fetch from live rates
   const r = data.find(x => (x.seq||'').toUpperCase() === seq);
   if (r) {
-    const parts = [r.carrier, r.pol || r.por, '→', r.pod || r.fpod].filter(Boolean);
-    $('lcCarrierInput').value = parts.join(' ');
-  } else if (lcStore[seq]) {
-    $('lcCarrierInput').value = lcStore[seq].carrier || '';
+    $('lcCarrierField').value = r.carrier || '';
+    $('lcPolField').value     = r.pol || r.por || '';
+    $('lcPodField').value     = r.pod || r.fpod || '';
+    $('lcDv20Field').value    = r.dv20 || '';
+    $('lcHc40Field').value    = r.hc40 || '';
+  } else if (lcDB[seq]) {
+    $('lcCarrierField').value = lcDB[seq].carrier || '';
+    $('lcPolField').value     = lcDB[seq].pol     || '';
+    $('lcPodField').value     = lcDB[seq].pod     || '';
+    $('lcDv20Field').value    = lcDB[seq].dv20    || '';
+    $('lcHc40Field').value    = lcDB[seq].hc40    || '';
   }
+
+  // Render saved lines for this SEQ
+  lcRenderTable(seq);
+  $('lcSaveStatus').textContent = r ? `✓ RATE FOUND: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''}` : 'NEW SEQ — FILL DETAILS AND SAVE';
 }
 
-$('addLcLineBtn').onclick = () => {
-  const seq      = $('lcSeqInput').value.trim().toUpperCase();
-  const carrier  = $('lcCarrierInput').value.trim().toUpperCase() || seq;
-  const desc     = $('lcDesc').value.trim().toUpperCase();
-  const type     = $('lcType').value;
-  const currency = $('lcCur').value;
-  const amount   = parseFloat($('lcAmount').value || '0') || 0;
-  const app      = $('lcAppliesTo').value;
-  if (!seq)    return alert('ENTER A SEQ NUMBER.');
-  if (!desc)   return alert('ENTER DESCRIPTION.');
-  if (!amount) return alert('ENTER AMOUNT > 0.');
+// Auto-fill when SEQ input changes
+$('lcSeqPick').addEventListener('change', lcFetchRate);
+$('lcFetchRateBtn').onclick = lcFetchRate;
 
-  if (!lcStore[seq]) {
-    lcStore[seq] = { seq, carrier, lines: [] };
-  } else {
-    // Update carrier label if given
-    if (carrier) lcStore[seq].carrier = carrier;
-  }
-  const lineId = 'lc' + Date.now() + Math.random().toString(36).slice(2,6);
-  lcStore[seq].lines.push({ id: lineId, desc, type, currency, amount, appliesTo: app });
-  lcSave();
-  lcLoad();
-  $('lcDesc').value = ''; $('lcAmount').value = '';
-  showCopyToast('CHARGE ADDED TO SEQ ' + seq);
-};
-
-window.lcDeleteLine = function(seq, lineId) {
-  if (!lcStore[seq]) return;
-  lcStore[seq].lines = lcStore[seq].lines.filter(l => l.id !== lineId);
-  if (!lcStore[seq].lines.length) delete lcStore[seq];
-  lcSave(); lcLoad();
-};
-window.lcDeleteSeq = function(seq) {
-  if (!confirm('DELETE ALL CHARGES FOR SEQ ' + seq + '?')) return;
-  delete lcStore[seq];
-  lcSave(); lcLoad();
-};
-window.lcCopySeq = function(seq) {
-  const entry = lcStore[seq];
-  if (!entry) return;
-  let lines = [`LOCAL CHARGES — SEQ: ${seq}`, `CARRIER/ROUTE: ${entry.carrier || '—'}`, `UID: ${seq}`];
-  entry.lines.forEach(l =>
-    lines.push(`${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo.toUpperCase()})`)
-  );
-  copyText(lines.join('\n'));
-  showCopyToast('CHARGES FOR SEQ ' + seq + ' COPIED');
-};
-
-function lcRenderAll() {
-  const wrap = $('lcRecordsWrap');
-  const seqs = Object.keys(lcStore).sort();
-  if (!seqs.length) {
-    wrap.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:10px">NO LOCAL CHARGES RECORDS YET.</div>';
-    return;
-  }
-  wrap.innerHTML = seqs.map(seq => {
-    const entry = lcStore[seq];
-    return `
-    <div class="lc-seq-section">
-      <div class="lc-seq-head">
-        <div>
-          <div class="lc-seq-title">SEQ: ${escapeHtml(seq)}</div>
-          <div class="lc-seq-sub">${escapeHtml(entry.carrier || '—')}</div>
-        </div>
-        <div class="lc-seq-actions">
-          <button class="ghost ios-btn" style="font-size:11px;min-height:28px;padding:0 8px" onclick="lcCopySeq('${escapeHtml(seq)}')">
-            <i class="bi bi-clipboard"></i> COPY
-          </button>
-          <button class="icon-btn danger" onclick="lcDeleteSeq('${escapeHtml(seq)}')"><i class="bi bi-x-square"></i></button>
-        </div>
-      </div>
-      <table class="lc-seq-table">
-        <thead>
-          <tr><th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th></tr>
-        </thead>
-        <tbody>
-          ${entry.lines.map(l => `
-            <tr>
-              <td>${escapeHtml(l.desc)}</td>
-              <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
-              <td>${escapeHtml(l.currency)}</td>
-              <td>${escapeHtml(String(l.amount))}</td>
-              <td>${escapeHtml(l.appliesTo === 'both' ? 'BOTH' : l.appliesTo.toUpperCase())}</td>
-              <td>
-                <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(seq)}','${escapeHtml(l.id)}')" title="Remove">
-                  <i class="bi bi-x"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>`;
-  }).join('');
-}
-
-// Button wiring
-$('openLcBtn').onclick = () => { lcLoad(); tahoeOpen($('lcPopup')); };
-$('closeLcBtn').onclick = () => tahoeClose($('lcPopup'));
-
-// Local Charges button inside editor — pre-fill SEQ from active rate
-const _lcEditorBtn = document.getElementById('openLcEditorBtn');
-if (_lcEditorBtn) {
-  _lcEditorBtn.onclick = () => {
-    lcLoad();
-    // Try to prefill from current editor SEQ
-    const currentSeq = (document.getElementById('carrier') && editId)
-      ? (data.find(r => r.id === editId) || {}).seq || ''
-      : '';
-    if (currentSeq) {
-      $('lcSeqInput').value = currentSeq;
-      lcAutoFillCarrier();
-    }
-    tahoeOpen($('lcPopup'));
-  };
-}
-
-// Initial load
-lcLoad();
-
-
-
-// ================================================================
-//  V4 NEW JS: LC PER-QUOTE | FX CONVERTER | COPY RATE+LC
-// ================================================================
-
-// ---- LC PER-QUOTE STORAGE ----
-// { [rateId]: { lines:[{id,desc,type,currency,amount,appliesTo}] } }
-const LCQ_KEY = 'fr8x_lcq_v1';
-let lcqStore = {};
-let lcqActiveRateId = null;
-
-function lcqLoad() {
-  try { lcqStore = JSON.parse(localStorage.getItem(LCQ_KEY)||'{}'); } catch(e){ lcqStore={}; }
-}
-function lcqSave() {
-  localStorage.setItem(LCQ_KEY, JSON.stringify(lcqStore));
-}
-
-function lcqGetLines(rateId) {
-  return (lcqStore[rateId]||{}).lines || [];
-}
-
-function lcqRender(rateId) {
-  const lines = lcqGetLines(rateId);
-  const tbody = $('lcqTbody');
+// Render lines for a SEQ into editable table
+function lcRenderTable(seq) {
+  const lines = (lcDB[seq]||{}).lines || [];
+  const tbody = $('lcTableBody');
   if (!lines.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES ADDED YET — ADD ONE ABOVE</td></tr>';
+    tbody.innerHTML = '<tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:10px">NO CHARGES YET — ADD BELOW</td></tr>';
     return;
   }
-  tbody.innerHTML = lines.map(l => `
-    <tr>
-      <td>${escapeHtml(l.desc)}</td>
-      <td>${escapeHtml(l.type.replace(/_/g,' ').toUpperCase())}</td>
-      <td>${escapeHtml(l.currency)}</td>
-      <td>${escapeHtml(String(l.amount))}</td>
-      <td>${escapeHtml(l.appliesTo==='both'?'BOTH':l.appliesTo.toUpperCase())}</td>
+  tbody.innerHTML = lines.map((l,i) => `
+    <tr data-lid="${escapeHtml(l.id)}">
+      <td><input value="${escapeHtml(l.desc)}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','desc',this.value)" style="width:100%"></td>
       <td>
-        <button class="icon-btn danger" onclick="lcqDeleteLine('${escapeHtml(rateId)}','${escapeHtml(l.id)}')" title="Remove">
-          <i class="bi bi-x"></i>
-        </button>
+        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','type',this.value)" style="width:100%">
+          ${['per_container','per_bl','per_cbm','per_ton','lumpsum'].map(t=>
+            `<option value="${t}" ${l.type===t?'selected':''}>${t.replace(/_/g,' ').toUpperCase()}</option>`
+          ).join('')}
+        </select>
+      </td>
+      <td>
+        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','cur',this.value)" style="width:100%">
+          ${['USD','INR','EUR','AED','GBP','CNY'].map(c=>
+            `<option value="${c}" ${l.cur===c?'selected':''}>${c}</option>`
+          ).join('')}
+        </select>
+      </td>
+      <td><input type="number" value="${escapeHtml(String(l.amt))}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','amt',this.value)" style="width:100%"></td>
+      <td>
+        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','app',this.value)" style="width:100%">
+          ${['both','20dv','40hc'].map(a=>
+            `<option value="${a}" ${l.app===a?'selected':''}>${a==='both'?'BOTH':a.toUpperCase()}</option>`
+          ).join('')}
+        </select>
+      </td>
+      <td>
+        <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(seq)}','${escapeHtml(l.id)}')" title="Delete"><i class="bi bi-x"></i></button>
       </td>
     </tr>
   `).join('');
 }
 
-window.lcqDeleteLine = function(rateId, lineId) {
-  if (!lcqStore[rateId]) return;
-  lcqStore[rateId].lines = lcqStore[rateId].lines.filter(l => l.id !== lineId);
-  lcqSave(); lcqRender(rateId);
+// Inline edit a field
+window.lcEditField = function(seq, lid, field, val) {
+  if (!lcDB[seq]) return;
+  const line = lcDB[seq].lines.find(l=>l.id===lid);
+  if (!line) return;
+  line[field] = field === 'amt' ? (parseFloat(val)||0) : val.trim().toUpperCase();
+  lcDbSave();
 };
 
-$('lcqAddBtn').onclick = () => {
-  const rateId = lcqActiveRateId;
-  if (!rateId) return alert('NO RATE SELECTED.');
-  const desc    = $('lcqDesc').value.trim().toUpperCase();
-  const type    = $('lcqType').value;
-  const currency= $('lcqCur').value;
-  const amount  = parseFloat($('lcqAmount').value||'0')||0;
-  const app     = $('lcqAppliesTo').value;
-  if (!desc || !amount) return alert('ENTER DESCRIPTION AND AMOUNT.');
-  if (!lcqStore[rateId]) lcqStore[rateId] = { lines:[] };
-  const lineId = 'lcq'+Date.now()+Math.random().toString(36).slice(2,6);
-  lcqStore[rateId].lines.push({ id:lineId, desc, type, currency, amount, appliesTo:app });
-  lcqSave(); lcqRender(rateId);
-  $('lcqDesc').value=''; $('lcqAmount').value='';
+// Delete a line
+window.lcDeleteLine = function(seq, lid) {
+  if (!lcDB[seq]) return;
+  lcDB[seq].lines = lcDB[seq].lines.filter(l=>l.id!==lid);
+  lcDbSave(); lcRenderTable(seq);
+};
+
+// Add new row
+$('lcAddRowBtn').onclick = () => {
+  const seq = lcActiveSeq;
+  if (!seq) { alert('FETCH A RATE FIRST.'); return; }
+  const desc = $('lcNewDesc').value.trim().toUpperCase();
+  const type = $('lcNewType').value;
+  const cur  = $('lcNewCur').value;
+  const amt  = parseFloat($('lcNewAmt').value||'0')||0;
+  const app  = $('lcNewApp').value;
+  if (!desc || !amt) { alert('ENTER DESCRIPTION AND AMOUNT.'); return; }
+  if (!lcDB[seq]) lcDB[seq] = { seq, carrier:'', pol:'', pod:'', dv20:'', hc40:'', lines:[] };
+  const lid = 'lc'+Date.now()+Math.random().toString(36).slice(2,5);
+  lcDB[seq].lines.push({ id:lid, desc, type, cur, amt, app });
+  lcDbSave(); lcRenderTable(seq);
+  $('lcNewDesc').value=''; $('lcNewAmt').value='';
   showCopyToast('CHARGE ADDED');
 };
 
-// Build LC text block for a rate (for copying)
-function buildLcText(rateId) {
-  const lines = lcqGetLines(rateId);
-  if (!lines.length) return '';
-  const parts = ['LOCAL CHARGES:'];
-  lines.forEach(l => {
-    parts.push(`  ${l.desc}: ${l.currency} ${l.amount} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.appliesTo==='both'?'BOTH':l.appliesTo.toUpperCase()})`);
+// Save header fields
+$('lcSaveBtn').onclick = () => {
+  const seq = lcActiveSeq || $('lcSeqPick').value.trim().toUpperCase();
+  if (!seq) { alert('NO SEQ SELECTED.'); return; }
+  lcActiveSeq = seq;
+  if (!lcDB[seq]) lcDB[seq] = { lines:[] };
+  lcDB[seq].seq     = seq;
+  lcDB[seq].carrier = $('lcCarrierField').value.trim().toUpperCase();
+  lcDB[seq].pol     = $('lcPolField').value.trim().toUpperCase();
+  lcDB[seq].pod     = $('lcPodField').value.trim().toUpperCase();
+  lcDB[seq].dv20    = $('lcDv20Field').value.trim();
+  lcDB[seq].hc40    = $('lcHc40Field').value.trim();
+  lcDbSave();
+  $('lcSaveStatus').textContent = '✓ SAVED: ' + seq;
+  showCopyToast('LOCAL CHARGES SAVED — ' + seq);
+};
+
+// Clear all lines for current SEQ
+$('lcClearAllBtn').onclick = () => {
+  const seq = lcActiveSeq;
+  if (!seq || !confirm('CLEAR ALL CHARGES FOR SEQ ' + seq + '?')) return;
+  if (lcDB[seq]) lcDB[seq].lines = [];
+  lcDbSave(); lcRenderTable(seq);
+};
+
+// Build LC text for copy
+function buildLcBlock(seq) {
+  const entry = lcDB[seq];
+  if (!entry || !entry.lines || !entry.lines.length) return '';
+  const lines = ['LOCAL CHARGES:'];
+  entry.lines.forEach(l => {
+    lines.push(`  ${l.desc}: ${l.cur} ${l.amt} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.app==='both'?'BOTH':l.app.toUpperCase()})`);
   });
-  return parts.join('\n');
+  return lines.join('\n');
 }
 
+// COPY RATE ONLY (for current LC popup rate)
+$('lcCopyRateOnlyBtn').onclick = async () => {
+  const seq = lcActiveSeq;
+  if (!seq) return;
+  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
+  let text = '';
+  if (r) {
+    text = buildRateCopyText(r);
+  } else if (lcDB[seq]) {
+    const e = lcDB[seq];
+    const parts = [];
+    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
+    if (e.pol) parts.push(`POL: ${e.pol}`);
+    if (e.pod) parts.push(`POD: ${e.pod}`);
+    if (e.dv20) parts.push(`20DV: USD ${e.dv20}`);
+    if (e.hc40) parts.push(`40HC: USD ${e.hc40}`);
+    text = parts.join('\n');
+  }
+  if (!text) { showCopyToast('NO RATE DATA'); return; }
+  await copyText(text);
+  showCopyToast('RATE COPIED');
+};
+
 // COPY RATE + LOCAL CHARGES
-$('lcqCopyRateAndLcBtn').onclick = async () => {
-  const rateId = lcqActiveRateId;
-  if (!rateId) return;
-  const r = data.find(x => x.id === rateId);
-  if (!r) return;
-  const rateText = buildRateCopyText(r);
-  const lcText   = buildLcText(rateId);
-  const combined = lcText ? rateText + '\n' + lcText : rateText;
+$('lcCopyRatePlusLcBtn').onclick = async () => {
+  const seq = lcActiveSeq;
+  if (!seq) { showCopyToast('FETCH A RATE FIRST'); return; }
+  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
+  let rateText = '';
+  if (r) {
+    rateText = buildRateCopyText(r);
+  } else if (lcDB[seq]) {
+    const e = lcDB[seq];
+    const parts = [];
+    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
+    if (e.pol) parts.push(`POL: ${e.pol}`);
+    if (e.pod) parts.push(`POD: ${e.pod}`);
+    if (e.dv20) parts.push(`O/F: 20DV USD ${e.dv20}`);
+    if (e.hc40) parts.push(`O/F: 40HC USD ${e.hc40}`);
+    rateText = parts.join('\n');
+  }
+  const lcText = buildLcBlock(seq);
+  const combined = [rateText, lcText].filter(Boolean).join('\n');
+  if (!combined) { showCopyToast('NO DATA TO COPY'); return; }
   await copyText(combined);
   showCopyToast('RATE + LOCAL CHARGES COPIED');
 };
 
-// COPY LC ONLY
-$('lcqCopyLcOnlyBtn').onclick = async () => {
-  const rateId = lcqActiveRateId;
-  if (!rateId) return;
-  const lcText = buildLcText(rateId);
-  if (!lcText) { showCopyToast('NO CHARGES TO COPY'); return; }
-  await copyText(lcText);
-  showCopyToast('LOCAL CHARGES COPIED');
-};
-
-// OPEN LC QUOTE POPUP for a rate
-window.openLcQuote = function(rateId) {
-  lcqLoad();
-  lcqActiveRateId = rateId;
-  const r = data.find(x => x.id === rateId);
-  if (r) {
-    const routeFrom = r.pol || r.por || '';
-    const routeTo   = r.pod || r.fpod || '';
-    $('lcqRateTitle').textContent = [r.carrier, routeFrom && routeTo ? routeFrom+'→'+routeTo : routeFrom||routeTo].filter(Boolean).join(' | ') || '—';
-    $('lcqRateSub').textContent   = ['SEQ: '+(r.seq||'—'), r.dv20?'20DV: USD '+r.dv20:'', r.hc40?'40HC: USD '+r.hc40:'', r.validity?'VALIDITY: '+r.validity:''].filter(Boolean).join('  ·  ');
-  } else {
-    $('lcqRateTitle').textContent = 'RATE ID: ' + rateId;
-    $('lcqRateSub').textContent   = '';
-  }
-  lcqRender(rateId);
-  tahoeOpen($('lcQuotePopup'));
-};
-$('closeLcQuoteBtn').onclick = () => tahoeClose($('lcQuotePopup'));
-makeDraggable($('lcQuotePopup'), $('lcQuotePopupHeader'));
-
-// ---- PATCH: copyRate also appends LC if present ----
-// Override the existing copyRate to include LC if exists
+// Row action button — copy rate (now includes LC if available)
 const _origCopyRate = window.copyRate;
 window.copyRate = async function(id) {
-  lcqLoad();
+  lcDbLoad();
   const r = data.find(x => x.id === id);
   if (!r) return;
   const rateText = buildRateCopyText(r);
-  const lcText   = buildLcText(id);
-  const combined = lcText ? rateText + '\n' + lcText : rateText;
+  const seq = (r.seq||'').toUpperCase();
+  const lcText = seq ? buildLcBlock(seq) : '';
+  const combined = [rateText, lcText].filter(Boolean).join('\n');
   await copyText(combined);
   showCopyToast(lcText ? 'RATE + LOCAL CHARGES COPIED' : 'RATE COPIED');
 };
 
-// Also patch copySelectedRates to include LC
-const _origCopySel = window.copySelectedRates || null;
-// We patch it directly
+// Row LC button — open LC popup for that rate
+window.openLcForRate = function(id) {
+  lcDbLoad();
+  const r = data.find(x => x.id === id);
+  if (!r) return;
+  const seq = (r.seq||'').toUpperCase();
+  lcPopulateSeqList();
+  $('lcSeqPick').value    = seq;
+  $('lcCarrierField').value = r.carrier || '';
+  $('lcPolField').value     = r.pol || r.por || '';
+  $('lcPodField').value     = r.pod || r.fpod || '';
+  $('lcDv20Field').value    = r.dv20 || '';
+  $('lcHc40Field').value    = r.hc40 || '';
+  lcActiveSeq = seq;
+  lcRenderTable(seq);
+  $('lcSaveStatus').textContent = `RATE: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''} | ${r.validity||''}`;
+  tahoeOpen($('lcPopup'));
+};
+
+// LC button in editor (above remarks)
+const _lcEdBtn = document.getElementById('openLcEditorBtn');
+if (_lcEdBtn) {
+  _lcEdBtn.onclick = () => {
+    lcDbLoad();
+    lcPopulateSeqList();
+    if (editId) {
+      const r = data.find(x=>x.id===editId);
+      if (r) { window.openLcForRate(editId); return; }
+    }
+    tahoeOpen($('lcPopup'));
+  };
+}
+
+// LC header button
+$('openLcBtn').onclick = () => {
+  lcDbLoad();
+  lcPopulateSeqList();
+  tahoeOpen($('lcPopup'));
+};
+$('closeLcBtn').onclick = () => tahoeClose($('lcPopup'));
+
+// Also patch COPY SELECTED to include LC
 document.getElementById('copySelectedRatesBtn').onclick = async function() {
-  lcqLoad();
-  let rows = filteredRows ? filteredRows().filter(r => selectedIds.has(r.id)) : [];
+  lcDbLoad();
+  let rows = (typeof filteredRows === 'function' ? filteredRows() : data).filter(r => selectedIds.has(r.id));
   if (!rows.length) rows = data.filter(r => selectedIds.has(r.id));
   if (!rows.length) return alert('SELECT RECORDS FIRST.');
-  const combined = rows.map(r => {
+  const parts = rows.map(r => {
     const rateText = buildRateCopyText(r);
-    const lcText   = buildLcText(r.id);
-    return lcText ? rateText + '\n' + lcText : rateText;
-  }).filter(Boolean).join('\n\n--------------------\n\n');
-  await copyText(combined);
+    const seq = (r.seq||'').toUpperCase();
+    const lcText = seq ? buildLcBlock(seq) : '';
+    return [rateText, lcText].filter(Boolean).join('\n');
+  });
+  await copyText(parts.join('\n\n──────────────────────\n\n'));
   showCopyToast(rows.length + ' RATE(S) COPIED');
 };
 
-// ---- FX CONVERTER ----
-$('fxConvBtn').onclick = fxConvert;
-$('fxConvAmt').addEventListener('keydown', e => { if(e.key==='Enter') fxConvert(); });
-$('fxConvFrom').addEventListener('change', fxConvert);
-$('fxConvTo').addEventListener('change',   fxConvert);
-
-function fxConvert() {
-  const amt  = parseFloat($('fxConvAmt').value||'0')||0;
-  const from = $('fxConvFrom').value;
-  const to   = $('fxConvTo').value;
-  const res  = $('fxConvResult');
-  if (!amt) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">ENTER AN AMOUNT</span>'; return; }
-  if (!Object.keys(fxRates).length) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">REFRESH RATES FIRST</span>'; return; }
-
-  // Convert amt from->USD->to
-  const amtUSD  = from === 'USD' ? amt : amt / fxRates[from];
-  const showCurs = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD'];
-  const results  = showCurs.map(cur => {
-    const val = cur === 'USD' ? amtUSD : amtUSD * fxRates[cur];
-    return { cur, val };
-  });
-
-  res.innerHTML = results.map(x =>
-    `<span class="fx-conv-pill"><span class="c">${escapeHtml(x.cur)}</span>${x.val.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`
-  ).join('');
-}
-
 // Initial load
-lcqLoad();
+lcDbLoad();
 
 </script>
 
 <!-- ============================================================
-     AUTO CALCULATION — Notepad Style (Draggable)
+     CALCULATOR POPUP
      ============================================================ -->
 <div id="calcPopup" class="draggable-popup hidden">
   <div class="dp-header" id="calcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; AUTO CALCULATION</div>
-    <button class="ghost icon-only dp-header-close" id="closeCalcBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
+    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; CALCULATOR</div>
+    <button class="ghost icon-only dp-close-btn" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
   </div>
-  <div class="dp-body" style="padding-top:8px">
-    <!-- TOTAL BANNER always on top -->
-    <div class="tape-total" id="calcTapeTotal">
+  <div class="dp-body">
+    <div class="calc-total-row">
       <span class="lbl">TOTAL</span>
-      <span class="val" id="calcTotalVal">0</span>
+      <span class="val" id="calcTotalVal">0.00</span>
     </div>
-    <!-- TAPE — running list of entries -->
     <div class="calc-tape" id="calcTape">
-      <div style="color:var(--muted);font-size:12px;text-align:center;padding:10px 0">TYPE A VALUE BELOW AND PRESS ENTER OR +</div>
+      <div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR + TO ADD</div>
     </div>
-    <!-- INPUT ROW -->
     <div class="calc-input-row">
-      <input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g.  1,925  or  500+200  or  (300)x2" autocomplete="off" spellcheck="false">
-      <button class="primary" id="calcAddBtn" style="min-width:64px"><i class="bi bi-plus-lg"></i> ADD</button>
-      <button class="ghost" id="calcUndoBtn" title="Undo last"><i class="bi bi-arrow-counterclockwise"></i></button>
-      <button class="ghost" id="calcClearTapeBtn" title="Clear tape"><i class="bi bi-trash3"></i></button>
+      <input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g.  1,925  ·  500+200  ·  (300)  ·  500x2" autocomplete="off" spellcheck="false">
+      <button class="primary" id="calcAddBtn"><i class="bi bi-plus-lg"></i></button>
+      <button class="ghost" id="calcUndoBtn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+      <button class="ghost" id="calcClearBtn" title="Clear all"><i class="bi bi-trash3"></i></button>
     </div>
-    <div style="display:flex;gap:6px;margin-top:6px">
-      <button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY RESULT</button>
+    <div style="display:flex;gap:5px;margin-top:5px">
+      <button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY TAPE</button>
     </div>
-    <div class="note" style="margin-top:6px">
-      ACCEPTS: <b>1,925</b> &nbsp;|&nbsp; <b>1925.00</b> &nbsp;|&nbsp; <b>500+200</b> &nbsp;|&nbsp; <b>1000 925</b> &nbsp;|&nbsp; <b>(300)</b> &nbsp;|&nbsp; <b>500x2</b> &nbsp;|&nbsp; spaces treated as +
-    </div>
+    <div class="note" style="margin-top:6px">ACCEPTS: <b>1,925</b> &nbsp;·&nbsp; <b>1000+500</b> &nbsp;·&nbsp; <b>1000 500</b> (space=add) &nbsp;·&nbsp; <b>(300)</b> &nbsp;·&nbsp; <b>500x2</b></div>
   </div>
 </div>
 
 <!-- ============================================================
-     LIVE EXCHANGE RATES (Draggable)
+     EXCHANGE RATES POPUP
      ============================================================ -->
 <div id="fxPopup" class="draggable-popup hidden">
   <div class="dp-header" id="fxPopupHeader">
     <div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div>
-    <button class="ghost icon-only dp-header-close" id="closeFxBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
+    <button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="dp-body">
     <div class="toolbar" style="margin-bottom:8px">
@@ -3260,10 +3013,10 @@ lcqLoad();
     </div>
     <div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
 
-    <!-- FX CONVERTER -->
+    <!-- AMOUNT CONVERTER -->
     <div class="fx-converter">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em">AMOUNT CONVERTER</div>
-      <div class="fx-conv-row">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>&nbsp; AMOUNT CONVERTER</div>
+      <div class="fx-conv-grid">
         <div class="field" style="margin:0">
           <label style="font-size:11px">AMOUNT</label>
           <input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px">
@@ -3271,37 +3024,24 @@ lcqLoad();
         <div class="field" style="margin:0">
           <label style="font-size:11px">FROM</label>
           <select id="fxConvFrom" style="min-height:30px">
-            <option value="USD">USD</option>
-            <option value="INR">INR</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="AED">AED</option>
-            <option value="CNY">CNY</option>
-            <option value="SGD">SGD</option>
-            <option value="JPY">JPY</option>
-            <option value="CAD">CAD</option>
-            <option value="AUD">AUD</option>
+            <option value="USD">USD</option><option value="INR">INR</option>
+            <option value="EUR">EUR</option><option value="GBP">GBP</option>
+            <option value="AED">AED</option><option value="CNY">CNY</option>
+            <option value="SGD">SGD</option><option value="JPY">JPY</option>
           </select>
         </div>
-        <div class="fx-conv-arrow">&#8594;</div>
         <div class="field" style="margin:0">
-          <label style="font-size:11px">TO</label>
+          <label style="font-size:11px">TO (MAIN)</label>
           <select id="fxConvTo" style="min-height:30px">
-            <option value="INR">INR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="AED">AED</option>
-            <option value="CNY">CNY</option>
-            <option value="SGD">SGD</option>
-            <option value="JPY">JPY</option>
-            <option value="CAD">CAD</option>
-            <option value="AUD">AUD</option>
+            <option value="INR">INR</option><option value="USD">USD</option>
+            <option value="EUR">EUR</option><option value="GBP">GBP</option>
+            <option value="AED">AED</option><option value="CNY">CNY</option>
+            <option value="SGD">SGD</option><option value="JPY">JPY</option>
           </select>
         </div>
         <div class="field" style="margin:0;justify-content:flex-end">
           <label style="font-size:11px">&nbsp;</label>
-          <button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-calculator"></i> CONVERT</button>
+          <button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button>
         </div>
       </div>
       <div class="fx-conv-pills" id="fxConvResult">
@@ -3312,169 +3052,111 @@ lcqLoad();
 </div>
 
 <!-- ============================================================
-     LOCAL CHARGES RECORD — SEQ-BASED (Draggable)
+     LOCAL CHARGES RECORD — PER RATE (SEQ-BASED, EDITABLE TABLE)
      ============================================================ -->
 <div id="lcPopup" class="draggable-popup hidden">
   <div class="dp-header" id="lcPopupHeader">
     <div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div>
-    <button class="ghost icon-only dp-header-close" id="closeLcBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
+    <button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button>
   </div>
   <div class="dp-body">
-    <div class="note" style="margin-bottom:8px">CHARGES ARE LINKED TO RATES BY SEQ. SELECT EXISTING SEQ OR TYPE A NEW ONE.</div>
 
-    <!-- ADD CHARGE FORM -->
-    <div class="lc-add-form">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em">ADD / LINK CHARGE TO SEQ</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
-        <div class="field" style="margin:0">
-          <label>SEQ (EXISTING OR NEW)</label>
-          <input id="lcSeqInput" list="lcSeqDatalist" placeholder="e.g. FR001 or new-001" autocomplete="off">
-          <datalist id="lcSeqDatalist"></datalist>
-        </div>
-        <div class="field" style="margin:0">
-          <label>CARRIER / LABEL</label>
-          <input id="lcCarrierInput" placeholder="Auto-fills from rate or enter manually" autocomplete="off">
-        </div>
-      </div>
-      <div class="lc-form-grid">
-        <div class="field">
-          <label>DESCRIPTION</label>
-          <input id="lcDesc" placeholder="e.g. THC, BL FEE, DO FEE">
-        </div>
-        <div class="field">
-          <label>TYPE</label>
-          <select id="lcType">
-            <option value="per_container">PER CONTAINER</option>
-            <option value="per_bl">PER B/L</option>
-            <option value="per_cbm">PER CBM</option>
-            <option value="per_ton">PER TON</option>
-            <option value="lumpsum">LUMPSUM</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>CUR</label>
-          <select id="lcCur">
-            <option value="USD">USD</option>
-            <option value="INR">INR</option>
-            <option value="EUR">EUR</option>
-            <option value="AED">AED</option>
-            <option value="GBP">GBP</option>
-            <option value="CNY">CNY</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>AMOUNT</label>
-          <input id="lcAmount" type="number" placeholder="0">
-        </div>
-        <div class="field">
-          <label>APPLIES TO</label>
-          <select id="lcAppliesTo">
-            <option value="both">BOTH</option>
-            <option value="20dv">20DV ONLY</option>
-            <option value="40hc">40HC ONLY</option>
-          </select>
-        </div>
-        <div class="field" style="justify-content:flex-end">
-          <label>&nbsp;</label>
-          <button class="success" id="addLcLineBtn"><i class="bi bi-plus-lg"></i> ADD</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- RECORDS BY SEQ -->
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.02em">RECORDS BY SEQ</div>
-    <div class="lc-records-wrap" id="lcRecordsWrap">
-      <div style="color:var(--muted);font-size:12px;padding:10px">NO LOCAL CHARGES RECORDS YET.</div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ============================================================
-     LOCAL CHARGES — PER QUOTE POPUP (Draggable)
-     ============================================================ -->
-<div id="lcQuotePopup" class="draggable-popup hidden">
-  <div class="dp-header" id="lcQuotePopupHeader">
-    <div class="dp-header-title"><i class="bi bi-receipt-cutoff"></i>&nbsp; LOCAL CHARGES — PER QUOTE</div>
-    <button class="ghost icon-only dp-header-close" id="closeLcQuoteBtn" style="background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.22);color:#dc2626"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-    <!-- Rate banner shows which rate these charges belong to -->
-    <div class="lcq-rate-banner" id="lcqRateBanner">
-      <div class="rb-title" id="lcqRateTitle">—</div>
-      <div class="rb-sub" id="lcqRateSub">SELECT A RATE TO ATTACH CHARGES</div>
-    </div>
-
-    <div class="note" style="margin-bottom:8px">CHARGES SAVED HERE ARE LINKED TO THIS RATE. REOPEN ANYTIME TO VIEW OR EDIT.</div>
-
-    <!-- ADD CHARGE LINE -->
-    <div class="lcq-add-row">
+    <!-- RATE FETCH: type SEQ or pick from dropdown, auto-fills carrier + POL -->
+    <div class="note" style="margin-bottom:7px">SELECT AN EXISTING RATE BY SEQ, OR ENTER A NEW SEQ MANUALLY TO ADD LOCAL CHARGES.</div>
+    <div class="lc-header-row" id="lcHeaderRow">
       <div class="field">
-        <label>DESCRIPTION</label>
-        <input id="lcqDesc" placeholder="e.g. THC, BL FEE, DO FEE">
+        <label>SEQ — PICK RATE OR TYPE NEW</label>
+        <input id="lcSeqPick" list="lcSeqList" placeholder="Type or select SEQ..." autocomplete="off">
+        <datalist id="lcSeqList"></datalist>
       </div>
       <div class="field">
-        <label>TYPE</label>
-        <select id="lcqType">
-          <option value="per_container">PER CONTAINER</option>
-          <option value="per_bl">PER B/L</option>
-          <option value="per_cbm">PER CBM</option>
-          <option value="per_ton">PER TON</option>
-          <option value="lumpsum">LUMPSUM</option>
-        </select>
+        <label>CARRIER</label>
+        <input id="lcCarrierField" placeholder="Auto or manual">
       </div>
       <div class="field">
-        <label>CUR</label>
-        <select id="lcqCur">
-          <option value="USD">USD</option>
-          <option value="INR">INR</option>
-          <option value="EUR">EUR</option>
-          <option value="AED">AED</option>
-          <option value="GBP">GBP</option>
-          <option value="CNY">CNY</option>
-        </select>
+        <label>POL</label>
+        <input id="lcPolField" placeholder="POL">
       </div>
       <div class="field">
-        <label>AMOUNT</label>
-        <input id="lcqAmount" type="number" placeholder="0">
+        <label>POD</label>
+        <input id="lcPodField" placeholder="POD">
       </div>
       <div class="field">
-        <label>APPLIES TO</label>
-        <select id="lcqAppliesTo">
-          <option value="both">BOTH</option>
-          <option value="20dv">20DV ONLY</option>
-          <option value="40hc">40HC ONLY</option>
-        </select>
+        <label>20DV RATE</label>
+        <input id="lcDv20Field" placeholder="USD">
+      </div>
+      <div class="field">
+        <label>40HC RATE</label>
+        <input id="lcHc40Field" placeholder="USD">
       </div>
       <div class="field" style="justify-content:flex-end">
         <label>&nbsp;</label>
-        <button class="success" id="lcqAddBtn"><i class="bi bi-plus-lg"></i> ADD</button>
+        <button class="primary ios-btn" id="lcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap">
+          <i class="bi bi-arrow-down-circle"></i> FETCH
+        </button>
       </div>
     </div>
 
-    <!-- CHARGES TABLE -->
-    <div class="lcq-table-wrap">
-      <table class="lcq-table">
+    <!-- CHARGES TABLE — inline editable -->
+    <div class="lc-table-scroll">
+      <table class="lc-main-table">
         <thead>
           <tr>
-            <th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES TO</th><th></th>
+            <th style="width:180px">DESCRIPTION</th>
+            <th style="width:120px">TYPE</th>
+            <th style="width:72px">CURRENCY</th>
+            <th style="width:80px">AMOUNT</th>
+            <th style="width:100px">APPLIES TO</th>
+            <th style="width:60px">ACTION</th>
           </tr>
         </thead>
-        <tbody id="lcqTbody">
-          <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES ADDED YET</td></tr>
+        <tbody id="lcTableBody">
+          <tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES — FETCH A RATE OR USE BUTTONS BELOW</td></tr>
         </tbody>
+        <!-- ADD NEW ROW (always at bottom of table) -->
+        <tfoot>
+          <tr style="background:rgba(255,255,255,.5)">
+            <td><input id="lcNewDesc" placeholder="Description e.g. THC"></td>
+            <td>
+              <select id="lcNewType">
+                <option value="per_container">PER CONTAINER</option>
+                <option value="per_bl">PER B/L</option>
+                <option value="per_cbm">PER CBM</option>
+                <option value="per_ton">PER TON</option>
+                <option value="lumpsum">LUMPSUM</option>
+              </select>
+            </td>
+            <td>
+              <select id="lcNewCur">
+                <option value="USD">USD</option><option value="INR">INR</option>
+                <option value="EUR">EUR</option><option value="AED">AED</option>
+                <option value="GBP">GBP</option><option value="CNY">CNY</option>
+              </select>
+            </td>
+            <td><input id="lcNewAmt" type="number" placeholder="0"></td>
+            <td>
+              <select id="lcNewApp">
+                <option value="both">BOTH</option>
+                <option value="20dv">20DV</option>
+                <option value="40hc">40HC</option>
+              </select>
+            </td>
+            <td>
+              <button class="icon-btn success" id="lcAddRowBtn" title="Add row"><i class="bi bi-plus-lg"></i></button>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
 
     <!-- ACTIONS -->
-    <div style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="primary" id="lcqCopyRateAndLcBtn" style="flex:1">
-        <i class="bi bi-clipboard2-check-fill"></i> COPY RATE + LOCAL CHARGES
-      </button>
-      <button class="ghost" id="lcqCopyLcOnlyBtn" style="flex:1">
-        <i class="bi bi-clipboard"></i> COPY LOCAL CHARGES ONLY
-      </button>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+      <button class="primary" id="lcSaveBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE CHARGES</button>
+      <button class="ghost" id="lcCopyRateOnlyBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY RATE</button>
+      <button class="success" id="lcCopyRatePlusLcBtn" style="flex:1"><i class="bi bi-clipboard2-check-fill"></i> COPY RATE + LC</button>
+      <button class="danger" id="lcClearAllBtn" style="flex:0 0 auto"><i class="bi bi-trash3"></i> CLEAR</button>
     </div>
+    <div class="note" style="margin-top:6px" id="lcSaveStatus"></div>
   </div>
 </div>
 
