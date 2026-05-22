@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>FR8X ADMIN</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<style>
-:root{
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>FR8X ADMIN</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <style>
+:root {
   --bg1:#e9f2ff;
   --bg2:#f3e8ff;
   --bg3:#f8fafc;
@@ -29,894 +30,201 @@
   --reflect-soft-2:rgba(37,99,235,.18);
   --edit-row:rgba(16,185,129,.08);
 }
-*{
-  box-sizing:border-box;
-  font-weight:normal !important;
-}
-html,body{
-  margin:0;
-  min-height:100%;
-  font-family:"Aptos","Segoe UI",Calibri,system-ui,sans-serif;
-  font-size:12px;
-  color:var(--text);
-  overflow-x:hidden;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(255,255,255,.95), transparent 34%),
-    radial-gradient(circle at 100% 20%, rgba(191,219,254,.88), transparent 30%),
-    radial-gradient(circle at 55% 100%, rgba(233,213,255,.86), transparent 34%),
-    linear-gradient(145deg,var(--bg3),var(--bg1) 42%,var(--bg2));
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,.03)),
-    radial-gradient(circle at 16% 8%, rgba(255,255,255,.32), transparent 24%),
-    radial-gradient(circle at 84% 4%, rgba(255,255,255,.28), transparent 24%);
-}
-.hidden{display:none!important}
-button,input,select,textarea{font:inherit}
-
-.glass,.panel,.card,.badge,.bulk-bar,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card,.import-options{
-  background:var(--glass);
-  border:1px solid var(--border);
-  backdrop-filter:blur(22px) saturate(155%);
-  -webkit-backdrop-filter:blur(22px) saturate(155%);
-  box-shadow:var(--shadow-soft);
-}
-
-.header{
-  position:sticky;
-  top:0;
-  z-index:40;
-  min-height:var(--header-h);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:12px 16px;
-  margin:8px;
-  border-radius:20px;
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(255,255,255,.5);
-  backdrop-filter:blur(26px) saturate(170%);
-  -webkit-backdrop-filter:blur(26px) saturate(170%);
-  box-shadow:var(--shadow);
-}
-.brand{
-  font-size:14px;
-  letter-spacing:.08em;
-}
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.badge{
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  white-space:nowrap;
-}
-
-.container{
-  width:100%;
-  padding:10px 12px 16px;
-}
-.topbar,.toolbar,.section-head,.editor-actions,.bulk-bar,.modal-head,.import-options{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.topbar{margin-bottom:8px}
-.bulk-bar{
-  margin-bottom:10px;
-  padding:9px 11px;
-  border-radius:16px;
-}
-.bulk-info{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  min-width:0;
-}
-.bulk-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.note{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-}
-#activeCellInfo{
-  max-width:520px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.section-tabs{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  margin:8px 0 10px;
-}
-.section-tabs button{
-  min-height:32px;
-  border-radius:11px;
-  padding:0 10px;
-  font-size:12px;
-}
-.section-tabs button.active{
-  background:rgba(17,24,39,.94);
-  color:#fff;
-  border-color:rgba(17,24,39,.88);
-}
-
-input,select,textarea{
-  width:100%;
-  min-height:32px;
-  padding:6px 9px;
-  border-radius:11px;
-  border:1px solid rgba(148,163,184,.24);
-  background:rgba(255,255,255,.76);
-  color:var(--text);
-  font-size:12px;
-  outline:none;
-  backdrop-filter:blur(14px);
-}
-textarea{
-  min-height:66px;
-  resize:vertical;
-}
-input:focus,select:focus,textarea:focus{
-  border-color:rgba(17,24,39,.42);
-  box-shadow:0 0 0 3px rgba(255,255,255,.42),0 0 0 6px rgba(148,163,184,.12);
-}
-
-button{
-  min-height:32px;
-  border-radius:11px;
-  border:1px solid rgba(148,163,184,.22);
-  background:rgba(255,255,255,.76);
-  color:var(--text);
-  font-size:12px;
-  padding:0 11px;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  transition:.16s ease;
-  backdrop-filter:blur(12px);
-}
-button:hover{transform:translateY(-1px)}
-button:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.primary,.success{
-  background:rgba(17,24,39,.94);
-  color:#fff;
-  border-color:rgba(17,24,39,.88);
-}
-.danger{
-  background:rgba(220,38,38,.92);
-  color:#fff;
-  border-color:rgba(220,38,38,.84);
-}
-.warning{
-  background:rgba(217,119,6,.92);
-  color:#fff;
-  border-color:rgba(217,119,6,.82);
-}
-.ghost{background:rgba(255,255,255,.68)}
-.icon-only{width:32px;height:32px;padding:0}
-.icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px}
-
-.layout-grid{
-  display:grid;
-  grid-template-columns:var(--editor-w) minmax(0,1fr);
-  gap:12px;
-  align-items:start;
-}
-.panel{
-  border-radius:22px;
-  padding:12px;
-}
-#editorPanel{
-  position:sticky;
-  top:92px;
-  max-height:calc(100vh - 106px);
-  overflow-y:auto;
-  overflow-x:hidden;
-}
-#editorPanel::-webkit-scrollbar{width:6px}
-#editorPanel::-webkit-scrollbar-thumb{background:rgba(148,163,184,.44);border-radius:999px}
-
-.form{
-  display:grid;
-  grid-template-columns:repeat(12,minmax(0,1fr));
-  gap:8px;
-}
-.field{
-  grid-column:span 12;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.field label{
-  font-size:12px;
-  color:var(--muted);
-  letter-spacing:.02em;
-}
-.span6{grid-column:span 6}
-.span12{grid-column:span 12}
-.inline-pair{
-  grid-column:span 12;
-  display:grid;
-  grid-template-columns:.92fr 1.08fr;
-  gap:8px;
-}
-.editor-actions button{flex:1}
-
-.table-wrap{
-  overflow:auto;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.42);
-  background:rgba(255,255,255,.48);
-  max-height:72vh;
-  backdrop-filter:blur(16px);
-}
-table{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0;
-  table-layout:fixed;
-}
-col.col-chk{width:30px}
-col.col-seq{width:88px}
-col.col-carrier{width:110px}
-col.col-loc{width:82px}
-col.col-rate{width:72px}
-col.col-type{width:78px}
-col.col-date{width:118px}
-col.col-tt{width:64px}
-col.col-route{width:118px}
-col.col-rem{width:130px}
-col.col-act{width:124px}
-th,td{
-  padding:5px 5px;
-  border-bottom:1px solid rgba(148,163,184,.16);
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  font-size:12px;
-  line-height:1.18;
-}
-th{
-  position:sticky;
-  top:0;
-  z-index:5;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(18px);
-}
-.filter-row th{
-  top:33px;
-  background:rgba(248,250,252,.88);
-  z-index:4;
-  padding:3px;
-}
-.filter-row input{
-  min-height:22px;
-  padding:3px 5px;
-  font-size:12px;
-}
-.sort-head{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-  width:100%;
-}
-.sort-btn{
-  min-height:18px;
-  height:18px;
-  width:18px;
-  padding:0;
-  border-radius:4px;
-  font-size:10px;
-  line-height:1;
-}
-.sort-btn.active{
-  background:rgba(17,24,39,.92);
-  color:#fff;
-  border-color:rgba(17,24,39,.88);
-}
-tbody tr:hover{background:rgba(255,255,255,.42)}
-.actions{
-  display:flex;
-  gap:3px;
-  justify-content:center;
-}
-.row-check{
-  width:14px;
-  height:14px;
-  accent-color:var(--primary);
-}
-.reflect-cell{
-  cursor:pointer;
-  position:relative;
-  transition:background .14s ease, box-shadow .14s ease, transform .14s ease;
-}
-.reflect-cell:hover{
-  background:var(--reflect-soft);
-}
-.reflect-cell.active-cell{
-  background:var(--reflect-soft-2) !important;
-  box-shadow:inset 0 0 0 1px rgba(37,99,235,.42), 0 0 0 2px rgba(37,99,235,.12);
-}
-tr.active-row td{
-  background:rgba(37,99,235,.04);
-}
-tr.editing-row td{
-  background:var(--edit-row);
-}
-tr.editing-row td:last-child{
-  box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);
-}
-
-.section{display:none}
-.section.active{display:block}
-
-.overlay{
-  position:fixed;
-  inset:0;
-  z-index:999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(15,23,42,.16);
-  backdrop-filter:blur(10px);
-  padding:14px;
-}
-.card{
-  width:min(1380px,calc(100% - 14px));
-  max-height:94vh;
-  overflow:auto;
-  padding:14px;
-  border-radius:24px;
-}
-.card.narrow{width:min(520px,calc(100% - 20px))}
-.file-input{display:none}
-
-.title{
-  font-size:14px;
-  letter-spacing:.03em;
-  text-align:center;
-}
-.subtitle{
-  text-align:center;
-  color:var(--muted);
-  margin:6px 0 10px;
-  font-size:12px;
-}
-.pin-row{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-bottom:10px;
-}
-.pin-input{
-  height:44px;
-  text-align:center;
-  font-size:16px;
-}
-
-.loader{
-  position:fixed;
-  inset:0;
-  z-index:2000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(15,23,42,.16);
-  backdrop-filter:blur(10px);
-}
-.loader.show{display:flex}
-.loader-box{
-  min-width:220px;
-  padding:14px 16px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.42);
-  background:rgba(255,255,255,.6);
-  text-align:center;
-  box-shadow:var(--shadow);
-}
-.spinner{
-  width:34px;
-  height:34px;
-  margin:0 auto 8px;
-  border-radius:50%;
-  border:3px solid rgba(148,163,184,.22);
-  border-top-color:#111827;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.copy-toast{
-  position:fixed;
-  right:16px;
-  bottom:16px;
-  z-index:1200;
-  background:rgba(17,24,39,.92);
-  color:#fff;
-  padding:8px 10px;
-  border-radius:12px;
-  font-size:12px;
-  box-shadow:var(--shadow);
-}
-
-#globalPopup{
-  position:fixed;
-  z-index:1300;
-  min-width:180px;
-  max-width:360px;
-  background:rgba(255,255,255,.9);
-  color:var(--text);
-  border:1px solid rgba(255,255,255,.5);
-  border-radius:12px;
-  padding:8px 10px;
-  font-size:12px;
-  line-height:1.35;
-  white-space:normal;
-  box-shadow:var(--shadow);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .08s ease;
-  backdrop-filter:blur(16px);
-}
-#globalPopup.show{opacity:1}
-.pop-field{display:block;width:100%;cursor:default}
-.cell-clip{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.mobile-list{
-  display:none;
-  gap:8px;
-  flex-direction:column;
-}
-.mobile-card{
-  border-radius:16px;
-  padding:10px;
-}
-.mobile-card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:8px;
-  margin-bottom:7px;
-}
-.mobile-card-title{font-size:13px}
-.mobile-card-sub{font-size:12px;color:var(--muted)}
-.mobile-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:6px;
-  margin-bottom:7px;
-}
-.mobile-item{
-  border:1px solid rgba(255,255,255,.46);
-  border-radius:12px;
-  padding:6px;
-  background:rgba(255,255,255,.42);
-  cursor:pointer;
-  transition:background .14s ease, box-shadow .14s ease;
-}
-.mobile-item:hover{
-  background:var(--reflect-soft);
-}
-.mobile-item.active-cell{
-  background:var(--reflect-soft-2);
-  box-shadow:inset 0 0 0 1px rgba(37,99,235,.42), 0 0 0 2px rgba(37,99,235,.12);
-}
-.mobile-item .k{
-  font-size:11px;
-  color:var(--muted);
-  margin-bottom:2px;
-}
-.mobile-item .v{
-  font-size:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.mobile-card.active-row{
-  box-shadow:inset 0 0 0 1px rgba(37,99,235,.22), 0 8px 24px rgba(37,99,235,.10);
-}
-.mobile-actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-.mobile-actions button{flex:1;min-height:30px}
-
-.import-options{
-  padding:9px 10px;
-  border-radius:16px;
-  margin-bottom:10px;
-}
-.option-chip{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,.46);
-  border:1px solid rgba(255,255,255,.46);
-  font-size:12px;
-}
-.option-chip input{
-  width:auto;
-  min-height:auto;
-  padding:0;
-  margin:0;
-  background:none;
-  border:none;
-}
-
-.fit-card{
-  padding:10px;
-  border-radius:16px;
-  margin-bottom:10px;
-}
-.fit-grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:8px;
-  margin-top:8px;
-}
-.fit-result{
-  margin-top:8px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.fit-pill{
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid rgba(255,255,255,.46);
-  background:rgba(255,255,255,.6);
-}
-.fit-pill.ok{color:#065f46}
-.fit-pill.bb{color:#991b1b;background:rgba(254,226,226,.82)}
-
-.dim-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:10px;
-}
-.dim-card{
-  border-radius:16px;
-  padding:10px;
-}
-.dim-card-title{
-  font-size:13px;
-  margin-bottom:6px;
-}
-.dim-specs{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.dim-spec{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:8px;
-  border-bottom:1px solid rgba(148,163,184,.12);
-  padding-bottom:3px;
-}
-.dim-label{
-  font-size:12px;
-  color:var(--muted);
-}
-.dim-value{
-  font-size:12px;
-  text-align:right;
-}
-.dim-note{
-  margin-top:6px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.35;
-}
-.info-strip{
-  padding:10px;
-  border-radius:16px;
-  font-size:12px;
-  line-height:1.4;
-  margin-bottom:10px;
-}
-
-.markup-card{
-  border-radius:16px;
-  padding:10px;
-  margin-bottom:8px;
-}
-.markup-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:8px;
-}
-.markup-row input{flex:0 0 110px}
-.markup-row label{margin:0;flex:1;font-size:12px}
-.applied-markups{
-  margin-top:8px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.46);
-  background:rgba(255,255,255,.45);
-  font-size:12px;
-}
-.applied-markup{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:5px 0;
-  border-bottom:1px solid rgba(148,163,184,.12);
-}
-.applied-markup:last-child{border-bottom:none}
-
-@media (max-width:1180px){
-  .layout-grid{grid-template-columns:1fr}
-  #editorPanel{position:static;max-height:none}
-}
-@media (max-width:860px){
-  .fit-grid{grid-template-columns:1fr 1fr}
-}
-@media (max-width:760px){
-  html,body{font-size:12px}
-  .container{padding:8px}
-  .header{padding:10px 12px;margin:6px}
-  .panel,.card{padding:10px}
-  .table-wrap.desktop-table{display:none}
-  .mobile-list{display:flex}
-  .mobile-grid{grid-template-columns:1fr}
-  .section-tabs button,.editor-actions button{flex:1 1 calc(50% - 6px)}
-  .inline-pair{grid-template-columns:1fr}
-  .fit-grid{grid-template-columns:1fr}
-  .bulk-bar{align-items:flex-start}
-  #activeCellInfo{max-width:100%}
-}
-
-/* ================================================================
-   FR8X v5 — iOS Glass + Tahoe Animations + Feature Styles
-   ================================================================ */
-
-/* PIN gate — borderless glass, pointer cursor */
-#pinGate .card.narrow {
-  border:none!important;
-  background:rgba(255,255,255,.62);
-  backdrop-filter:blur(40px) saturate(200%);
-  -webkit-backdrop-filter:blur(40px) saturate(200%);
-  box-shadow:0 24px 60px rgba(15,23,42,.16),0 2px 0 rgba(255,255,255,.7) inset;
-  cursor:pointer;
-}
-#pinGate .card.narrow *{cursor:pointer}
-#pinGate .card.narrow input{cursor:text!important}
-.pin-input{
-  border:none!important;
-  background:rgba(255,255,255,.55)!important;
-  box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 8px rgba(15,23,42,.07)!important;
-  border-radius:14px!important;
-  font-size:20px;
-  transition:box-shadow .16s,background .16s;
-}
-.pin-input:focus{
-  background:rgba(255,255,255,.9)!important;
-  box-shadow:0 0 0 2.5px rgba(17,24,39,.18),0 2px 12px rgba(15,23,42,.08)!important;
-  outline:none!important;
-  border:none!important;
-}
-
-/* Header iOS buttons */
-.ios-btn{
-  background:rgba(255,255,255,.62)!important;
-  border:1px solid rgba(255,255,255,.74)!important;
-  border-radius:14px!important;
-  box-shadow:0 1px 0 rgba(255,255,255,.72) inset,0 4px 12px rgba(15,23,42,.07)!important;
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  transition:.16s ease!important;
-}
-.ios-btn:hover{
-  background:rgba(255,255,255,.82)!important;
-  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 6px 16px rgba(15,23,42,.10)!important;
-  transform:translateY(-1px);
-}
-
-/* Action column alignment */
-td.actions{
-  display:table-cell!important;
-  vertical-align:middle!important;
-  text-align:center!important;
-  white-space:nowrap!important;
-  padding:3px 4px!important;
-}
-.actions{
-  display:inline-flex!important;
-  flex-direction:row!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:2px!important;
-  flex-wrap:nowrap!important;
-}
-.icon-btn{
-  width:24px!important;height:24px!important;min-height:24px!important;
-  padding:0!important;font-size:11px!important;flex-shrink:0!important;
-  border-radius:7px!important;display:inline-flex!important;
-  align-items:center!important;justify-content:center!important;
-}
-col.col-act{width:140px!important}
-.icon-btn.lc-act{
-  background:rgba(5,150,105,.10)!important;
-  border-color:rgba(5,150,105,.26)!important;
-  color:#065f46!important;
-}
-.icon-btn.lc-act:hover{background:rgba(5,150,105,.22)!important;transform:translateY(-1px)}
-
-/* Draggable popup — Tahoe glass */
-.draggable-popup{
-  position:fixed;z-index:1100;
-  display:flex;flex-direction:column;
-  min-width:300px;max-height:92vh;overflow:hidden;
-  background:rgba(245,247,252,.76);
-  border:1px solid rgba(255,255,255,.80);
-  backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
-  -webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
-  box-shadow:0 2px 0 rgba(255,255,255,.72) inset,0 24px 56px rgba(15,23,42,.15),0 1px 0 rgba(255,255,255,.6);
-  border-radius:22px;
-  user-select:none;
-  top:80px;left:50%;transform:translateX(-50%);
-}
-.draggable-popup.hidden{display:none!important}
+*,*::before,*::after{box-sizing:border-box;font-weight:normal!important;}
+html,body{margin:0;min-height:100%;font-family:"Aptos","Segoe UI","Calibri",system-ui,sans-serif;font-size:12px;color:var(--text);overflow-x:hidden;background:radial-gradient(circle at 0 0, rgba(255,255,255,.95), transparent 34%),radial-gradient(circle at 100% 20%, rgba(191,219,254,.88), transparent 30%),radial-gradient(circle at 55% 100%, rgba(233,213,255,.86), transparent 34%),linear-gradient(145deg,var(--bg3),var(--bg1) 42%,var(--bg2));}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,.03)),radial-gradient(circle at 16% 8%, rgba(255,255,255,.32), transparent 24%),radial-gradient(circle at 84% 4%, rgba(255,255,255,.28), transparent 24%);}
+.hidden{display:none!important;}
+button,input,select,textarea{font:inherit;}
+.glass,.panel,.card,.badge,.bulk-bar,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card,.import-options,.lc-panel{background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%);box-shadow:var(--shadow-soft);}
+.header{position:sticky;top:0;z-index:40;min-height:var(--header-h);display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;margin:8px;border-radius:20px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);box-shadow:var(--shadow);}
+.brand{font-size:14px;letter-spacing:.08em;}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.badge{padding:6px 10px;border-radius:999px;font-size:12px;white-space:nowrap;}
+.container{width:100%;padding:10px 12px 16px;}
+.topbar,.toolbar,.section-head,.editor-actions,.bulk-bar,.modal-head,.import-options{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.topbar{margin-bottom:8px;}
+.bulk-bar{margin-bottom:10px;padding:9px 11px;border-radius:16px;}
+.bulk-info{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;}
+.bulk-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.note{color:var(--muted);font-size:12px;line-height:1.35;}
+#activeCellInfo{max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.section-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 10px;}
+.section-tabs button{min-height:32px;border-radius:11px;padding:0 10px;font-size:12px;}
+.section-tabs button.active{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88);}
+input,select,textarea{width:100%;min-height:32px;padding:6px 9px;border-radius:11px;border:1px solid rgba(148,163,184,.24);background:rgba(255,255,255,.76);color:var(--text);font-size:12px;outline:none;backdrop-filter:blur(14px);}
+textarea{min-height:66px;resize:vertical;}
+input:focus,select:focus,textarea:focus{border-color:rgba(17,24,39,.42);box-shadow:0 0 0 3px rgba(255,255,255,.42),0 0 0 6px rgba(148,163,184,.12);}
+button{min-height:32px;border-radius:11px;border:1px solid rgba(148,163,184,.22);background:rgba(255,255,255,.76);color:var(--text);font-size:12px;padding:0 11px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.16s ease;backdrop-filter:blur(12px);}
+button:hover{transform:translateY(-1px);}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.primary,.success{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88);}
+.success{background:#059669;border-color:#059669;}
+.danger{background:rgba(220,38,38,.92);color:#fff;border-color:rgba(220,38,38,.84);}
+.warning{background:rgba(217,119,6,.92);color:#fff;border-color:rgba(217,119,6,.82);}
+.ghost{background:rgba(255,255,255,.68);}
+.icon-only{width:32px;height:32px;padding:0;}
+.icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px;}
+.layout-grid{display:grid;grid-template-columns:var(--editor-w) minmax(0,1fr);gap:12px;align-items:start;}
+.panel{border-radius:22px;padding:12px;}
+#editorPanel{position:sticky;top:92px;max-height:calc(100vh - 106px);overflow-y:auto;overflow-x:hidden;}
+.form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px;}
+.field{grid-column:span 12;display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:12px;color:var(--muted);letter-spacing:.02em;}
+.span6{grid-column:span 6;}
+.span12{grid-column:span 12;}
+.inline-pair{grid-column:span 12;display:grid;grid-template-columns:.92fr 1.08fr;gap:8px;}
+.editor-actions button{flex:1;}
+.table-wrap{overflow:auto;border-radius:16px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.48);max-height:72vh;backdrop-filter:blur(16px);}
+table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;}
+col.col-chk{width:30px;} col.col-seq{width:88px;} col.col-carrier{width:110px;} col.col-loc{width:82px;} col.col-rate{width:72px;} col.col-type{width:78px;} col.col-date{width:118px;} col.col-tt{width:64px;} col.col-route{width:118px;} col.col-rem{width:130px;} col.col-act{width:156px;}
+th,td{padding:5px 5px;border-bottom:1px solid rgba(148,163,184,.16);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;line-height:1.18;}
+th{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.88);backdrop-filter:blur(18px);}
+.filter-row th{top:33px;background:rgba(248,250,252,.88);z-index:4;padding:3px;}
+.filter-row input{min-height:22px;padding:3px 5px;font-size:12px;}
+.sort-head{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}
+.sort-btn{min-height:18px;height:18px;width:18px;padding:0;border-radius:4px;font-size:10px;line-height:1;}
+.sort-btn.active{background:rgba(17,24,39,.92);color:#fff;border-color:rgba(17,24,39,.88);}
+tbody tr:hover{background:rgba(255,255,255,.42);}
+.actions{display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:2px!important;flex-wrap:nowrap!important;}
+td.actions{display:table-cell!important;vertical-align:middle!important;text-align:center!important;white-space:nowrap!important;padding:3px 4px!important;}
+.icon-btn{border-radius:7px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;}
+.icon-btn.lc-act{background:rgba(5,150,105,.10)!important;border-color:rgba(5,150,105,.26)!important;color:#065f46!important;}
+.icon-btn.lc-act:hover{background:rgba(5,150,105,.22)!important;transform:translateY(-1px);}
+.row-check{width:14px;height:14px;accent-color:var(--primary);}
+.reflect-cell{cursor:pointer;position:relative;transition:background .14s ease, box-shadow .14s ease, transform .14s ease;}
+.reflect-cell:hover{background:var(--reflect-soft);}
+.reflect-cell.active-cell{background:var(--reflect-soft-2)!important;box-shadow:inset 0 0 0 1px rgba(37,99,235,.42),0 0 0 2px rgba(37,99,235,.12);}
+tr.active-row td{background:rgba(37,99,235,.04);}
+tr.editing-row td{background:var(--edit-row);}
+tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
+.section{display:none;}
+.section.active{display:block;}
+.overlay{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.16);backdrop-filter:blur(10px);padding:14px;}
+.card{width:min(1380px,calc(100% - 14px));max-height:94vh;overflow:auto;padding:14px;border-radius:24px;}
+.card.narrow{width:min(520px,calc(100% - 20px));}
+.file-input{display:none;}
+.title{font-size:14px;letter-spacing:.03em;text-align:center;}
+.subtitle{text-align:center;color:var(--muted);margin:6px 0 10px;font-size:12px;}
+.pin-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+.pin-input{height:44px;text-align:center;font-size:16px;}
+.loader{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.16);backdrop-filter:blur(10px);}
+.loader.show{display:flex;}
+.loader-box{min-width:220px;padding:14px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.6);text-align:center;box-shadow:var(--shadow);}
+.spinner{width:34px;height:34px;margin:0 auto 8px;border-radius:50%;border:3px solid rgba(148,163,184,.22);border-top-color:#111827;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.copy-toast{position:fixed;right:16px;bottom:16px;z-index:1200;background:rgba(17,24,39,.92);color:#fff;padding:8px 10px;border-radius:12px;font-size:12px;box-shadow:var(--shadow);}
+#globalPopup{position:fixed;z-index:1300;min-width:180px;max-width:360px;background:rgba(255,255,255,.9);color:var(--text);border:1px solid rgba(255,255,255,.5);border-radius:12px;padding:8px 10px;font-size:12px;line-height:1.35;white-space:normal;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .08s ease;backdrop-filter:blur(16px);}
+#globalPopup.show{opacity:1;}
+.pop-field{display:block;width:100%;cursor:default;}
+.cell-clip{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mobile-list{display:none;gap:8px;flex-direction:column;}
+.mobile-card{border-radius:16px;padding:10px;}
+.mobile-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.mobile-card-title{font-size:13px;}
+.mobile-card-sub{font-size:12px;color:var(--muted);}
+.mobile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:7px;}
+.mobile-item{border:1px solid rgba(255,255,255,.46);border-radius:12px;padding:6px;background:rgba(255,255,255,.42);cursor:pointer;transition:background .14s ease, box-shadow .14s ease;}
+.mobile-item:hover{background:var(--reflect-soft);}
+.mobile-item.active-cell{background:var(--reflect-soft-2);box-shadow:inset 0 0 0 1px rgba(37,99,235,.42),0 0 0 2px rgba(37,99,235,.12);}
+.mobile-item .k{font-size:11px;color:var(--muted);margin-bottom:2px;}
+.mobile-item .v{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mobile-card.active-row{box-shadow:inset 0 0 0 1px rgba(37,99,235,.22),0 8px 24px rgba(37,99,235,.10);}
+.mobile-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.mobile-actions button{flex:1;min-height:30px;}
+.import-options{padding:9px 10px;border-radius:16px;margin-bottom:10px;}
+.option-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.46);font-size:12px;}
+.option-chip input{width:auto;min-height:auto;padding:0;margin:0;background:none;border:none;}
+.fit-card{padding:10px;border-radius:16px;margin-bottom:10px;}
+.fit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px;}
+.fit-result{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;}
+.fit-pill{padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(255,255,255,.46);background:rgba(255,255,255,.6);}
+.fit-pill.ok{color:#065f46;}
+.fit-pill.bb{color:#991b1b;background:rgba(254,226,226,.82);}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;}
+.dim-card{border-radius:16px;padding:10px;}
+.dim-card-title{font-size:13px;margin-bottom:6px;}
+.dim-note{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.35;}
+.info-strip{padding:10px;border-radius:16px;font-size:12px;line-height:1.4;margin-bottom:10px;}
+.markup-card{border-radius:16px;padding:10px;margin-bottom:8px;}
+.markup-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.markup-row input{flex:0 0 110px;}
+.markup-row label{margin:0;flex:1;font-size:12px;}
+.applied-markups{margin-top:8px;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,.46);background:rgba(255,255,255,.45);font-size:12px;}
+.applied-markup{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(148,163,184,.12);}
+.applied-markup:last-child{border-bottom:none;}
+.lc-panel{border-radius:16px;padding:12px;margin-top:10px;}
+@media(max-width:1180px){.layout-grid{grid-template-columns:1fr;}#editorPanel{position:static;max-height:none;}}
+@media(max-width:860px){.fit-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:760px){html,body{font-size:12px;}.container{padding:8px;}.header{padding:10px 12px;margin:6px;}.panel,.card{padding:10px;}.table-wrap.desktop-table{display:none;}.mobile-list{display:flex;}.mobile-grid{grid-template-columns:1fr;}.section-tabs button,.editor-actions button{flex:1 1 calc(50% - 6px);}.inline-pair{grid-template-columns:1fr;}.fit-grid{grid-template-columns:1fr;}.bulk-bar{align-items:flex-start;}#activeCellInfo{max-width:100%;}}
+#pinGate .card.narrow{border:none!important;background:rgba(255,255,255,.62);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);box-shadow:0 24px 60px rgba(15,23,42,.16),0 2px 0 rgba(255,255,255,.7) inset;cursor:pointer;}
+#pinGate .card.narrow *{cursor:pointer;}
+#pinGate .card.narrow input{cursor:text!important;}
+.pin-input{border:none!important;background:rgba(255,255,255,.55)!important;box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 2px 8px rgba(15,23,42,.07)!important;border-radius:14px!important;font-size:20px;transition:box-shadow .16s,background .16s;}
+.pin-input:focus{background:rgba(255,255,255,.9)!important;box-shadow:0 0 0 2.5px rgba(17,24,39,.18),0 2px 12px rgba(15,23,42,.08)!important;outline:none!important;border:none!important;}
+.ios-btn{background:rgba(255,255,255,.62)!important;border:1px solid rgba(255,255,255,.74)!important;border-radius:14px!important;box-shadow:0 1px 0 rgba(255,255,255,.72) inset,0 4px 12px rgba(15,23,42,.07)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:.16s ease!important;}
+.ios-btn:hover{background:rgba(255,255,255,.82)!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 6px 16px rgba(15,23,42,.10)!important;transform:translateY(-1px);}
+.draggable-popup{position:fixed;z-index:1100;display:flex;flex-direction:column;min-width:300px;max-height:92vh;overflow:hidden;background:rgba(245,247,252,.76);border:1px solid rgba(255,255,255,.80);backdrop-filter:blur(36px) saturate(200%) brightness(1.04);-webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04);box-shadow:0 2px 0 rgba(255,255,255,.72) inset,0 24px 56px rgba(15,23,42,.15),0 1px 0 rgba(255,255,255,.6);border-radius:22px;user-select:none;top:80px;left:50%;transform:translateX(-50%);}
+.draggable-popup.hidden{display:none!important;}
 @keyframes tahoeOpen{from{opacity:0;transform:scale(.88) translateY(-14px)}to{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes tahoeClose{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.88) translateY(-10px)}}
-.tahoe-opening{animation:tahoeOpen .28s cubic-bezier(.34,1.48,.64,1) forwards}
-.tahoe-closing{animation:tahoeClose .2s cubic-bezier(.4,0,.2,1) forwards}
-
-.dp-header{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;padding:11px 14px 9px;cursor:grab;
-  border-bottom:1px solid rgba(148,163,184,.13);flex-shrink:0;
-  background:rgba(255,255,255,.35);border-radius:22px 22px 0 0;
-}
-.dp-header:active{cursor:grabbing}
-.dp-header-title{font-size:13px;letter-spacing:.03em}
-.dp-body{overflow-y:auto;padding:10px 12px 14px;flex:1}
-.dp-body::-webkit-scrollbar{width:5px}
-.dp-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.38);border-radius:999px}
-.dp-close-btn{
-  background:rgba(220,38,38,.12)!important;
-  border-color:rgba(220,38,38,.22)!important;
-  color:#dc2626!important;
-}
-
-/* ---- CALC TAPE ---- */
-#calcPopup{width:min(480px,calc(100vw - 20px))}
-.calc-total-row{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:8px 12px;margin-bottom:8px;flex-shrink:0;
-  background:rgba(17,24,39,.06);border-radius:12px;
-  border:1px solid rgba(148,163,184,.13);
-}
-.calc-total-row .lbl{font-size:11px;color:var(--muted)}
-.calc-total-row .val{font-size:18px;letter-spacing:.02em;font-family:'SF Mono','Consolas',monospace}
-.calc-tape{
-  background:rgba(255,255,255,.65);border:1px solid rgba(148,163,184,.14);
-  border-radius:12px;padding:8px 10px;min-height:70px;max-height:40vh;
-  overflow-y:auto;font-family:'SF Mono','Consolas',monospace;
-  font-size:12px;line-height:1.8;margin-bottom:8px;
-}
-.calc-tape::-webkit-scrollbar{width:4px}
-.calc-tape::-webkit-scrollbar-thumb{background:rgba(148,163,184,.3);border-radius:999px}
-.tape-line{
-  display:flex;justify-content:space-between;align-items:baseline;
-  padding:1px 0;border-bottom:1px solid rgba(148,163,184,.07);gap:10px;
-}
-.tape-line:last-child{border-bottom:none}
-.tape-expr{color:var(--muted);font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tape-val{font-size:12px;white-space:nowrap}
-.calc-input-row{display:flex;gap:5px;align-items:center;margin-bottom:6px}
-.calc-notepad-input{
-  flex:1;font-family:'SF Mono','Consolas',monospace;font-size:13px;
-  border-radius:11px;border:1px solid rgba(148,163,184,.2);
-  background:rgba(255,255,255,.8);padding:7px 10px;min-height:34px;
-}
-.calc-notepad-input:focus{border-color:rgba(17,24,39,.3);outline:none;
-  box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 0 5px rgba(148,163,184,.1)}
-
-/* ---- FX ---- */
-#fxPopup{width:min(620px,calc(100vw - 20px))}
-.fx-rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:8px}
-.fx-rate-pill{
-  background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5);
-  border-radius:11px;padding:7px 9px;text-align:center;
-  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
-}
-.fx-rate-pill .cur{font-size:11px;color:var(--muted);margin-bottom:2px}
-.fx-rate-pill .rate{font-size:13px}
-.fx-converter{
-  margin-top:10px;padding:10px 12px;border-radius:14px;
-  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
-}
-.fx-conv-grid{display:grid;grid-template-columns:1fr 80px 1fr auto;gap:6px;align-items:end;margin-bottom:7px}
-.fx-conv-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
-.fx-conv-pill{
-  padding:4px 9px;border-radius:999px;font-size:12px;
-  background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.55);white-space:nowrap;
-}
-.fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
-
-/* ---- LOCAL CHARGES ---- */
-#lcPopup{width:min(860px,calc(100vw - 20px))}
-.lc-header-row{
-  display:grid;grid-template-columns:1fr 80px 80px 90px 90px auto;
-  gap:6px;align-items:end;margin-bottom:8px;
-  padding:10px;border-radius:14px;
-  background:rgba(255,255,255,.44);border:1px solid rgba(148,163,184,.13);
-}
-.lc-header-row .field{margin:0}
-.lc-header-row input,.lc-header-row select{min-height:30px}
-.lc-table-scroll{
-  max-height:55vh;overflow-y:auto;border-radius:12px;
-  border:1px solid rgba(148,163,184,.13);background:rgba(255,255,255,.44);
-}
-.lc-table-scroll::-webkit-scrollbar{width:5px}
-.lc-table-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.36);border-radius:999px}
-.lc-main-table{width:100%;border-collapse:collapse;font-size:12px}
-.lc-main-table th{
-  background:rgba(248,250,252,.88);padding:5px 8px;text-align:left;
-  border-bottom:1px solid rgba(148,163,184,.13);font-size:11px;color:var(--muted);
-  position:sticky;top:0;z-index:2;
-}
-.lc-main-table td{padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.07)}
-.lc-main-table tbody tr:last-child td{border-bottom:none}
-.lc-main-table tbody tr:hover{background:rgba(255,255,255,.44)}
-.lc-main-table td input,.lc-main-table td select{
-  min-height:26px!important;padding:3px 6px!important;font-size:11px!important;
-  border-radius:7px!important;
-}
-.lc-group-head td{
-  background:rgba(17,24,39,.04)!important;
-  font-size:11px!important;color:var(--muted)!important;
-  padding:4px 8px!important;border-top:1px solid rgba(148,163,184,.14)!important;
-}
-@media(max-width:640px){
-  .lc-header-row{grid-template-columns:1fr 1fr}
-  #fxPopup,#lcPopup{width:calc(100vw - 14px)}
-}
-
-</style>
+.tahoe-opening{animation:tahoeOpen .28s cubic-bezier(.34,1.48,.64,1) forwards;}
+.tahoe-closing{animation:tahoeClose .2s cubic-bezier(.4,0,.2,1) forwards;}
+.dp-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 14px 9px;cursor:grab;border-bottom:1px solid rgba(148,163,184,.13);flex-shrink:0;background:rgba(255,255,255,.35);border-radius:22px 22px 0 0;}
+.dp-header:active{cursor:grabbing;}
+.dp-header-title{font-size:13px;letter-spacing:.03em;}
+.dp-body{overflow-y:auto;padding:10px 12px 14px;flex:1;}
+.dp-close-btn{background:rgba(220,38,38,.12)!important;border-color:rgba(220,38,38,.22)!important;color:#dc2626!important;}
+#calcPopup{width:min(480px,calc(100vw - 20px));}
+.calc-total-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;margin-bottom:8px;flex-shrink:0;background:rgba(17,24,39,.06);border-radius:12px;border:1px solid rgba(148,163,184,.13);}
+.calc-total-row .lbl{font-size:11px;color:var(--muted);}
+.calc-total-row .val{font-size:18px;letter-spacing:.02em;font-family:"SF Mono","Consolas",monospace;}
+.calc-tape{background:rgba(255,255,255,.65);border:1px solid rgba(148,163,184,.14);border-radius:12px;padding:8px 10px;min-height:70px;max-height:40vh;overflow-y:auto;font-family:"SF Mono","Consolas",monospace;font-size:12px;line-height:1.8;margin-bottom:8px;}
+.calc-input-row{display:flex;gap:5px;align-items:center;margin-bottom:6px;}
+.calc-notepad-input{flex:1;font-family:"SF Mono","Consolas",monospace;font-size:13px;border-radius:11px;border:1px solid rgba(148,163,184,.2);background:rgba(255,255,255,.8);padding:7px 10px;min-height:34px;}
+#fxPopup{width:min(620px,calc(100vw - 20px));}
+.fx-rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:8px;}
+.fx-rate-pill{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.5);border-radius:11px;padding:7px 9px;text-align:center;box-shadow:0 1px 0 rgba(255,255,255,.7) inset;}
+.fx-rate-pill .cur{font-size:11px;color:var(--muted);margin-bottom:2px;}
+.fx-rate-pill .rate{font-size:13px;}
+.fx-converter{margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.6);box-shadow:0 1px 0 rgba(255,255,255,.7) inset;}
+.fx-conv-grid{display:grid;grid-template-columns:1fr 80px 1fr auto;gap:6px;align-items:end;margin-bottom:7px;}
+.fx-conv-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.fx-conv-pill{padding:4px 9px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.55);white-space:nowrap;}
+.fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px;}
+#lcPopup{width:min(980px,calc(100vw - 20px));}
+.lc-top-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr auto;gap:6px;align-items:end;margin-bottom:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,.44);border:1px solid rgba(148,163,184,.13);}
+.lc-top-grid .field{margin:0;}
+.lc-top-grid input,.lc-top-grid select{min-height:30px;}
+.lc-subtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.lc-subtabs button.active{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88);}
+.lc-table-scroll{max-height:52vh;overflow-y:auto;border-radius:12px;border:1px solid rgba(148,163,184,.13);background:rgba(255,255,255,.44);}
+.lc-main-table{width:100%;border-collapse:collapse;font-size:12px;}
+.lc-main-table th{background:rgba(248,250,252,.88);padding:5px 8px;text-align:left;border-bottom:1px solid rgba(148,163,184,.13);font-size:11px;color:var(--muted);position:sticky;top:0;z-index:2;}
+.lc-main-table td{padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.07);}
+.lc-main-table tbody tr:last-child td{border-bottom:none;}
+.lc-main-table tbody tr:hover{background:rgba(255,255,255,.44);}
+.lc-main-table td input,.lc-main-table td select{min-height:26px!important;padding:3px 6px!important;font-size:11px!important;border-radius:7px!important;}
+.lc-ref-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;background:rgba(5,150,105,.05);border-left:3px solid rgba(5,150,105,.4);border-radius:0 10px 10px 0;margin-bottom:8px;font-size:12px;}
+.lc-sub-seq-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;background:rgba(5,150,105,.10);border:1px solid rgba(5,150,105,.22);color:#065f46;font-family:"SF Mono","Consolas",monospace;letter-spacing:.04em;}
+@media(max-width:640px){#fxPopup,#lcPopup{width:calc(100vw - 14px);}.lc-top-grid{grid-template-columns:1fr 1fr;}}
+.dash-kpi{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.56);border-radius:14px;padding:10px 12px;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 4px 12px rgba(15,23,42,.06);text-align:center;}
+.dash-kpi .kv{font-size:22px;letter-spacing:.01em;}
+.dash-kpi .kl{font-size:11px;color:var(--muted);margin-top:2px;}
+.dash-kpi.danger-kpi{border-color:rgba(220,38,38,.22);background:rgba(220,38,38,.06);}
+.dash-kpi.warn-kpi{border-color:rgba(217,119,6,.22);background:rgba(217,119,6,.06);}
+.dash-kpi.ok-kpi{border-color:rgba(5,150,105,.22);background:rgba(5,150,105,.06);}
+#dashTable th{padding:4px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left;font-size:11px;color:var(--muted);background:rgba(248,250,252,.88);position:sticky;top:0;}
+#dashTable td{padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.07);font-size:12px;cursor:pointer;}
+#dashTable tbody tr:hover{background:rgba(37,99,235,.05);}
+#dashTable tbody tr.selected-row{background:rgba(37,99,235,.10);}
+#dashDrillBody tr:hover{background:rgba(255,255,255,.44);}
+#dashDrillBody .expired-badge{color:#dc2626;font-size:11px;}
+#dashDrillBody .active-badge{color:#059669;font-size:11px;}
+#tabDashBtn.active{background:rgba(153,27,27,.92)!important;color:#fff!important;border-color:rgba(153,27,27,.88)!important;}
+  </style>
 </head>
 <body>
-
-<div id="loader" class="loader">
-  <div class="loader-box">
-    <div class="spinner"></div>
-    <div id="loaderText" class="title">UPDATING...</div>
-    <div id="loaderSub" class="note" style="margin-top:4px">PLEASE WAIT</div>
-  </div>
-</div>
+<div id="loader" class="loader"><div class="loader-box"><div class="spinner"></div><div id="loaderText" class="title">UPDATING...</div><div id="loaderSub" class="note" style="margin-top:4px;">PLEASE WAIT</div></div></div>
 
 <div id="pinGate" class="overlay">
   <div class="card narrow">
@@ -935,92 +243,22 @@ col.col-act{width:140px!important}
   </div>
 </div>
 
-<div id="uploadOverlay" class="overlay hidden">
-  <div class="card">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">UPLOAD / EXPORT</div>
-      <button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <div class="note" style="margin-bottom:8px">
-      CSV IMPORT SUPPORTED. TYPE: V = HANDOVER, S = SAILING. ROUTING CAN BE IN ROUTING / VIA / ROUTE.
-    </div>
-
-    <div class="import-options">
-      <label class="option-chip">
-        <input type="checkbox" id="clearEditorAfterImport">
-        CLEAR UPDATED RECORD / EDITOR AFTER IMPORT
-      </label>
-      <label class="option-chip">
-        <input type="checkbox" id="clearImportPreviewAfterApply" checked>
-        CLEAR IMPORT PREVIEW AFTER APPLY
-      </label>
-    </div>
-
-    <div class="toolbar" style="margin-bottom:8px">
-      <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
-      <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
-      <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
-      <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
-    </div>
-
-    <input type="file" id="fileInput" class="file-input" accept=".csv,.txt" />
-
-    <div class="table-wrap desktop-table">
-      <table>
-        <colgroup>
-          <col class="col-chk">
-          <col class="col-seq">
-          <col class="col-carrier">
-          <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-          <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-          <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt"><col class="col-route"><col class="col-rem">
-        </colgroup>
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAllUpload"></th>
-            <th>SEQ</th>
-            <th>CARRIER</th>
-            <th>POR</th>
-            <th>POL</th>
-            <th>POD</th>
-            <th>FPOD</th>
-            <th>20DV</th>
-            <th>20 TYPE</th>
-            <th>40HC</th>
-            <th>40 TYPE</th>
-            <th>F/T</th>
-            <th>DATE</th>
-            <th>TYPE</th>
-            <th>TT</th>
-            <th>ROUTING</th>
-            <th>REMARKS</th>
-          </tr>
-        </thead>
-        <tbody id="uploadBody"></tbody>
-      </table>
-    </div>
-
-    <div class="mobile-list" id="uploadMobile"></div>
-  </div>
-</div>
-
 <div id="appShell" class="hidden">
   <div class="header">
     <div class="brand">FR8X ADMIN</div>
     <div class="header-right">
-      <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
-      <span class="badge" id="activeCount">0 ACTIVE</span>
+      <button class="ghost ios-btn icon-only" id="openUploadBtn" title="UPLOAD EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
       <button class="ghost ios-btn icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
       <button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
       <button class="ghost ios-btn icon-only" id="openLcBtn" title="LOCAL CHARGES RECORD"><i class="bi bi-receipt"></i></button>
+      <span class="badge" id="activeCount">0 ACTIVE</span>
       <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
     </div>
   </div>
 
   <div class="container">
     <div class="topbar">
-      <input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:340px">
+      <input id="globalSearch" placeholder="SEARCH CARRIER / POR / POL / CONTAINER SIZE" style="max-width:360px">
       <div class="toolbar">
         <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
         <button class="primary" id="copySelectedRatesBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
@@ -1042,120 +280,44 @@ col.col-act{width:140px!important}
       <button class="active" id="tabActiveBtn" data-view="active">ACTIVE RATES</button>
       <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
       <button id="tabAllBtn" data-view="all">ALL RATES</button>
+      <button id="tabLcBtn" data-view="localcharges">LOCAL CHARGES</button>
       <button id="tabDimBtn" data-view="dimensions">DIMENSIONS</button>
       <button id="tabMarkupBtn" data-view="markups">MARKUP</button>
+      <button id="tabDashBtn" data-view="dashboard" style="background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.22);color:#991b1b"><i class="bi bi-bar-chart-fill"></i> DASHBOARD</button>
     </div>
 
     <div class="layout-grid">
       <div class="panel" id="editorPanel">
         <div class="section-head">
-          <div>
-            <div style="font-size:13px;">RATE EDITOR</div>
-            <div class="note" id="editorState">CREATE OR UPDATE RATE</div>
-          </div>
+          <div><div style="font-size:13px;">RATE EDITOR</div><div class="note" id="editorState">CREATE OR UPDATE RATE</div></div>
         </div>
-
         <div class="form">
-          <div class="field span12">
-            <label for="carrier">CARRIER</label>
-            <input id="carrier" placeholder="Carrier">
-          </div>
-
-          <div class="field span6">
-            <label for="por">POR</label>
-            <input id="por" placeholder="POR">
-          </div>
-          <div class="field span6">
-            <label for="pol">POL</label>
-            <input id="pol" placeholder="POL">
-          </div>
-
-          <div class="field span6">
-            <label for="pod">POD</label>
-            <input id="pod" placeholder="POD">
-          </div>
-          <div class="field span6">
-            <label for="fpod">FPOD</label>
-            <input id="fpod" placeholder="FPOD">
-          </div>
-
+          <div class="field span12"><label for="carrier">CARRIER</label><input id="carrier" placeholder="Carrier"></div>
+          <div class="field span6"><label for="por">POR</label><input id="por" placeholder="POR"></div>
+          <div class="field span6"><label for="pol">POL</label><input id="pol" placeholder="POL"></div>
+          <div class="field span6"><label for="pod">POD</label><input id="pod" placeholder="POD"></div>
+          <div class="field span6"><label for="fpod">FPOD</label><input id="fpod" placeholder="FPOD"></div>
           <div class="inline-pair">
-            <div class="field">
-              <label for="container20Type">20DV TYPE</label>
-              <select id="container20Type">
-                <option value="">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="dv20">USD 20DV</label>
-              <input id="dv20" placeholder="USD 20DV">
-            </div>
+            <div class="field"><label for="container20Type">20DV TYPE</label><select id="container20Type"><option value="">STANDARD</option><option value="OT">OT</option><option value="OG">OG</option><option value="FR">FR</option><option value="DG">DG</option><option value="RF">RF</option></select></div>
+            <div class="field"><label for="dv20">USD 20DV</label><input id="dv20" placeholder="USD 20DV"></div>
           </div>
-
           <div class="inline-pair">
-            <div class="field">
-              <label for="container40Type">40HC TYPE</label>
-              <select id="container40Type">
-                <option value="">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="hc40">USD 40HC</label>
-              <input id="hc40" placeholder="USD 40HC">
-            </div>
+            <div class="field"><label for="container40Type">40HC TYPE</label><select id="container40Type"><option value="">STANDARD</option><option value="OT">OT</option><option value="OG">OG</option><option value="FR">FR</option><option value="DG">DG</option><option value="RF">RF</option></select></div>
+            <div class="field"><label for="hc40">USD 40HC</label><input id="hc40" placeholder="USD 40HC"></div>
           </div>
-
-          <div class="field span6">
-            <label for="ft">F/T</label>
-            <input id="ft" placeholder="F/T">
-          </div>
-          <div class="field span6">
-            <label for="validity">VALIDITY</label>
-            <input id="validity" type="date">
-          </div>
-
-          <div class="field span6">
-            <label for="tt">TT</label>
-            <input id="tt" placeholder="TT">
-          </div>
-          <div class="field span6">
-            <label for="via">ROUTING</label>
-            <input id="via" placeholder="Routing">
-          </div>
-
-          <div class="field span6">
-            <label for="rateType">TYPE</label>
-            <select id="rateType">
-              <option value="V">HANDOVER</option>
-              <option value="S">SAILING</option>
-            </select>
-          </div>
-
-          <div class="field span12" style="margin-bottom:0">
-            <button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES FOR THIS RATE</button>
-          </div>
-
-          <div class="field span12">
-            <label for="remarks">REMARKS</label>
-            <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
-          </div>
-
-          <div class="editor-actions span12">
-            <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
-            <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
-            <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-            <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
-          </div>
+          <div class="field span6"><label for="ft">FT</label><input id="ft" placeholder="FT"></div>
+          <div class="field span6"><label for="validity">VALIDITY</label><input id="validity" type="date"></div>
+          <div class="field span6"><label for="tt">TT</label><input id="tt" placeholder="TT"></div>
+          <div class="field span6"><label for="via">ROUTING</label><input id="via" placeholder="Routing"></div>
+          <div class="field span6"><label for="rateType">TYPE</label><select id="rateType"><option value="V">HANDOVER</option><option value="S">SAILING</option></select></div>
+          <div class="field span12" style="margin-bottom:0"><button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES FOR THIS RATE</button></div>
+          <div class="field span12"><label for="remarks">REMARKS</label><textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea></div>
+        </div>
+        <div class="editor-actions span12">
+          <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
+          <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
+          <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
+          <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
         </div>
       </div>
 
@@ -1165,17 +327,10 @@ col.col-act{width:140px!important}
             <div class="note" id="sectionLabel">ACTIVE RATES</div>
             <div class="note">CLICK ANY CELL TO REFLECT IT. HOVER TO VIEW FULL TEXT.</div>
           </div>
-
           <div class="table-wrap desktop-table">
             <table>
               <colgroup>
-                <col class="col-chk">
-                <col class="col-seq">
-                <col class="col-carrier">
-                <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-                <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-                <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt">
-                <col class="col-route"><col class="col-rem"><col class="col-act">
+                <col class="col-chk"><col class="col-seq"><col class="col-carrier"><col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt"><col class="col-route"><col class="col-rem"><col class="col-act">
               </colgroup>
               <thead>
                 <tr>
@@ -1190,7 +345,7 @@ col.col-act{width:140px!important}
                   <th><div class="sort-head"><span>20TYPE</span><button class="sort-btn" data-sort="container20Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th><div class="sort-head"><span>40HC</span><button class="sort-btn" data-sort="hc40"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th><div class="sort-head"><span>40TYPE</span><button class="sort-btn" data-sort="container40Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>F/T</span><button class="sort-btn" data-sort="ft"><i class="bi bi-caret-down-fill"></i></button></div></th>
+                  <th><div class="sort-head"><span>FT</span><button class="sort-btn" data-sort="ft"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th><div class="sort-head"><span>DATE</span><button class="sort-btn" data-sort="validity"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th><div class="sort-head"><span>TYPE</span><button class="sort-btn" data-sort="type"><i class="bi bi-caret-down-fill"></i></button></div></th>
                   <th><div class="sort-head"><span>TT</span><button class="sort-btn" data-sort="tt"><i class="bi bi-caret-down-fill"></i></button></div></th>
@@ -1222,201 +377,98 @@ col.col-act{width:140px!important}
               <tbody id="tbody"></tbody>
             </table>
           </div>
-
           <div class="mobile-list" id="mobileRates"></div>
+        </div>
+
+        <div class="panel section" id="sectionLc">
+          <div class="section-head"><div style="font-size:13px">LOCAL CHARGES</div><div class="note">MANAGE LC RECORDS AS A SEPARATE PART.</div></div>
+          <div class="lc-panel">
+            <div class="note" style="margin-bottom:8px">SEARCH LC BY PARENT RATE OR LC SUB-SEQ. USE + TO FETCH FROM LC TABLE.</div>
+            <div class="lc-top-grid">
+              <div class="field"><label>PARENT SEQ</label><input id="lcSearchSeq" placeholder="SEQ"></div>
+              <div class="field"><label>CARRIER</label><input id="lcSearchCarrier" placeholder="Carrier"></div>
+              <div class="field"><label>POL</label><input id="lcSearchPol" placeholder="POL"></div>
+              <div class="field"><label>POR</label><input id="lcSearchPor" placeholder="POR"></div>
+              <div class="field"><label>CONTAINER</label><input id="lcSearchContainer" placeholder="20DV / 40HC / BOTH"></div>
+              <div class="field"><label>LC NAME</label><input id="lcSearchName" placeholder="THC / DOC / OTHER"></div>
+              <div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="primary" id="lcSearchBtn"><i class="bi bi-search"></i> SEARCH</button></div>
+            </div>
+            <div class="lc-subtabs">
+              <button class="active" data-lcv="all">ALL LC</button>
+              <button data-lcv="recent">RECENT</button>
+              <button data-lcv="selected">SELECTED RATE LC</button>
+            </div>
+            <div class="lc-table-scroll">
+              <table class="lc-main-table">
+                <thead><tr><th>SUB-SEQ</th><th>PARENT SEQ</th><th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES</th><th>ACTION</th></tr></thead>
+                <tbody id="lcMainBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr></tbody>
+              </table>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+              <button class="primary" id="lcAddNewBtn" style="flex:1"><i class="bi bi-node-plus-fill"></i> + NEW LC</button>
+              <button class="ghost" id="lcRefreshBtn" style="flex:1"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+            </div>
+          </div>
         </div>
 
         <div class="panel section" id="sectionDim">
           <div style="font-size:13px;margin-bottom:6px">CONTAINER DIMENSIONS</div>
-
           <div class="fit-card">
             <div style="font-size:13px;margin-bottom:4px">CARGO FIT ADVISOR</div>
             <div class="note">ENTER CARGO SIZE. IF IT EXCEEDS CONTAINER LIMITS, TREAT IT AS BREAK BULK.</div>
             <div class="fit-grid">
-              <div class="field" style="margin:0">
-                <label for="cargoL">LENGTH (M)</label>
-                <input id="cargoL" type="number" step="0.01" placeholder="e.g. 5.8">
-              </div>
-              <div class="field" style="margin:0">
-                <label for="cargoW">WIDTH (M)</label>
-                <input id="cargoW" type="number" step="0.01" placeholder="e.g. 2.2">
-              </div>
-              <div class="field" style="margin:0">
-                <label for="cargoH">HEIGHT (M)</label>
-                <input id="cargoH" type="number" step="0.01" placeholder="e.g. 2.3">
-              </div>
-              <div class="field" style="margin:0;justify-content:flex-end">
-                <label>&nbsp;</label>
-                <button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK</button>
-              </div>
+              <div class="field" style="margin:0"><label for="cargoL">LENGTH M</label><input id="cargoL" type="number" step="0.01" placeholder="e.g. 5.8"></div>
+              <div class="field" style="margin:0"><label for="cargoW">WIDTH M</label><input id="cargoW" type="number" step="0.01" placeholder="e.g. 2.2"></div>
+              <div class="field" style="margin:0"><label for="cargoH">HEIGHT M</label><input id="cargoH" type="number" step="0.01" placeholder="e.g. 2.3"></div>
+              <div class="field" style="margin:0;justify-content:flex-end"><label>&nbsp;</label><button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK</button></div>
             </div>
-            <div class="fit-result" id="fitResult">
-              <span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>
-            </div>
+            <div class="fit-result" id="fitResult"><span class="fit-pill">ENTER LENGTH · WIDTH · HEIGHT TO CHECK</span></div>
           </div>
-
-          <div class="info-strip">
-            ALL VALUES BELOW ARE STANDARD REFERENCE FIGURES. FINAL ACCEPTANCE, INTERNAL CLEARANCE, DOOR OPENING, PAYLOAD, OPEN-TOP BOW HEIGHT, FLAT-RACK END WALL CONDITION, AND LINE-SPECIFIC TOLERANCE MUST ALWAYS BE CONFIRMED WITH THE CARRIER. IF CARGO EXCEEDS CONTAINER CAPABILITY, TREAT IT AS BREAK BULK.
-          </div>
-
+          <div class="info-strip">ALL VALUES BELOW ARE STANDARD REFERENCE FIGURES. FINAL ACCEPTANCE, INTERNAL CLEARANCE, DOOR OPENING, PAYLOAD, OPEN-TOP BOW HEIGHT, FLAT-RACK END WALL CONDITION, AND LINE-SPECIFIC TOLERANCE MUST ALWAYS BE CONFIRMED WITH THE CARRIER. IF CARGO EXCEEDS CONTAINER CAPABILITY, TREAT IT AS BREAK BULK.</div>
           <div class="dim-grid">
-            <div class="dim-card">
-              <div class="dim-card-title">20GP / 20DV</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">6.058 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.900 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">33.2 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~28.25 t</span></div>
-              </div>
-              <div class="dim-note">Standard dry container for dense cargo, pallets, cartons, and short machinery.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40GP</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">67.7 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.78 t</span></div>
-              </div>
-              <div class="dim-note">Longer dry container with standard height clearance.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">76.3 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.51 t</span></div>
-              </div>
-              <div class="dim-note">Most common export container when extra internal height is needed.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">45HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">13.716 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">13.556 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">86.0 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">Carrier specific</span></div>
-              </div>
-              <div class="dim-note">For extra volume and length, subject to service acceptance.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.895 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">5.44 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Bow / tarp height varies</span></div>
-              </div>
-              <div class="dim-note">Useful when cargo cannot be stuffed through standard rear doors.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.029 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">11.58 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Confirm removable bows</span></div>
-              </div>
-              <div class="dim-note">Used for tall cargo where top loading is required.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">5.63 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Lashing / point load</span></div>
-              </div>
-              <div class="dim-note">Good for heavy machinery and project cargo with special lashing needs.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">11.65 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Special stowage may apply</span></div>
-              </div>
-              <div class="dim-note">For long machinery and outsized project cargo.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20RF</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.45 × 2.29 × 2.26 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Machinery reduces cube</span></div>
-              </div>
-              <div class="dim-note">For chilled or frozen cargo with strict temperature profile.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40RH</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">11.58 × 2.29 × 2.55 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Do not block air channels</span></div>
-              </div>
-              <div class="dim-note">Most common reefer size for larger temperature-controlled shipments.</div>
-            </div>
-
-            <div class="dim-card" style="background:rgba(254,242,242,.76)">
-              <div class="dim-card-title">BREAK BULK</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">When to use</span><span class="dim-value">If cargo exceeds container limits</span></div>
-                <div class="dim-spec"><span class="dim-label">Typical cases</span><span class="dim-value">Extreme length / width / height / non-containerizable cargo</span></div>
-                <div class="dim-spec"><span class="dim-label">Handling</span><span class="dim-value">Special stowage / lifting / planning</span></div>
-              </div>
-              <div class="dim-note">If it does not safely fit a suitable container type, treat it as break bulk.</div>
-            </div>
+            <div class="dim-card"><div class="dim-card-title">20GP</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">40GP</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">40HC</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">45HC</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">20OT</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">40OT</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">20FR</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">40FR</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">20RF</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">40RH</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
+            <div class="dim-card"><div class="dim-card-title">BREAK BULK</div><div class="dim-note">Preserve your original dimension cards here.</div></div>
           </div>
         </div>
 
         <div class="panel section" id="sectionMarkup">
           <div style="font-size:13px;margin-bottom:6px">COPY MARKUP SETTINGS</div>
-          <div class="note" style="margin-bottom:8px">
-            BASE ADMIN RATES STAY EXACTLY AS ENTERED. ONLY USER MARKUP IS APPLIED WHEN YOU PRESS COPY.
-          </div>
-
+          <div class="note" style="margin-bottom:8px">BASE ADMIN RATES STAY EXACTLY AS ENTERED. ONLY USER MARKUP IS APPLIED WHEN YOU PRESS COPY.</div>
           <div class="markup-card">
-            <div class="markup-row">
-              <label>USER 20DV MARKUP (%)</label>
-              <input type="number" id="userMu20" step="0.01" placeholder="e.g. 1">
-              <span class="badge" id="userMu20Status">NOT SET</span>
-            </div>
-            <div class="markup-row" style="margin-bottom:0">
-              <label>USER 40HC MARKUP (%)</label>
-              <input type="number" id="userMu40" step="0.01" placeholder="e.g. 2">
-              <span class="badge" id="userMu40Status">NOT SET</span>
-            </div>
+            <div class="markup-row"><label>USER 20DV MARKUP</label><input type="number" id="userMu20" step="0.01" placeholder="e.g. 1"><span class="badge" id="userMu20Status">NOT SET</span></div>
+            <div class="markup-row" style="margin-bottom:0"><label>USER 40HC MARKUP</label><input type="number" id="userMu40" step="0.01" placeholder="e.g. 2"><span class="badge" id="userMu40Status">NOT SET</span></div>
           </div>
-
-          <div class="toolbar">
-            <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
-            <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
-          </div>
-
-          <div class="applied-markups">
-            <div style="margin-bottom:4px">CURRENT COPY CALCULATION</div>
-            <div id="appliedMarkupsList">
-              <div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>
-            </div>
-          </div>
+          <div class="toolbar"><button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button><button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button></div>
+          <div class="applied-markups"><div style="margin-bottom:4px">CURRENT COPY CALCULATION</div><div id="appliedMarkupsList"><div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div></div></div>
         </div>
+      </div>
+    </div>
+
+    <div id="sectionDashboard" class="section" style="margin-top:12px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <div class="field" style="margin:0;flex:0 0 140px"><label style="font-size:11px;color:var(--muted)">VIEW</label><select id="dashView" style="min-height:30px"><option value="expired">EXPIRED RATES</option><option value="active">ACTIVE RATES</option><option value="all">ALL RATES</option></select></div>
+        <div class="field" style="margin:0;flex:0 0 140px"><label style="font-size:11px;color:var(--muted)">GROUP BY</label><select id="dashGroup" style="min-height:30px"><option value="continent">CONTINENT</option><option value="pol">POL</option><option value="carrier">CARRIER</option></select></div>
+        <div class="field" style="margin:0;flex:0 0 140px"><label style="font-size:11px;color:var(--muted)">CHART TYPE</label><select id="dashChartType" style="min-height:30px"><option value="bar">BAR</option><option value="pie">PIE</option><option value="donut">DONUT</option></select></div>
+        <div style="margin-top:16px"><button class="primary ios-btn" id="dashRefreshBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button></div>
+        <div style="margin-top:16px"><button class="ghost ios-btn" id="dashExportBtn"><i class="bi bi-download"></i> EXPORT CSV</button></div>
+      </div>
+      <div id="dashKpiRow" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:10px"></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:10px;align-items:start">
+        <div class="panel" style="padding:12px;min-height:320px;position:relative"><div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="dashChartLabel">CHART</div><div style="position:relative;height:300px"><canvas id="dashChart"></canvas></div></div>
+        <div class="panel" style="padding:12px;max-height:400px;overflow-y:auto"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">BREAKDOWN TABLE</div><table style="width:100%;border-collapse:collapse;font-size:12px" id="dashTable"><thead id="dashThead"></thead><tbody id="dashTbody"></tbody></table></div>
+      </div>
+      <div id="dashDrillPanel" class="panel" style="margin-top:10px;padding:12px;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="font-size:12px" id="dashDrillTitle">RATES IN GROUP</div><button class="ghost icon-only" id="dashDrillClose" title="Close"><i class="bi bi-x-lg"></i></button></div>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:rgba(248,250,252,.9)"><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">SEQ</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">CARRIER</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">POL</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">POD</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">20DV</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">40HC</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">VALIDITY</th><th style="padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.14);text-align:left">STATUS</th></tr></thead><tbody id="dashDrillBody"></tbody></table></div>
       </div>
     </div>
   </div>
@@ -1424,1741 +476,150 @@ col.col-act{width:140px!important}
 
 <div id="globalPopup"></div>
 
+<div id="calcPopup" class="draggable-popup hidden"><div class="dp-header" id="calcPopupHeader"><div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; CALCULATOR</div><button class="ghost icon-only dp-close-btn" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="calc-total-row"><span class="lbl">TOTAL</span><span class="val" id="calcTotalVal">0.00</span></div><div class="calc-tape" id="calcTape"><div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR + TO ADD</div></div><div class="calc-input-row"><input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g. 1,925 · 500+200 · (300) · 500x2" autocomplete="off" spellcheck="false"><button class="primary" id="calcAddBtn"><i class="bi bi-plus-lg"></i></button><button class="ghost" id="calcUndoBtn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button><button class="ghost" id="calcClearBtn" title="Clear all"><i class="bi bi-trash3"></i></button></div><div style="display:flex;gap:5px;margin-top:5px"><button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY TAPE</button></div></div></div>
+
+<div id="fxPopup" class="draggable-popup hidden"><div class="dp-header" id="fxPopupHeader"><div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div><button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="toolbar" style="margin-bottom:8px"><button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button><span class="badge" id="fxTimestamp">NOT LOADED</span><span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span></div><div id="fxRateGrid" class="fx-rate-grid"><div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div></div><div class="fx-converter"><div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>&nbsp; AMOUNT CONVERTER</div><div class="fx-conv-grid"><div class="field" style="margin:0"><label style="font-size:11px">AMOUNT</label><input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px"></div><div class="field" style="margin:0"><label style="font-size:11px">FROM</label><select id="fxConvFrom" style="min-height:30px"><option value="USD">USD</option><option value="INR">INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AED">AED</option><option value="CNY">CNY</option><option value="SGD">SGD</option><option value="JPY">JPY</option></select></div><div class="field" style="margin:0"><label style="font-size:11px">TO (MAIN)</label><select id="fxConvTo" style="min-height:30px"><option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AED">AED</option><option value="CNY">CNY</option><option value="SGD">SGD</option><option value="JPY">JPY</option></select></div><div class="field" style="margin:0;justify-content:flex-end"><label style="font-size:11px">&nbsp;</label><button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button></div></div><div class="fx-conv-pills" id="fxConvResult"><span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span></div></div></div></div>
+
+<div id="lcPopup" class="draggable-popup hidden"><div class="dp-header" id="lcPopupHeader"><div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div><button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="note" style="margin-bottom:7px">SELECT A PARENT SEQ RATE FIRST. LOCAL CHARGES ARE SAVED AS SUB-SEQ LIKE FR001LC1.</div><div class="lc-top-grid"><div class="field"><label>PARENT SEQ</label><input id="lcSearchSeq" placeholder="Type or select SEQ..."></div><div class="field"><label>CARRIER</label><input id="lcSearchCarrier" placeholder="Carrier"></div><div class="field"><label>POL</label><input id="lcSearchPol" placeholder="POL"></div><div class="field"><label>POR</label><input id="lcSearchPor" placeholder="POR"></div><div class="field"><label>CONTAINER</label><input id="lcSearchContainer" placeholder="20DV / 40HC / BOTH"></div><div class="field"><label>LC NAME</label><input id="lcSearchName" placeholder="THC / DOC / OTHER"></div><div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="primary ios-btn" id="lcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap"><i class="bi bi-arrow-down-circle"></i> FETCH</button></div></div><div id="lcRefRow" class="lc-ref-row" style="display:none"><span class="lc-sub-seq-badge" id="lcRefBadge">SEQ/LC1</span><span>CARRIER: <span id="lcRefCarrier">—</span></span><span>POL: <span id="lcRefPol">—</span></span><span>20DV: <span id="lcRefDv20">—</span></span><span>40HC: <span id="lcRefHc40">—</span></span></div><div class="lc-subtabs"><button class="active" data-lcview="all">ALL LC</button><button data-lcview="recent">RECENT</button><button data-lcview="selected">SELECTED RATE LC</button></div><div class="lc-table-scroll"><table class="lc-main-table"><thead><tr><th>SUB-SEQ</th><th>PARENT SEQ</th><th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES</th><th>ACTION</th></tr></thead><tbody id="lcMainBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr></tbody></table></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="primary" id="lcAddNewBtn" style="flex:1"><i class="bi bi-node-plus-fill"></i> + NEW LC</button><button class="ghost" id="lcRefreshBtn" style="flex:1"><i class="bi bi-arrow-clockwise"></i> REFRESH</button></div></div></div>
+
+<div id="uploadOverlay" class="overlay hidden"><div class="card"><div class="modal-head"><div class="title" style="text-align:left;">UPLOAD EXPORT</div><button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button></div><div class="note" style="margin-bottom:8px">CSV IMPORT SUPPORTED. TYPE V = HANDOVER, S = SAILING. ROUTING CAN BE IN "ROUTING"/"VIA"/"ROUTE".</div><div class="toolbar" style="margin-bottom:8px;"><button class="primary" id="downloadTemplateBtn">TEMPLATE</button><button class="success" id="pickFileBtn">IMPORT FILE</button><button class="ghost" id="exportSelectedBtn">EXPORT SELECTED</button><button class="ghost" id="applyImportBtn">APPLY IMPORT</button></div><input type="file" id="fileInput" class="file-input" accept=".csv,.txt"><div class="table-wrap desktop-table"><table><thead><tr><th><input type="checkbox" id="selectAllUpload"></th><th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20 TYPE</th><th>40HC</th><th>40 TYPE</th><th>FT</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th></tr></thead><tbody id="uploadBody"></tbody></table></div><div class="mobile-list" id="uploadMobile"></div></div></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const app = initializeApp({ projectId:"swifty-52e05" });
 const db = getFirestore(app);
-
-const $ = id => document.getElementById(id);
-const upper = v => (v ?? "").toString().trim().toUpperCase();
+const $ = (id) => document.getElementById(id);
+const upper = (v) => (v ?? "").toString().trim().toUpperCase();
 const popupEl = $("globalPopup");
 const PIN = "2710";
 
-let sessionUntil = 0;
-let data = [];
-let editId = null;
-let viewMode = "active";
-let uploadRows = [];
-let selectedUploadRows = new Set();
+let sessionUntil = 0, data = [], editId = null, viewMode = "active";
 let selectedIds = new Set();
-let sortState = { key:"", dir:"" };
-let filterMap = {
-  seq:"", carrier:"", por:"", pol:"", pod:"", fpod:"",
-  dv20:"", container20Type:"", hc40:"", container40Type:"",
-  ft:"", validity:"", type:"", tt:"", via:"", remarks:""
-};
-
+let sortState = { key:null, dir:"asc" };
+let filterMap = { seq:"", carrier:"", por:"", pol:"", pod:"", fpod:"", dv20:"", container20Type:"", hc40:"", container40Type:"", ft:"", validity:"", type:"", tt:"", via:"", remarks:"" };
 let activeCellKey = "";
-let activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
+let activeCellState = { id:null, seq:null, key:null, label:null, value:null };
+let userMu20 = 0, userMu40 = 0;
+const USERMU20KEY = "fr8x_usermu20", USERMU40KEY = "fr8x_usermu40";
+let dashChart = null;
+let lcData = [], lcView = "all", selectedParentSeq = "";
 
-let userMu20 = 0;
-let userMu40 = 0;
-const USER_MU20_KEY = "fr8x_user_mu20";
-const USER_MU40_KEY = "fr8x_user_mu40";
-
-const fitSpecs = [
-  { key:"20DV", l:5.90,   w:2.352, h:2.393 },
-  { key:"40GP", l:12.032, w:2.352, h:2.393 },
-  { key:"40HC", l:12.032, w:2.352, h:2.698 },
-  { key:"45HC", l:13.556, w:2.352, h:2.698 },
-  { key:"20OT", l:5.895,  w:2.350, h:2.350 },
-  { key:"40OT", l:12.029, w:2.350, h:2.350 },
-  { key:"20RF", l:5.45,   w:2.29,  h:2.26  },
-  { key:"40RH", l:11.58,  w:2.29,  h:2.55  }
-];
-
-function escapeHtml(v=""){
-  return String(v)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
+function escapeHtml(v){ return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 function pad2(n){ return String(n).padStart(2,"0"); }
-function safeAttr(v=""){
-  return String(v).replace(/\\/g,"\\\\").replace(/"/g,'\\"');
-}
-function seqFromDate(dateLike){
-  const dt = dateLike ? new Date(dateLike) : new Date();
-  const y = String(dt.getFullYear()).slice(-2);
-  return `${y}${pad2(dt.getMonth()+1)}${pad2(dt.getDate())}${pad2(dt.getHours())}${pad2(dt.getMinutes())}${pad2(dt.getSeconds())}`;
-}
+function seqFromDate(dateLike){ const dt = dateLike ? new Date(dateLike) : new Date(); return String(dt.getFullYear()).slice(-2)+pad2(dt.getMonth()+1)+pad2(dt.getDate())+pad2(dt.getHours())+pad2(dt.getMinutes())+pad2(dt.getSeconds()); }
 function generateSeq(){ return seqFromDate(new Date()); }
+function localDateFromInput(v){ if(!v) return null; if(/^\d{4}-\d{2}-\d{2}$/.test(v)){ const [y,m,d] = v.split("-").map(Number); return new Date(y,m-1,d); } const d = new Date(v); return isNaN(d) ? null : d; }
+function inputDateValue(v){ if(!v) return ""; if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v; const d = new Date(v); if(isNaN(d)) return ""; return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+function fmtDate(v){ const d = localDateFromInput(v); if(!d) return ""; return d.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase(); }
+function expired(r){ const d = localDateFromInput(r.validity); if(!d) return false; const today = new Date(); today.setHours(0,0,0,0); d.setHours(0,0,0,0); return d < today; }
+function showLoader(title="UPDATING...", sub="PLEASE WAIT"){ $("loaderText").textContent = title; $("loaderSub").textContent = sub; $("loader").classList.add("show"); }
+function hideLoader(){ $("loader").classList.remove("show"); }
+function calc(v){ v = (v ?? "").toString().trim(); if(!v) return ""; if(/[,;]/.test(v)){ const sum = v.split(/[,;]+/).filter(Boolean).map(Number).reduce((a,b)=>a + (isNaN(b)?0:b),0); return sum ? String(sum) : v; } return v; }
+function displayType(v){ return v === "V" ? "HANDOVER" : v === "S" ? "SAILING" : (v || ""); }
+function truncate(v,len=18){ const s = String(v ?? ""); return s.length > len ? s.slice(0,len-3)+"..." : s; }
+function showCopyToast(msg="COPIED"){ const t = document.createElement("div"); t.className = "copy-toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+function setEditorState(text){ $("editorState").textContent = text; }
+function sessionValid(){ return Date.now() < sessionUntil; }
+function setSession(){ sessionUntil = Date.now() + 4*60*60*1000; }
+function showApp(){ $("pinGate").classList.add("hidden"); $("appShell").classList.remove("hidden"); load(); loadMarkups(); loadLocalCharges(); }
+function showPopup(text, target){ if(!text) return; popupEl.textContent = text; popupEl.classList.add("show"); const rect = target.getBoundingClientRect(); const popupRect = popupEl.getBoundingClientRect(); let left = rect.left + rect.width/2 - popupRect.width/2; let top = rect.top - popupRect.height - 6; if(left < 6) left = 6; if(left + popupRect.width > window.innerWidth - 6) left = window.innerWidth - popupRect.width - 6; if(top < 6) top = rect.bottom + 6; popupEl.style.left = left+"px"; popupEl.style.top = top+"px"; }
+function hidePopup(){ popupEl.classList.remove("show"); }
+function appendDays(v){ const s = upper(v); if(!s) return ""; return /DAY/.test(s) ? s : `${s} DAYS`; }
+function updateActiveCellInfo(){ if(!activeCellKey){ $("activeCellInfo").textContent = "NO ACTIVE CELL"; return; } const valueText = activeCellState.value ? " = " + activeCellState.value : ""; $("activeCellInfo").textContent = `ACTIVE CELL · ${activeCellState.label}${activeCellState.seq ? " · SEQ " + activeCellState.seq : ""}${valueText}`; }
+function syncActiveCellClasses(){ document.querySelectorAll(".active-cell").forEach(el => el.classList.remove("active-cell")); document.querySelectorAll(".active-row").forEach(el => el.classList.remove("active-row")); if(!activeCellKey) return; document.querySelectorAll(`[data-cellkey="${CSS.escape(activeCellKey)}"]`).forEach(el => el.classList.add("active-cell")); if(activeCellState.id) document.querySelectorAll(`[data-rowid="${CSS.escape(activeCellState.id)}"]`).forEach(el => el.classList.add("active-row")); }
+function setActiveCell(el){ activeCellKey = el.dataset.cellkey; activeCellState = { id:el.dataset.id, seq:el.dataset.seq, key:el.dataset.fieldkey, label:el.dataset.label, value:el.dataset.value }; updateActiveCellInfo(); syncActiveCellClasses(); }
+function clearActiveCell(){ activeCellKey = ""; activeCellState = { id:null, seq:null, key:null, label:null, value:null }; updateActiveCellInfo(); syncActiveCellClasses(); }
+function normalizeSearchRow(r){ return [r.carrier,r.por,r.pol,r.container20Type,r.container40Type].join(" ").toUpperCase(); }
 
-function localDateFromInput(v){
-  if(!v) return null;
-  if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
-    const [y,m,d] = v.split("-").map(Number);
-    return new Date(y, m - 1, d);
-  }
-  const d = new Date(v);
-  return isNaN(d) ? null : d;
-}
-function inputDateValue(v){
-  if(!v) return "";
-  if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
-  const d = new Date(v);
-  if(isNaN(d)) return "";
-  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-}
-function fmtDate(v){
-  const d = localDateFromInput(v);
-  if(!d) return "";
-  return d.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
-}
-function expired(r){
-  const d = localDateFromInput(r.validity);
-  if(!d) return false;
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  d.setHours(0,0,0,0);
-  return d < today;
-}
-function showLoader(title="UPDATING...", sub="PLEASE WAIT"){
-  $("loaderText").textContent = title;
-  $("loaderSub").textContent = sub;
-  $("loader").classList.add("show");
-}
-function hideLoader(){
-  $("loader").classList.remove("show");
-}
-function calc(v){
-  v = (v ?? "").toString().trim();
-  if(!v) return "";
-  if(/[+\s]/.test(v)){
-    const sum = v.split(/[+\s]+/).filter(Boolean).map(Number).reduce((a,b)=>a + (isNaN(b) ? 0 : b),0);
-    return sum ? String(sum) : "";
-  }
-  return v;
-}
-function displayType(v){
-  return v === "V" ? "HANDOVER" : v === "S" ? "SAILING" : (v || "");
-}
-function truncate(v="", len=18){
-  const s = String(v);
-  return s.length > len ? s.slice(0, len - 3) + "..." : s;
-}
-function showCopyToast(msg="COPIED"){
-  const t = document.createElement("div");
-  t.className = "copy-toast";
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 1800);
-}
-function setEditorState(text){
-  $("editorState").textContent = text;
-}
-function sessionValid(){
-  return Date.now() < sessionUntil;
-}
-function setSession(){
-  sessionUntil = Date.now() + 4 * 60 * 60 * 1000;
-}
-function showApp(){
-  $("pinGate").classList.add("hidden");
-  $("appShell").classList.remove("hidden");
-  load();
-  loadMarkups();
-}
-function showPopup(text, target){
-  if(!text) return;
-  popupEl.textContent = text;
-  popupEl.classList.add("show");
-  const rect = target.getBoundingClientRect();
-  const popupRect = popupEl.getBoundingClientRect();
-  let left = rect.left + rect.width / 2 - popupRect.width / 2;
-  let top = rect.top - popupRect.height - 6;
-  if(left < 6) left = 6;
-  if(left + popupRect.width > window.innerWidth - 6) left = window.innerWidth - popupRect.width - 6;
-  if(top < 6) top = rect.bottom + 6;
-  popupEl.style.left = left + "px";
-  popupEl.style.top = top + "px";
-}
-function hidePopup(){
-  popupEl.classList.remove("show");
-}
-function appendDays(v){
-  const s = upper(v);
-  if(!s) return "";
-  return /DAY/.test(s) ? s : `${s} DAYS`;
-}
-function updateActiveCellInfo(){
-  if(!activeCellKey){
-    $("activeCellInfo").textContent = "NO ACTIVE CELL";
-    return;
-  }
-  const valueText = activeCellState.value ? activeCellState.value : "-";
-  $("activeCellInfo").textContent = `ACTIVE CELL · ${activeCellState.label}${activeCellState.seq ? ` · SEQ ${activeCellState.seq}` : ""} · ${valueText}`;
-}
-function syncActiveCellClasses(){
-  document.querySelectorAll(".active-cell").forEach(el => el.classList.remove("active-cell"));
-  document.querySelectorAll(".active-row").forEach(el => el.classList.remove("active-row"));
-  if(!activeCellKey) return;
-  document.querySelectorAll(`[data-cellkey="${safeAttr(activeCellKey)}"]`).forEach(el => el.classList.add("active-cell"));
-  if(activeCellState.id){
-    document.querySelectorAll(`[data-rowid="${safeAttr(activeCellState.id)}"]`).forEach(el => el.classList.add("active-row"));
-  }
-}
-function setActiveCell(el){
-  activeCellKey = el.dataset.cellkey || "";
-  activeCellState = {
-    id: el.dataset.id || "",
-    seq: el.dataset.seq || "",
-    key: el.dataset.fieldkey || "",
-    label: el.dataset.label || "",
-    value: el.dataset.value || ""
-  };
-  updateActiveCellInfo();
-  syncActiveCellClasses();
-}
-function clearActiveCell(){
-  activeCellKey = "";
-  activeCellState = { id:"", seq:"", key:"", label:"", value:"" };
-  updateActiveCellInfo();
-  syncActiveCellClasses();
-}
-
-async function load(){
-  showLoader("UPDATING DATA","FETCHING RECORDS");
-  try{
-    const snap = await getDocs(collection(db,"rates"));
-    data = [];
-    snap.forEach(d => data.push({ id:d.id, ...d.data() }));
-    data.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-    updateCounters();
-    render();
-  }catch(err){
-    alert("FAILED TO LOAD DATA");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-}
-function updateCounters(){
-  const ex = data.filter(expired).length;
-  $("expiredCount").textContent = `${ex} EXPIRED`;
-  $("activeCount").textContent = `${data.length - ex} ACTIVE`;
-}
-function getSortValue(row,key){
-  if(key === "validity") return inputDateValue(row.validity || "");
-  if(key === "type") return displayType(row.type || "");
-  return row[key] ?? "";
-}
-function compareValues(a,b,key){
-  const va = getSortValue(a,key);
-  const vb = getSortValue(b,key);
-  const na = parseFloat(String(va).replace(/[^0-9.\-]/g,""));
-  const nb = parseFloat(String(vb).replace(/[^0-9.\-]/g,""));
-  const isNumA = !isNaN(na) && String(va).trim() !== "";
-  const isNumB = !isNaN(nb) && String(vb).trim() !== "";
-  if(isNumA && isNumB){
-    if(na < nb) return -1;
-    if(na > nb) return 1;
-    return 0;
-  }
-  const sa = String(va).toUpperCase();
-  const sb = String(vb).toUpperCase();
-  if(sa < sb) return -1;
-  if(sa > sb) return 1;
-  return 0;
-}
-function filteredRows(){
-  const g = $("globalSearch").value.toUpperCase();
-  let rows = [...data];
-
-  if(viewMode === "active") rows = rows.filter(r => !expired(r));
-  if(viewMode === "expired") rows = rows.filter(r => expired(r));
-
-  rows = rows.filter(r => {
-    for(const k in filterMap){
-      const q = (filterMap[k] || "").trim().toUpperCase();
-      if(!q) continue;
-      const val = (k === "validity" ? fmtDate(r[k]) : (r[k] || "")).toString().toUpperCase();
-      if(!val.includes(q)) return false;
-    }
-    return true;
-  });
-
-  if(g){
-    rows = rows.filter(r => JSON.stringify(r).toUpperCase().includes(g));
-  }
-
-  if(sortState.key && sortState.dir){
-    rows.sort((a,b) => {
-      const res = compareValues(a,b,sortState.key);
-      return sortState.dir === "asc" ? res : -res;
-    });
-  }
-
-  return rows;
-}
-function updateSelectedInfo(){
-  $("selectedCountInfo").textContent = `${selectedIds.size} SELECTED`;
-  $("copySelectedRatesBtn").disabled = !selectedIds.size;
-}
-function switchView(mode){
-  viewMode = mode;
-  ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn"].forEach(id => $(id).classList.remove("active"));
-  ["sectionRates","sectionDim","sectionMarkup"].forEach(id => $(id).classList.remove("active"));
-  $("editorPanel").classList.remove("hidden");
-  $("sectionRates").classList.add("active");
-
-  if(mode === "active") $("tabActiveBtn").classList.add("active");
-  if(mode === "expired") $("tabExpiredBtn").classList.add("active");
-  if(mode === "all") $("tabAllBtn").classList.add("active");
-
-  if(mode === "dimensions"){
-    $("tabDimBtn").classList.add("active");
-    $("sectionRates").classList.remove("active");
-    $("sectionDim").classList.add("active");
-    $("editorPanel").classList.add("hidden");
-  }
-
-  if(mode === "markups"){
-    $("tabMarkupBtn").classList.add("active");
-    $("sectionRates").classList.remove("active");
-    $("sectionMarkup").classList.add("active");
-    $("editorPanel").classList.add("hidden");
-  }
-
-  if(["active","expired","all"].includes(mode)) render();
-}
-function updateSortButtons(){
-  document.querySelectorAll(".sort-btn").forEach(btn => {
-    btn.classList.remove("active");
-    const icon = btn.querySelector("i");
-    if(btn.dataset.sort === sortState.key){
-      btn.classList.add("active");
-      if(icon) icon.className = sortState.dir === "asc" ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill";
-    }else{
-      if(icon) icon.className = "bi bi-caret-down-fill";
-    }
-  });
-}
-
-function popupField(label, value, shortLen=14){
-  const full = (value ?? "").toString().trim();
-  const clip = full ? truncate(full, shortLen) : "-";
-  return `<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`;
-}
-function desktopCell(id, seq, fieldKey, label, value, shortLen=14){
-  return `
-    <td
-      class="reflect-cell ${activeCellKey === `${id}|${fieldKey}` ? "active-cell" : ""}"
-      data-rowid="${escapeHtml(id)}"
-      data-id="${escapeHtml(id)}"
-      data-seq="${escapeHtml(seq || "")}"
-      data-fieldkey="${escapeHtml(fieldKey)}"
-      data-cellkey="${escapeHtml(`${id}|${fieldKey}`)}"
-      data-label="${escapeHtml(label)}"
-      data-value="${escapeHtml((value ?? "").toString().trim())}"
-    >${popupField(label, value, shortLen)}</td>
-  `;
-}
-function mobileItem(rowId, seq, fieldKey, label, value){
-  const full = (value ?? "").toString().trim();
-  return `
-    <div
-      class="mobile-item ${activeCellKey === `${rowId}|${fieldKey}` ? "active-cell" : ""}"
-      data-rowid="${escapeHtml(rowId)}"
-      data-id="${escapeHtml(rowId)}"
-      data-seq="${escapeHtml(seq || "")}"
-      data-fieldkey="${escapeHtml(fieldKey)}"
-      data-cellkey="${escapeHtml(`${rowId}|${fieldKey}`)}"
-      data-label="${escapeHtml(label)}"
-      data-value="${escapeHtml(full)}"
-    >
-      <div class="k">${escapeHtml(label)}</div>
-      <div class="v">${escapeHtml(full ? truncate(full, 26) : "-")}</div>
-    </div>
-  `;
-}
-function renderDesktopRows(rows){
-  return rows.map((r,i) => `
-    <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? "active-row" : ""} ${editId === r.id ? "editing-row" : ""}">
-      <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}></td>
-      ${desktopCell(r.id, r.seq || i+1, "seq", "SEQ", r.seq || i+1, 14)}
-      ${desktopCell(r.id, r.seq || i+1, "carrier", "CARRIER", r.carrier, 16)}
-      ${desktopCell(r.id, r.seq || i+1, "por", "POR", r.por, 12)}
-      ${desktopCell(r.id, r.seq || i+1, "pol", "POL", r.pol, 12)}
-      ${desktopCell(r.id, r.seq || i+1, "pod", "POD", r.pod, 12)}
-      ${desktopCell(r.id, r.seq || i+1, "fpod", "FPOD", r.fpod, 12)}
-      ${desktopCell(r.id, r.seq || i+1, "dv20", "20DV", r.dv20, 10)}
-      ${desktopCell(r.id, r.seq || i+1, "container20Type", "20 TYPE", r.container20Type, 10)}
-      ${desktopCell(r.id, r.seq || i+1, "hc40", "40HC", r.hc40, 10)}
-      ${desktopCell(r.id, r.seq || i+1, "container40Type", "40 TYPE", r.container40Type, 10)}
-      ${desktopCell(r.id, r.seq || i+1, "ft", "F/T", r.ft, 8)}
-      ${desktopCell(r.id, r.seq || i+1, "validity", "DATE", fmtDate(r.validity), 18)}
-      ${desktopCell(r.id, r.seq || i+1, "type", "TYPE", displayType(r.type), 10)}
-      ${desktopCell(r.id, r.seq || i+1, "tt", "TT", r.tt, 10)}
-      ${desktopCell(r.id, r.seq || i+1, "via", "ROUTING", r.via, 16)}
-      ${desktopCell(r.id, r.seq || i+1, "remarks", "REMARKS", r.remarks, 18)}
-      <td class="actions">
-        <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button>
-        <button class="icon-btn lc-act" data-action="lc" data-id="${r.id}" title="Local Charges"><i class="bi bi-receipt-cutoff"></i></button>
-        <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
-        <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
-        <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
-      </td>
-    </tr>
-  `).join("");
-}
-function renderMobileRows(rows){
-  return rows.map(r => `
-    <div class="mobile-card ${activeCellState.id === r.id ? "active-row" : ""}" data-rowid="${escapeHtml(r.id)}">
-      <div class="mobile-card-head">
-        <div>
-          <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
-          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div>
-        </div>
-        <label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}> SELECT</label>
-      </div>
-      <div class="mobile-grid">
-        ${mobileItem(r.id, r.seq, "por", "POR", r.por)}
-        ${mobileItem(r.id, r.seq, "pol", "POL", r.pol)}
-        ${mobileItem(r.id, r.seq, "pod", "POD", r.pod)}
-        ${mobileItem(r.id, r.seq, "fpod", "FPOD", r.fpod)}
-        ${mobileItem(r.id, r.seq, "dv20", "20DV", `${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
-        ${mobileItem(r.id, r.seq, "hc40", "40HC", `${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
-        ${mobileItem(r.id, r.seq, "ft", "F/T", r.ft)}
-        ${mobileItem(r.id, r.seq, "validity", "DATE", fmtDate(r.validity))}
-        ${mobileItem(r.id, r.seq, "type", "TYPE", displayType(r.type))}
-        ${mobileItem(r.id, r.seq, "tt", "TT", r.tt)}
-        ${mobileItem(r.id, r.seq, "via", "ROUTING", r.via)}
-        ${mobileItem(r.id, r.seq, "remarks", "REMARKS", r.remarks)}
-      </div>
-      <div class="mobile-actions">
-        <button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
-        <button class="lc-act" data-action="lc" data-id="${r.id}"><i class="bi bi-receipt-cutoff"></i> LC</button>
-        <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
-        <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
-        <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
-      </div>
-    </div>
-  `).join("");
-}
-function render(){
-  const rows = filteredRows();
-  $("tbody").innerHTML = renderDesktopRows(rows);
-  $("mobileRates").innerHTML = renderMobileRows(rows);
-  $("sectionLabel").textContent =
-    viewMode === "active" ? "ACTIVE RATES" :
-    viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES";
-  updateSelectedInfo();
-  updateSortButtons();
-  updateActiveCellInfo();
-  syncActiveCellClasses();
-}
-
-function clearForm(resetEdit=true){
-  ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = "");
-  $("rateType").value = "V";
-  if(resetEdit) editId = null;
-  setEditorState("CREATE OR UPDATE RATE");
-  render();
-}
-function editorPayload(existing={}){
-  return {
-    seq: existing.seq || generateSeq(),
-    createdAt: existing.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    carrier: upper($("carrier").value),
-    por: upper($("por").value),
-    pol: upper($("pol").value),
-    pod: upper($("pod").value),
-    fpod: upper($("fpod").value),
-    dv20: calc($("dv20").value),
-    container20Type: upper($("container20Type").value),
-    hc40: calc($("hc40").value),
-    container40Type: upper($("container40Type").value),
-    ft: upper($("ft").value),
-    validity: inputDateValue($("validity").value),
-    tt: upper($("tt").value),
-    via: upper($("via").value),
-    remarks: upper($("remarks").value),
-    type: $("rateType").value,
-    localCharges: existing.localCharges || [],
-    charges20dv: existing.charges20dv || [],
-    charges40hc: existing.charges40hc || []
-  };
-}
-
+async function load(){ showLoader("UPDATING DATA","FETCHING RECORDS"); try{ data = []; const snap = await getDocs(collection(db,"rates")); snap.forEach(d => data.push({ id:d.id, ...d.data() })); data.sort((a,b) => (new Date(b.createdAt || 0)) - (new Date(a.createdAt || 0))); updateCounters(); render(); }catch(err){ alert("FAILED TO LOAD DATA"); console.error(err); }finally{ hideLoader(); } }
+async function loadLocalCharges(){ try{ lcData = []; const snap = await getDocs(collection(db,"localCharges")); snap.forEach(d => lcData.push({ id:d.id, ...d.data() })); renderLocalCharges(); }catch(err){ console.error(err); } }
+function updateCounters(){ const ex = data.filter(r => expired(r)).length; $("expiredCount").textContent = ex + " EXPIRED"; $("activeCount").textContent = (data.length - ex) + " ACTIVE"; }
+function getSortValue(row,key){ if(key === "validity") return inputDateValue(row.validity || ""); if(key === "type") return displayType(row.type || ""); return row[key] ?? ""; }
+function compareValues(a,b,key){ const va = getSortValue(a,key), vb = getSortValue(b,key); const na = parseFloat(String(va).replace(/[^\d.-]/g,"")), nb = parseFloat(String(vb).replace(/[^\d.-]/g,"")); const isNumA = !isNaN(na) && String(va).trim() !== "", isNumB = !isNaN(nb) && String(vb).trim() !== ""; if(isNumA && isNumB){ if(na < nb) return -1; if(na > nb) return 1; return 0; } const sa = String(va).toUpperCase(), sb = String(vb).toUpperCase(); if(sa < sb) return -1; if(sa > sb) return 1; return 0; }
+function filteredRows(){ const g = $("globalSearch").value.toUpperCase(); let rows = [...data]; if(viewMode === "active") rows = rows.filter(r => !expired(r)); if(viewMode === "expired") rows = rows.filter(r => expired(r)); rows = rows.filter(r => { for(const k in filterMap){ const q = (filterMap[k] || "").trim().toUpperCase(); if(!q) continue; const val = k === "validity" ? fmtDate(r[k]) : (r[k] || "").toString().toUpperCase(); if(!val.includes(q)) return false; } return true; }); if(g) rows = rows.filter(r => normalizeSearchRow(r).includes(g)); if(sortState.key) rows.sort((a,b) => { const res = compareValues(a,b,sortState.key); return sortState.dir === "asc" ? res : -res; }); return rows; }
+function updateSelectedInfo(){ $("selectedCountInfo").textContent = selectedIds.size + " SELECTED"; $("copySelectedRatesBtn").disabled = !selectedIds.size; }
+function switchView(mode){ viewMode = mode; ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabLcBtn","tabDimBtn","tabMarkupBtn","tabDashBtn"].forEach(id => $(id).classList.remove("active")); ["sectionRates","sectionLc","sectionDim","sectionMarkup","sectionDashboard"].forEach(id => $(id).classList.remove("active")); $("editorPanel").classList.remove("hidden"); if(mode === "dashboard"){ $("sectionDashboard").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabDashBtn").classList.add("active"); renderDashboard(); return; } if(mode === "dimensions"){ $("sectionDim").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabDimBtn").classList.add("active"); render(); return; } if(mode === "markups"){ $("sectionMarkup").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabMarkupBtn").classList.add("active"); render(); return; } if(mode === "localcharges"){ $("sectionLc").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabLcBtn").classList.add("active"); renderLocalCharges(); return; } $("sectionRates").classList.add("active"); if(mode === "active") $("tabActiveBtn").classList.add("active"); if(mode === "expired") $("tabExpiredBtn").classList.add("active"); if(mode === "all") $("tabAllBtn").classList.add("active"); render(); }
+function updateSortButtons(){ document.querySelectorAll(".sort-btn").forEach(btn=>{ btn.classList.remove("active"); const icon = btn.querySelector("i"); if(btn.dataset.sort === sortState.key){ btn.classList.add("active"); if(icon) icon.className = sortState.dir === "asc" ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill"; }else if(icon){ icon.className = "bi bi-caret-down-fill"; } }); }
+function popupField(label,value,shortLen=14){ const full = (value ?? "").toString().trim(); const clip = full ? truncate(full,shortLen) : ""; return `<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`; }
+function desktopCell(id,seq,fieldKey,label,value,shortLen=14){ return `<td class="reflect-cell${activeCellKey===id+fieldKey?' active-cell':''}" data-rowid="${escapeHtml(id)}" data-id="${escapeHtml(id)}" data-seq="${escapeHtml(seq)}" data-fieldkey="${escapeHtml(fieldKey)}" data-cellkey="${escapeHtml(id+fieldKey)}" data-label="${escapeHtml(label)}" data-value="${escapeHtml(value ?? "")}">${popupField(label,value,shortLen)}</td>`; }
+function mobileItem(rowId,seq,fieldKey,label,value){ const full = (value ?? "").toString().trim(); return `<div class="mobile-item${activeCellKey===rowId+fieldKey?' active-cell':''}" data-rowid="${escapeHtml(rowId)}" data-id="${escapeHtml(rowId)}" data-seq="${escapeHtml(seq)}" data-fieldkey="${escapeHtml(fieldKey)}" data-cellkey="${escapeHtml(rowId+fieldKey)}" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><div class="k">${escapeHtml(label)}</div><div class="v">${escapeHtml(full ? truncate(full,26) : "")}</div></div>`; }
+function renderDesktopRows(rows){ return rows.map((r,i)=>`<tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id===r.id?'active-row':''} ${editId===r.id?'editing-row':''}"><td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}></td>${desktopCell(r.id,r.seq || (i+1),"seq","SEQ",r.seq || (i+1),14)}${desktopCell(r.id,r.seq || (i+1),"carrier","CARRIER",r.carrier,16)}${desktopCell(r.id,r.seq || (i+1),"por","POR",r.por,12)}${desktopCell(r.id,r.seq || (i+1),"pol","POL",r.pol,12)}${desktopCell(r.id,r.seq || (i+1),"pod","POD",r.pod,12)}${desktopCell(r.id,r.seq || (i+1),"fpod","FPOD",r.fpod,12)}${desktopCell(r.id,r.seq || (i+1),"dv20","20DV",r.dv20,10)}${desktopCell(r.id,r.seq || (i+1),"container20Type","20 TYPE",r.container20Type,10)}${desktopCell(r.id,r.seq || (i+1),"hc40","40HC",r.hc40,10)}${desktopCell(r.id,r.seq || (i+1),"container40Type","40 TYPE",r.container40Type,10)}${desktopCell(r.id,r.seq || (i+1),"ft","FT",r.ft,8)}${desktopCell(r.id,r.seq || (i+1),"validity","DATE",fmtDate(r.validity),18)}${desktopCell(r.id,r.seq || (i+1),"type","TYPE",displayType(r.type),10)}${desktopCell(r.id,r.seq || (i+1),"tt","TT",r.tt,10)}${desktopCell(r.id,r.seq || (i+1),"via","ROUTING",r.via,16)}${desktopCell(r.id,r.seq || (i+1),"remarks","REMARKS",r.remarks,18)}<td class="actions"><button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button><button class="icon-btn lc-act" data-action="lc" data-id="${r.id}" title="Local Charges"><i class="bi bi-plus-lg"></i></button><button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button><button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button><button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button></td></tr>`).join(""); }
+function renderMobileRows(rows){ return rows.map(r => `<div class="mobile-card ${activeCellState.id===r.id?'active-row':''}" data-rowid="${escapeHtml(r.id)}"><div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div></div><div><label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}> SELECT</label></div></div><div class="mobile-grid">${mobileItem(r.id,r.seq,"por","POR",r.por)}${mobileItem(r.id,r.seq,"pol","POL",r.pol)}${mobileItem(r.id,r.seq,"pod","POD",r.pod)}${mobileItem(r.id,r.seq,"fpod","FPOD",r.fpod)}${mobileItem(r.id,r.seq,"dv20","20DV",r.dv20 + (r.container20Type ? " " + r.container20Type : ""))}${mobileItem(r.id,r.seq,"hc40","40HC",r.hc40 + (r.container40Type ? " " + r.container40Type : ""))}${mobileItem(r.id,r.seq,"ft","FT",r.ft)}${mobileItem(r.id,r.seq,"validity","DATE",fmtDate(r.validity))}${mobileItem(r.id,r.seq,"type","TYPE",displayType(r.type))}${mobileItem(r.id,r.seq,"tt","TT",r.tt)}${mobileItem(r.id,r.seq,"via","ROUTING",r.via)}${mobileItem(r.id,r.seq,"remarks","REMARKS",r.remarks)}</div><div class="mobile-actions"><button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button><button class="lc-act" data-action="lc" data-id="${r.id}"><i class="bi bi-plus-lg"></i> LC</button><button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button><button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button><button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button></div></div>`).join(""); }
+function render(){ const rows = filteredRows(); $("tbody").innerHTML = renderDesktopRows(rows); $("mobileRates").innerHTML = renderMobileRows(rows); $("sectionLabel").textContent = viewMode === "active" ? "ACTIVE RATES" : viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES"; updateSelectedInfo(); updateSortButtons(); updateActiveCellInfo(); syncActiveCellClasses(); }
+function clearForm(resetEdit=true){ ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = ""); $("rateType").value = "V"; if(resetEdit) editId = null; setEditorState("CREATE OR UPDATE RATE"); render(); }
+function editorPayload(existing={}){ return { seq: existing.seq || generateSeq(), createdAt: existing.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString(), carrier: upper($("carrier").value), por: upper($("por").value), pol: upper($("pol").value), pod: upper($("pod").value), fpod: upper($("fpod").value), dv20: calc($("dv20").value), container20Type: upper($("container20Type").value), hc40: calc($("hc40").value), container40Type: upper($("container40Type").value), ft: upper($("ft").value), validity: inputDateValue($("validity").value), tt: upper($("tt").value), via: upper($("via").value), remarks: upper($("remarks").value), type: $("rateType").value, localCharges: existing.localCharges || [] }; }
 $("clear").onclick = () => clearForm(true);
-
-$("save").onclick = async () => {
-  showLoader("SAVING","CREATING NEW RECORD");
-  try{
-    await addDoc(collection(db,"rates"), editorPayload());
-    clearForm(true);
-    await load();
-  }catch(err){
-    alert("SAVE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-};
-
-$("update").onclick = async () => {
-  if(!editId) return alert("SELECT A RECORD TO UPDATE.");
-  showLoader("UPDATING","SAVING CHANGES");
-  try{
-    const current = data.find(x => x.id === editId) || {};
-    await updateDoc(doc(db,"rates",editId), editorPayload(current));
-    clearForm(true);
-    await load();
-  }catch(err){
-    alert("UPDATE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-};
-
-async function duplicateRate(id){
-  const r = data.find(x => x.id === id);
-  if(!r) return;
-  showLoader("DUPLICATING","CREATING COPY");
-  try{
-    const payload = { ...r };
-    delete payload.id;
-    payload.seq = generateSeq();
-    payload.createdAt = new Date().toISOString();
-    payload.updatedAt = payload.createdAt;
-    await addDoc(collection(db,"rates"), payload);
-    await load();
-  }catch(err){
-    alert("DUPLICATE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-}
-$("duplicateBtn").onclick = async () => {
-  if(!editId) return alert("SELECT A RECORD TO DUPLICATE.");
-  await duplicateRate(editId);
-};
-
-async function deleteRate(id){
-  if(!confirm("DELETE THIS RATE?")) return;
-  showLoader("DELETING","REMOVING RECORD");
-  try{
-    await deleteDoc(doc(db,"rates",id));
-    selectedIds.delete(id);
-    if(editId === id) clearForm(true);
-    if(activeCellState.id === id) clearActiveCell();
-    await load();
-  }catch(err){
-    alert("DELETE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-}
-async function bulkDeleteSelected(){
-  if(!selectedIds.size) return alert("SELECT RECORDS FIRST.");
-  if(!confirm(`DELETE ${selectedIds.size} SELECTED RECORD(S)?`)) return;
-  showLoader("DELETING","REMOVING SELECTED RECORDS");
-  try{
-    for(const id of [...selectedIds]){
-      await deleteDoc(doc(db,"rates",id));
-    }
-    selectedIds.clear();
-    clearForm(true);
-    clearActiveCell();
-    await load();
-  }catch(err){
-    alert("BULK DELETE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-}
+$("save").onclick = async ()=>{ showLoader("SAVING","CREATING NEW RECORD"); try{ await addDoc(collection(db,"rates"), editorPayload()); clearForm(true); await load(); }catch(err){ alert("SAVE FAILED"); console.error(err); } finally{ hideLoader(); } };
+$("update").onclick = async ()=>{ if(!editId) return alert("SELECT A RECORD TO UPDATE."); showLoader("UPDATING","SAVING CHANGES"); try{ const current = data.find(x => x.id === editId); await updateDoc(doc(db,"rates",editId), editorPayload(current)); clearForm(true); await load(); }catch(err){ alert("UPDATE FAILED"); console.error(err); } finally{ hideLoader(); } };
+async function duplicateRate(id){ const r = data.find(x => x.id === id); if(!r) return; showLoader("DUPLICATING","CREATING COPY"); try{ const payload = {...r}; delete payload.id; payload.seq = generateSeq(); payload.createdAt = new Date().toISOString(); payload.updatedAt = payload.createdAt; await addDoc(collection(db,"rates"), payload); await load(); }catch(err){ alert("DUPLICATE FAILED"); console.error(err); } finally{ hideLoader(); } }
+$("duplicateBtn").onclick = async ()=>{ if(!editId) return alert("SELECT A RECORD TO DUPLICATE."); await duplicateRate(editId); };
+async function deleteRate(id){ if(!confirm("DELETE THIS RATE?")) return; showLoader("DELETING","REMOVING RECORD"); try{ await deleteDoc(doc(db,"rates",id)); selectedIds.delete(id); if(editId === id) clearForm(true); if(activeCellState.id === id) clearActiveCell(); await load(); }catch(err){ alert("DELETE FAILED"); console.error(err); } finally{ hideLoader(); } }
+async function bulkDeleteSelected(){ if(!selectedIds.size) return alert("SELECT RECORDS FIRST."); if(!confirm("DELETE " + selectedIds.size + " SELECTED RECORDS?")) return; showLoader("DELETING","REMOVING SELECTED RECORDS"); try{ for(const id of [...selectedIds]) await deleteDoc(doc(db,"rates",id)); selectedIds.clear(); clearForm(true); clearActiveCell(); await load(); }catch(err){ alert("BULK DELETE FAILED"); console.error(err); } finally{ hideLoader(); } }
 $("bulkDeleteBtn").onclick = bulkDeleteSelected;
-
-async function migrateAllSequences(){
-  if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return;
-  showLoader("UPDATING SEQ","APPLYING NEW FORMAT");
-  try{
-    for(const r of data){
-      const source = r.createdAt || r.updatedAt || new Date().toISOString();
-      const newSeq = seqFromDate(source);
-      if(r.seq !== newSeq){
-        await updateDoc(doc(db,"rates",r.id), { seq:newSeq });
-      }
-    }
-    await load();
-  }catch(err){
-    alert("SEQUENCE UPDATE FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-}
+async function migrateAllSequences(){ if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return; showLoader("UPDATING SEQ","APPLYING NEW FORMAT"); try{ for(const r of data){ const source = r.createdAt || r.updatedAt || new Date().toISOString(); const newSeq = seqFromDate(source); if(r.seq !== newSeq) await updateDoc(doc(db,"rates",r.id), { seq:newSeq }); } await load(); }catch(err){ alert("SEQUENCE UPDATE FAILED"); console.error(err); } finally{ hideLoader(); } }
 $("migrateSeqBtn").onclick = migrateAllSequences;
 
-function copyText(text){
-  return navigator.clipboard.writeText(text).catch(() => {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-  });
-}
-
+function copyText(text){ return navigator.clipboard.writeText(text).catch(()=>{ const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }); }
 function effectiveMarkup20(){ return parseFloat(userMu20 || 0) || 0; }
 function effectiveMarkup40(){ return parseFloat(userMu40 || 0) || 0; }
+function loadMarkups(){ userMu20 = parseFloat(localStorage.getItem(USERMU20KEY) || "0") || 0; userMu40 = parseFloat(localStorage.getItem(USERMU40KEY) || "0") || 0; $("userMu20").value = localStorage.getItem(USERMU20KEY) || ""; $("userMu40").value = localStorage.getItem(USERMU40KEY) || ""; $("userMu20Status").textContent = userMu20 ? userMu20 : "NOT SET"; $("userMu40Status").textContent = userMu40 ? userMu40 : "NOT SET"; updateAppliedMarkupsList(); }
+function updateAppliedMarkupsList(){ const m20 = effectiveMarkup20(), m40 = effectiveMarkup40(); if(!m20 && !m40){ $("appliedMarkupsList").innerHTML = `<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>`; return; } let html = ""; if(m20) html += `<div class="applied-markup"><span>20DV</span><span>${m20}</span></div>`; if(m40) html += `<div class="applied-markup"><span>40HC</span><span>${m40}</span></div>`; $("appliedMarkupsList").innerHTML = html; }
+$("saveUserMarkupBtn").onclick = ()=>{ const v20 = parseFloat($("userMu20").value || "0") || 0; const v40 = parseFloat($("userMu40").value || "0") || 0; if(v20 < 0 || v40 < 0) return alert("MARKUPS CANNOT BE NEGATIVE."); localStorage.setItem(USERMU20KEY, String(v20)); localStorage.setItem(USERMU40KEY, String(v40)); loadMarkups(); showCopyToast("USER MARKUPS SAVED"); };
+$("clearUserMarkupBtn").onclick = ()=>{ localStorage.removeItem(USERMU20KEY); localStorage.removeItem(USERMU40KEY); loadMarkups(); showCopyToast("USER MARKUPS CLEARED"); };
+function buildRateCopyText(r){ const lines = []; if(r.carrier) lines.push(`CARRIER: ${r.carrier}`); if(r.por) lines.push(`POR: ${r.por}`); if(r.pol) lines.push(`POL: ${r.pol}`); if(r.pod) lines.push(`POD: ${r.pod}`); if(r.fpod) lines.push(`FPOD: ${r.fpod}`); const routeFrom = r.pol || r.por || ""; const routeTo = r.pod || ""; const base20 = parseFloat(r.dv20 || "") || 0; const base40 = parseFloat(r.hc40 || "") || 0; const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20()/100)) : 0; const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40()/100)) : 0; const type20 = r.container20Type ? ` (${r.container20Type})` : ""; const type40 = r.container40Type ? ` (${r.container40Type})` : ""; const part20 = final20 ? `USD ${final20}/20DV${type20}` : ""; const part40 = final40 ? `USD ${final40}/40HC${type40}` : ""; if(routeFrom || routeTo || part20 || part40){ const rateParts = [part20,part40].filter(Boolean).join(" & "); lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${rateParts}`.replace(/\s+/g," ").trim()); } if(r.ft) lines.push(`F/T: ${appendDays(r.ft)}`); if(r.validity){ const validityText = fmtDate(r.validity); const typeText = displayType(r.type); lines.push(`VALIDITY: ${validityText}${typeText ? ` (${typeText})` : ""}`); } if(r.tt) lines.push(`TT: ${appendDays(r.tt)}`); if(r.via) lines.push(`ROUTING: ${r.via}`); if(r.remarks) lines.push(`REMARKS: ${r.remarks}`); return lines.join("\n"); }
 
-function loadMarkups(){
-  userMu20 = parseFloat(localStorage.getItem(USER_MU20_KEY) || "0") || 0;
-  userMu40 = parseFloat(localStorage.getItem(USER_MU40_KEY) || "0") || 0;
-  $("userMu20").value = localStorage.getItem(USER_MU20_KEY) || "";
-  $("userMu40").value = localStorage.getItem(USER_MU40_KEY) || "";
-  $("userMu20Status").textContent = userMu20 ? `${userMu20}%` : "NOT SET";
-  $("userMu40Status").textContent = userMu40 ? `${userMu40}%` : "NOT SET";
-  updateAppliedMarkupsList();
-}
-function updateAppliedMarkupsList(){
-  const m20 = effectiveMarkup20();
-  const m40 = effectiveMarkup40();
-  if(!m20 && !m40){
-    $("appliedMarkupsList").innerHTML = `<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>`;
-    return;
-  }
-  let html = "";
-  if(m20) html += `<div class="applied-markup"><span>20DV</span><span>+${m20}%</span></div>`;
-  if(m40) html += `<div class="applied-markup"><span>40HC</span><span>+${m40}%</span></div>`;
-  $("appliedMarkupsList").innerHTML = html;
-}
-$("saveUserMarkupBtn").onclick = () => {
-  const v20 = parseFloat($("userMu20").value || "0") || 0;
-  const v40 = parseFloat($("userMu40").value || "0") || 0;
-  if(v20 < 0 || v40 < 0) return alert("MARKUPS CANNOT BE NEGATIVE.");
-  localStorage.setItem(USER_MU20_KEY, String(v20));
-  localStorage.setItem(USER_MU40_KEY, String(v40));
-  loadMarkups();
-  showCopyToast("USER MARKUPS SAVED");
-};
-$("clearUserMarkupBtn").onclick = () => {
-  localStorage.removeItem(USER_MU20_KEY);
-  localStorage.removeItem(USER_MU40_KEY);
-  loadMarkups();
-  showCopyToast("USER MARKUPS CLEARED");
-};
-
-function buildRateCopyText(r){
-  const lines = [];
-
-  if(r.carrier) lines.push(`CARRIER: ${r.carrier}`);
-  if(r.por) lines.push(`POR: ${r.por}`);
-  if(r.pol) lines.push(`POL: ${r.pol}`);
-  if(r.pod) lines.push(`POD: ${r.pod}`);
-  if(r.fpod) lines.push(`FPOD: ${r.fpod}`);
-
-  const routeFrom = r.pol || r.por || "";
-  const routeTo = r.pod || "";
-  const base20 = parseFloat(r.dv20 || "") || 0;
-  const base40 = parseFloat(r.hc40 || "") || 0;
-  const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20() / 100)) : 0;
-  const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40() / 100)) : 0;
-
-  const type20 = r.container20Type ? ` (${r.container20Type})` : "";
-  const type40 = r.container40Type ? ` (${r.container40Type})` : "";
-  const part20 = final20 ? `USD ${final20}/20DV${type20}` : "";
-  const part40 = final40 ? `USD ${final40}/40HC${type40}` : "";
-
-  if(routeFrom || routeTo || part20 || part40){
-    const rateParts = [part20, part40].filter(Boolean).join(" & ");
-    lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${rateParts}`.replace(/\s+/g," ").trim());
-  }
-
-  if(r.ft) lines.push(`F/T: ${appendDays(r.ft)}`);
-
-  if(r.validity){
-    const validityText = fmtDate(r.validity);
-    const typeText = displayType(r.type);
-    lines.push(`VALIDITY: ${validityText}${typeText ? ` (${typeText})` : ""}`);
-  }
-
-  if(r.tt) lines.push(`TT: ${appendDays(r.tt)}`);
-  if(r.via) lines.push(`ROUTING: ${r.via}`);
-  if(r.remarks) lines.push(`REMARKS: ${r.remarks}`);
-
-  return lines.join("\n");
-}
-
-window.copyRate = async (id) => {
-  const r = data.find(x => x.id === id);
-  if(!r) return;
-  const text = buildRateCopyText(r);
-  await copyText(text);
-  showCopyToast("RATE COPIED");
-};
-
-async function copySelectedRates(){
-  let rows = filteredRows().filter(r => selectedIds.has(r.id));
-  if(!rows.length) rows = data.filter(r => selectedIds.has(r.id));
-  if(!rows.length) return alert("SELECT RECORDS FIRST.");
-  const combined = rows.map(buildRateCopyText).filter(Boolean).join("\n\n--------------------\n\n");
-  await copyText(combined);
-  showCopyToast(`${rows.length} RATE(S) COPIED`);
-}
-$("copySelectedRatesBtn").onclick = copySelectedRates;
-
-window.editRate = (id) => {
-  const r = data.find(x => x.id === id);
-  if(!r) return;
-  editId = id;
-  setEditorState(`EDITING ${r.seq || "SELECTED RATE"}`);
-  $("carrier").value = r.carrier || "";
-  $("por").value = r.por || "";
-  $("pol").value = r.pol || "";
-  $("pod").value = r.pod || "";
-  $("fpod").value = r.fpod || "";
-  $("dv20").value = r.dv20 || "";
-  $("container20Type").value = r.container20Type || "";
-  $("hc40").value = r.hc40 || "";
-  $("container40Type").value = r.container40Type || "";
-  $("ft").value = r.ft || "";
-  $("validity").value = inputDateValue(r.validity);
-  $("tt").value = r.tt || "";
-  $("via").value = r.via || "";
-  $("remarks").value = r.remarks || "";
-  $("rateType").value = r.type === "S" ? "S" : "V";
-  render();
-};
-
-window.delRate = deleteRate;
-
-function toCSV(rows){
-  const head = ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
-  const esc = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
-  return [
-    head.join(","),
-    ...rows.map((r,i) => [
-      esc(r.seq || i + 1),
-      esc(r.carrier),
-      esc(r.por),
-      esc(r.pol),
-      esc(r.pod),
-      esc(r.fpod),
-      esc(r.dv20),
-      esc(r.container20Type),
-      esc(r.hc40),
-      esc(r.container40Type),
-      esc(r.ft),
-      esc(inputDateValue(r.validity)),
-      esc(r.type),
-      esc(r.tt),
-      esc(r.via),
-      esc(r.remarks)
-    ].join(","))
-  ].join("\n");
-}
-function download(name, txt){
-  const a = document.createElement("a");
-  const blob = new Blob([txt], { type:"text/csv;charset=utf-8" });
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 500);
-}
-
-function parseCSVLine(line, sep=","){
-  const out = [];
-  let cur = "", inQuotes = false;
-  for(let i=0;i<line.length;i++){
-    const ch = line[i];
-    if(ch === '"'){
-      if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; }
-      else inQuotes = !inQuotes;
-    }else if(ch === sep && !inQuotes){
-      out.push(cur); cur = "";
-    }else{
-      cur += ch;
-    }
-  }
-  out.push(cur);
-  return out.map(v => v.trim());
-}
-function parseCSV(txt){
-  const lines = txt.split(/\r?\n/).filter(line => line.trim() !== "");
-  if(!lines.length) return [];
-  const sep = lines[0].includes("\t") ? "\t" : ",";
-  const headers = parseCSVLine(lines[0],sep).map(s => s.trim().toLowerCase());
-  return lines.slice(1).map(line => {
-    const cols = parseCSVLine(line,sep);
-    const o = {};
-    headers.forEach((h,i) => o[h] = (cols[i] ?? "").trim());
-    return o;
-  });
-}
-function normalizeUploadRow(r){
-  const rawType = upper(r.type || r.vtype || r.stype || "");
-  const typeCode = rawType === "S" || rawType === "SAILING" ? "S" : "V";
-  return {
-    seq:r.seq || r.sequence || "",
-    carrier:upper(r.carrier),
-    por:upper(r.por),
-    pol:upper(r.pol),
-    pod:upper(r.pod),
-    fpod:upper(r.fpod),
-    dv20:calc(r.dv20 || r["20dv"] || ""),
-    container20Type:upper(r["20type"] || r.container20type || ""),
-    hc40:calc(r.hc40 || r["40hc"] || ""),
-    container40Type:upper(r["40type"] || r.container40type || ""),
-    ft:upper(r["f/t"] || r.ft || ""),
-    validity:inputDateValue(r.validity || r.date || ""),
-    type:typeCode,
-    tt:upper(r.tt || r["transit time"] || ""),
-    via:upper(r.routing || r.via || r.route || ""),
-    remarks:upper(r.remarks || "")
-  };
-}
-function renderUpload(){
-  $("uploadBody").innerHTML = uploadRows.map((r,i) => `
-    <tr>
-      <td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}></td>
-      <td>${escapeHtml(r.seq || i+1)}</td>
-      <td>${escapeHtml(r.carrier || "")}</td>
-      <td>${escapeHtml(r.por || "")}</td>
-      <td>${escapeHtml(r.pol || "")}</td>
-      <td>${escapeHtml(r.pod || "")}</td>
-      <td>${escapeHtml(r.fpod || "")}</td>
-      <td>${escapeHtml(r.dv20 || "")}</td>
-      <td>${escapeHtml(r.container20Type || "")}</td>
-      <td>${escapeHtml(r.hc40 || "")}</td>
-      <td>${escapeHtml(r.container40Type || "")}</td>
-      <td>${escapeHtml(r.ft || "")}</td>
-      <td>${escapeHtml(fmtDate(r.validity))}</td>
-      <td>${escapeHtml(displayType(r.type))}</td>
-      <td>${escapeHtml(r.tt || "")}</td>
-      <td>${escapeHtml(r.via || "")}</td>
-      <td>${escapeHtml(r.remarks || "")}</td>
-    </tr>
-  `).join("");
-
-  $("uploadMobile").innerHTML = uploadRows.map((r,i) => `
-    <div class="mobile-card">
-      <div class="mobile-card-head">
-        <div>
-          <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
-          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div>
-        </div>
-        <label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? "checked" : ""}> SELECT</label>
-      </div>
-      <div class="mobile-grid">
-        ${mobileItem(`upload-${i}`, r.seq, "por", "POR", r.por)}
-        ${mobileItem(`upload-${i}`, r.seq, "pol", "POL", r.pol)}
-        ${mobileItem(`upload-${i}`, r.seq, "pod", "POD", r.pod)}
-        ${mobileItem(`upload-${i}`, r.seq, "fpod", "FPOD", r.fpod)}
-        ${mobileItem(`upload-${i}`, r.seq, "dv20", "20DV", `${r.dv20 || ""} ${r.container20Type || ""}`.trim())}
-        ${mobileItem(`upload-${i}`, r.seq, "hc40", "40HC", `${r.hc40 || ""} ${r.container40Type || ""}`.trim())}
-        ${mobileItem(`upload-${i}`, r.seq, "ft", "F/T", r.ft)}
-        ${mobileItem(`upload-${i}`, r.seq, "validity", "DATE", fmtDate(r.validity))}
-        ${mobileItem(`upload-${i}`, r.seq, "type", "TYPE", displayType(r.type))}
-        ${mobileItem(`upload-${i}`, r.seq, "tt", "TT", r.tt)}
-        ${mobileItem(`upload-${i}`, r.seq, "via", "ROUTING", r.via)}
-        ${mobileItem(`upload-${i}`, r.seq, "remarks", "REMARKS", r.remarks)}
-      </div>
-    </div>
-  `).join("");
-}
-
-function openUpload(){
-  $("uploadOverlay").classList.remove("hidden");
-  renderUpload();
-}
-function closeUpload(){
-  $("uploadOverlay").classList.add("hidden");
-}
-$("openUploadBtn").onclick = openUpload;
-$("closeUploadBtn").onclick = closeUpload;
-$("pickFileBtn").onclick = () => $("fileInput").click();
-
-$("fileInput").addEventListener("change", async e => {
-  const f = e.target.files?.[0];
-  if(!f) return;
-  showLoader("IMPORTING","READING FILE");
-  try{
-    const txt = await f.text();
-    uploadRows = parseCSV(txt).map(normalizeUploadRow);
-    selectedUploadRows.clear();
-    renderUpload();
-  }catch(err){
-    alert("IMPORT READ FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-});
-
-$("selectAllUpload").addEventListener("change", e => {
-  if(e.target.checked) uploadRows.forEach((_,i) => selectedUploadRows.add(i));
-  else selectedUploadRows.clear();
-  renderUpload();
-});
-
-$("uploadBody").addEventListener("change", e => {
-  const cb = e.target.closest("input[data-ui]");
-  if(!cb) return;
-  const i = Number(cb.dataset.ui);
-  if(cb.checked) selectedUploadRows.add(i);
-  else selectedUploadRows.delete(i);
-});
-$("uploadMobile").addEventListener("change", e => {
-  const cb = e.target.closest("input[data-ui]");
-  if(!cb) return;
-  const i = Number(cb.dataset.ui);
-  if(cb.checked) selectedUploadRows.add(i);
-  else selectedUploadRows.delete(i);
-  renderUpload();
-});
-
-$("exportSelectedBtn").onclick = () => {
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : filteredRows();
-  download("fr8x_selected_export.csv", toCSV(rows));
-};
-
-$("applyImportBtn").onclick = async () => {
-  const rows = selectedUploadRows.size ? uploadRows.filter((_,i) => selectedUploadRows.has(i)) : uploadRows;
-  if(!rows.length) return alert("NO DATA TO IMPORT.");
-  showLoader("IMPORTING","ADDING RECORDS");
-  try{
-    for(const r of rows){
-      if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
-      await addDoc(collection(db,"rates"), {
-        seq:r.seq || generateSeq(),
-        createdAt:new Date().toISOString(),
-        updatedAt:new Date().toISOString(),
-        carrier:r.carrier,
-        por:r.por,
-        pol:r.pol,
-        pod:r.pod,
-        fpod:r.fpod,
-        dv20:r.dv20,
-        container20Type:r.container20Type,
-        hc40:r.hc40,
-        container40Type:r.container40Type,
-        ft:r.ft,
-        validity:r.validity,
-        type:r.type,
-        tt:r.tt,
-        via:r.via,
-        remarks:r.remarks,
-        localCharges:[],
-        charges20dv:[],
-        charges40hc:[]
-      });
-    }
-    if($("clearImportPreviewAfterApply").checked){
-      uploadRows = [];
-      selectedUploadRows.clear();
-      renderUpload();
-    }
-    if($("clearEditorAfterImport").checked){
-      clearForm(true);
-    }
-    closeUpload();
-    await load();
-  }catch(err){
-    alert("IMPORT APPLY FAILED");
-    console.error(err);
-  }finally{
-    hideLoader();
-  }
-};
-
-$("downloadTemplateBtn").onclick = () => {
-  const templateRows = [{
-    seq:"",
-    carrier:"MSC",
-    por:"DELHI",
-    pol:"NHAVA SHEVA",
-    pod:"JEBEL ALI",
-    fpod:"DUBAI",
-    dv20:"1000",
-    container20Type:"",
-    hc40:"1800",
-    container40Type:"",
-    ft:"14",
-    validity:inputDateValue(new Date()),
-    type:"V",
-    tt:"7",
-    via:"DIRECT",
-    remarks:"SAMPLE"
-  }];
-  download("fr8x_template.csv", toCSV(templateRows));
-};
-
-function checkFit(){
-  const l = parseFloat($("cargoL").value || "");
-  const w = parseFloat($("cargoW").value || "");
-  const h = parseFloat($("cargoH").value || "");
-  if(isNaN(l) || isNaN(w) || isNaN(h)){
-    $("fitResult").innerHTML = `<span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>`;
-    return;
-  }
-  const fits = fitSpecs.filter(x => l <= x.l && w <= x.w && h <= x.h).map(x => x.key);
-  if(!fits.length){
-    $("fitResult").innerHTML = `<span class="fit-pill bb">BREAK BULK</span>`;
-    return;
-  }
-  $("fitResult").innerHTML = fits.map(x => `<span class="fit-pill ok">${escapeHtml(x)}</span>`).join("");
-}
+function checkFit(){ const l = parseFloat($("cargoL").value), w = parseFloat($("cargoW").value), h = parseFloat($("cargoH").value); if(isNaN(l) || isNaN(w) || isNaN(h)){ $("fitResult").innerHTML = `<span class="fit-pill">ENTER LENGTH · WIDTH · HEIGHT TO CHECK</span>`; return; } const specs = [{k:"20GP",l:5.90,w:2.352,h:2.393},{k:"40GP",l:12.032,w:2.352,h:2.393},{k:"40HC",l:12.032,w:2.352,h:2.698},{k:"45HC",l:13.556,w:2.352,h:2.698},{k:"20OT",l:5.895,w:2.35,h:2.35},{k:"40OT",l:12.029,w:2.35,h:2.35},{k:"20RF",l:5.45,w:2.29,h:2.26},{k:"40RH",l:11.58,w:2.29,h:2.55}]; const fits = specs.filter(x => l <= x.l && w <= x.w && h <= x.h).map(x => x.k); $("fitResult").innerHTML = fits.length ? fits.map(x => `<span class="fit-pill ok">${escapeHtml(x)}</span>`).join("") : `<span class="fit-pill bb">BREAK BULK</span>`; }
 $("checkFitBtn").onclick = checkFit;
 
-function pinUnlock(){
-  const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join("");
-  if(pin === PIN){
-    setSession();
-    showApp();
-  }else{
-    alert("INVALID PIN");
-    clearPin();
-  }
-}
-function clearPin(){
-  ["pin1","pin2","pin3","pin4"].forEach(id => $(id).value = "");
-  $("pin1").focus();
-}
-["pin1","pin2","pin3","pin4"].forEach((id,i,arr) => {
-  $(id).addEventListener("input", e => {
-    e.target.value = e.target.value.replace(/\D/g,"").slice(0,1);
-    if(e.target.value && arr[i+1]) $(arr[i+1]).focus();
-  });
-  $(id).addEventListener("keydown", e => {
-    if(e.key === "Backspace" && !e.target.value && arr[i-1]) $(arr[i-1]).focus();
-    if(e.key === "Enter") pinUnlock();
-  });
-});
-$("unlockBtn").onclick = pinUnlock;
-$("clearPinBtn").onclick = clearPin;
+function renderLocalCharges(){ const q = { seq:$("lcSearchSeq").value.trim().toUpperCase(), carrier:$("lcSearchCarrier").value.trim().toUpperCase(), pol:$("lcSearchPol").value.trim().toUpperCase(), por:$("lcSearchPor").value.trim().toUpperCase(), container:$("lcSearchContainer").value.trim().toUpperCase(), name:$("lcSearchName").value.trim().toUpperCase() }; let rows = [...lcData]; if(selectedParentSeq) rows = rows.filter(x => (x.parentSeq || "") === selectedParentSeq); if(lcView === "recent") rows = rows.slice(-20); if(lcView === "selected" && selectedParentSeq) rows = rows.filter(x => x.parentSeq === selectedParentSeq); rows = rows.filter(r => [r.parentSeq,r.carrier,r.pol,r.por,r.container,r.desc].join(" ").toUpperCase().includes((q.seq+" "+q.carrier+" "+q.pol+" "+q.por+" "+q.container+" "+q.name).trim())); $("lcMainBody").innerHTML = rows.length ? rows.map(r => `<tr data-lcid="${escapeHtml(r.id)}"><td>${escapeHtml(r.subSeq || "")}</td><td>${escapeHtml(r.parentSeq || "")}</td><td>${escapeHtml(r.desc || "")}</td><td>${escapeHtml(r.type || "")}</td><td>${escapeHtml(r.currency || "")}</td><td>${escapeHtml(String(r.amount || ""))}</td><td>${escapeHtml(r.applies || "")}</td><td><button class="icon-btn danger" data-lc-action="delete" data-id="${escapeHtml(r.id)}"><i class="bi bi-trash3"></i></button></td></tr>`).join("") : `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr>`; }
+$("lcSearchBtn").onclick = renderLocalCharges;
+$("lcRefreshBtn").onclick = loadLocalCharges;
+document.querySelectorAll(".lc-subtabs button").forEach(btn => btn.addEventListener("click", ()=>{ document.querySelectorAll(".lc-subtabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); lcView = btn.dataset.lcview; renderLocalCharges(); }));
+
+function openLocalChargesForRate(id){ const r = data.find(x => x.id === id); if(!r) return; selectedParentSeq = r.seq || ""; $("lcSearchSeq").value = selectedParentSeq; $("lcSearchCarrier").value = r.carrier || ""; $("lcSearchPol").value = r.pol || ""; $("lcSearchPor").value = r.por || ""; $("lcSearchContainer").value = [r.container20Type,r.container40Type].filter(Boolean).join(" / "); $("lcRefRow").style.display = "flex"; $("lcRefBadge").textContent = (r.seq || "") + "/LC1"; $("lcRefCarrier").textContent = r.carrier || "—"; $("lcRefPol").textContent = r.pol || "—"; $("lcRefDv20").textContent = r.dv20 || "—"; $("lcRefHc40").textContent = r.hc40 || "—"; switchView("localcharges"); openPopupById("lcPopup"); renderLocalCharges(); }
+
+function renderDashboard(){ const view = $("dashView").value; const groupKey = $("dashGroup").value; const chartType = $("dashChartType").value; const rows = data.filter(r => view === "all" ? true : view === "active" ? !expired(r) : expired(r)); const groups = {}; rows.forEach(r => { const k = groupKey === "carrier" ? (r.carrier || "UNKNOWN") : groupKey === "pol" ? (r.pol || "UNKNOWN") : ((r.por || r.pol || "UNKNOWN").slice(0,3) || "UNKNOWN"); groups[k] = (groups[k] || 0) + 1; }); const labels = Object.keys(groups); const values = labels.map(k => groups[k]); $("dashKpiRow").innerHTML = [ {k:"TOTAL",v:data.length,c:"ok-kpi"}, {k:"ACTIVE",v:data.filter(r=>!expired(r)).length,c:"ok-kpi"}, {k:"EXPIRED",v:data.filter(r=>expired(r)).length,c:"danger-kpi"}, {k:"LOCAL CHARGES",v:lcData.length,c:"warn-kpi"} ].map(x => `<div class="dash-kpi ${x.c}"><div class="kv">${escapeHtml(String(x.v))}</div><div class="kl">${escapeHtml(x.k)}</div></div>`).join(""); $("dashThead").innerHTML = `<tr><th>GROUP</th><th>COUNT</th></tr>`; $("dashTbody").innerHTML = labels.map((k,i) => `<tr data-group="${escapeHtml(k)}"><td>${escapeHtml(k)}</td><td>${values[i]}</td></tr>`).join(""); if(dashChart) dashChart.destroy(); const ctx = $("dashChart").getContext("2d"); dashChart = new Chart(ctx,{ type: chartType === "donut" ? "doughnut" : chartType, data:{ labels, datasets:[{ data:values, backgroundColor:["#111827","#2563eb","#059669","#d97706","#dc2626","#7c3aed","#0ea5e9","#14b8a6"] }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:chartType !== "bar", position:"bottom" } } } }); $("dashChartLabel").textContent = `CHART · ${view.toUpperCase()} · ${groupKey.toUpperCase()}`; }
+$("dashRefreshBtn").onclick = renderDashboard;
+$("dashExportBtn").onclick = ()=>{ const rows = data.map(r => ({ seq:r.seq, carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod, dv20:r.dv20, hc40:r.hc40, validity:r.validity, type:displayType(r.type) })); const csv = [Object.keys(rows[0] || {seq:"",carrier:""}).join(","), ...rows.map(r => Object.values(r).map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(","))].join("\n"); copyText(csv); showCopyToast("DASH CSV COPIED"); };
+
+function pinUnlock(){ const pin = [$("pin1").value,$("pin2").value,$("pin3").value,$("pin4").value].join(""); if(pin === PIN){ setSession(); showApp(); } else { alert("INVALID PIN"); clearPin(); } }
+function clearPin(){ ["pin1","pin2","pin3","pin4"].forEach(id => $(id).value = ""); $("pin1").focus(); }
+["pin1","pin2","pin3","pin4"].forEach((id,idx,arr)=>{ const el = $(id); el.addEventListener("input",e=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,1); if(e.target.value && arr[idx+1]) $(arr[idx+1]).focus(); }); el.addEventListener("keydown",e=>{ if(e.key === "Backspace" && !e.target.value && arr[idx-1]) $(arr[idx-1]).focus(); if(e.key === "Enter") pinUnlock(); }); });
+$("unlockBtn").onclick = pinUnlock; $("clearPinBtn").onclick = clearPin;
 
 $("globalSearch").addEventListener("input", render);
-document.querySelectorAll(".filter-row input").forEach(inp => inp.addEventListener("input", e => {
-  filterMap[e.target.dataset.col] = e.target.value;
-  render();
-}));
-document.querySelectorAll(".sort-btn").forEach(btn => btn.addEventListener("click", e => {
-  e.stopPropagation();
-  const key = btn.dataset.sort;
-  if(sortState.key !== key){
-    sortState = { key, dir:"asc" };
-  }else if(sortState.dir === "asc"){
-    sortState = { key, dir:"desc" };
-  }else{
-    sortState = { key:"", dir:"" };
-  }
-  render();
-}));
-document.querySelectorAll(".section-tabs button").forEach(btn => btn.addEventListener("click", () => switchView(btn.dataset.view)));
+document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener("input", e=>{ filterMap[e.target.dataset.col] = e.target.value; render(); }));
+document.querySelectorAll(".sort-btn").forEach(btn=>btn.addEventListener("click", e=>{ e.stopPropagation(); const key = btn.dataset.sort; if(sortState.key === key) sortState.dir = sortState.dir === "asc" ? "desc" : "asc"; else { sortState.key = key; sortState.dir = "asc"; } render(); }));
+document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click", ()=>switchView(btn.dataset.view)));
 
-document.addEventListener("mouseover", e => {
-  const pop = e.target.closest(".pop-field");
-  if(pop) showPopup(pop.dataset.value || "", pop);
-});
-document.addEventListener("mouseout", e => {
-  if(e.target.closest(".pop-field")) hidePopup();
-});
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest("button[data-action]");
-  if(btn){
-    const id = btn.dataset.id;
-    if(btn.dataset.action === "copy") window.copyRate(id);
-    if(btn.dataset.action === "lc")   window.openLcForRate(id);
-    if(btn.dataset.action === "duplicate") duplicateRate(id);
-    if(btn.dataset.action === "edit") window.editRate(id);
-    if(btn.dataset.action === "delete") window.delRate(id);
-    return;
-  }
-
-  const reflectTarget = e.target.closest(".reflect-cell, .mobile-item");
-  if(reflectTarget && !e.target.closest("button") && !e.target.closest("input")){
-    setActiveCell(reflectTarget);
-    return;
-  }
-});
-
-document.addEventListener("change", e => {
-  const cb = e.target.closest(".row-check[data-id]");
-  if(cb){
-    const id = cb.dataset.id;
-    if(cb.checked) selectedIds.add(id);
-    else selectedIds.delete(id);
-    document.querySelectorAll(`.row-check[data-id="${safeAttr(id)}"]`).forEach(el => { if(el !== cb) el.checked = cb.checked; });
-    updateSelectedInfo();
-  }
-});
-$("selectAllRows").addEventListener("change", e => {
-  document.querySelectorAll(".row-check[data-id]").forEach(cb => {
-    cb.checked = e.target.checked;
-    if(e.target.checked) selectedIds.add(cb.dataset.id);
-    else selectedIds.delete(cb.dataset.id);
-  });
-  updateSelectedInfo();
-});
+document.addEventListener("click", (e)=>{ const t = e.target.closest("[data-action],[data-cellkey],.pop-field,.mobile-item,.reflect-cell,.row-check,[data-lc-action],#dashTable tbody tr"); if(!t) return; const action = t.dataset.action; if(t.matches(".row-check")){ const id = t.dataset.id; if(t.checked) selectedIds.add(id); else selectedIds.delete(id); updateSelectedInfo(); return; } if(t.dataset.cellkey){ setActiveCell(t); return; } if(action === "copy") copyText(buildRateCopyText(data.find(x=>x.id===t.dataset.id) || {})).then(()=>showCopyToast("RATE COPIED")); if(action === "duplicate") duplicateRate(t.dataset.id); if(action === "edit"){ const r = data.find(x=>x.id===t.dataset.id); if(!r) return; editId = r.id; ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = ""); $("carrier").value = r.carrier || ""; $("por").value = r.por || ""; $("pol").value = r.pol || ""; $("pod").value = r.pod || ""; $("fpod").value = r.fpod || ""; $("dv20").value = r.dv20 || ""; $("hc40").value = r.hc40 || ""; $("ft").value = r.ft || ""; $("validity").value = inputDateValue(r.validity); $("tt").value = r.tt || ""; $("via").value = r.via || ""; $("remarks").value = r.remarks || ""; $("container20Type").value = r.container20Type || ""; $("container40Type").value = r.container40Type || ""; $("rateType").value = r.type || "V"; setEditorState("EDITING RECORD " + (r.seq || "")); switchView("active"); } if(action === "delete") deleteRate(t.dataset.id); if(action === "lc") openLocalChargesForRate(t.dataset.id); if(t.dataset.lcAction === "delete"){ lcData = lcData.filter(x => x.id !== t.dataset.id); renderLocalCharges(); } if(t.matches("#dashTable tbody tr")){ const group = t.dataset.group; $("dashDrillPanel").style.display = "block"; $("dashDrillTitle").textContent = "RATES IN GROUP: " + group; const view = $("dashView").value; const rows = data.filter(r => (view === "all" ? true : view === "active" ? !expired(r) : expired(r))); $("dashDrillBody").innerHTML = rows.filter(r => ((r[$("dashGroup").value] || "") + "").toUpperCase().includes((group || "").toUpperCase())).map(r => `<tr><td>${escapeHtml(r.seq || "")}</td><td>${escapeHtml(r.carrier || "")}</td><td>${escapeHtml(r.pol || "")}</td><td>${escapeHtml(r.pod || "")}</td><td>${escapeHtml(r.dv20 || "")}</td><td>${escapeHtml(r.hc40 || "")}</td><td>${escapeHtml(fmtDate(r.validity) || "")}</td><td>${expired(r) ? '<span class="expired-badge">EXPIRED</span>' : '<span class="active-badge">ACTIVE</span>'}</td></tr>`).join(""); } });
 
 $("clearActiveCellBtn").onclick = clearActiveCell;
+$("tabActiveBtn").onclick = ()=>switchView("active");
+$("tabExpiredBtn").onclick = ()=>switchView("expired");
+$("tabAllBtn").onclick = ()=>switchView("all");
+$("tabLcBtn").onclick = ()=>switchView("localcharges");
+$("tabDimBtn").onclick = ()=>switchView("dimensions");
+$("tabMarkupBtn").onclick = ()=>switchView("markups");
+$("tabDashBtn").onclick = ()=>switchView("dashboard");
+$("openCalcBtn").onclick = ()=>openPopupById("calcPopup");
+$("closeCalcBtn").onclick = ()=>closePopupById("calcPopup");
+$("openFxBtn").onclick = ()=>openPopupById("fxPopup");
+$("closeFxBtn").onclick = ()=>closePopupById("fxPopup");
+$("openLcBtn").onclick = ()=>openPopupById("lcPopup");
+$("closeLcBtn").onclick = ()=>closePopupById("lcPopup");
+$("openUploadBtn").onclick = ()=>openPopupById("uploadOverlay");
+$("closeUploadBtn").onclick = ()=>closePopupById("uploadOverlay");
+$("openLcEditorBtn").onclick = ()=>openPopupById("lcPopup");
+$("copySelectedRatesBtn").onclick = async ()=>{ const txt = [...selectedIds].map(id => buildRateCopyText(data.find(x=>x.id===id) || {})).filter(Boolean).join("\n\n"); if(!txt) return; await copyText(txt); showCopyToast("SELECTED COPIED"); };
+$("lcAddNewBtn").onclick = ()=>{ openPopupById("lcPopup"); $("lcRefRow").style.display = "none"; $("lcSearchSeq").value = selectedParentSeq || ""; };
+$("lcFetchRateBtn").onclick = ()=>{ const seq = $("lcSearchSeq").value.trim().toUpperCase(); const r = data.find(x => (x.seq || "").toUpperCase() === seq); if(!r) return alert("PARENT RATE NOT FOUND"); selectedParentSeq = r.seq || seq; $("lcSearchCarrier").value = r.carrier || ""; $("lcSearchPol").value = r.pol || ""; $("lcSearchPor").value = r.por || ""; $("lcSearchContainer").value = [r.container20Type,r.container40Type].filter(Boolean).join(" / "); $("lcRefRow").style.display = "flex"; $("lcRefBadge").textContent = (r.seq || "") + "/LC1"; $("lcRefCarrier").textContent = r.carrier || "—"; $("lcRefPol").textContent = r.pol || "—"; $("lcRefDv20").textContent = r.dv20 || "—"; $("lcRefHc40").textContent = r.hc40 || "—"; renderLocalCharges(); switchView("localcharges"); };
+$("lcSearchBtn").onclick = renderLocalCharges;
+$("dashDrillClose").onclick = ()=>{$("dashDrillPanel").style.display = "none";};
 
-setEditorState("CREATE OR UPDATE RATE");
-updateActiveCellInfo();
-updateSelectedInfo();
-if(sessionValid()) showApp();
-
-
-// ================================================================
-//  FR8X v5 FEATURES — CALCULATOR | FX RATES | LOCAL CHARGES
-// ================================================================
-
-// ---- TAHOE OPEN/CLOSE ----
-function tahoeOpen(el) {
-  el.classList.remove('hidden','tahoe-closing');
-  void el.offsetWidth;
-  el.classList.add('tahoe-opening');
-  el.addEventListener('animationend', () => el.classList.remove('tahoe-opening'), { once: true });
-}
-function tahoeClose(el) {
-  el.classList.add('tahoe-closing');
-  el.addEventListener('animationend', () => {
-    el.classList.remove('tahoe-closing');
-    el.classList.add('hidden');
-  }, { once: true });
-}
-
-// ---- DRAG ----
-function makeDraggable(popup, handle) {
-  let ox=0, oy=0, dragging=false;
-  handle.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
-    if (popup.style.transform && popup.style.transform.includes('translateX')) {
-      const r = popup.getBoundingClientRect();
-      popup.style.left = r.left + 'px';
-      popup.style.top  = r.top  + 'px';
-      popup.style.transform = 'none';
-    }
-    dragging = true;
-    ox = e.clientX - popup.getBoundingClientRect().left;
-    oy = e.clientY - popup.getBoundingClientRect().top;
-    document.body.style.userSelect = 'none';
-  });
-  document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    let nx = Math.max(0, Math.min(e.clientX - ox, window.innerWidth  - popup.offsetWidth));
-    let ny = Math.max(0, Math.min(e.clientY - oy, window.innerHeight - popup.offsetHeight));
-    popup.style.left = nx + 'px';
-    popup.style.top  = ny + 'px';
-  });
-  document.addEventListener('mouseup', () => { dragging=false; document.body.style.userSelect=''; });
-}
-makeDraggable($('calcPopup'), $('calcPopupHeader'));
-makeDraggable($('fxPopup'),   $('fxPopupHeader'));
-makeDraggable($('lcPopup'),   $('lcPopupHeader'));
-
-// ---- SMART NUMBER PARSER ----
-function parseSmartNum(raw) {
-  if (!raw && raw !== 0) return 0;
-  let s = String(raw).trim()
-    .replace(/,/g, '')           // 1,925 → 1925
-    .replace(/\(([^)]+)\)/g, '+$1')  // (500) → +500
-    .replace(/[xX×]/g, '*')     // x → *
-    .replace(/(\d)\s+(\d)/g, '$1+$2') // space → +
-    .replace(/^\+/, '')
-    .replace(/[^0-9+\-*/.()]/g, '');
-  if (!s) return 0;
-  try { const v = Function('"use strict";return(' + s + ')')(); return isNaN(v) ? 0 : +v; }
-  catch(e) { return parseFloat(s) || 0; }
-}
-
-// ================================================================
-//  CALCULATOR TAPE
-// ================================================================
-let _tape = [];
-
-function _tapeRender() {
-  const el = $('calcTape');
-  if (!_tape.length) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR +</div>';
-    $('calcTotalVal').textContent = '0.00';
-    return;
-  }
-  const total = _tape.reduce((s, l) => s + l.v, 0);
-  el.innerHTML = _tape.map(l =>
-    `<div class="tape-line">
-      <span class="tape-expr">${escapeHtml(l.e)}</span>
-      <span class="tape-val">${l.v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>
-    </div>`
-  ).join('');
-  $('calcTotalVal').textContent = total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  el.scrollTop = el.scrollHeight;
-}
-
-function _tapeAdd() {
-  const inp = $('calcNotepadInput');
-  const raw = inp.value.trim();
-  if (!raw) return;
-  _tape.push({ e: raw, v: parseSmartNum(raw) });
-  inp.value = '';
-  _tapeRender();
-  inp.focus();
-}
-
-$('calcAddBtn').onclick = _tapeAdd;
-$('calcNotepadInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') { e.preventDefault(); _tapeAdd(); }
-  if (e.key === '+' && !e.shiftKey) { e.preventDefault(); _tapeAdd(); }
-  if (e.key === 'Backspace' && !$('calcNotepadInput').value) { _tape.pop(); _tapeRender(); }
-});
-$('calcUndoBtn').onclick  = () => { _tape.pop(); _tapeRender(); };
-$('calcClearBtn').onclick = () => { _tape = []; _tapeRender(); };
-$('copyCalcBtn').onclick  = async () => {
-  if (!_tape.length) { showCopyToast('TAPE IS EMPTY'); return; }
-  const total = _tape.reduce((s,l)=>s+l.v,0);
-  const lines = _tape.map(l=>`${l.e}  =  ${l.v.toFixed(2)}`);
-  lines.push('──────────────');
-  lines.push(`TOTAL  =  ${total.toFixed(2)}`);
-  await copyText(lines.join('\n'));
-  showCopyToast('TAPE COPIED');
-};
-$('openCalcBtn').onclick  = () => { tahoeOpen($('calcPopup')); setTimeout(()=>$('calcNotepadInput').focus(),80); };
-$('closeCalcBtn').onclick = () => tahoeClose($('calcPopup'));
-
-// ================================================================
-//  EXCHANGE RATES
-// ================================================================
-let fxRates = {};
-const FX_SHOW = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD','BDT','PKR','THB','MYR'];
-
-async function fetchFxRates() {
-  $('fxStatusMsg').textContent = 'FETCHING...';
-  $('refreshFxBtn').disabled = true;
-  try {
-    const res  = await fetch('https://open.er-api.com/v6/latest/USD');
-    const json = await res.json();
-    if (json.result === 'success') {
-      fxRates = json.rates || {};
-      _renderFxGrid();
-      $('fxTimestamp').textContent = 'UPDATED: ' + new Date().toLocaleTimeString();
-      $('fxStatusMsg').textContent = '';
-    } else { $('fxStatusMsg').textContent = 'API ERROR'; }
-  } catch(e) { $('fxStatusMsg').textContent = 'NETWORK ERROR'; }
-  $('refreshFxBtn').disabled = false;
-}
-
-function _renderFxGrid() {
-  $('fxRateGrid').innerHTML = FX_SHOW.map(cur => {
-    const rate = cur === 'USD' ? 1 : (fxRates[cur] || '-');
-    return `<div class="fx-rate-pill">
-      <div class="cur">${cur}</div>
-      <div class="rate">${cur==='USD'?'1.0000':(typeof rate==='number'?rate.toFixed(4):rate)}</div>
-    </div>`;
-  }).join('');
-}
-
-function fxConvert() {
-  const amt = parseFloat($('fxConvAmt').value||'0')||0;
-  const from = $('fxConvFrom').value;
-  const res  = $('fxConvResult');
-  if (!amt) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">ENTER AN AMOUNT</span>'; return; }
-  if (!Object.keys(fxRates).length) { res.innerHTML = '<span style="color:var(--muted);font-size:11px">REFRESH RATES FIRST</span>'; return; }
-  const amtUSD = from === 'USD' ? amt : amt / fxRates[from];
-  res.innerHTML = ['USD','INR','EUR','GBP','AED','CNY','SGD','JPY','CAD','AUD'].map(cur => {
-    const val = cur === 'USD' ? amtUSD : amtUSD * fxRates[cur];
-    return `<span class="fx-conv-pill"><span class="c">${cur}</span>${val.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
-  }).join('');
-}
-
-$('refreshFxBtn').onclick = fetchFxRates;
-$('fxConvBtn').onclick    = fxConvert;
-$('fxConvAmt').addEventListener('keydown', e => { if(e.key==='Enter') fxConvert(); });
-$('openFxBtn').onclick    = () => { tahoeOpen($('fxPopup')); if(!Object.keys(fxRates).length) fetchFxRates(); };
-$('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
-
-// ================================================================
-//  LOCAL CHARGES — PER RATE, SEQ-BASED, EDITABLE
-// ================================================================
-const LC_STORE_KEY = 'fr8x_lc_v5';
-// lcDB = { [seq]: { seq, carrier, pol, pod, dv20, hc40, lines:[{id,desc,type,cur,amt,app}] } }
-let lcDB = {};
-let lcActiveSeq = null;
-
-function lcDbLoad() { try { lcDB = JSON.parse(localStorage.getItem(LC_STORE_KEY)||'{}'); } catch(e){ lcDB={}; } }
-function lcDbSave() { localStorage.setItem(LC_STORE_KEY, JSON.stringify(lcDB)); }
-
-// Populate SEQ datalist from live rates + stored keys
-function lcPopulateSeqList() {
-  const dl = $('lcSeqList');
-  const fromRates  = data.map(r => r.seq).filter(Boolean);
-  const fromStored = Object.keys(lcDB);
-  const all = [...new Set([...fromRates, ...fromStored])].sort();
-  dl.innerHTML = all.map(s=>`<option value="${escapeHtml(s)}">`).join('');
-}
-
-// Fetch rate info from live data by SEQ
-function lcFetchRate() {
-  const seq = $('lcSeqPick').value.trim().toUpperCase();
-  if (!seq) { alert('ENTER A SEQ NUMBER FIRST.'); return; }
-  lcActiveSeq = seq;
-
-  // Try to fetch from live rates
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq);
-  if (r) {
-    $('lcCarrierField').value = r.carrier || '';
-    $('lcPolField').value     = r.pol || r.por || '';
-    $('lcPodField').value     = r.pod || r.fpod || '';
-    $('lcDv20Field').value    = r.dv20 || '';
-    $('lcHc40Field').value    = r.hc40 || '';
-  } else if (lcDB[seq]) {
-    $('lcCarrierField').value = lcDB[seq].carrier || '';
-    $('lcPolField').value     = lcDB[seq].pol     || '';
-    $('lcPodField').value     = lcDB[seq].pod     || '';
-    $('lcDv20Field').value    = lcDB[seq].dv20    || '';
-    $('lcHc40Field').value    = lcDB[seq].hc40    || '';
-  }
-
-  // Render saved lines for this SEQ
-  lcRenderTable(seq);
-  $('lcSaveStatus').textContent = r ? `✓ RATE FOUND: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''}` : 'NEW SEQ — FILL DETAILS AND SAVE';
-}
-
-// Auto-fill when SEQ input changes
-$('lcSeqPick').addEventListener('change', lcFetchRate);
-$('lcFetchRateBtn').onclick = lcFetchRate;
-
-// Render lines for a SEQ into editable table
-function lcRenderTable(seq) {
-  const lines = (lcDB[seq]||{}).lines || [];
-  const tbody = $('lcTableBody');
-  if (!lines.length) {
-    tbody.innerHTML = '<tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:10px">NO CHARGES YET — ADD BELOW</td></tr>';
-    return;
-  }
-  tbody.innerHTML = lines.map((l,i) => `
-    <tr data-lid="${escapeHtml(l.id)}">
-      <td><input value="${escapeHtml(l.desc)}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','desc',this.value)" style="width:100%"></td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','type',this.value)" style="width:100%">
-          ${['per_container','per_bl','per_cbm','per_ton','lumpsum'].map(t=>
-            `<option value="${t}" ${l.type===t?'selected':''}>${t.replace(/_/g,' ').toUpperCase()}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','cur',this.value)" style="width:100%">
-          ${['USD','INR','EUR','AED','GBP','CNY'].map(c=>
-            `<option value="${c}" ${l.cur===c?'selected':''}>${c}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td><input type="number" value="${escapeHtml(String(l.amt))}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','amt',this.value)" style="width:100%"></td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','app',this.value)" style="width:100%">
-          ${['both','20dv','40hc'].map(a=>
-            `<option value="${a}" ${l.app===a?'selected':''}>${a==='both'?'BOTH':a.toUpperCase()}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td>
-        <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(seq)}','${escapeHtml(l.id)}')" title="Delete"><i class="bi bi-x"></i></button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// Inline edit a field
-window.lcEditField = function(seq, lid, field, val) {
-  if (!lcDB[seq]) return;
-  const line = lcDB[seq].lines.find(l=>l.id===lid);
-  if (!line) return;
-  line[field] = field === 'amt' ? (parseFloat(val)||0) : val.trim().toUpperCase();
-  lcDbSave();
-};
-
-// Delete a line
-window.lcDeleteLine = function(seq, lid) {
-  if (!lcDB[seq]) return;
-  lcDB[seq].lines = lcDB[seq].lines.filter(l=>l.id!==lid);
-  lcDbSave(); lcRenderTable(seq);
-};
-
-// Add new row
-$('lcAddRowBtn').onclick = () => {
-  const seq = lcActiveSeq;
-  if (!seq) { alert('FETCH A RATE FIRST.'); return; }
-  const desc = $('lcNewDesc').value.trim().toUpperCase();
-  const type = $('lcNewType').value;
-  const cur  = $('lcNewCur').value;
-  const amt  = parseFloat($('lcNewAmt').value||'0')||0;
-  const app  = $('lcNewApp').value;
-  if (!desc || !amt) { alert('ENTER DESCRIPTION AND AMOUNT.'); return; }
-  if (!lcDB[seq]) lcDB[seq] = { seq, carrier:'', pol:'', pod:'', dv20:'', hc40:'', lines:[] };
-  const lid = 'lc'+Date.now()+Math.random().toString(36).slice(2,5);
-  lcDB[seq].lines.push({ id:lid, desc, type, cur, amt, app });
-  lcDbSave(); lcRenderTable(seq);
-  $('lcNewDesc').value=''; $('lcNewAmt').value='';
-  showCopyToast('CHARGE ADDED');
-};
-
-// Save header fields
-$('lcSaveBtn').onclick = () => {
-  const seq = lcActiveSeq || $('lcSeqPick').value.trim().toUpperCase();
-  if (!seq) { alert('NO SEQ SELECTED.'); return; }
-  lcActiveSeq = seq;
-  if (!lcDB[seq]) lcDB[seq] = { lines:[] };
-  lcDB[seq].seq     = seq;
-  lcDB[seq].carrier = $('lcCarrierField').value.trim().toUpperCase();
-  lcDB[seq].pol     = $('lcPolField').value.trim().toUpperCase();
-  lcDB[seq].pod     = $('lcPodField').value.trim().toUpperCase();
-  lcDB[seq].dv20    = $('lcDv20Field').value.trim();
-  lcDB[seq].hc40    = $('lcHc40Field').value.trim();
-  lcDbSave();
-  $('lcSaveStatus').textContent = '✓ SAVED: ' + seq;
-  showCopyToast('LOCAL CHARGES SAVED — ' + seq);
-};
-
-// Clear all lines for current SEQ
-$('lcClearAllBtn').onclick = () => {
-  const seq = lcActiveSeq;
-  if (!seq || !confirm('CLEAR ALL CHARGES FOR SEQ ' + seq + '?')) return;
-  if (lcDB[seq]) lcDB[seq].lines = [];
-  lcDbSave(); lcRenderTable(seq);
-};
-
-// Build LC text for copy
-function buildLcBlock(seq) {
-  const entry = lcDB[seq];
-  if (!entry || !entry.lines || !entry.lines.length) return '';
-  const lines = ['LOCAL CHARGES:'];
-  entry.lines.forEach(l => {
-    lines.push(`  ${l.desc}: ${l.cur} ${l.amt} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.app==='both'?'BOTH':l.app.toUpperCase()})`);
-  });
-  return lines.join('\n');
-}
-
-// COPY RATE ONLY (for current LC popup rate)
-$('lcCopyRateOnlyBtn').onclick = async () => {
-  const seq = lcActiveSeq;
-  if (!seq) return;
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
-  let text = '';
-  if (r) {
-    text = buildRateCopyText(r);
-  } else if (lcDB[seq]) {
-    const e = lcDB[seq];
-    const parts = [];
-    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
-    if (e.pol) parts.push(`POL: ${e.pol}`);
-    if (e.pod) parts.push(`POD: ${e.pod}`);
-    if (e.dv20) parts.push(`20DV: USD ${e.dv20}`);
-    if (e.hc40) parts.push(`40HC: USD ${e.hc40}`);
-    text = parts.join('\n');
-  }
-  if (!text) { showCopyToast('NO RATE DATA'); return; }
-  await copyText(text);
-  showCopyToast('RATE COPIED');
-};
-
-// COPY RATE + LOCAL CHARGES
-$('lcCopyRatePlusLcBtn').onclick = async () => {
-  const seq = lcActiveSeq;
-  if (!seq) { showCopyToast('FETCH A RATE FIRST'); return; }
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
-  let rateText = '';
-  if (r) {
-    rateText = buildRateCopyText(r);
-  } else if (lcDB[seq]) {
-    const e = lcDB[seq];
-    const parts = [];
-    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
-    if (e.pol) parts.push(`POL: ${e.pol}`);
-    if (e.pod) parts.push(`POD: ${e.pod}`);
-    if (e.dv20) parts.push(`O/F: 20DV USD ${e.dv20}`);
-    if (e.hc40) parts.push(`O/F: 40HC USD ${e.hc40}`);
-    rateText = parts.join('\n');
-  }
-  const lcText = buildLcBlock(seq);
-  const combined = [rateText, lcText].filter(Boolean).join('\n');
-  if (!combined) { showCopyToast('NO DATA TO COPY'); return; }
-  await copyText(combined);
-  showCopyToast('RATE + LOCAL CHARGES COPIED');
-};
-
-// Row action button — copy rate (now includes LC if available)
-const _origCopyRate = window.copyRate;
-window.copyRate = async function(id) {
-  lcDbLoad();
-  const r = data.find(x => x.id === id);
-  if (!r) return;
-  const rateText = buildRateCopyText(r);
-  const seq = (r.seq||'').toUpperCase();
-  const lcText = seq ? buildLcBlock(seq) : '';
-  const combined = [rateText, lcText].filter(Boolean).join('\n');
-  await copyText(combined);
-  showCopyToast(lcText ? 'RATE + LOCAL CHARGES COPIED' : 'RATE COPIED');
-};
-
-// Row LC button — open LC popup for that rate
-window.openLcForRate = function(id) {
-  lcDbLoad();
-  const r = data.find(x => x.id === id);
-  if (!r) return;
-  const seq = (r.seq||'').toUpperCase();
-  lcPopulateSeqList();
-  $('lcSeqPick').value    = seq;
-  $('lcCarrierField').value = r.carrier || '';
-  $('lcPolField').value     = r.pol || r.por || '';
-  $('lcPodField').value     = r.pod || r.fpod || '';
-  $('lcDv20Field').value    = r.dv20 || '';
-  $('lcHc40Field').value    = r.hc40 || '';
-  lcActiveSeq = seq;
-  lcRenderTable(seq);
-  $('lcSaveStatus').textContent = `RATE: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''} | ${r.validity||''}`;
-  tahoeOpen($('lcPopup'));
-};
-
-// LC button in editor (above remarks)
-const _lcEdBtn = document.getElementById('openLcEditorBtn');
-if (_lcEdBtn) {
-  _lcEdBtn.onclick = () => {
-    lcDbLoad();
-    lcPopulateSeqList();
-    if (editId) {
-      const r = data.find(x=>x.id===editId);
-      if (r) { window.openLcForRate(editId); return; }
-    }
-    tahoeOpen($('lcPopup'));
-  };
-}
-
-// LC header button
-$('openLcBtn').onclick = () => {
-  lcDbLoad();
-  lcPopulateSeqList();
-  tahoeOpen($('lcPopup'));
-};
-$('closeLcBtn').onclick = () => tahoeClose($('lcPopup'));
-
-// Also patch COPY SELECTED to include LC
-document.getElementById('copySelectedRatesBtn').onclick = async function() {
-  lcDbLoad();
-  let rows = (typeof filteredRows === 'function' ? filteredRows() : data).filter(r => selectedIds.has(r.id));
-  if (!rows.length) rows = data.filter(r => selectedIds.has(r.id));
-  if (!rows.length) return alert('SELECT RECORDS FIRST.');
-  const parts = rows.map(r => {
-    const rateText = buildRateCopyText(r);
-    const seq = (r.seq||'').toUpperCase();
-    const lcText = seq ? buildLcBlock(seq) : '';
-    return [rateText, lcText].filter(Boolean).join('\n');
-  });
-  await copyText(parts.join('\n\n──────────────────────\n\n'));
-  showCopyToast(rows.length + ' RATE(S) COPIED');
-};
-
-// Initial load
-lcDbLoad();
-
+if(sessionValid()) showApp(); else $("pinGate").classList.remove("hidden");
 </script>
-
-<!-- ============================================================
-     CALCULATOR POPUP
-     ============================================================ -->
-<div id="calcPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="calcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; CALCULATOR</div>
-    <button class="ghost icon-only dp-close-btn" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-    <div class="calc-total-row">
-      <span class="lbl">TOTAL</span>
-      <span class="val" id="calcTotalVal">0.00</span>
-    </div>
-    <div class="calc-tape" id="calcTape">
-      <div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR + TO ADD</div>
-    </div>
-    <div class="calc-input-row">
-      <input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g.  1,925  ·  500+200  ·  (300)  ·  500x2" autocomplete="off" spellcheck="false">
-      <button class="primary" id="calcAddBtn"><i class="bi bi-plus-lg"></i></button>
-      <button class="ghost" id="calcUndoBtn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
-      <button class="ghost" id="calcClearBtn" title="Clear all"><i class="bi bi-trash3"></i></button>
-    </div>
-    <div style="display:flex;gap:5px;margin-top:5px">
-      <button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY TAPE</button>
-    </div>
-    <div class="note" style="margin-top:6px">ACCEPTS: <b>1,925</b> &nbsp;·&nbsp; <b>1000+500</b> &nbsp;·&nbsp; <b>1000 500</b> (space=add) &nbsp;·&nbsp; <b>(300)</b> &nbsp;·&nbsp; <b>500x2</b></div>
-  </div>
-</div>
-
-<!-- ============================================================
-     EXCHANGE RATES POPUP
-     ============================================================ -->
-<div id="fxPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="fxPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div>
-    <button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-    <div class="toolbar" style="margin-bottom:8px">
-      <button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
-      <span class="badge" id="fxTimestamp">NOT LOADED</span>
-      <span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span>
-    </div>
-    <div id="fxRateGrid" class="fx-rate-grid">
-      <div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
-
-    <!-- AMOUNT CONVERTER -->
-    <div class="fx-converter">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>&nbsp; AMOUNT CONVERTER</div>
-      <div class="fx-conv-grid">
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">AMOUNT</label>
-          <input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px">
-        </div>
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">FROM</label>
-          <select id="fxConvFrom" style="min-height:30px">
-            <option value="USD">USD</option><option value="INR">INR</option>
-            <option value="EUR">EUR</option><option value="GBP">GBP</option>
-            <option value="AED">AED</option><option value="CNY">CNY</option>
-            <option value="SGD">SGD</option><option value="JPY">JPY</option>
-          </select>
-        </div>
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">TO (MAIN)</label>
-          <select id="fxConvTo" style="min-height:30px">
-            <option value="INR">INR</option><option value="USD">USD</option>
-            <option value="EUR">EUR</option><option value="GBP">GBP</option>
-            <option value="AED">AED</option><option value="CNY">CNY</option>
-            <option value="SGD">SGD</option><option value="JPY">JPY</option>
-          </select>
-        </div>
-        <div class="field" style="margin:0;justify-content:flex-end">
-          <label style="font-size:11px">&nbsp;</label>
-          <button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button>
-        </div>
-      </div>
-      <div class="fx-conv-pills" id="fxConvResult">
-        <span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     LOCAL CHARGES RECORD — PER RATE (SEQ-BASED, EDITABLE TABLE)
-     ============================================================ -->
-<div id="lcPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="lcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div>
-    <button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-
-    <!-- RATE FETCH: type SEQ or pick from dropdown, auto-fills carrier + POL -->
-    <div class="note" style="margin-bottom:7px">SELECT AN EXISTING RATE BY SEQ, OR ENTER A NEW SEQ MANUALLY TO ADD LOCAL CHARGES.</div>
-    <div class="lc-header-row" id="lcHeaderRow">
-      <div class="field">
-        <label>SEQ — PICK RATE OR TYPE NEW</label>
-        <input id="lcSeqPick" list="lcSeqList" placeholder="Type or select SEQ..." autocomplete="off">
-        <datalist id="lcSeqList"></datalist>
-      </div>
-      <div class="field">
-        <label>CARRIER</label>
-        <input id="lcCarrierField" placeholder="Auto or manual">
-      </div>
-      <div class="field">
-        <label>POL</label>
-        <input id="lcPolField" placeholder="POL">
-      </div>
-      <div class="field">
-        <label>POD</label>
-        <input id="lcPodField" placeholder="POD">
-      </div>
-      <div class="field">
-        <label>20DV RATE</label>
-        <input id="lcDv20Field" placeholder="USD">
-      </div>
-      <div class="field">
-        <label>40HC RATE</label>
-        <input id="lcHc40Field" placeholder="USD">
-      </div>
-      <div class="field" style="justify-content:flex-end">
-        <label>&nbsp;</label>
-        <button class="primary ios-btn" id="lcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap">
-          <i class="bi bi-arrow-down-circle"></i> FETCH
-        </button>
-      </div>
-    </div>
-
-    <!-- CHARGES TABLE — inline editable -->
-    <div class="lc-table-scroll">
-      <table class="lc-main-table">
-        <thead>
-          <tr>
-            <th style="width:180px">DESCRIPTION</th>
-            <th style="width:120px">TYPE</th>
-            <th style="width:72px">CURRENCY</th>
-            <th style="width:80px">AMOUNT</th>
-            <th style="width:100px">APPLIES TO</th>
-            <th style="width:60px">ACTION</th>
-          </tr>
-        </thead>
-        <tbody id="lcTableBody">
-          <tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES — FETCH A RATE OR USE BUTTONS BELOW</td></tr>
-        </tbody>
-        <!-- ADD NEW ROW (always at bottom of table) -->
-        <tfoot>
-          <tr style="background:rgba(255,255,255,.5)">
-            <td><input id="lcNewDesc" placeholder="Description e.g. THC"></td>
-            <td>
-              <select id="lcNewType">
-                <option value="per_container">PER CONTAINER</option>
-                <option value="per_bl">PER B/L</option>
-                <option value="per_cbm">PER CBM</option>
-                <option value="per_ton">PER TON</option>
-                <option value="lumpsum">LUMPSUM</option>
-              </select>
-            </td>
-            <td>
-              <select id="lcNewCur">
-                <option value="USD">USD</option><option value="INR">INR</option>
-                <option value="EUR">EUR</option><option value="AED">AED</option>
-                <option value="GBP">GBP</option><option value="CNY">CNY</option>
-              </select>
-            </td>
-            <td><input id="lcNewAmt" type="number" placeholder="0"></td>
-            <td>
-              <select id="lcNewApp">
-                <option value="both">BOTH</option>
-                <option value="20dv">20DV</option>
-                <option value="40hc">40HC</option>
-              </select>
-            </td>
-            <td>
-              <button class="icon-btn success" id="lcAddRowBtn" title="Add row"><i class="bi bi-plus-lg"></i></button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-
-    <!-- ACTIONS -->
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-      <button class="primary" id="lcSaveBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE CHARGES</button>
-      <button class="ghost" id="lcCopyRateOnlyBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY RATE</button>
-      <button class="success" id="lcCopyRatePlusLcBtn" style="flex:1"><i class="bi bi-clipboard2-check-fill"></i> COPY RATE + LC</button>
-      <button class="danger" id="lcClearAllBtn" style="flex:0 0 auto"><i class="bi bi-trash3"></i> CLEAR</button>
-    </div>
-    <div class="note" style="margin-top:6px" id="lcSaveStatus"></div>
-  </div>
-</div>
-
 </body>
 </html>
