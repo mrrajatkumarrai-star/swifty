@@ -66,7 +66,7 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 .icon-btn{width:24px;height:24px;min-height:24px;padding:0;font-size:11px;}
 .layout-grid{display:grid;grid-template-columns:var(--editor-w) minmax(0,1fr);gap:12px;align-items:start;}
 .panel{border-radius:22px;padding:12px;}
-#editorPanel{position:sticky;top:92px;max-height:calc(100vh - 106px);overflow-y:auto;overflow-x:hidden;}
+#editorPanel, #lcEditorPanel, #carrierEditorPanel{position:sticky;top:92px;max-height:calc(100vh - 106px);overflow-y:auto;overflow-x:hidden;}
 .form{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:8px;}
 .field{grid-column:span 12;display:flex;flex-direction:column;gap:4px;}
 .field label{font-size:12px;color:var(--muted);letter-spacing:.02em;}
@@ -153,7 +153,7 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
 .applied-markup{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(148,163,184,.12);}
 .applied-markup:last-child{border-bottom:none;}
 .lc-panel{border-radius:16px;padding:12px;margin-top:10px;}
-@media(max-width:1180px){.layout-grid{grid-template-columns:1fr;}#editorPanel{position:static;max-height:none;}}
+@media(max-width:1180px){.layout-grid{grid-template-columns:1fr;}#editorPanel, #lcEditorPanel, #carrierEditorPanel{position:static;max-height:none;}}
 @media(max-width:860px){.fit-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:760px){html,body{font-size:12px;}.container{padding:8px;}.header{padding:10px 12px;margin:6px;}.panel,.card{padding:10px;}.table-wrap.desktop-table{display:none;}.mobile-list{display:flex;}.mobile-grid{grid-template-columns:1fr;}.section-tabs button,.editor-actions button{flex:1 1 calc(50% - 6px);}.inline-pair{grid-template-columns:1fr;}.fit-grid{grid-template-columns:1fr;}.bulk-bar{align-items:flex-start;}#activeCellInfo{max-width:100%;}}
 #pinGate .card.narrow{border:none!important;background:rgba(255,255,255,.62);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);box-shadow:0 24px 60px rgba(15,23,42,.16),0 2px 0 rgba(255,255,255,.7) inset;cursor:pointer;}
@@ -281,18 +281,31 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
       <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
       <button id="tabAllBtn" data-view="all">ALL RATES</button>
       <button id="tabLcBtn" data-view="localcharges">LOCAL CHARGES</button>
+      <button id="tabCarrierBtn" data-view="carrier">CARRIER MASTER</button>
       <button id="tabDimBtn" data-view="dimensions">DIMENSIONS</button>
       <button id="tabMarkupBtn" data-view="markups">MARKUP</button>
       <button id="tabDashBtn" data-view="dashboard" style="background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.22);color:#991b1b"><i class="bi bi-bar-chart-fill"></i> DASHBOARD</button>
     </div>
 
     <div class="layout-grid">
+      <!-- 1) MAIN RATE EDITOR PANEL -->
       <div class="panel" id="editorPanel">
         <div class="section-head">
           <div><div style="font-size:13px;">RATE EDITOR</div><div class="note" id="editorState">CREATE OR UPDATE RATE</div></div>
         </div>
         <div class="form">
-          <div class="field span12"><label for="carrier">CARRIER</label><input id="carrier" placeholder="Carrier"></div>
+          <div class="field span12">
+            <label for="carrier">CARRIER</label>
+            <select id="carrier">
+              <option value="">SELECT CARRIER...</option>
+              <option value="MAERSK">MAERSK</option>
+              <option value="MSC">MSC</option>
+              <option value="CMA CGM">CMA CGM</option>
+              <option value="HAPAG LLOYD">HAPAG LLOYD</option>
+              <option value="ONE">ONE</option>
+              <option value="EVERGREEN">EVERGREEN</option>
+            </select>
+          </div>
           <div class="field span6"><label for="por">POR</label><input id="por" placeholder="POR"></div>
           <div class="field span6"><label for="pol">POL</label><input id="pol" placeholder="POL"></div>
           <div class="field span6"><label for="pod">POD</label><input id="pod" placeholder="POD"></div>
@@ -313,11 +326,46 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
           <div class="field span12" style="margin-bottom:0"><button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES FOR THIS RATE</button></div>
           <div class="field span12"><label for="remarks">REMARKS</label><textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea></div>
         </div>
-        <div class="editor-actions span12">
+        <div class="editor-actions span12" style="margin-top:10px;">
           <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
           <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
           <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-          <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
+          <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUP</button>
+        </div>
+      </div>
+
+      <!-- 2) LOCAL CHARGES EDITOR PANEL (Added to match Main Screen Space) -->
+      <div class="panel hidden" id="lcEditorPanel">
+        <div class="section-head">
+          <div><div style="font-size:13px;">FEED LOCAL CHARGES</div><div class="note">ADD NEW CHARGE TO A PARENT RATE</div></div>
+        </div>
+        <div class="form">
+          <div class="field span12"><label>PARENT SEQ</label><input id="lcFormParentSeq" placeholder="e.g. 260522174953"></div>
+          <div class="field span6"><label>CHARGE DESCRIPTION</label><input id="lcFormDesc" placeholder="THC, DOC, SEAL, etc."></div>
+          <div class="field span6"><label>TYPE</label><select id="lcFormType"><option value="ORIGIN">ORIGIN</option><option value="DESTINATION">DESTINATION</option><option value="FREIGHT">FREIGHT</option></select></div>
+          <div class="field span6"><label>CURRENCY</label><select id="lcFormCurrency"><option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="AED">AED</option></select></div>
+          <div class="field span6"><label>AMOUNT</label><input id="lcFormAmount" type="number" placeholder="0.00"></div>
+          <div class="field span12"><label>APPLIES PER</label><select id="lcFormApplies"><option value="PER CONTAINER">PER CONTAINER</option><option value="PER BL">PER BL</option><option value="PER TEU">PER TEU</option></select></div>
+        </div>
+        <div class="editor-actions span12" style="margin-top:10px;">
+          <button class="primary" id="saveLcPanelBtn"><i class="bi bi-plus-circle-fill"></i> ADD CHARGE</button>
+          <button class="ghost" id="clearLcPanelBtn"><i class="bi bi-eraser"></i> CLEAR</button>
+        </div>
+      </div>
+
+      <!-- 3) CARRIER MASTER EDITOR PANEL (Blank Placeholder as requested) -->
+      <div class="panel hidden" id="carrierEditorPanel">
+        <div class="section-head">
+          <div><div style="font-size:13px;">CARRIER EDITOR</div><div class="note">CREATE OR UPDATE CARRIER</div></div>
+        </div>
+        <div class="form">
+          <div class="field span12"><label>CARRIER CODE / SHORT</label><input placeholder="e.g. MSKU"></div>
+          <div class="field span12"><label>CARRIER FULL NAME</label><input placeholder="e.g. MAERSK LINE"></div>
+          <div class="field span12"><label>REMARKS / HIGHLIGHTS</label><textarea placeholder="Carrier specific notes..."></textarea></div>
+        </div>
+        <div class="editor-actions span12" style="margin-top:10px;">
+          <button class="primary"><i class="bi bi-floppy-fill"></i> SAVE</button>
+          <button class="ghost"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
         </div>
       </div>
 
@@ -381,9 +429,8 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
         </div>
 
         <div class="panel section" id="sectionLc">
-          <div class="section-head"><div style="font-size:13px">LOCAL CHARGES</div><div class="note">MANAGE LC RECORDS AS A SEPARATE PART.</div></div>
+          <div class="section-head"><div style="font-size:13px">LOCAL CHARGES BROWSER</div><div class="note">SEARCH & MANAGE EXISTING LC RECORDS.</div></div>
           <div class="lc-panel">
-            <div class="note" style="margin-bottom:8px">SEARCH LC BY PARENT RATE OR LC SUB-SEQ. USE + TO FETCH FROM LC TABLE.</div>
             <div class="lc-top-grid">
               <div class="field"><label>PARENT SEQ</label><input id="lcSearchSeq" placeholder="SEQ"></div>
               <div class="field"><label>CARRIER</label><input id="lcSearchCarrier" placeholder="Carrier"></div>
@@ -405,9 +452,23 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
               </table>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-              <button class="primary" id="lcAddNewBtn" style="flex:1"><i class="bi bi-node-plus-fill"></i> + NEW LC</button>
-              <button class="ghost" id="lcRefreshBtn" style="flex:1"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+              <button class="ghost" id="lcRefreshBtn" style="flex:1"><i class="bi bi-arrow-clockwise"></i> REFRESH TABLE</button>
             </div>
+          </div>
+        </div>
+
+        <!-- CARRIER MASTER SECTION -->
+        <div class="panel section" id="sectionCarrier">
+          <div class="section-head"><div style="font-size:13px">CARRIER MASTER (PREVIEW)</div><div class="note">VIEW & MANAGE CARRIERS.</div></div>
+          <div class="info-strip">This is a placeholder for the future Carrier Master list. You will be able to see all saved Carriers and select them to edit here.</div>
+          <div class="table-wrap desktop-table">
+            <table style="width:100%;text-align:left;">
+              <thead><tr><th style="text-align:left;">CARRIER CODE</th><th style="text-align:left;">FULL NAME</th><th style="text-align:left;">REMARKS</th><th style="text-align:center;">ACTION</th></tr></thead>
+              <tbody>
+                <tr><td>MSKU</td><td>MAERSK LINE</td><td></td><td style="text-align:center;"><button class="icon-btn"><i class="bi bi-pencil-square"></i></button></td></tr>
+                <tr><td>MEDU</td><td>MSC</td><td></td><td style="text-align:center;"><button class="icon-btn"><i class="bi bi-pencil-square"></i></button></td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -480,7 +541,7 @@ tr.editing-row td:last-child{box-shadow:inset 0 0 0 1px rgba(16,185,129,.24);}
 
 <div id="fxPopup" class="draggable-popup hidden"><div class="dp-header" id="fxPopupHeader"><div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div><button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="toolbar" style="margin-bottom:8px"><button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button><span class="badge" id="fxTimestamp">NOT LOADED</span><span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span></div><div id="fxRateGrid" class="fx-rate-grid"><div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div></div><div class="fx-converter"><div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>&nbsp; AMOUNT CONVERTER</div><div class="fx-conv-grid"><div class="field" style="margin:0"><label style="font-size:11px">AMOUNT</label><input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px"></div><div class="field" style="margin:0"><label style="font-size:11px">FROM</label><select id="fxConvFrom" style="min-height:30px"><option value="USD">USD</option><option value="INR">INR</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AED">AED</option><option value="CNY">CNY</option><option value="SGD">SGD</option><option value="JPY">JPY</option></select></div><div class="field" style="margin:0"><label style="font-size:11px">TO (MAIN)</label><select id="fxConvTo" style="min-height:30px"><option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AED">AED</option><option value="CNY">CNY</option><option value="SGD">SGD</option><option value="JPY">JPY</option></select></div><div class="field" style="margin:0;justify-content:flex-end"><label style="font-size:11px">&nbsp;</label><button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button></div></div><div class="fx-conv-pills" id="fxConvResult"><span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span></div></div></div></div>
 
-<div id="lcPopup" class="draggable-popup hidden"><div class="dp-header" id="lcPopupHeader"><div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div><button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="note" style="margin-bottom:7px">SELECT A PARENT SEQ RATE FIRST. LOCAL CHARGES ARE SAVED AS SUB-SEQ LIKE FR001LC1.</div><div class="lc-top-grid"><div class="field"><label>PARENT SEQ</label><input id="lcSearchSeq" placeholder="Type or select SEQ..."></div><div class="field"><label>CARRIER</label><input id="lcSearchCarrier" placeholder="Carrier"></div><div class="field"><label>POL</label><input id="lcSearchPol" placeholder="POL"></div><div class="field"><label>POR</label><input id="lcSearchPor" placeholder="POR"></div><div class="field"><label>CONTAINER</label><input id="lcSearchContainer" placeholder="20DV / 40HC / BOTH"></div><div class="field"><label>LC NAME</label><input id="lcSearchName" placeholder="THC / DOC / OTHER"></div><div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="primary ios-btn" id="lcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap"><i class="bi bi-arrow-down-circle"></i> FETCH</button></div></div><div id="lcRefRow" class="lc-ref-row" style="display:none"><span class="lc-sub-seq-badge" id="lcRefBadge">SEQ/LC1</span><span>CARRIER: <span id="lcRefCarrier">—</span></span><span>POL: <span id="lcRefPol">—</span></span><span>20DV: <span id="lcRefDv20">—</span></span><span>40HC: <span id="lcRefHc40">—</span></span></div><div class="lc-subtabs"><button class="active" data-lcview="all">ALL LC</button><button data-lcview="recent">RECENT</button><button data-lcview="selected">SELECTED RATE LC</button></div><div class="lc-table-scroll"><table class="lc-main-table"><thead><tr><th>SUB-SEQ</th><th>PARENT SEQ</th><th>DESCRIPTION</th><th>TYPE</th><th>CURRENCY</th><th>AMOUNT</th><th>APPLIES</th><th>ACTION</th></tr></thead><tbody id="lcMainBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr></tbody></table></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><button class="primary" id="lcAddNewBtn" style="flex:1"><i class="bi bi-node-plus-fill"></i> + NEW LC</button><button class="ghost" id="lcRefreshBtn" style="flex:1"><i class="bi bi-arrow-clockwise"></i> REFRESH</button></div></div></div>
+<div id="lcPopup" class="draggable-popup hidden"><div class="dp-header" id="lcPopupHeader"><div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD POPUP</div><button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button></div><div class="dp-body"><div class="note" style="margin-bottom:7px">SELECT A PARENT SEQ RATE FIRST TO ADD TO THIS LIST QUICKLY.</div><div class="lc-top-grid"><div class="field"><label>PARENT SEQ</label><input id="popupLcSearchSeq" placeholder="Type or select SEQ..."></div><div class="field" style="justify-content:flex-end"><label>&nbsp;</label><button class="primary ios-btn" id="popupLcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap"><i class="bi bi-arrow-down-circle"></i> JUMP TO TAB</button></div></div></div></div>
 
 <div id="uploadOverlay" class="overlay hidden"><div class="card"><div class="modal-head"><div class="title" style="text-align:left;">UPLOAD EXPORT</div><button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button></div><div class="note" style="margin-bottom:8px">CSV IMPORT SUPPORTED. TYPE V = HANDOVER, S = SAILING. ROUTING CAN BE IN "ROUTING"/"VIA"/"ROUTE".</div><div class="toolbar" style="margin-bottom:8px;"><button class="primary" id="downloadTemplateBtn">TEMPLATE</button><button class="success" id="pickFileBtn">IMPORT FILE</button><button class="ghost" id="exportSelectedBtn">EXPORT SELECTED</button><button class="ghost" id="applyImportBtn">APPLY IMPORT</button></div><input type="file" id="fileInput" class="file-input" accept=".csv,.txt"><div class="table-wrap desktop-table"><table><thead><tr><th><input type="checkbox" id="selectAllUpload"></th><th>SEQ</th><th>CARRIER</th><th>POR</th><th>POL</th><th>POD</th><th>FPOD</th><th>20DV</th><th>20 TYPE</th><th>40HC</th><th>40 TYPE</th><th>FT</th><th>DATE</th><th>TYPE</th><th>TT</th><th>ROUTING</th><th>REMARKS</th></tr></thead><tbody id="uploadBody"></tbody></table></div><div class="mobile-list" id="uploadMobile"></div></div></div>
 
@@ -506,6 +567,32 @@ const USERMU20KEY = "fr8x_usermu20", USERMU40KEY = "fr8x_usermu40";
 let dashChart = null;
 let lcData = [], lcView = "all", selectedParentSeq = "";
 
+// Popup logic that was missing
+function openPopupById(id) {
+    const el = $(id);
+    if(el) {
+        el.classList.remove("hidden");
+        if(el.classList.contains("draggable-popup")){
+            el.classList.add("tahoe-opening");
+            setTimeout(() => el.classList.remove("tahoe-opening"), 280);
+        }
+    }
+}
+function closePopupById(id) {
+    const el = $(id);
+    if(el) {
+        if(el.classList.contains("draggable-popup")){
+            el.classList.add("tahoe-closing");
+            setTimeout(() => {
+                el.classList.remove("tahoe-closing");
+                el.classList.add("hidden");
+            }, 200);
+        } else {
+            el.classList.add("hidden");
+        }
+    }
+}
+
 function escapeHtml(v){ return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 function pad2(n){ return String(n).padStart(2,"0"); }
 function seqFromDate(dateLike){ const dt = dateLike ? new Date(dateLike) : new Date(); return String(dt.getFullYear()).slice(-2)+pad2(dt.getMonth()+1)+pad2(dt.getDate())+pad2(dt.getHours())+pad2(dt.getMinutes())+pad2(dt.getSeconds()); }
@@ -524,14 +611,6 @@ function setEditorState(text){ $("editorState").textContent = text; }
 function sessionValid(){ return Date.now() < sessionUntil; }
 function setSession(){ sessionUntil = Date.now() + 4*60*60*1000; }
 function showApp(){ $("pinGate").classList.add("hidden"); $("appShell").classList.remove("hidden"); load(); loadMarkups(); loadLocalCharges(); }
-function showPopup(text, target){ if(!text) return; popupEl.textContent = text; popupEl.classList.add("show"); const rect = target.getBoundingClientRect(); const popupRect = popupEl.getBoundingClientRect(); let left = rect.left + rect.width/2 - popupRect.width/2; let top = rect.top - popupRect.height - 6; if(left < 6) left = 6; if(left + popupRect.width > window.innerWidth - 6) left = window.innerWidth - popupRect.width - 6; if(top < 6) top = rect.bottom + 6; popupEl.style.left = left+"px"; popupEl.style.top = top+"px"; }
-function hidePopup(){ popupEl.classList.remove("show"); }
-function appendDays(v){ const s = upper(v); if(!s) return ""; return /DAY/.test(s) ? s : `${s} DAYS`; }
-function updateActiveCellInfo(){ if(!activeCellKey){ $("activeCellInfo").textContent = "NO ACTIVE CELL"; return; } const valueText = activeCellState.value ? " = " + activeCellState.value : ""; $("activeCellInfo").textContent = `ACTIVE CELL · ${activeCellState.label}${activeCellState.seq ? " · SEQ " + activeCellState.seq : ""}${valueText}`; }
-function syncActiveCellClasses(){ document.querySelectorAll(".active-cell").forEach(el => el.classList.remove("active-cell")); document.querySelectorAll(".active-row").forEach(el => el.classList.remove("active-row")); if(!activeCellKey) return; document.querySelectorAll(`[data-cellkey="${CSS.escape(activeCellKey)}"]`).forEach(el => el.classList.add("active-cell")); if(activeCellState.id) document.querySelectorAll(`[data-rowid="${CSS.escape(activeCellState.id)}"]`).forEach(el => el.classList.add("active-row")); }
-function setActiveCell(el){ activeCellKey = el.dataset.cellkey; activeCellState = { id:el.dataset.id, seq:el.dataset.seq, key:el.dataset.fieldkey, label:el.dataset.label, value:el.dataset.value }; updateActiveCellInfo(); syncActiveCellClasses(); }
-function clearActiveCell(){ activeCellKey = ""; activeCellState = { id:null, seq:null, key:null, label:null, value:null }; updateActiveCellInfo(); syncActiveCellClasses(); }
-function normalizeSearchRow(r){ return [r.carrier,r.por,r.pol,r.container20Type,r.container40Type].join(" ").toUpperCase(); }
 
 async function load(){ showLoader("UPDATING DATA","FETCHING RECORDS"); try{ data = []; const snap = await getDocs(collection(db,"rates")); snap.forEach(d => data.push({ id:d.id, ...d.data() })); data.sort((a,b) => (new Date(b.createdAt || 0)) - (new Date(a.createdAt || 0))); updateCounters(); render(); }catch(err){ alert("FAILED TO LOAD DATA"); console.error(err); }finally{ hideLoader(); } }
 async function loadLocalCharges(){ try{ lcData = []; const snap = await getDocs(collection(db,"localCharges")); snap.forEach(d => lcData.push({ id:d.id, ...d.data() })); renderLocalCharges(); }catch(err){ console.error(err); } }
@@ -540,16 +619,73 @@ function getSortValue(row,key){ if(key === "validity") return inputDateValue(row
 function compareValues(a,b,key){ const va = getSortValue(a,key), vb = getSortValue(b,key); const na = parseFloat(String(va).replace(/[^\d.-]/g,"")), nb = parseFloat(String(vb).replace(/[^\d.-]/g,"")); const isNumA = !isNaN(na) && String(va).trim() !== "", isNumB = !isNaN(nb) && String(vb).trim() !== ""; if(isNumA && isNumB){ if(na < nb) return -1; if(na > nb) return 1; return 0; } const sa = String(va).toUpperCase(), sb = String(vb).toUpperCase(); if(sa < sb) return -1; if(sa > sb) return 1; return 0; }
 function filteredRows(){ const g = $("globalSearch").value.toUpperCase(); let rows = [...data]; if(viewMode === "active") rows = rows.filter(r => !expired(r)); if(viewMode === "expired") rows = rows.filter(r => expired(r)); rows = rows.filter(r => { for(const k in filterMap){ const q = (filterMap[k] || "").trim().toUpperCase(); if(!q) continue; const val = k === "validity" ? fmtDate(r[k]) : (r[k] || "").toString().toUpperCase(); if(!val.includes(q)) return false; } return true; }); if(g) rows = rows.filter(r => normalizeSearchRow(r).includes(g)); if(sortState.key) rows.sort((a,b) => { const res = compareValues(a,b,sortState.key); return sortState.dir === "asc" ? res : -res; }); return rows; }
 function updateSelectedInfo(){ $("selectedCountInfo").textContent = selectedIds.size + " SELECTED"; $("copySelectedRatesBtn").disabled = !selectedIds.size; }
-function switchView(mode){ viewMode = mode; ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabLcBtn","tabDimBtn","tabMarkupBtn","tabDashBtn"].forEach(id => $(id).classList.remove("active")); ["sectionRates","sectionLc","sectionDim","sectionMarkup","sectionDashboard"].forEach(id => $(id).classList.remove("active")); $("editorPanel").classList.remove("hidden"); if(mode === "dashboard"){ $("sectionDashboard").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabDashBtn").classList.add("active"); renderDashboard(); return; } if(mode === "dimensions"){ $("sectionDim").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabDimBtn").classList.add("active"); render(); return; } if(mode === "markups"){ $("sectionMarkup").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabMarkupBtn").classList.add("active"); render(); return; } if(mode === "localcharges"){ $("sectionLc").classList.add("active"); $("editorPanel").classList.add("hidden"); $("tabLcBtn").classList.add("active"); renderLocalCharges(); return; } $("sectionRates").classList.add("active"); if(mode === "active") $("tabActiveBtn").classList.add("active"); if(mode === "expired") $("tabExpiredBtn").classList.add("active"); if(mode === "all") $("tabAllBtn").classList.add("active"); render(); }
+
+// Adjusted Switch View to handle the left panels appropriately
+function switchView(mode){ 
+    viewMode = mode; 
+    ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabLcBtn","tabDimBtn","tabMarkupBtn","tabDashBtn","tabCarrierBtn"].forEach(id => {
+        if($(id)) $(id).classList.remove("active");
+    }); 
+    ["sectionRates","sectionLc","sectionDim","sectionMarkup","sectionDashboard","sectionCarrier"].forEach(id => {
+        if($(id)) $(id).classList.remove("active");
+    }); 
+    
+    // Hide all left panels initially
+    $("editorPanel").classList.add("hidden"); 
+    $("lcEditorPanel").classList.add("hidden");
+    $("carrierEditorPanel").classList.add("hidden");
+
+    if(mode === "dashboard"){ 
+        $("sectionDashboard").classList.add("active"); 
+        $("tabDashBtn").classList.add("active"); 
+        renderDashboard(); 
+        return; 
+    } 
+    if(mode === "dimensions"){ 
+        $("sectionDim").classList.add("active"); 
+        $("tabDimBtn").classList.add("active"); 
+        render(); 
+        return; 
+    } 
+    if(mode === "markups"){ 
+        $("sectionMarkup").classList.add("active"); 
+        $("tabMarkupBtn").classList.add("active"); 
+        render(); 
+        return; 
+    } 
+    if(mode === "localcharges"){ 
+        $("sectionLc").classList.add("active"); 
+        $("tabLcBtn").classList.add("active"); 
+        $("lcEditorPanel").classList.remove("hidden"); // Show LC feed panel
+        renderLocalCharges(); 
+        return; 
+    } 
+    if(mode === "carrier"){
+        $("sectionCarrier").classList.add("active");
+        $("tabCarrierBtn").classList.add("active");
+        $("carrierEditorPanel").classList.remove("hidden"); // Show Carrier panel
+        return;
+    }
+
+    // Default Rates Mode
+    $("sectionRates").classList.add("active"); 
+    $("editorPanel").classList.remove("hidden"); // Show standard Editor
+
+    if(mode === "active") $("tabActiveBtn").classList.add("active"); 
+    if(mode === "expired") $("tabExpiredBtn").classList.add("active"); 
+    if(mode === "all") $("tabAllBtn").classList.add("active"); 
+    render(); 
+}
+
 function updateSortButtons(){ document.querySelectorAll(".sort-btn").forEach(btn=>{ btn.classList.remove("active"); const icon = btn.querySelector("i"); if(btn.dataset.sort === sortState.key){ btn.classList.add("active"); if(icon) icon.className = sortState.dir === "asc" ? "bi bi-caret-up-fill" : "bi bi-caret-down-fill"; }else if(icon){ icon.className = "bi bi-caret-down-fill"; } }); }
 function popupField(label,value,shortLen=14){ const full = (value ?? "").toString().trim(); const clip = full ? truncate(full,shortLen) : ""; return `<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`; }
 function desktopCell(id,seq,fieldKey,label,value,shortLen=14){ return `<td class="reflect-cell${activeCellKey===id+fieldKey?' active-cell':''}" data-rowid="${escapeHtml(id)}" data-id="${escapeHtml(id)}" data-seq="${escapeHtml(seq)}" data-fieldkey="${escapeHtml(fieldKey)}" data-cellkey="${escapeHtml(id+fieldKey)}" data-label="${escapeHtml(label)}" data-value="${escapeHtml(value ?? "")}">${popupField(label,value,shortLen)}</td>`; }
 function mobileItem(rowId,seq,fieldKey,label,value){ const full = (value ?? "").toString().trim(); return `<div class="mobile-item${activeCellKey===rowId+fieldKey?' active-cell':''}" data-rowid="${escapeHtml(rowId)}" data-id="${escapeHtml(rowId)}" data-seq="${escapeHtml(seq)}" data-fieldkey="${escapeHtml(fieldKey)}" data-cellkey="${escapeHtml(rowId+fieldKey)}" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><div class="k">${escapeHtml(label)}</div><div class="v">${escapeHtml(full ? truncate(full,26) : "")}</div></div>`; }
 function renderDesktopRows(rows){ return rows.map((r,i)=>`<tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id===r.id?'active-row':''} ${editId===r.id?'editing-row':''}"><td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}></td>${desktopCell(r.id,r.seq || (i+1),"seq","SEQ",r.seq || (i+1),14)}${desktopCell(r.id,r.seq || (i+1),"carrier","CARRIER",r.carrier,16)}${desktopCell(r.id,r.seq || (i+1),"por","POR",r.por,12)}${desktopCell(r.id,r.seq || (i+1),"pol","POL",r.pol,12)}${desktopCell(r.id,r.seq || (i+1),"pod","POD",r.pod,12)}${desktopCell(r.id,r.seq || (i+1),"fpod","FPOD",r.fpod,12)}${desktopCell(r.id,r.seq || (i+1),"dv20","20DV",r.dv20,10)}${desktopCell(r.id,r.seq || (i+1),"container20Type","20 TYPE",r.container20Type,10)}${desktopCell(r.id,r.seq || (i+1),"hc40","40HC",r.hc40,10)}${desktopCell(r.id,r.seq || (i+1),"container40Type","40 TYPE",r.container40Type,10)}${desktopCell(r.id,r.seq || (i+1),"ft","FT",r.ft,8)}${desktopCell(r.id,r.seq || (i+1),"validity","DATE",fmtDate(r.validity),18)}${desktopCell(r.id,r.seq || (i+1),"type","TYPE",displayType(r.type),10)}${desktopCell(r.id,r.seq || (i+1),"tt","TT",r.tt,10)}${desktopCell(r.id,r.seq || (i+1),"via","ROUTING",r.via,16)}${desktopCell(r.id,r.seq || (i+1),"remarks","REMARKS",r.remarks,18)}<td class="actions"><button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button><button class="icon-btn lc-act" data-action="lc" data-id="${r.id}" title="Local Charges"><i class="bi bi-plus-lg"></i></button><button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button><button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button><button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button></td></tr>`).join(""); }
 function renderMobileRows(rows){ return rows.map(r => `<div class="mobile-card ${activeCellState.id===r.id?'active-row':''}" data-rowid="${escapeHtml(r.id)}"><div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div></div><div><label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id)?"checked":""}> SELECT</label></div></div><div class="mobile-grid">${mobileItem(r.id,r.seq,"por","POR",r.por)}${mobileItem(r.id,r.seq,"pol","POL",r.pol)}${mobileItem(r.id,r.seq,"pod","POD",r.pod)}${mobileItem(r.id,r.seq,"fpod","FPOD",r.fpod)}${mobileItem(r.id,r.seq,"dv20","20DV",r.dv20 + (r.container20Type ? " " + r.container20Type : ""))}${mobileItem(r.id,r.seq,"hc40","40HC",r.hc40 + (r.container40Type ? " " + r.container40Type : ""))}${mobileItem(r.id,r.seq,"ft","FT",r.ft)}${mobileItem(r.id,r.seq,"validity","DATE",fmtDate(r.validity))}${mobileItem(r.id,r.seq,"type","TYPE",displayType(r.type))}${mobileItem(r.id,r.seq,"tt","TT",r.tt)}${mobileItem(r.id,r.seq,"via","ROUTING",r.via)}${mobileItem(r.id,r.seq,"remarks","REMARKS",r.remarks)}</div><div class="mobile-actions"><button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button><button class="lc-act" data-action="lc" data-id="${r.id}"><i class="bi bi-plus-lg"></i> LC</button><button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button><button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button><button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button></div></div>`).join(""); }
-function render(){ const rows = filteredRows(); $("tbody").innerHTML = renderDesktopRows(rows); $("mobileRates").innerHTML = renderMobileRows(rows); $("sectionLabel").textContent = viewMode === "active" ? "ACTIVE RATES" : viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES"; updateSelectedInfo(); updateSortButtons(); updateActiveCellInfo(); syncActiveCellClasses(); }
+function render(){ const rows = filteredRows(); $("tbody").innerHTML = renderDesktopRows(rows); $("mobileRates").innerHTML = renderMobileRows(rows); $("sectionLabel").textContent = viewMode === "active" ? "ACTIVE RATES" : viewMode === "expired" ? "EXPIRED RATES" : "ALL RATES"; updateSelectedInfo(); updateSortButtons(); syncActiveCellClasses(); }
 function clearForm(resetEdit=true){ ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = ""); $("rateType").value = "V"; if(resetEdit) editId = null; setEditorState("CREATE OR UPDATE RATE"); render(); }
-function editorPayload(existing={}){ return { seq: existing.seq || generateSeq(), createdAt: existing.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString(), carrier: upper($("carrier").value), por: upper($("por").value), pol: upper($("pol").value), pod: upper($("pod").value), fpod: upper($("fpod").value), dv20: calc($("dv20").value), container20Type: upper($("container20Type").value), hc40: calc($("hc40").value), container40Type: upper($("container40Type").value), ft: upper($("ft").value), validity: inputDateValue($("validity").value), tt: upper($("tt").value), via: upper($("via").value), remarks: upper($("remarks").value), type: $("rateType").value, localCharges: existing.localCharges || [] }; }
+function editorPayload(existing={}){ return { seq: existing.seq || generateSeq(), createdAt: existing.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString(), carrier: upper($("carrier").value), por: upper($("por").value), pol: upper($("pol").value), pod: upper($("pod").value), fpod: upper($("fpod").value), dv20: calc($("dv20").value), container20Type: upper($("container20Type").value), hc40: calc($("hc40").value), container40Type: upper($("container40Type").value), ft: upper($("ft").value), validity: inputDateValue($("validity").value), tt: upper($("tt").value), via: upper($("via").value), remarks: upper($("remarks").value), type: $("rateType").value }; }
 $("clear").onclick = () => clearForm(true);
 $("save").onclick = async ()=>{ showLoader("SAVING","CREATING NEW RECORD"); try{ await addDoc(collection(db,"rates"), editorPayload()); clearForm(true); await load(); }catch(err){ alert("SAVE FAILED"); console.error(err); } finally{ hideLoader(); } };
 $("update").onclick = async ()=>{ if(!editId) return alert("SELECT A RECORD TO UPDATE."); showLoader("UPDATING","SAVING CHANGES"); try{ const current = data.find(x => x.id === editId); await updateDoc(doc(db,"rates",editId), editorPayload(current)); clearForm(true); await load(); }catch(err){ alert("UPDATE FAILED"); console.error(err); } finally{ hideLoader(); } };
@@ -558,9 +694,9 @@ $("duplicateBtn").onclick = async ()=>{ if(!editId) return alert("SELECT A RECOR
 async function deleteRate(id){ if(!confirm("DELETE THIS RATE?")) return; showLoader("DELETING","REMOVING RECORD"); try{ await deleteDoc(doc(db,"rates",id)); selectedIds.delete(id); if(editId === id) clearForm(true); if(activeCellState.id === id) clearActiveCell(); await load(); }catch(err){ alert("DELETE FAILED"); console.error(err); } finally{ hideLoader(); } }
 async function bulkDeleteSelected(){ if(!selectedIds.size) return alert("SELECT RECORDS FIRST."); if(!confirm("DELETE " + selectedIds.size + " SELECTED RECORDS?")) return; showLoader("DELETING","REMOVING SELECTED RECORDS"); try{ for(const id of [...selectedIds]) await deleteDoc(doc(db,"rates",id)); selectedIds.clear(); clearForm(true); clearActiveCell(); await load(); }catch(err){ alert("BULK DELETE FAILED"); console.error(err); } finally{ hideLoader(); } }
 $("bulkDeleteBtn").onclick = bulkDeleteSelected;
-async function migrateAllSequences(){ if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return; showLoader("UPDATING SEQ","APPLYING NEW FORMAT"); try{ for(const r of data){ const source = r.createdAt || r.updatedAt || new Date().toISOString(); const newSeq = seqFromDate(source); if(r.seq !== newSeq) await updateDoc(doc(db,"rates",r.id), { seq:newSeq }); } await load(); }catch(err){ alert("SEQUENCE UPDATE FAILED"); console.error(err); } finally{ hideLoader(); } }
-$("migrateSeqBtn").onclick = migrateAllSequences;
+$("migrateSeqBtn").onclick = async ()=>{ if(!confirm("UPDATE SEQUENCE FOR ALL EXISTING RECORDS?")) return; showLoader("UPDATING SEQ","APPLYING NEW FORMAT"); try{ for(const r of data){ const source = r.createdAt || r.updatedAt || new Date().toISOString(); const newSeq = seqFromDate(source); if(r.seq !== newSeq) await updateDoc(doc(db,"rates",r.id), { seq:newSeq }); } await load(); }catch(err){ alert("SEQUENCE UPDATE FAILED"); console.error(err); } finally{ hideLoader(); } };
 
+// Copy Logic updated to grab LCs
 function copyText(text){ return navigator.clipboard.writeText(text).catch(()=>{ const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }); }
 function effectiveMarkup20(){ return parseFloat(userMu20 || 0) || 0; }
 function effectiveMarkup40(){ return parseFloat(userMu40 || 0) || 0; }
@@ -568,17 +704,126 @@ function loadMarkups(){ userMu20 = parseFloat(localStorage.getItem(USERMU20KEY) 
 function updateAppliedMarkupsList(){ const m20 = effectiveMarkup20(), m40 = effectiveMarkup40(); if(!m20 && !m40){ $("appliedMarkupsList").innerHTML = `<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>`; return; } let html = ""; if(m20) html += `<div class="applied-markup"><span>20DV</span><span>${m20}</span></div>`; if(m40) html += `<div class="applied-markup"><span>40HC</span><span>${m40}</span></div>`; $("appliedMarkupsList").innerHTML = html; }
 $("saveUserMarkupBtn").onclick = ()=>{ const v20 = parseFloat($("userMu20").value || "0") || 0; const v40 = parseFloat($("userMu40").value || "0") || 0; if(v20 < 0 || v40 < 0) return alert("MARKUPS CANNOT BE NEGATIVE."); localStorage.setItem(USERMU20KEY, String(v20)); localStorage.setItem(USERMU40KEY, String(v40)); loadMarkups(); showCopyToast("USER MARKUPS SAVED"); };
 $("clearUserMarkupBtn").onclick = ()=>{ localStorage.removeItem(USERMU20KEY); localStorage.removeItem(USERMU40KEY); loadMarkups(); showCopyToast("USER MARKUPS CLEARED"); };
-function buildRateCopyText(r){ const lines = []; if(r.carrier) lines.push(`CARRIER: ${r.carrier}`); if(r.por) lines.push(`POR: ${r.por}`); if(r.pol) lines.push(`POL: ${r.pol}`); if(r.pod) lines.push(`POD: ${r.pod}`); if(r.fpod) lines.push(`FPOD: ${r.fpod}`); const routeFrom = r.pol || r.por || ""; const routeTo = r.pod || ""; const base20 = parseFloat(r.dv20 || "") || 0; const base40 = parseFloat(r.hc40 || "") || 0; const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20()/100)) : 0; const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40()/100)) : 0; const type20 = r.container20Type ? ` (${r.container20Type})` : ""; const type40 = r.container40Type ? ` (${r.container40Type})` : ""; const part20 = final20 ? `USD ${final20}/20DV${type20}` : ""; const part40 = final40 ? `USD ${final40}/40HC${type40}` : ""; if(routeFrom || routeTo || part20 || part40){ const rateParts = [part20,part40].filter(Boolean).join(" & "); lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${rateParts}`.replace(/\s+/g," ").trim()); } if(r.ft) lines.push(`F/T: ${appendDays(r.ft)}`); if(r.validity){ const validityText = fmtDate(r.validity); const typeText = displayType(r.type); lines.push(`VALIDITY: ${validityText}${typeText ? ` (${typeText})` : ""}`); } if(r.tt) lines.push(`TT: ${appendDays(r.tt)}`); if(r.via) lines.push(`ROUTING: ${r.via}`); if(r.remarks) lines.push(`REMARKS: ${r.remarks}`); return lines.join("\n"); }
+
+function buildRateCopyText(r){ 
+    const lines = []; 
+    if(r.carrier) lines.push(`CARRIER: ${r.carrier}`); 
+    if(r.por) lines.push(`POR: ${r.por}`); 
+    if(r.pol) lines.push(`POL: ${r.pol}`); 
+    if(r.pod) lines.push(`POD: ${r.pod}`); 
+    if(r.fpod) lines.push(`FPOD: ${r.fpod}`); 
+    
+    const routeFrom = r.pol || r.por || ""; 
+    const routeTo = r.pod || ""; 
+    const base20 = parseFloat(r.dv20 || "") || 0; 
+    const base40 = parseFloat(r.hc40 || "") || 0; 
+    const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20()/100)) : 0; 
+    const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40()/100)) : 0; 
+    const type20 = r.container20Type ? ` (${r.container20Type})` : ""; 
+    const type40 = r.container40Type ? ` (${r.container40Type})` : ""; 
+    const part20 = final20 ? `USD ${final20}/20DV${type20}` : ""; 
+    const part40 = final40 ? `USD ${final40}/40HC${type40}` : ""; 
+    
+    if(routeFrom || routeTo || part20 || part40){ 
+        const rateParts = [part20,part40].filter(Boolean).join(" & "); 
+        lines.push(`O/F FM ${routeFrom} TO ${routeTo} @ ${rateParts}`.replace(/\s+/g," ").trim()); 
+    } 
+    if(r.ft) lines.push(`F/T: ${appendDays(r.ft)}`); 
+    if(r.validity){ 
+        const validityText = fmtDate(r.validity); 
+        const typeText = displayType(r.type); 
+        lines.push(`VALIDITY: ${validityText}${typeText ? ` (${typeText})` : ""}`); 
+    } 
+    if(r.tt) lines.push(`TT: ${appendDays(r.tt)}`); 
+    if(r.via) lines.push(`ROUTING: ${r.via}`); 
+    if(r.remarks) lines.push(`REMARKS: ${r.remarks}`); 
+
+    // Append LC automatically
+    const relatedLCs = lcData.filter(lc => lc.parentSeq === r.seq);
+    if(relatedLCs.length > 0) {
+        lines.push(`\nLOCAL CHARGES:`);
+        relatedLCs.forEach(lc => {
+            lines.push(`+ ${lc.desc}: ${lc.currency} ${lc.amount} (${lc.applies})`);
+        });
+    }
+
+    return lines.join("\n"); 
+}
 
 function checkFit(){ const l = parseFloat($("cargoL").value), w = parseFloat($("cargoW").value), h = parseFloat($("cargoH").value); if(isNaN(l) || isNaN(w) || isNaN(h)){ $("fitResult").innerHTML = `<span class="fit-pill">ENTER LENGTH · WIDTH · HEIGHT TO CHECK</span>`; return; } const specs = [{k:"20GP",l:5.90,w:2.352,h:2.393},{k:"40GP",l:12.032,w:2.352,h:2.393},{k:"40HC",l:12.032,w:2.352,h:2.698},{k:"45HC",l:13.556,w:2.352,h:2.698},{k:"20OT",l:5.895,w:2.35,h:2.35},{k:"40OT",l:12.029,w:2.35,h:2.35},{k:"20RF",l:5.45,w:2.29,h:2.26},{k:"40RH",l:11.58,w:2.29,h:2.55}]; const fits = specs.filter(x => l <= x.l && w <= x.w && h <= x.h).map(x => x.k); $("fitResult").innerHTML = fits.length ? fits.map(x => `<span class="fit-pill ok">${escapeHtml(x)}</span>`).join("") : `<span class="fit-pill bb">BREAK BULK</span>`; }
 $("checkFitBtn").onclick = checkFit;
 
-function renderLocalCharges(){ const q = { seq:$("lcSearchSeq").value.trim().toUpperCase(), carrier:$("lcSearchCarrier").value.trim().toUpperCase(), pol:$("lcSearchPol").value.trim().toUpperCase(), por:$("lcSearchPor").value.trim().toUpperCase(), container:$("lcSearchContainer").value.trim().toUpperCase(), name:$("lcSearchName").value.trim().toUpperCase() }; let rows = [...lcData]; if(selectedParentSeq) rows = rows.filter(x => (x.parentSeq || "") === selectedParentSeq); if(lcView === "recent") rows = rows.slice(-20); if(lcView === "selected" && selectedParentSeq) rows = rows.filter(x => x.parentSeq === selectedParentSeq); rows = rows.filter(r => [r.parentSeq,r.carrier,r.pol,r.por,r.container,r.desc].join(" ").toUpperCase().includes((q.seq+" "+q.carrier+" "+q.pol+" "+q.por+" "+q.container+" "+q.name).trim())); $("lcMainBody").innerHTML = rows.length ? rows.map(r => `<tr data-lcid="${escapeHtml(r.id)}"><td>${escapeHtml(r.subSeq || "")}</td><td>${escapeHtml(r.parentSeq || "")}</td><td>${escapeHtml(r.desc || "")}</td><td>${escapeHtml(r.type || "")}</td><td>${escapeHtml(r.currency || "")}</td><td>${escapeHtml(String(r.amount || ""))}</td><td>${escapeHtml(r.applies || "")}</td><td><button class="icon-btn danger" data-lc-action="delete" data-id="${escapeHtml(r.id)}"><i class="bi bi-trash3"></i></button></td></tr>`).join("") : `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr>`; }
+// LC Logic mapped to UI Panel
+function renderLocalCharges(){ 
+    const q = { 
+        seq:$("lcSearchSeq").value.trim().toUpperCase(), 
+        carrier:$("lcSearchCarrier").value.trim().toUpperCase(), 
+        pol:$("lcSearchPol").value.trim().toUpperCase(), 
+        por:$("lcSearchPor").value.trim().toUpperCase(), 
+        container:$("lcSearchContainer").value.trim().toUpperCase(), 
+        name:$("lcSearchName").value.trim().toUpperCase() 
+    }; 
+    let rows = [...lcData]; 
+    if(selectedParentSeq) rows = rows.filter(x => (x.parentSeq || "") === selectedParentSeq); 
+    if(lcView === "recent") rows = rows.slice(-20); 
+    if(lcView === "selected" && selectedParentSeq) rows = rows.filter(x => x.parentSeq === selectedParentSeq); 
+    
+    rows = rows.filter(r => [r.parentSeq,r.carrier,r.pol,r.por,r.container,r.desc].join(" ").toUpperCase().includes((q.seq+" "+q.carrier+" "+q.pol+" "+q.por+" "+q.container+" "+q.name).trim())); 
+    
+    $("lcMainBody").innerHTML = rows.length ? rows.map(r => `<tr data-lcid="${escapeHtml(r.id)}"><td>${escapeHtml(r.subSeq || "")}</td><td>${escapeHtml(r.parentSeq || "")}</td><td>${escapeHtml(r.desc || "")}</td><td>${escapeHtml(r.type || "")}</td><td>${escapeHtml(r.currency || "")}</td><td>${escapeHtml(String(r.amount || ""))}</td><td>${escapeHtml(r.applies || "")}</td><td><button class="icon-btn danger" data-lc-action="delete" data-id="${escapeHtml(r.id)}"><i class="bi bi-trash3"></i></button></td></tr>`).join("") : `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">NO LC RECORDS</td></tr>`; 
+}
 $("lcSearchBtn").onclick = renderLocalCharges;
 $("lcRefreshBtn").onclick = loadLocalCharges;
-document.querySelectorAll(".lc-subtabs button").forEach(btn => btn.addEventListener("click", ()=>{ document.querySelectorAll(".lc-subtabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); lcView = btn.dataset.lcview; renderLocalCharges(); }));
+document.querySelectorAll(".lc-subtabs button").forEach(btn => btn.addEventListener("click", ()=>{ document.querySelectorAll(".lc-subtabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); lcView = btn.dataset.lcv; renderLocalCharges(); }));
 
-function openLocalChargesForRate(id){ const r = data.find(x => x.id === id); if(!r) return; selectedParentSeq = r.seq || ""; $("lcSearchSeq").value = selectedParentSeq; $("lcSearchCarrier").value = r.carrier || ""; $("lcSearchPol").value = r.pol || ""; $("lcSearchPor").value = r.por || ""; $("lcSearchContainer").value = [r.container20Type,r.container40Type].filter(Boolean).join(" / "); $("lcRefRow").style.display = "flex"; $("lcRefBadge").textContent = (r.seq || "") + "/LC1"; $("lcRefCarrier").textContent = r.carrier || "—"; $("lcRefPol").textContent = r.pol || "—"; $("lcRefDv20").textContent = r.dv20 || "—"; $("lcRefHc40").textContent = r.hc40 || "—"; switchView("localcharges"); openPopupById("lcPopup"); renderLocalCharges(); }
+function openLocalChargesForRate(id){ 
+    const r = data.find(x => x.id === id); 
+    if(!r) return; 
+    selectedParentSeq = r.seq || ""; 
+    $("lcFormParentSeq").value = selectedParentSeq;
+    $("lcSearchSeq").value = selectedParentSeq;
+    switchView("localcharges"); 
+}
+
+$("saveLcPanelBtn").onclick = async () => {
+    const pSeq = $("lcFormParentSeq").value.trim().toUpperCase();
+    if(!pSeq) return alert("PLEASE PROVIDE A PARENT SEQ.");
+    const desc = $("lcFormDesc").value.trim().toUpperCase();
+    if(!desc) return alert("DESCRIPTION IS REQUIRED.");
+    
+    // Calculate sub seq e.g., 22051212LC1
+    const existing = lcData.filter(x => x.parentSeq === pSeq);
+    const subSeq = pSeq + "LC" + (existing.length + 1);
+
+    const payload = {
+        parentSeq: pSeq,
+        subSeq: subSeq,
+        desc: desc,
+        type: $("lcFormType").value,
+        currency: $("lcFormCurrency").value,
+        amount: parseFloat($("lcFormAmount").value) || 0,
+        applies: $("lcFormApplies").value,
+        createdAt: new Date().toISOString()
+    };
+
+    showLoader("SAVING LC", "RECORDING NEW CHARGE");
+    try {
+        await addDoc(collection(db, "localCharges"), payload);
+        $("lcFormDesc").value = "";
+        $("lcFormAmount").value = "";
+        await loadLocalCharges();
+    } catch(err) {
+        alert("FAILED TO SAVE LOCAL CHARGE");
+        console.error(err);
+    } finally {
+        hideLoader();
+    }
+};
+
+$("clearLcPanelBtn").onclick = () => {
+    $("lcFormDesc").value = "";
+    $("lcFormAmount").value = "";
+};
 
 function renderDashboard(){ const view = $("dashView").value; const groupKey = $("dashGroup").value; const chartType = $("dashChartType").value; const rows = data.filter(r => view === "all" ? true : view === "active" ? !expired(r) : expired(r)); const groups = {}; rows.forEach(r => { const k = groupKey === "carrier" ? (r.carrier || "UNKNOWN") : groupKey === "pol" ? (r.pol || "UNKNOWN") : ((r.por || r.pol || "UNKNOWN").slice(0,3) || "UNKNOWN"); groups[k] = (groups[k] || 0) + 1; }); const labels = Object.keys(groups); const values = labels.map(k => groups[k]); $("dashKpiRow").innerHTML = [ {k:"TOTAL",v:data.length,c:"ok-kpi"}, {k:"ACTIVE",v:data.filter(r=>!expired(r)).length,c:"ok-kpi"}, {k:"EXPIRED",v:data.filter(r=>expired(r)).length,c:"danger-kpi"}, {k:"LOCAL CHARGES",v:lcData.length,c:"warn-kpi"} ].map(x => `<div class="dash-kpi ${x.c}"><div class="kv">${escapeHtml(String(x.v))}</div><div class="kl">${escapeHtml(x.k)}</div></div>`).join(""); $("dashThead").innerHTML = `<tr><th>GROUP</th><th>COUNT</th></tr>`; $("dashTbody").innerHTML = labels.map((k,i) => `<tr data-group="${escapeHtml(k)}"><td>${escapeHtml(k)}</td><td>${values[i]}</td></tr>`).join(""); if(dashChart) dashChart.destroy(); const ctx = $("dashChart").getContext("2d"); dashChart = new Chart(ctx,{ type: chartType === "donut" ? "doughnut" : chartType, data:{ labels, datasets:[{ data:values, backgroundColor:["#111827","#2563eb","#059669","#d97706","#dc2626","#7c3aed","#0ea5e9","#14b8a6"] }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:chartType !== "bar", position:"bottom" } } } }); $("dashChartLabel").textContent = `CHART · ${view.toUpperCase()} · ${groupKey.toUpperCase()}`; }
 $("dashRefreshBtn").onclick = renderDashboard;
@@ -594,13 +839,68 @@ document.querySelectorAll(".filter-row input").forEach(inp=>inp.addEventListener
 document.querySelectorAll(".sort-btn").forEach(btn=>btn.addEventListener("click", e=>{ e.stopPropagation(); const key = btn.dataset.sort; if(sortState.key === key) sortState.dir = sortState.dir === "asc" ? "desc" : "asc"; else { sortState.key = key; sortState.dir = "asc"; } render(); }));
 document.querySelectorAll(".section-tabs button").forEach(btn=>btn.addEventListener("click", ()=>switchView(btn.dataset.view)));
 
-document.addEventListener("click", (e)=>{ const t = e.target.closest("[data-action],[data-cellkey],.pop-field,.mobile-item,.reflect-cell,.row-check,[data-lc-action],#dashTable tbody tr"); if(!t) return; const action = t.dataset.action; if(t.matches(".row-check")){ const id = t.dataset.id; if(t.checked) selectedIds.add(id); else selectedIds.delete(id); updateSelectedInfo(); return; } if(t.dataset.cellkey){ setActiveCell(t); return; } if(action === "copy") copyText(buildRateCopyText(data.find(x=>x.id===t.dataset.id) || {})).then(()=>showCopyToast("RATE COPIED")); if(action === "duplicate") duplicateRate(t.dataset.id); if(action === "edit"){ const r = data.find(x=>x.id===t.dataset.id); if(!r) return; editId = r.id; ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = ""); $("carrier").value = r.carrier || ""; $("por").value = r.por || ""; $("pol").value = r.pol || ""; $("pod").value = r.pod || ""; $("fpod").value = r.fpod || ""; $("dv20").value = r.dv20 || ""; $("hc40").value = r.hc40 || ""; $("ft").value = r.ft || ""; $("validity").value = inputDateValue(r.validity); $("tt").value = r.tt || ""; $("via").value = r.via || ""; $("remarks").value = r.remarks || ""; $("container20Type").value = r.container20Type || ""; $("container40Type").value = r.container40Type || ""; $("rateType").value = r.type || "V"; setEditorState("EDITING RECORD " + (r.seq || "")); switchView("active"); } if(action === "delete") deleteRate(t.dataset.id); if(action === "lc") openLocalChargesForRate(t.dataset.id); if(t.dataset.lcAction === "delete"){ lcData = lcData.filter(x => x.id !== t.dataset.id); renderLocalCharges(); } if(t.matches("#dashTable tbody tr")){ const group = t.dataset.group; $("dashDrillPanel").style.display = "block"; $("dashDrillTitle").textContent = "RATES IN GROUP: " + group; const view = $("dashView").value; const rows = data.filter(r => (view === "all" ? true : view === "active" ? !expired(r) : expired(r))); $("dashDrillBody").innerHTML = rows.filter(r => ((r[$("dashGroup").value] || "") + "").toUpperCase().includes((group || "").toUpperCase())).map(r => `<tr><td>${escapeHtml(r.seq || "")}</td><td>${escapeHtml(r.carrier || "")}</td><td>${escapeHtml(r.pol || "")}</td><td>${escapeHtml(r.pod || "")}</td><td>${escapeHtml(r.dv20 || "")}</td><td>${escapeHtml(r.hc40 || "")}</td><td>${escapeHtml(fmtDate(r.validity) || "")}</td><td>${expired(r) ? '<span class="expired-badge">EXPIRED</span>' : '<span class="active-badge">ACTIVE</span>'}</td></tr>`).join(""); } });
+function syncActiveCellClasses(){ document.querySelectorAll(".active-cell").forEach(el => el.classList.remove("active-cell")); document.querySelectorAll(".active-row").forEach(el => el.classList.remove("active-row")); if(!activeCellKey) return; document.querySelectorAll(`[data-cellkey="${CSS.escape(activeCellKey)}"]`).forEach(el => el.classList.add("active-cell")); if(activeCellState.id) document.querySelectorAll(`[data-rowid="${CSS.escape(activeCellState.id)}"]`).forEach(el => el.classList.add("active-row")); }
+function updateActiveCellInfo(){ if(!activeCellKey){ $("activeCellInfo").textContent = "NO ACTIVE CELL"; return; } const valueText = activeCellState.value ? " = " + activeCellState.value : ""; $("activeCellInfo").textContent = `ACTIVE CELL · ${activeCellState.label}${activeCellState.seq ? " · SEQ " + activeCellState.seq : ""}${valueText}`; }
+function setActiveCell(el){ activeCellKey = el.dataset.cellkey; activeCellState = { id:el.dataset.id, seq:el.dataset.seq, key:el.dataset.fieldkey, label:el.dataset.label, value:el.dataset.value }; updateActiveCellInfo(); syncActiveCellClasses(); }
+function clearActiveCell(){ activeCellKey = ""; activeCellState = { id:null, seq:null, key:null, label:null, value:null }; updateActiveCellInfo(); syncActiveCellClasses(); }
+
+document.addEventListener("click", async (e)=>{ 
+    const t = e.target.closest("[data-action],[data-cellkey],.pop-field,.mobile-item,.reflect-cell,.row-check,[data-lc-action],#dashTable tbody tr"); 
+    if(!t) return; 
+    const action = t.dataset.action; 
+    if(t.matches(".row-check")){ const id = t.dataset.id; if(t.checked) selectedIds.add(id); else selectedIds.delete(id); updateSelectedInfo(); return; } 
+    if(t.dataset.cellkey){ setActiveCell(t); return; } 
+    if(action === "copy") copyText(buildRateCopyText(data.find(x=>x.id===t.dataset.id) || {})).then(()=>showCopyToast("RATE COPIED")); 
+    if(action === "duplicate") duplicateRate(t.dataset.id); 
+    if(action === "edit"){ 
+        const r = data.find(x=>x.id===t.dataset.id); 
+        if(!r) return; 
+        editId = r.id; 
+        ["carrier","por","pol","pod","fpod","dv20","hc40","ft","validity","tt","via","remarks","container20Type","container40Type"].forEach(id => $(id).value = ""); 
+        $("carrier").value = r.carrier || ""; 
+        $("por").value = r.por || ""; 
+        $("pol").value = r.pol || ""; 
+        $("pod").value = r.pod || ""; 
+        $("fpod").value = r.fpod || ""; 
+        $("dv20").value = r.dv20 || ""; 
+        $("hc40").value = r.hc40 || ""; 
+        $("ft").value = r.ft || ""; 
+        $("validity").value = inputDateValue(r.validity); 
+        $("tt").value = r.tt || ""; 
+        $("via").value = r.via || ""; 
+        $("remarks").value = r.remarks || ""; 
+        $("container20Type").value = r.container20Type || ""; 
+        $("container40Type").value = r.container40Type || ""; 
+        $("rateType").value = r.type || "V"; 
+        setEditorState("EDITING RECORD " + (r.seq || "")); 
+        switchView("active"); 
+    } 
+    if(action === "delete") deleteRate(t.dataset.id); 
+    if(action === "lc") openLocalChargesForRate(t.dataset.id); 
+    if(t.dataset.lcAction === "delete"){ 
+        if(!confirm("DELETE THIS LOCAL CHARGE?")) return;
+        try {
+            await deleteDoc(doc(db,"localCharges",t.dataset.id));
+            lcData = lcData.filter(x => x.id !== t.dataset.id); 
+            renderLocalCharges();
+        } catch(err){ alert("DELETE FAILED"); }
+    } 
+    if(t.matches("#dashTable tbody tr")){ 
+        const group = t.dataset.group; 
+        $("dashDrillPanel").style.display = "block"; 
+        $("dashDrillTitle").textContent = "RATES IN GROUP: " + group; 
+        const view = $("dashView").value; 
+        const rows = data.filter(r => (view === "all" ? true : view === "active" ? !expired(r) : expired(r))); 
+        $("dashDrillBody").innerHTML = rows.filter(r => ((r[$("dashGroup").value] || "") + "").toUpperCase().includes((group || "").toUpperCase())).map(r => `<tr><td>${escapeHtml(r.seq || "")}</td><td>${escapeHtml(r.carrier || "")}</td><td>${escapeHtml(r.pol || "")}</td><td>${escapeHtml(r.pod || "")}</td><td>${escapeHtml(r.dv20 || "")}</td><td>${escapeHtml(r.hc40 || "")}</td><td>${escapeHtml(fmtDate(r.validity) || "")}</td><td>${expired(r) ? '<span class="expired-badge">EXPIRED</span>' : '<span class="active-badge">ACTIVE</span>'}</td></tr>`).join(""); 
+    } 
+});
 
 $("clearActiveCellBtn").onclick = clearActiveCell;
 $("tabActiveBtn").onclick = ()=>switchView("active");
 $("tabExpiredBtn").onclick = ()=>switchView("expired");
 $("tabAllBtn").onclick = ()=>switchView("all");
 $("tabLcBtn").onclick = ()=>switchView("localcharges");
+$("tabCarrierBtn").onclick = ()=>switchView("carrier");
 $("tabDimBtn").onclick = ()=>switchView("dimensions");
 $("tabMarkupBtn").onclick = ()=>switchView("markups");
 $("tabDashBtn").onclick = ()=>switchView("dashboard");
@@ -614,11 +914,15 @@ $("openUploadBtn").onclick = ()=>openPopupById("uploadOverlay");
 $("closeUploadBtn").onclick = ()=>closePopupById("uploadOverlay");
 $("openLcEditorBtn").onclick = ()=>openPopupById("lcPopup");
 $("copySelectedRatesBtn").onclick = async ()=>{ const txt = [...selectedIds].map(id => buildRateCopyText(data.find(x=>x.id===id) || {})).filter(Boolean).join("\n\n"); if(!txt) return; await copyText(txt); showCopyToast("SELECTED COPIED"); };
-$("lcAddNewBtn").onclick = ()=>{ openPopupById("lcPopup"); $("lcRefRow").style.display = "none"; $("lcSearchSeq").value = selectedParentSeq || ""; };
-$("lcFetchRateBtn").onclick = ()=>{ const seq = $("lcSearchSeq").value.trim().toUpperCase(); const r = data.find(x => (x.seq || "").toUpperCase() === seq); if(!r) return alert("PARENT RATE NOT FOUND"); selectedParentSeq = r.seq || seq; $("lcSearchCarrier").value = r.carrier || ""; $("lcSearchPol").value = r.pol || ""; $("lcSearchPor").value = r.por || ""; $("lcSearchContainer").value = [r.container20Type,r.container40Type].filter(Boolean).join(" / "); $("lcRefRow").style.display = "flex"; $("lcRefBadge").textContent = (r.seq || "") + "/LC1"; $("lcRefCarrier").textContent = r.carrier || "—"; $("lcRefPol").textContent = r.pol || "—"; $("lcRefDv20").textContent = r.dv20 || "—"; $("lcRefHc40").textContent = r.hc40 || "—"; renderLocalCharges(); switchView("localcharges"); };
-$("lcSearchBtn").onclick = renderLocalCharges;
 $("dashDrillClose").onclick = ()=>{$("dashDrillPanel").style.display = "none";};
+$("popupLcFetchRateBtn").onclick = ()=>{ 
+    selectedParentSeq = $("popupLcSearchSeq").value.toUpperCase(); 
+    $("lcFormParentSeq").value = selectedParentSeq;
+    closePopupById("lcPopup"); 
+    switchView("localcharges"); 
+};
 
+// Initial entry point
 if(sessionValid()) showApp(); else $("pinGate").classList.remove("hidden");
 </script>
 </body>
