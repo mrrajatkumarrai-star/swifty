@@ -1,348 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>FR8X ADMIN</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"/>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <style>
     :root{
-      --bg:#e9eef7;
-      --bg-soft:#f5f8fc;
-      --bg-deep:#d9e4f1;
-      --glass:rgba(255,255,255,.58);
-      --glass-strong:rgba(255,255,255,.72);
-      --glass-soft:rgba(255,255,255,.42);
-      --line:rgba(255,255,255,.58);
-      --line-2:rgba(148,163,184,.32);
+      --bg1:#eef4ff;
+      --bg2:#f4ecff;
+      --bg3:#f8fafc;
+      --glass:rgba(255,255,255,.72);
+      --glass-2:rgba(255,255,255,.56);
+      --border:rgba(255,255,255,.54);
       --text:#0f172a;
       --muted:#64748b;
-      --primary:#2563eb;
-      --primary-2:#1d4ed8;
+      --primary:#111827;
       --success:#059669;
       --danger:#dc2626;
       --warning:#d97706;
+      --blue:#2563eb;
+      --blue2:#1d4ed8;
       --purple:#7c3aed;
       --teal:#0f766e;
-      --shadow:0 20px 50px rgba(15,23,42,.12);
-      --shadow-soft:0 10px 26px rgba(15,23,42,.10);
-      --radius:20px;
+      --amber:#b45309;
+      --shadow:0 18px 40px rgba(15,23,42,.12);
+      --shadow-soft:0 10px 26px rgba(15,23,42,.08);
+      --radius:22px;
       --radius-sm:14px;
-      --header-h:66px;
-      --editor-w:380px;
-      --font:'Aptos','Segoe UI',Calibri,system-ui,sans-serif;
-      --table-head:rgba(255,255,255,.78);
-      --table-row:rgba(255,255,255,.36);
-      --table-hover:rgba(37,99,235,.08);
-      --popup-bg:rgba(15,23,42,.96);
-      --popup-text:#fff;
+      --header-h:74px;
+      --editor-w:405px;
     }
-
-    :root[data-theme="dark"]{
-      --bg:#05111f;
-      --bg-soft:#09172b;
-      --bg-deep:#0f223d;
-      --glass:rgba(11,20,34,.58);
-      --glass-strong:rgba(12,24,42,.72);
-      --glass-soft:rgba(16,28,48,.38);
-      --line:rgba(255,255,255,.10);
-      --line-2:rgba(148,163,184,.18);
-      --text:#e5edf8;
-      --muted:#9db0c9;
-      --primary:#60a5fa;
-      --primary-2:#3b82f6;
-      --success:#10b981;
-      --danger:#f87171;
-      --warning:#f59e0b;
-      --purple:#a78bfa;
-      --teal:#2dd4bf;
-      --shadow:0 24px 60px rgba(0,0,0,.38);
-      --shadow-soft:0 12px 34px rgba(0,0,0,.30);
-      --table-head:rgba(17,25,40,.82);
-      --table-row:rgba(17,25,40,.42);
-      --table-hover:rgba(96,165,250,.10);
-      --popup-bg:rgba(241,245,249,.98);
-      --popup-text:#0f172a;
-    }
-
-    *{box-sizing:border-box}
+    *,*::before,*::after{box-sizing:border-box}
     html,body{
       margin:0;
       min-height:100%;
-      font-family:var(--font);
+      font-family:Aptos,Segoe UI,Calibri,system-ui,sans-serif;
+      font-size:12px;
+      color:var(--text);
       background:
-        radial-gradient(circle at 12% 18%, rgba(56,189,248,.16), transparent 28%),
-        radial-gradient(circle at 84% 14%, rgba(124,58,237,.16), transparent 26%),
-        radial-gradient(circle at 70% 78%, rgba(16,185,129,.14), transparent 30%),
-        linear-gradient(160deg,var(--bg-soft),var(--bg),var(--bg-deep));
-      color:var(--text);
+        radial-gradient(circle at 0 0, rgba(255,255,255,.95), transparent 34%),
+        radial-gradient(circle at 100% 20%, rgba(191,219,254,.88), transparent 30%),
+        radial-gradient(circle at 55% 100%, rgba(233,213,255,.86), transparent 34%),
+        linear-gradient(145deg,var(--bg3),var(--bg1) 42%,var(--bg2));
       overflow-x:hidden;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-      font-size:11px;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,.03)),
+        radial-gradient(circle at 16% 8%, rgba(255,255,255,.32), transparent 24%),
+        radial-gradient(circle at 84% 4%, rgba(255,255,255,.28), transparent 24%);
     }
 
-    body,input,select,textarea,button,th,td,label,div,span,p{
-      font-family:var(--font);
-      font-size:11px;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-    }
+    .hidden{display:none!important}
 
-    input,select,textarea{
-      width:100%;
-      min-height:32px;
-      padding:6px 10px;
-      border:1px solid var(--line-2);
-      border-radius:12px;
-      background:var(--glass-soft);
-      color:var(--text);
-      outline:none;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.24);
-      backdrop-filter:blur(14px);
-    }
-
-    textarea{min-height:72px;resize:vertical}
-    input:focus,select:focus,textarea:focus{
-      border-color:rgba(59,130,246,.55);
-      box-shadow:0 0 0 3px rgba(59,130,246,.12), inset 0 1px 0 rgba(255,255,255,.18);
-    }
-
-    ::placeholder{color:var(--muted)}
-
+    button,input,select,textarea{font:inherit}
     button{
-      min-height:32px;
-      border:none;
+      min-height:34px;
       border-radius:12px;
+      border:1px solid rgba(148,163,184,.24);
+      background:rgba(255,255,255,.82);
+      color:var(--text);
       padding:0 12px;
-      cursor:pointer;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:6px;
-      white-space:nowrap;
-      font-weight:700;
-      transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease, background .14s ease;
-      position:relative;
-      overflow:hidden;
+      cursor:pointer;
+      transition:.16s ease;
+      backdrop-filter:blur(12px);
     }
     button:hover{transform:translateY(-1px)}
-    button:active{transform:translateY(1px)}
-    button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .primary{background:rgba(17,24,39,.94);color:#fff;border-color:rgba(17,24,39,.88)}
+    .success{background:var(--success);color:#fff;border-color:var(--success)}
+    .danger{background:rgba(220,38,38,.92);color:#fff;border-color:rgba(220,38,38,.84)}
+    .warning{background:rgba(217,119,6,.92);color:#fff;border-color:rgba(217,119,6,.82)}
+    .ghost{background:rgba(255,255,255,.72)}
+    .icon-only{width:34px;height:34px;padding:0}
+    .icon-btn{
+      min-height:26px;
+      width:26px;
+      height:26px;
+      padding:0;
+      border-radius:8px!important;
+      font-size:11px;
+      display:inline-flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      flex-shrink:0!important;
+    }
 
-    .btn-primary{
-      color:#fff;
-      background:linear-gradient(135deg,var(--primary),var(--primary-2));
-      box-shadow:0 10px 22px rgba(37,99,235,.22);
-    }
-    .btn-success{
-      color:#fff;
-      background:linear-gradient(135deg,#10b981,#059669);
-      box-shadow:0 10px 22px rgba(5,150,105,.22);
-    }
-    .btn-danger{
-      color:#fff;
-      background:linear-gradient(135deg,#ef4444,#dc2626);
-      box-shadow:0 10px 22px rgba(220,38,38,.22);
-    }
-    .btn-warning{
-      color:#fff;
-      background:linear-gradient(135deg,#f59e0b,#d97706);
-      box-shadow:0 10px 22px rgba(217,119,6,.22);
-    }
-    .btn-ghost{
-      color:var(--text);
+    .glass,.panel,.card,.bulk-bar,.mobile-card,.stats-card,.popup-card,.rate-cell,.toolbar-box,.dimension-card,.dashboard-hero,.chart-card{
       background:var(--glass);
-      border:1px solid var(--line);
+      border:1px solid var(--border);
       box-shadow:var(--shadow-soft);
-      backdrop-filter:blur(18px);
-    }
-    .icon-only{width:32px;height:32px;padding:0}
-    .icon-btn{width:28px;height:28px;min-height:28px;padding:0;border-radius:10px}
-
-    .glass{
-      background:linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.08));
-      background-color:var(--glass);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(22px) saturate(140%);
-      -webkit-backdrop-filter:blur(22px) saturate(140%);
-    }
-
-    .hidden{display:none !important}
-
-    .theme-toggle{
-      min-width:108px;
+      backdrop-filter:blur(20px) saturate(150%);
     }
 
     .header{
       position:sticky;
-      top:8px;
-      z-index:50;
-      margin:8px;
+      top:0;
+      z-index:40;
       min-height:var(--header-h);
-      border-radius:24px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:12px;
-      padding:10px 14px;
+      padding:12px 16px;
+      margin:8px;
+      border-radius:22px;
+      background:rgba(255,255,255,.56);
+      border:1px solid rgba(255,255,255,.5);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(26px) saturate(170%);
     }
-    .brand{
-      font-size:14px;
-      font-weight:800;
-      color:var(--text);
-      letter-spacing:.10em;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
+    .brand{font-size:14px;letter-spacing:.08em}
+    .header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      min-height:30px;
-      padding:0 10px;
+      padding:6px 10px;
       border-radius:999px;
-      background:var(--glass-soft);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow-soft);
-      backdrop-filter:blur(16px);
+      background:rgba(255,255,255,.76);
+      border:1px solid rgba(255,255,255,.6);
+      white-space:nowrap;
     }
 
-    .container{padding:0 8px 12px}
-    .toolbar-row,.section-head,.toolbar-group,.bulk-bar,.bulk-info,.bulk-actions{
+    .container{padding:10px 12px 16px}
+    .topbar,.toolbar,.section-head,.editor-actions,.bulk-bar,.bulk-actions,.bulk-info{
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:8px;
       flex-wrap:wrap;
     }
-
-    .toolbar-row{
-      margin-bottom:8px;
+    .topbar{margin-bottom:8px}
+    .toolbar-box{
+      padding:8px 10px;
+      border-radius:16px;
     }
 
-    .search-input{
-      max-width:380px;
-      width:100%;
-      min-height:34px;
-      padding:7px 12px;
-      border-radius:12px;
+    .bulk-bar{
+      padding:10px 12px;
+      border-radius:18px;
+      margin-bottom:10px;
     }
+    .note{color:var(--muted);font-size:12px;line-height:1.35}
 
     .tabs-wrap{
-      overflow:auto;
-      margin-bottom:8px;
+      overflow-x:auto;
+      margin:8px 0 10px;
       padding-bottom:2px;
     }
-    .tabs{
+    .section-tabs{
       display:flex;
       gap:8px;
+      flex-wrap:nowrap;
       min-width:max-content;
     }
-    .tab-active{
-      color:#fff !important;
-      background:linear-gradient(135deg,var(--primary),var(--primary-2)) !important;
-      border:none !important;
-      box-shadow:0 10px 22px rgba(37,99,235,.22) !important;
+    .section-tabs button{
+      white-space:nowrap;
+      min-height:34px;
+      border-radius:12px;
+      padding:0 12px;
+      flex:0 0 auto;
+    }
+    .section-tabs button.active{
+      background:rgba(17,24,39,.94);
+      color:#fff;
+      border-color:rgba(17,24,39,.88);
     }
 
-    .view{display:none}
-    .view.active{display:block}
+    .view-group{display:none}
+    .view-group.active{display:block}
 
     .layout-grid{
       display:grid;
       grid-template-columns:var(--editor-w) minmax(0,1fr);
-      gap:10px;
+      gap:12px;
       align-items:start;
     }
-
     .panel{
       border-radius:22px;
       padding:12px;
     }
-
-    .panel.sticky{
+    .editor-panel-sticky{
       position:sticky;
-      top:84px;
-      max-height:calc(100vh - 98px);
+      top:92px;
+      max-height:calc(100vh - 106px);
       overflow:auto;
-    }
-
-    .title{
-      font-size:12px;
-      font-weight:800;
-      color:var(--text);
-    }
-
-    .note{
-      font-size:10px;
-      color:var(--muted);
-      line-height:1.35;
     }
 
     .form{
       display:grid;
       grid-template-columns:repeat(12,minmax(0,1fr));
-      gap:8px;
+      gap:10px;
       align-items:start;
     }
     .field{
       grid-column:span 12;
       display:flex;
       flex-direction:column;
-      gap:4px;
+      gap:5px;
     }
-    .span2{grid-column:span 2}
-    .span3{grid-column:span 3}
-    .span4{grid-column:span 4}
-    .span5{grid-column:span 5}
     .span6{grid-column:span 6}
-    .span7{grid-column:span 7}
+    .span4{grid-column:span 4}
+    .span3{grid-column:span 3}
     .span8{grid-column:span 8}
     .span9{grid-column:span 9}
     .span12{grid-column:span 12}
-
     .field label{
-      font-size:10px;
+      font-size:11px;
       color:var(--muted);
-      font-weight:700;
+      letter-spacing:.03em;
+      line-height:1.15;
+      min-height:14px;
+    }
+    .field input,.field select,.field textarea{
+      width:100%;
+      min-height:36px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,.24);
+      background:rgba(255,255,255,.82);
+      color:var(--text);
+      outline:none;
+      backdrop-filter:blur(14px);
+    }
+    .field textarea{min-height:74px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{
+      border-color:rgba(17,24,39,.42);
+      box-shadow:0 0 0 3px rgba(255,255,255,.42),0 0 0 6px rgba(148,163,184,.12);
     }
 
-    .editor-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:2px;
-    }
+    .editor-card-title{font-size:13px}
+    .editor-actions{margin-top:10px}
     .editor-actions button{flex:1}
 
-    .bulk-bar{
-      padding:8px 10px;
-      border-radius:16px;
-      margin-bottom:8px;
+    .carrier-stack{
+      display:grid;
+      gap:8px;
+    }
+    .carrier-top{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 38px;
+      gap:8px;
+      align-items:center;
+    }
+    .carrier-top button{padding:0}
+    .carrier-search-input{
+      min-height:36px;
     }
 
     .table-wrap{
       overflow:auto;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:var(--table-row);
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.42);
+      background:rgba(255,255,255,.52);
       max-height:72vh;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
-      backdrop-filter:blur(18px);
+      backdrop-filter:blur(16px);
     }
-
     table{
       width:100%;
       border-collapse:separate;
@@ -351,2365 +275,2585 @@
     }
     th,td{
       padding:6px 6px;
-      border-bottom:1px solid var(--line-2);
+      border-bottom:1px solid rgba(148,163,184,.16);
       text-align:center;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      line-height:1.2;
-      color:var(--text);
+      font-size:12px;
+      line-height:1.18;
     }
     th{
       position:sticky;
       top:0;
-      z-index:3;
-      background:var(--table-head);
-      backdrop-filter:blur(16px);
-      font-weight:800;
+      z-index:5;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(18px);
     }
     .filter-row th{
-      top:32px;
-      z-index:2;
-      padding:3px;
+      top:35px;
+      z-index:4;
+      background:rgba(248,250,252,.92);
+      padding:4px;
     }
     .filter-row input{
-      min-height:23px;
-      padding:3px 6px;
-      border-radius:8px;
-      background:var(--glass-soft);
-      font-size:10px;
+      min-height:24px;
+      padding:4px 6px;
+      font-size:11px;
     }
-    tbody tr:hover td{
-      background:var(--table-hover);
-    }
-    tr.editing-row td{
-      background:rgba(16,185,129,.10);
-    }
-    tr.active-row td{
-      background:rgba(37,99,235,.10);
-    }
+    tbody tr:hover{background:rgba(255,255,255,.38)}
+    tr.editing-row td{background:rgba(16,185,129,.08)}
+    tr.active-row td{background:rgba(37,99,235,.05)}
 
-    .row-check{
-      width:14px;
-      height:14px;
-      accent-color:var(--primary);
-    }
-
+    .row-check{width:14px;height:14px;accent-color:var(--primary)}
     .reflect-cell{
       cursor:pointer;
+      position:relative;
+      transition:background .14s ease;
     }
-
-    .actions{
-      display:flex;
-      justify-content:center;
-      gap:4px;
-      white-space:nowrap;
+    .reflect-cell:hover{
+      background:rgba(37,99,235,.08);
     }
+    .actions{white-space:nowrap}
 
-    .hover-popup{
+    .cell-hover-popup{
       position:fixed;
-      z-index:2000;
+      z-index:1600;
       max-width:360px;
       padding:8px 10px;
       border-radius:12px;
-      background:var(--popup-bg);
-      color:var(--popup-text);
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 16px 34px rgba(15,23,42,.24);
+      background:rgba(17,24,39,.96);
+      color:#fff;
+      font-size:11px;
+      line-height:1.35;
+      box-shadow:var(--shadow);
       pointer-events:none;
+      border:1px solid rgba(255,255,255,.12);
       white-space:pre-wrap;
       word-break:break-word;
       display:none;
-      line-height:1.35;
     }
-    .hover-popup.show{display:block}
+    .cell-hover-popup.show{display:block}
 
-    .carrier-combo{
-      position:relative;
-      width:100%;
-    }
-    .carrier-input{
-      padding-right:34px;
-    }
-    .carrier-arrow{
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      color:var(--muted);
-      pointer-events:none;
-    }
-    .carrier-dropdown{
-      position:absolute;
-      left:0;
-      right:0;
-      top:calc(100% + 6px);
-      z-index:100;
-      max-height:240px;
-      overflow:auto;
+    .mobile-list{display:none;gap:8px;flex-direction:column}
+    .mobile-card{
       border-radius:16px;
-      border:1px solid var(--line);
-      background:var(--glass-strong);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(20px);
-      display:none;
-    }
-    .carrier-dropdown.open{display:block}
-    .carrier-item,.carrier-add{
-      padding:9px 10px;
-      cursor:pointer;
-      text-align:left;
-      border-bottom:1px solid var(--line-2);
-    }
-    .carrier-item:last-child,.carrier-add:last-child{border-bottom:none}
-    .carrier-item:hover,.carrier-item.focused,.carrier-add:hover{
-      background:rgba(37,99,235,.10);
-    }
-    .carrier-item-name{font-weight:800}
-    .carrier-item-sub{font-size:10px;color:var(--muted);margin-top:2px}
-
-    .cards-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .carrier-card,.metric-card,.fit-card,.dim-card,.chart-card{
-      border-radius:18px;
       padding:10px;
     }
-
-    .carrier-card{
-      display:grid;
-      gap:8px;
-    }
-    .carrier-head{
+    .mobile-card-head{
       display:flex;
       justify-content:space-between;
       gap:8px;
       align-items:flex-start;
+      margin-bottom:8px;
     }
-    .carrier-name{
-      font-size:12px;
-      font-weight:800;
-      color:var(--text);
-      line-height:1.25;
-    }
-    .carrier-sub{
-      font-size:10px;
-      color:var(--muted);
-      margin-top:2px;
-      line-height:1.35;
-    }
-    .carrier-badges{
-      display:flex;
+    .mobile-card-title{font-size:13px}
+    .mobile-card-sub{font-size:12px;color:var(--muted)}
+    .mobile-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:6px;
-      flex-wrap:wrap;
+      margin-bottom:8px;
     }
-    .pill{
-      display:inline-flex;
+    .mobile-item{
+      border:1px solid rgba(255,255,255,.46);
+      border-radius:12px;
+      padding:7px;
+      background:rgba(255,255,255,.42);
+      cursor:pointer;
+      transition:.14s ease;
+    }
+    .mobile-item:hover{background:rgba(37,99,235,.07)}
+    .mobile-item .k{font-size:11px;color:var(--muted);margin-bottom:2px}
+    .mobile-item .v{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mobile-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .mobile-actions button{flex:1;min-height:31px}
+
+    .dashboard-shell{
+      position:relative;
+      isolation:isolate;
+    }
+    .dashboard-shell::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 0 0, rgba(37,99,235,.11), transparent 28%),
+        radial-gradient(circle at 100% 0, rgba(124,58,237,.12), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(16,185,129,.10), transparent 28%);
+      z-index:-1;
+    }
+    .dashboard-hero{
+      border-radius:22px;
+      padding:14px 16px;
+      margin-bottom:12px;
+      display:flex;
+      justify-content:space-between;
       align-items:center;
-      min-height:24px;
-      padding:0 8px;
-      border-radius:999px;
-      background:var(--glass-soft);
-      border:1px solid var(--line);
-      color:var(--text);
-      font-size:10px;
+      gap:12px;
+      background:
+        linear-gradient(135deg, rgba(37,99,235,.16), rgba(124,58,237,.13)),
+        rgba(255,255,255,.72);
     }
-    .carrier-actions{
+    .dashboard-hero-title{
+      font-size:16px;
+      letter-spacing:.02em;
+    }
+    .dashboard-pills{
       display:flex;
-      gap:6px;
+      gap:8px;
       flex-wrap:wrap;
+    }
+    .dash-pill{
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.7);
+      font-size:11px;
+      white-space:nowrap;
     }
 
-    .dim-grid{
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .stats-card{
+      border-radius:18px;
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+      min-height:92px;
+    }
+    .stats-card::before{
+      content:"";
+      position:absolute;
+      right:-18px;
+      top:-18px;
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      background:rgba(255,255,255,.28);
+    }
+    .stats-card.blue{background:linear-gradient(135deg, rgba(37,99,235,.18), rgba(255,255,255,.76))}
+    .stats-card.green{background:linear-gradient(135deg, rgba(5,150,105,.18), rgba(255,255,255,.76))}
+    .stats-card.red{background:linear-gradient(135deg, rgba(220,38,38,.14), rgba(255,255,255,.76))}
+    .stats-card.purple{background:linear-gradient(135deg, rgba(124,58,237,.16), rgba(255,255,255,.76))}
+    .stats-card.amber{background:linear-gradient(135deg, rgba(217,119,6,.16), rgba(255,255,255,.76))}
+    .stats-card.teal{background:linear-gradient(135deg, rgba(15,118,110,.16), rgba(255,255,255,.76))}
+    .stats-icon{
+      font-size:18px;
+      margin-bottom:6px;
+      opacity:.9;
+    }
+    .stats-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .stats-value{font-size:18px}
+    .stats-sub{font-size:11px;color:var(--muted);margin-top:3px}
+
+    .dash-controls{
+      display:grid;
+      grid-template-columns:1.4fr 1fr auto auto;
+      gap:8px;
+      margin-bottom:12px;
+      align-items:center;
+    }
+    .dash-charts{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+    .chart-card{
+      padding:12px;
+      border-radius:18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,255,255,.64));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.75),
+        0 10px 24px rgba(15,23,42,.08);
+    }
+
+    .carrier-list{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .fit-result,.fx-grid{
+      display:grid;
+      gap:8px;
+    }
+    .fit-result{margin-top:10px}
+    .fit-pill{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.46);
+      background:rgba(255,255,255,.64);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+
+    .dimension-cards{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
-      margin-top:10px;
+      margin-top:12px;
     }
-    .dim-head{
+    .dimension-card{
+      padding:12px;
+      border-radius:18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.62));
+    }
+    .dimension-card-head{
       display:flex;
       align-items:center;
       gap:8px;
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
-    .dim-icon{
-      width:32px;
-      height:32px;
+    .dimension-icon{
+      width:34px;
+      height:34px;
       border-radius:12px;
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(37,99,235,.12);
-      color:var(--primary);
+      font-size:16px;
+      background:rgba(37,99,235,.10);
+      color:var(--blue2);
       flex-shrink:0;
-      font-size:15px;
     }
-    .dim-title{
-      font-weight:800;
-      font-size:11px;
-    }
-    .dim-meta{
+    .dimension-title{font-size:12px}
+    .dimension-note{font-size:11px;color:var(--muted)}
+    .dimension-metrics{
       display:grid;
       gap:4px;
-      color:var(--muted);
-      font-size:10px;
-    }
-
-    .fit-summary{
-      border-radius:18px;
-      padding:10px;
-      margin-top:10px;
-    }
-
-    .fit-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      margin-top:10px;
-    }
-    .fit-card.ok{border-left:3px solid var(--success)}
-    .fit-card.warn{border-left:3px solid var(--warning)}
-    .fit-card.no{border-left:3px solid var(--danger)}
-    .fit-top{
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
-      align-items:center;
-      margin-bottom:6px;
-    }
-
-    .metrics-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .metric-card{
-      min-height:96px;
-      position:relative;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:6px;
-    }
-    .metric-card::after{
-      content:'';
-      position:absolute;
-      right:-12px;
-      top:-12px;
-      width:56px;
-      height:56px;
-      border-radius:50%;
-      background:rgba(255,255,255,.14);
-    }
-    .metric-label{
-      color:var(--muted);
-      font-size:10px;
-      font-weight:700;
-    }
-    .metric-value{
-      font-size:20px;
-      font-weight:800;
-      color:var(--text);
-      line-height:1.1;
-    }
-    .metric-sub{
-      color:var(--muted);
-      font-size:10px;
-    }
-
-    .dashboard-grid{
-      display:grid;
-      grid-template-columns:1.35fr 1fr 1fr;
-      gap:10px;
-      align-items:start;
-    }
-    .chart-card{
-      min-height:330px;
-      display:flex;
-      flex-direction:column;
-      overflow:hidden;
-    }
-    .chart-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      margin-bottom:8px;
-      flex-wrap:wrap;
-    }
-    .chart-title{
-      font-weight:800;
       font-size:11px;
     }
-    .chart-wrap{
-      position:relative;
-      height:250px;
-      min-height:250px;
-      max-height:250px;
-    }
-
-    .markup-box{
+    .fit-result-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
-      margin-top:10px;
+      margin-top:8px;
+    }
+    .fit-card{
+      border-radius:18px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.5);
+      background:rgba(255,255,255,.66);
+      box-shadow:var(--shadow-soft);
+    }
+    .fit-card.ok{
+      background:linear-gradient(180deg, rgba(5,150,105,.12), rgba(255,255,255,.72));
+    }
+    .fit-card.no{
+      background:linear-gradient(180deg, rgba(220,38,38,.10), rgba(255,255,255,.72));
+    }
+    .fit-card.warn{
+      background:linear-gradient(180deg, rgba(217,119,6,.12), rgba(255,255,255,.72));
+    }
+    .fit-card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+    }
+    .fit-status{
+      padding:5px 8px;
+      border-radius:999px;
+      font-size:11px;
+      border:1px solid rgba(255,255,255,.5);
+      background:rgba(255,255,255,.7);
+      white-space:nowrap;
+    }
+    .fit-summary-box{
+      border-radius:18px;
+      padding:12px;
+      background:linear-gradient(135deg, rgba(37,99,235,.10), rgba(124,58,237,.10), rgba(255,255,255,.7));
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:var(--shadow-soft);
+    }
+    .summary-title{
+      font-size:13px;
+      margin-bottom:6px;
+    }
+    .summary-line{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
     }
 
-    .copy-preview{
-      margin-top:10px;
-      border-radius:16px;
-      padding:10px;
-      white-space:pre-wrap;
-      font-family:ui-monospace,Consolas,monospace;
-      text-transform:none;
-      letter-spacing:0;
-      min-height:150px;
-      color:var(--text);
-      background:var(--glass-soft);
-      border:1px solid var(--line);
-    }
-
-    .login-wrap{
+    .overlay{
       position:fixed;
       inset:0;
-      z-index:3000;
+      z-index:1000;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:18px;
-      background:rgba(15,23,42,.18);
-      backdrop-filter:blur(14px);
+      background:rgba(15,23,42,.16);
+      backdrop-filter:blur(10px);
+      padding:14px;
     }
-    .login-card{
-      width:min(460px,100%);
-      border-radius:28px;
-      padding:18px;
+    .popup-card{
+      width:min(980px,calc(100vw - 18px));
+      max-height:94vh;
+      overflow:auto;
+      padding:14px;
+      border-radius:24px;
     }
-    .login-top{
+    .popup-card.narrow{width:min(520px,calc(100vw - 20px))}
+    .popup-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:8px;
-      margin-bottom:16px;
+      margin-bottom:10px;
     }
-    .login-brand{
-      font-size:16px;
-      font-weight:900;
-      color:var(--text);
-      letter-spacing:.12em;
-    }
-    .login-sub{
-      color:var(--muted);
-      font-size:10px;
-      margin-top:4px;
-    }
+    .title{font-size:14px;letter-spacing:.03em}
+    .subtitle{color:var(--muted);font-size:12px}
     .pin-row{
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      margin:14px 0;
+      gap:8px;
+      margin:10px 0;
     }
     .pin-input{
-      height:52px;
+      height:46px;
       text-align:center;
-      font-size:18px;
-      font-weight:900;
-      border-radius:16px;
-      background:var(--glass-soft);
+      font-size:16px;
     }
-    .login-actions{
-      display:flex;
-      gap:8px;
-    }
-    .login-actions button{flex:1}
 
     .loader{
       position:fixed;
       inset:0;
-      z-index:3200;
+      z-index:2000;
       display:none;
       align-items:center;
       justify-content:center;
-      background:rgba(15,23,42,.14);
-      backdrop-filter:blur(8px);
+      background:rgba(15,23,42,.16);
+      backdrop-filter:blur(10px);
     }
     .loader.show{display:flex}
     .loader-box{
       min-width:220px;
-      padding:16px;
+      padding:14px 16px;
       border-radius:20px;
+      border:1px solid rgba(255,255,255,.42);
+      background:rgba(255,255,255,.7);
       text-align:center;
+      box-shadow:var(--shadow);
     }
     .spinner{
       width:34px;
       height:34px;
       margin:0 auto 8px;
       border-radius:50%;
-      border:3px solid rgba(148,163,184,.28);
-      border-top-color:var(--primary);
+      border:3px solid rgba(148,163,184,.22);
+      border-top-color:#111827;
       animation:spin 1s linear infinite;
     }
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    .toast{
+    .copy-toast{
       position:fixed;
       right:16px;
       bottom:16px;
-      z-index:3300;
-      padding:8px 12px;
-      border-radius:12px;
+      z-index:1700;
+      background:rgba(17,24,39,.92);
       color:#fff;
-      background:rgba(15,23,42,.92);
+      padding:8px 10px;
+      border-radius:12px;
+      font-size:12px;
       box-shadow:var(--shadow);
     }
 
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
+    .preview-box{
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.18);
+      background:rgba(255,255,255,.58);
+      padding:10px;
+      min-height:120px;
+      overflow:auto;
+      white-space:pre-wrap;
+      font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+      font-size:11px;
     }
 
-    .file-input{display:none}
+    .fx-grid{
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      margin:10px 0 12px;
+    }
+    .rate-cell{
+      border-radius:14px;
+      padding:10px;
+      text-align:center;
+      cursor:pointer;
+      transition:.14s ease;
+    }
+    .rate-cell .k{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .rate-cell .v{font-size:13px}
+    .rate-cell:hover{
+      outline:1px solid rgba(37,99,235,.25);
+      transform:translateY(-1px);
+    }
+
+    .result-box{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:8px;
+      align-items:end;
+    }
 
     @media(max-width:1180px){
       .layout-grid{grid-template-columns:1fr}
-      .panel.sticky{position:static;max-height:none}
-      .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .dashboard-grid{grid-template-columns:1fr}
-      .cards-grid{grid-template-columns:1fr}
-      .dim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .fit-grid{grid-template-columns:1fr}
+      .editor-panel-sticky{position:static;max-height:none}
+      .stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .dash-charts{grid-template-columns:1fr}
+      .dash-controls{grid-template-columns:1fr 1fr}
+      .carrier-list{grid-template-columns:1fr}
+      .fx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .dimension-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .fit-result-grid{grid-template-columns:1fr}
     }
     @media(max-width:760px){
-      .container{padding:0 6px 10px}
-      .header{margin:6px}
-      .metrics-grid{grid-template-columns:1fr 1fr}
-      .dim-grid{grid-template-columns:1fr}
-      .markup-box{grid-template-columns:1fr}
-      .span2,.span3,.span4,.span5,.span6,.span7,.span8,.span9{grid-column:span 12}
-      .table-wrap{max-height:62vh}
+      .container{padding:8px}
+      .header{padding:10px 12px;margin:6px}
+      .panel,.popup-card{padding:10px}
+      .table-wrap.desktop-table{display:none}
+      .mobile-list{display:flex}
+      .mobile-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:1fr}
+      .dash-controls{grid-template-columns:1fr}
+      .dimension-cards{grid-template-columns:1fr}
+      .form .span6,.form .span4,.form .span8,.form .span9,.form .span3{grid-column:span 12}
+      .carrier-top{grid-template-columns:1fr 38px}
     }
   </style>
 </head>
 <body>
 
-<div id="loader" class="loader">
-  <div class="loader-box glass">
-    <div class="spinner"></div>
-    <div id="loaderTitle" class="title">UPDATING</div>
-    <div id="loaderSub" class="note" style="margin-top:4px">PLEASE WAIT</div>
-  </div>
-</div>
-
-<div id="hoverPopup" class="hover-popup"></div>
-
-<div id="loginWrap" class="login-wrap">
-  <div class="login-card glass">
-    <div class="login-top">
-      <div>
-        <div class="login-brand">FR8X ADMIN</div>
-        <div class="login-sub">SECURE ACCESS</div>
-      </div>
-      <button class="btn-ghost theme-toggle" id="themeToggleLogin"><i class="bi bi-moon-stars-fill"></i> DARK</button>
+  <div id="loader" class="loader">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <div id="loaderText" class="title">UPDATING...</div>
+      <div id="loaderSub" class="subtitle" style="margin-top:4px;">PLEASE WAIT</div>
     </div>
+  </div>
 
-    <div class="field">
-      <label>PIN</label>
+  <div id="cellHoverPopup" class="cell-hover-popup"></div>
+
+  <div id="pinGate" class="overlay">
+    <div class="popup-card narrow">
+      <div class="title" style="text-align:center">FR8X ACCESS</div>
+      <div class="subtitle" style="text-align:center;margin-top:6px">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
       <div class="pin-row">
-        <input id="pin1" class="pin-input" maxlength="1" inputmode="numeric" type="password"/>
-        <input id="pin2" class="pin-input" maxlength="1" inputmode="numeric" type="password"/>
-        <input id="pin3" class="pin-input" maxlength="1" inputmode="numeric" type="password"/>
-        <input id="pin4" class="pin-input" maxlength="1" inputmode="numeric" type="password"/>
+        <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
+        <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
+        <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
+        <input class="pin-input" id="pin4" maxlength="1" inputmode="numeric" type="password">
       </div>
-    </div>
-
-    <div class="login-actions">
-      <button class="btn-primary" id="unlockBtn"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
-      <button class="btn-ghost" id="clearPinBtn"><i class="bi bi-eraser-fill"></i> CLEAR</button>
-    </div>
-  </div>
-</div>
-
-<div id="appShell" class="hidden">
-  <div class="header glass">
-    <div class="brand"><i class="bi bi-grid-1x2-fill"></i> FR8X ADMIN</div>
-    <div class="header-right">
-      <button class="btn-ghost theme-toggle" id="themeToggleApp"><i class="bi bi-moon-stars-fill"></i> DARK</button>
-      <button class="btn-ghost" id="templateBtn"><i class="bi bi-file-earmark-spreadsheet"></i> TEMPLATE</button>
-      <button class="btn-ghost" id="importBtn"><i class="bi bi-upload"></i> IMPORT</button>
-      <button class="btn-ghost" id="exportBtn"><i class="bi bi-download"></i> EXPORT</button>
-      <input type="file" id="fileInput" class="file-input" accept=".csv,.xlsx,.xls"/>
-      <span class="badge"><i class="bi bi-check-circle-fill" style="color:var(--success)"></i> <span id="activeCount">0 ACTIVE</span></span>
-      <span class="badge"><i class="bi bi-clock-history" style="color:var(--danger)"></i> <span id="expiredCount">0 EXPIRED</span></span>
+      <div class="toolbar">
+        <button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
+        <button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser-fill"></i> CLEAR</button>
+      </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="toolbar-row">
-      <input id="globalSearch" class="search-input" placeholder="SEARCH CARRIER, POR, POL, POD, ROUTING, REMARKS"/>
-      <div class="toolbar-group">
-        <button class="btn-warning" id="resequenceBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
-        <button class="btn-primary" id="copySelectedBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
-        <button class="btn-danger" id="deleteSelectedBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
+  <div id="appShell" class="hidden">
+    <div class="header">
+      <div class="brand">FR8X ADMIN</div>
+      <div class="header-right">
+        <button class="ghost icon-only" id="openImportBtn" title="IMPORT / EXPORT"><i class="bi bi-file-earmark-arrow-up"></i></button>
+        <button class="ghost icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
+        <button class="ghost icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
+        <span class="badge" id="activeCount">0 ACTIVE</span>
+        <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
       </div>
     </div>
 
-    <div class="bulk-bar glass">
-      <div class="bulk-info">
-        <div class="note" id="selectedInfo">0 SELECTED</div>
-        <div class="note" id="activeCellInfo">NO ACTIVE CELL</div>
+    <div class="container">
+      <div class="topbar">
+        <input id="globalSearch" placeholder="SEARCH CARRIER, POR, POL, POD, CONTAINER SIZE" style="max-width:360px">
+        <div class="toolbar">
+          <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
+          <button class="primary" id="copySelectedRatesBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
+          <button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
+        </div>
       </div>
-      <div class="bulk-actions">
-        <button class="btn-ghost" id="clearSelectionBtn"><i class="bi bi-check2-square"></i> CLEAR SELECTION</button>
-        <button class="btn-ghost" id="clearActiveCellBtn"><i class="bi bi-grid-3x3-gap"></i> CLEAR ACTIVE</button>
-      </div>
-    </div>
 
-    <div class="tabs-wrap">
-      <div class="tabs">
-        <button class="btn-ghost tab-active" id="tabActiveBtn">ACTIVE RATES</button>
-        <button class="btn-ghost" id="tabExpiredBtn">EXPIRED RATES</button>
-        <button class="btn-ghost" id="tabAllBtn">ALL RATES</button>
-        <button class="btn-ghost" id="tabCarrierBtn"><i class="bi bi-truck"></i> CARRIER MASTER</button>
-        <button class="btn-ghost" id="tabDimensionBtn"><i class="bi bi-box-seam"></i> DIMENSIONS</button>
-        <button class="btn-ghost" id="tabMarkupBtn"><i class="bi bi-percent"></i> MARKUP</button>
-        <button class="btn-ghost" id="tabDashboardBtn"><i class="bi bi-bar-chart-fill"></i> DASHBOARD</button>
+      <div class="bulk-bar">
+        <div class="bulk-info">
+          <div class="note" id="selectedCountInfo">0 SELECTED</div>
+          <div class="note" id="activeCellInfo">NO ACTIVE CELL</div>
+        </div>
+        <div class="bulk-actions">
+          <button class="ghost" id="clearSelectionBtn"><i class="bi bi-check2-square"></i> CLEAR SELECTION</button>
+          <button class="ghost" id="clearActiveCellBtn"><i class="bi bi-grid-3x3-gap"></i> CLEAR ACTIVE CELL</button>
+        </div>
       </div>
-    </div>
 
-    <section id="viewRates" class="view active">
-      <div class="layout-grid">
-        <div class="panel glass sticky">
-          <div class="section-head" style="margin-bottom:10px">
-            <div>
-              <div class="title">RATE EDITOR</div>
+      <div class="tabs-wrap">
+        <div class="section-tabs">
+          <button class="active" id="tabActiveBtn">ACTIVE RATES</button>
+          <button id="tabExpiredBtn">EXPIRED RATES</button>
+          <button id="tabAllBtn">ALL RATES</button>
+          <button id="tabCarrierBtn"><i class="bi bi-truck"></i> CARRIER MASTER</button>
+          <button id="tabDimBtn">DIMENSIONS</button>
+          <button id="tabMarkupBtn">MARKUP</button>
+          <button id="tabDashBtn"><i class="bi bi-bar-chart-fill"></i> DASHBOARD</button>
+        </div>
+      </div>
+
+      <div id="viewRates" class="view-group active">
+        <div class="layout-grid">
+          <div class="panel editor-panel-sticky">
+            <div class="section-head">
+              <div class="editor-card-title">RATE EDITOR</div>
               <div class="note" id="editorState">CREATE OR UPDATE RATE</div>
             </div>
-          </div>
 
-          <div class="form">
-            <div class="field span12">
-              <label>CARRIER</label>
-              <div class="carrier-combo" id="carrierComboWrap">
-                <input id="carrierInput" class="carrier-input" placeholder="SEARCH OR SELECT CARRIER"/>
-                <span class="carrier-arrow"><i class="bi bi-chevron-down"></i></span>
-                <div id="carrierDropdown" class="carrier-dropdown"></div>
+            <div class="form">
+              <div class="field span12">
+                <label for="carrier">CARRIER</label>
+                <div class="carrier-stack">
+                  <div class="carrier-top">
+                    <input id="carrierSearch" class="carrier-search-input" placeholder="SEARCH OR TYPE CARRIER">
+                    <button class="ghost icon-only" id="quickAddCarrierBtn" title="ADD CARRIER"><i class="bi bi-plus-lg"></i></button>
+                  </div>
+                  <select id="carrier"></select>
+                </div>
+              </div>
+
+              <div class="field span6">
+                <label for="por">POR</label>
+                <input id="por" placeholder="POR">
+              </div>
+              <div class="field span6">
+                <label for="pol">POL</label>
+                <input id="pol" placeholder="POL">
+              </div>
+
+              <div class="field span6">
+                <label for="pod">POD</label>
+                <input id="pod" placeholder="POD">
+              </div>
+              <div class="field span6">
+                <label for="fpod">FPOD</label>
+                <input id="fpod" placeholder="FPOD">
+              </div>
+
+              <div class="field span6">
+                <label for="container20Type">20DV TYPE</label>
+                <select id="container20Type">
+                  <option value="STANDARD">STANDARD</option>
+                  <option value="OT">OT</option>
+                  <option value="OG">OG</option>
+                  <option value="FR">FR</option>
+                  <option value="DG">DG</option>
+                  <option value="RF">RF</option>
+                </select>
+              </div>
+              <div class="field span6">
+                <label for="dv20">USD 20DV</label>
+                <input id="dv20" placeholder="USD 20DV">
+              </div>
+
+              <div class="field span6">
+                <label for="container40Type">40HC TYPE</label>
+                <select id="container40Type">
+                  <option value="STANDARD">STANDARD</option>
+                  <option value="OT">OT</option>
+                  <option value="OG">OG</option>
+                  <option value="FR">FR</option>
+                  <option value="DG">DG</option>
+                  <option value="RF">RF</option>
+                </select>
+              </div>
+              <div class="field span6">
+                <label for="hc40">USD 40HC</label>
+                <input id="hc40" placeholder="USD 40HC">
+              </div>
+
+              <div class="field span4">
+                <label for="ft">F/T</label>
+                <input id="ft" placeholder="F/T">
+              </div>
+              <div class="field span4">
+                <label for="validity">DATE</label>
+                <input id="validity" type="date">
+              </div>
+              <div class="field span4">
+                <label for="tt">TT</label>
+                <input id="tt" placeholder="TT">
+              </div>
+
+              <div class="field span6">
+                <label for="rateType">TYPE</label>
+                <select id="rateType">
+                  <option value="V">HANDOVER</option>
+                  <option value="S">SAILING</option>
+                </select>
+              </div>
+              <div class="field span6">
+                <label for="via">ROUTING</label>
+                <input id="via" placeholder="Routing">
+              </div>
+
+              <div class="field span12">
+                <label for="remarks">REMARKS</label>
+                <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
+              </div>
+
+              <div class="editor-actions span12">
+                <button class="primary" id="saveBtn"><i class="bi bi-floppy-fill"></i> SAVE</button>
+                <button class="success" id="updateBtn"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
+                <button class="danger" id="clearBtn"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
+                <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUP</button>
               </div>
             </div>
-
-            <div class="field span6"><label>POR</label><input id="por" placeholder="POR"/></div>
-            <div class="field span6"><label>POL</label><input id="pol" placeholder="POL"/></div>
-            <div class="field span6"><label>POD</label><input id="pod" placeholder="POD"/></div>
-            <div class="field span6"><label>FPOD</label><input id="fpod" placeholder="FPOD"/></div>
-
-            <div class="field span6">
-              <label>20DV TYPE</label>
-              <select id="type20">
-                <option value="STANDARD">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field span6"><label>USD 20DV</label><input id="rate20" type="number" step="0.01" placeholder="USD 20DV"/></div>
-
-            <div class="field span6">
-              <label>40HC TYPE</label>
-              <select id="type40">
-                <option value="STANDARD">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field span6"><label>USD 40HC</label><input id="rate40" type="number" step="0.01" placeholder="USD 40HC"/></div>
-
-            <div class="field span4"><label>F/T</label><input id="ft" placeholder="5 DAYS"/></div>
-            <div class="field span4"><label>VALIDITY</label><input id="validity" type="date"/></div>
-            <div class="field span4"><label>TT</label><input id="tt" placeholder="10-15 DAYS"/></div>
-
-            <div class="field span6">
-              <label>TYPE</label>
-              <select id="rateType">
-                <option value="S">SAILING</option>
-                <option value="V">HANDOVER</option>
-              </select>
-            </div>
-            <div class="field span6"><label>ROUTING</label><input id="routing" placeholder="DIRECT"/></div>
-
-            <div class="field span12"><label>REMARKS</label><textarea id="remarks" placeholder="REMARKS"></textarea></div>
-
-            <div class="editor-actions span12">
-              <button class="btn-primary" id="saveBtn"><i class="bi bi-floppy-fill"></i> SAVE</button>
-              <button class="btn-success" id="updateBtn"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
-              <button class="btn-danger" id="clearBtn"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-              <button class="btn-ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUP</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel glass">
-          <div class="section-head" style="margin-bottom:8px">
-            <div class="title" id="rateSectionTitle">ACTIVE RATES</div>
           </div>
 
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:30px"><input id="selectAllRows" class="row-check" type="checkbox"/></th>
-                  <th style="width:82px">SEQ</th>
-                  <th style="width:94px">CARRIER</th>
-                  <th>POR</th>
-                  <th>POL</th>
-                  <th>POD</th>
-                  <th>FPOD</th>
-                  <th style="width:88px">20DV</th>
-                  <th style="width:78px">20TYPE</th>
-                  <th style="width:88px">40HC</th>
-                  <th style="width:78px">40TYPE</th>
-                  <th style="width:70px">F/T</th>
-                  <th style="width:112px">VALIDITY</th>
-                  <th style="width:74px">TYPE</th>
-                  <th style="width:86px">TT</th>
-                  <th style="width:110px">ROUTING</th>
-                  <th style="width:140px">REMARKS</th>
-                  <th style="width:122px">ACTION</th>
-                </tr>
-                <tr class="filter-row">
-                  <th></th>
-                  <th><input data-col="seq" placeholder="FILTER"/></th>
-                  <th><input data-col="carrier" placeholder="FILTER"/></th>
-                  <th><input data-col="por" placeholder="FILTER"/></th>
-                  <th><input data-col="pol" placeholder="FILTER"/></th>
-                  <th><input data-col="pod" placeholder="FILTER"/></th>
-                  <th><input data-col="fpod" placeholder="FILTER"/></th>
-                  <th><input data-col="rate20" placeholder="FILTER"/></th>
-                  <th><input data-col="type20" placeholder="FILTER"/></th>
-                  <th><input data-col="rate40" placeholder="FILTER"/></th>
-                  <th><input data-col="type40" placeholder="FILTER"/></th>
-                  <th><input data-col="ft" placeholder="FILTER"/></th>
-                  <th><input data-col="validity" placeholder="FILTER"/></th>
-                  <th><input data-col="rateType" placeholder="FILTER"/></th>
-                  <th><input data-col="tt" placeholder="FILTER"/></th>
-                  <th><input data-col="routing" placeholder="FILTER"/></th>
-                  <th><input data-col="remarks" placeholder="FILTER"/></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
+          <div class="panel">
+            <div class="section-head">
+              <div class="note" id="sectionLabel">ACTIVE RATES</div>
+              <div class="note">HOVER ANY CELL TO VIEW FULL VALUE. CLICK CELL TO COPY IT.</div>
+            </div>
+
+            <div class="table-wrap desktop-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:30px"><input type="checkbox" id="selectAllRows"></th>
+                    <th>SEQ</th>
+                    <th>CARRIER</th>
+                    <th>POR</th>
+                    <th>POL</th>
+                    <th>POD</th>
+                    <th>FPOD</th>
+                    <th>20DV</th>
+                    <th>20TYPE</th>
+                    <th>40HC</th>
+                    <th>40TYPE</th>
+                    <th>F/T</th>
+                    <th>DATE</th>
+                    <th>TYPE</th>
+                    <th>TT</th>
+                    <th>ROUTING</th>
+                    <th>REMARKS</th>
+                    <th style="width:170px">ACTION</th>
+                  </tr>
+                  <tr class="filter-row">
+                    <th></th>
+                    <th><input data-col="seq" placeholder="FILTER"></th>
+                    <th><input data-col="carrier" placeholder="FILTER"></th>
+                    <th><input data-col="por" placeholder="FILTER"></th>
+                    <th><input data-col="pol" placeholder="FILTER"></th>
+                    <th><input data-col="pod" placeholder="FILTER"></th>
+                    <th><input data-col="fpod" placeholder="FILTER"></th>
+                    <th><input data-col="dv20" placeholder="FILTER"></th>
+                    <th><input data-col="container20Type" placeholder="FILTER"></th>
+                    <th><input data-col="hc40" placeholder="FILTER"></th>
+                    <th><input data-col="container40Type" placeholder="FILTER"></th>
+                    <th><input data-col="ft" placeholder="FILTER"></th>
+                    <th><input data-col="validity" placeholder="FILTER"></th>
+                    <th><input data-col="type" placeholder="FILTER"></th>
+                    <th><input data-col="tt" placeholder="FILTER"></th>
+                    <th><input data-col="via" placeholder="FILTER"></th>
+                    <th><input data-col="remarks" placeholder="FILTER"></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+
+            <div class="mobile-list" id="mobileRates"></div>
           </div>
         </div>
       </div>
-    </section>
 
-    <section id="viewCarrier" class="view">
-      <div class="panel glass">
-        <div class="section-head">
-          <div class="title">CARRIER MASTER</div>
-        </div>
+      <div id="viewCarrier" class="view-group">
+        <div class="panel">
+          <div class="section-head">
+            <div class="editor-card-title">CARRIER MASTER</div>
+            <div class="note">MANAGE GLOBAL CARRIER LIST USED IN THE RATE FORM.</div>
+          </div>
 
-        <div class="form" style="margin-top:8px">
-          <div class="field span3"><label>CODE</label><input id="carrierCode" placeholder="CMA"/></div>
-          <div class="field span4"><label>CARRIER NAME</label><input id="carrierName" placeholder="CMA CGM"/></div>
-          <div class="field span5"><label>EMAIL</label><input id="carrierEmail" type="email" placeholder="EMAIL@CARRIER.COM"/></div>
-
-          <div class="field span3"><label>PHONE</label><input id="carrierPhone" placeholder="+91 0000000000"/></div>
-          <div class="field span3"><label>CONTACT PERSON</label><input id="carrierContact" placeholder="CONTACT PERSON"/></div>
-          <div class="field span6"><label>NOTES</label><input id="carrierNotes" placeholder="FREE NOTES"/></div>
-
-          <div class="field span5"><label>SEARCH</label><input id="carrierSearch" placeholder="SEARCH CODE, NAME, EMAIL"/></div>
-          <div class="field span7">
-            <label>&nbsp;</label>
-            <div class="editor-actions" style="margin:0">
-              <button class="btn-primary" id="addCarrierBtn"><i class="bi bi-plus-circle-fill"></i> SAVE</button>
-              <button class="btn-success" id="updateCarrierBtn"><i class="bi bi-pencil-square"></i> UPDATE</button>
-              <button class="btn-ghost" id="clearCarrierBtn"><i class="bi bi-x-circle"></i> CLEAR</button>
-              <button class="btn-danger" id="resetCarrierBtn"><i class="bi bi-arrow-counterclockwise"></i> RESET DEFAULTS</button>
+          <div class="form" style="margin-top:8px">
+            <div class="field span8">
+              <label for="newCarrierName">NEW CARRIER</label>
+              <input id="newCarrierName" placeholder="Carrier name">
+            </div>
+            <div class="field span4">
+              <label>&nbsp;</label>
+              <button class="primary" id="addCarrierBtn"><i class="bi bi-plus-circle-fill"></i> ADD</button>
             </div>
           </div>
-        </div>
 
-        <div id="carrierList" class="cards-grid" style="margin-top:10px"></div>
+          <div style="margin-top:8px">
+            <button class="ghost" id="resetCarrierBtn"><i class="bi bi-arrow-counterclockwise"></i> RESET DEFAULTS</button>
+          </div>
+
+          <div class="carrier-list" id="carrierList"></div>
+        </div>
       </div>
-    </section>
 
-    <section id="viewDimensions" class="view">
-      <div class="panel glass">
-        <div class="section-head">
-          <div class="title">DIMENSIONS</div>
+      <div id="viewDim" class="view-group">
+        <div class="panel">
+          <div class="section-head">
+            <div class="editor-card-title">CONTAINER DIMENSIONS</div>
+            <div class="note">CHECK CARGO AGAINST COMMON CONTAINER TYPES WITH UNIT CONVERSION AND CLEAR FIT RESULT.</div>
+          </div>
+
+          <div class="form" style="margin-top:8px">
+            <div class="field span3">
+              <label for="cargoUnit">UNIT</label>
+              <select id="cargoUnit">
+                <option value="m">METER</option>
+                <option value="cm">CM</option>
+                <option value="mm">MM</option>
+              </select>
+            </div>
+            <div class="field span3">
+              <label for="cargoL">LENGTH</label>
+              <input id="cargoL" type="number" step="0.01" placeholder="e.g. 5.8">
+            </div>
+            <div class="field span3">
+              <label for="cargoW">WIDTH</label>
+              <input id="cargoW" type="number" step="0.01" placeholder="e.g. 2.2">
+            </div>
+            <div class="field span3">
+              <label for="cargoH">HEIGHT</label>
+              <input id="cargoH" type="number" step="0.01" placeholder="e.g. 2.3">
+            </div>
+            <div class="field span12">
+              <button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK FIT</button>
+            </div>
+          </div>
+
+          <div class="dimension-cards" id="dimensionGuide"></div>
+          <div class="fit-result" id="fitResult">
+            <span class="fit-pill">ENTER LENGTH, WIDTH, HEIGHT TO CHECK</span>
+          </div>
         </div>
+      </div>
 
-        <div class="form" style="margin-top:8px">
-          <div class="field span3">
-            <label>UNIT</label>
-            <select id="cargoUnit">
-              <option value="m">METER</option>
-              <option value="cm">CM</option>
-              <option value="mm">MM</option>
+      <div id="viewMarkup" class="view-group">
+        <div class="panel">
+          <div class="section-head">
+            <div class="editor-card-title">MARKUP</div>
+            <div class="note">BASE ADMIN RATES STAY EXACTLY AS ENTERED. COPY APPLIES USER MARKUP ONLY.</div>
+          </div>
+
+          <div class="form" style="margin-top:8px">
+            <div class="field span6">
+              <label for="userMu20">USER 20DV MARKUP</label>
+              <input id="userMu20" type="number" step="0.01" placeholder="e.g. 10">
+            </div>
+            <div class="field span6">
+              <label for="userMu40">USER 40HC MARKUP</label>
+              <input id="userMu40" type="number" step="0.01" placeholder="e.g. 10">
+            </div>
+          </div>
+
+          <div class="toolbar" style="margin-top:8px">
+            <button class="primary" id="saveUserMarkupBtn"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
+            <button class="ghost" id="clearUserMarkupBtn"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
+          </div>
+
+          <div class="toolbar-box" style="margin-top:10px">
+            <div style="margin-bottom:4px">CURRENT COPY CALCULATION</div>
+            <div id="appliedMarkupsList" class="note">No user markup configured. COPY uses base rates.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewDashboard" class="view-group">
+        <div class="panel dashboard-shell">
+          <div class="dashboard-hero">
+            <div>
+              <div class="dashboard-hero-title">MARKET SNAPSHOT</div>
+              <div class="note">LIVE ANALYTICS FROM YOUR CURRENT RATE DATASET.</div>
+            </div>
+            <div class="dashboard-pills">
+              <span class="dash-pill" id="dashLastUpdated">LIVE VIEW</span>
+              <span class="dash-pill" id="dashResult">READY</span>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stats-card blue">
+              <div class="stats-icon"><i class="bi bi-collection"></i></div>
+              <div class="stats-label">TOTAL RATES</div>
+              <div class="stats-value" id="dashTotal">0</div>
+              <div class="stats-sub">All visible data loaded</div>
+            </div>
+            <div class="stats-card green">
+              <div class="stats-icon"><i class="bi bi-check-circle"></i></div>
+              <div class="stats-label">ACTIVE</div>
+              <div class="stats-value" id="dashActive">0</div>
+              <div class="stats-sub">Non-expired rates</div>
+            </div>
+            <div class="stats-card red">
+              <div class="stats-icon"><i class="bi bi-clock-history"></i></div>
+              <div class="stats-label">EXPIRED</div>
+              <div class="stats-value" id="dashExpired">0</div>
+              <div class="stats-sub">Past validity date</div>
+            </div>
+            <div class="stats-card purple">
+              <div class="stats-icon"><i class="bi bi-truck"></i></div>
+              <div class="stats-label">CARRIERS</div>
+              <div class="stats-value" id="dashCarriers">0</div>
+              <div class="stats-sub">Unique carrier count</div>
+            </div>
+            <div class="stats-card amber">
+              <div class="stats-icon"><i class="bi bi-exclamation-circle"></i></div>
+              <div class="stats-label">EXPIRY IN 30D</div>
+              <div class="stats-value" id="dashExpSoon">0</div>
+              <div class="stats-sub">Follow-up required soon</div>
+            </div>
+            <div class="stats-card teal">
+              <div class="stats-icon"><i class="bi bi-currency-dollar"></i></div>
+              <div class="stats-label">AVG OFR</div>
+              <div class="stats-value" id="dashAvgRates">20: 0 | 40: 0</div>
+              <div class="stats-sub">Average USD price</div>
+            </div>
+          </div>
+
+          <div class="dash-controls">
+            <select id="dashMetric">
+              <option value="status">Rates by status</option>
+              <option value="carrier">Top carriers</option>
+              <option value="expiry">Expiry in 30 days</option>
             </select>
-          </div>
-          <div class="field span3"><label>LENGTH</label><input id="cargoL" type="number" step="0.001" placeholder="5.8"/></div>
-          <div class="field span3"><label>WIDTH</label><input id="cargoW" type="number" step="0.001" placeholder="2.2"/></div>
-          <div class="field span3"><label>HEIGHT</label><input id="cargoH" type="number" step="0.001" placeholder="2.3"/></div>
-          <div class="field span12">
-            <button class="btn-primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK FIT</button>
-          </div>
-        </div>
-
-        <div id="dimensionCards" class="dim-grid"></div>
-        <div id="fitSummary" class="fit-summary glass" style="margin-top:10px">ENTER CARGO DIMENSIONS</div>
-        <div id="fitGrid" class="fit-grid"></div>
-      </div>
-    </section>
-
-    <section id="viewMarkup" class="view">
-      <div class="panel glass">
-        <div class="section-head">
-          <div class="title">MARKUP</div>
-        </div>
-
-        <div class="markup-box">
-          <div class="field">
-            <label>20DV MARKUP (%)</label>
-            <input id="markup20" type="number" step="0.01" placeholder="0"/>
-          </div>
-          <div class="field">
-            <label>40HC MARKUP (%)</label>
-            <input id="markup40" type="number" step="0.01" placeholder="0"/>
-          </div>
-        </div>
-
-        <div class="editor-actions" style="margin-top:10px">
-          <button class="btn-primary" id="saveMarkupBtn"><i class="bi bi-floppy-fill"></i> SAVE</button>
-          <button class="btn-ghost" id="clearMarkupBtn"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-        </div>
-
-        <div class="copy-preview glass" id="copyPreview"></div>
-      </div>
-    </section>
-
-    <section id="viewDashboard" class="view">
-      <div class="panel glass">
-        <div class="section-head" style="margin-bottom:10px">
-          <div class="title">DASHBOARD</div>
-          <div class="note" id="dashUpdated">UPDATED: --</div>
-        </div>
-
-        <div class="metrics-grid">
-          <div class="metric-card glass">
-            <div class="metric-label">TOTAL RATES</div>
-            <div class="metric-value" id="dashTotal">0</div>
-            <div class="metric-sub">ALL RECORDS</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">ACTIVE</div>
-            <div class="metric-value" id="dashActive">0</div>
-            <div class="metric-sub">VALID NOW</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">EXPIRED</div>
-            <div class="metric-value" id="dashExpired">0</div>
-            <div class="metric-sub">PAST VALIDITY</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">EXPIRING IN 15D</div>
-            <div class="metric-value" id="dashSoon">0</div>
-            <div class="metric-sub">FOLLOW UP</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">UNIQUE CARRIERS</div>
-            <div class="metric-value" id="dashCarriers">0</div>
-            <div class="metric-sub">MASTER USED</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">UNIQUE ROUTES</div>
-            <div class="metric-value" id="dashRoutes">0</div>
-            <div class="metric-sub">POL TO POD</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">AVG 20DV</div>
-            <div class="metric-value" id="dashAvg20">0</div>
-            <div class="metric-sub">USD</div>
-          </div>
-          <div class="metric-card glass">
-            <div class="metric-label">AVG 40HC</div>
-            <div class="metric-value" id="dashAvg40">0</div>
-            <div class="metric-sub">USD</div>
-          </div>
-        </div>
-
-        <div class="dashboard-grid">
-          <div class="chart-card glass">
-            <div class="chart-head">
-              <div class="chart-title">STATUS</div>
-              <button class="btn-ghost" id="refreshDashboardBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
-            </div>
-            <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+            <select id="dashChartType">
+              <option value="doughnut">Doughnut</option>
+              <option value="bar">Bar</option>
+              <option value="pie">Pie</option>
+            </select>
+            <button class="primary" id="dashRefreshBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+            <div class="badge" id="dashTopCarrier">TOP CARRIER: -</div>
           </div>
 
-          <div class="chart-card glass">
-            <div class="chart-head">
-              <div class="chart-title">TOP CARRIERS</div>
-            </div>
-            <div class="chart-wrap"><canvas id="carrierChart"></canvas></div>
-          </div>
-
-          <div class="chart-card glass">
-            <div class="chart-head">
-              <div class="chart-title">TOP ROUTES</div>
-            </div>
-            <div class="chart-wrap"><canvas id="routeChart"></canvas></div>
+          <div class="dash-charts">
+            <div class="chart-card"><canvas id="summaryChart"></canvas></div>
+            <div class="chart-card"><canvas id="carrierChart"></canvas></div>
+            <div class="chart-card"><canvas id="expiryChart"></canvas></div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
-</div>
 
-<script>
-(() => {
-  const $ = id => document.getElementById(id);
+  <!-- Import Popup -->
+  <div id="importPopup" class="overlay hidden">
+    <div class="popup-card">
+      <div class="popup-head">
+        <div>
+          <div class="title">IMPORT / EXPORT</div>
+          <div class="subtitle">UPLOAD CSV OR EXCEL, PREVIEW IT, THEN APPLY TO ACTIVE RATES.</div>
+        </div>
+        <button class="ghost icon-only" id="closeImportBtn"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <div class="toolbar" style="margin-bottom:8px">
+        <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> DOWNLOAD TEMPLATE</button>
+        <button class="ghost" id="exportCsvBtn"><i class="bi bi-filetype-csv"></i> EXPORT CSV</button>
+        <button class="ghost" id="chooseImportBtn"><i class="bi bi-file-earmark-arrow-up"></i> CHOOSE FILE</button>
+        <input id="importFileInput" type="file" accept=".csv,.xlsx,.xls" class="hidden">
+      </div>
+
+      <div class="form">
+        <div class="field span12">
+          <label>FILE PREVIEW</label>
+          <div id="importPreview" class="preview-box">No file selected.</div>
+        </div>
+      </div>
+
+      <div class="toolbar" style="margin-top:8px">
+        <div class="note" id="importStatus">Template columns required.</div>
+        <div class="toolbar">
+          <button class="success" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
+          <button class="danger" id="clearImportBtn"><i class="bi bi-trash3"></i> CLEAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculator Popup -->
+  <div id="calcPopup" class="overlay hidden">
+    <div class="popup-card narrow">
+      <div class="popup-head">
+        <div>
+          <div class="title">LIVE ADDITION CALCULATOR</div>
+          <div class="subtitle">SPACE OR + IS TREATED AS ADDITION. RESULT UPDATES LIVE.</div>
+        </div>
+        <button class="ghost icon-only" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <div class="field">
+        <label for="calcExpr">TYPE NUMBERS, SPACE, +</label>
+        <input id="calcExpr" placeholder="Example: 100 200 + 50">
+      </div>
+
+      <div class="field" style="margin-top:8px">
+        <label for="calcNormalized">NORMALIZED ADDITION</label>
+        <input id="calcNormalized" readonly>
+      </div>
+
+      <div class="field" style="margin-top:8px">
+        <label for="calcResult">LIVE RESULT</label>
+        <div class="result-box">
+          <input id="calcResult" readonly>
+          <button class="primary" id="copyCalcResultBtn"><i class="bi bi-clipboard"></i> COPY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FX Popup -->
+  <div id="fxPopup" class="overlay hidden">
+    <div class="popup-card">
+      <div class="popup-head">
+        <div>
+          <div class="title">LIVE USD EXCHANGE RATES</div>
+          <div class="subtitle">10 MAJOR TRADING CURRENCIES AGAINST USD WITH LIVE CONVERSION.</div>
+        </div>
+        <button class="ghost icon-only" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <div class="toolbar">
+        <div class="note" id="fxStatus">Loading live rates...</div>
+        <button class="primary" id="refreshFxBtn"><i class="bi bi-arrow-repeat"></i> REFRESH LIVE</button>
+      </div>
+
+      <div id="fxGrid" class="fx-grid"></div>
+
+      <div class="form">
+        <div class="field span3">
+          <label for="fxAmount">AMOUNT</label>
+          <input id="fxAmount" type="number" step="0.0001" value="1">
+        </div>
+        <div class="field span3">
+          <label for="fxFrom">FROM</label>
+          <select id="fxFrom"></select>
+        </div>
+        <div class="field span3">
+          <label for="fxTo">TO</label>
+          <select id="fxTo"></select>
+        </div>
+        <div class="field span3">
+          <label for="fxResult">RESULT</label>
+          <div class="result-box">
+            <input id="fxResult" readonly>
+            <button class="primary" id="copyFxResultBtn"><i class="bi bi-clipboard"></i> COPY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const $ = (id) => document.getElementById(id);
 
   const els = {
-    loader: $('loader'),
-    loaderTitle: $('loaderTitle'),
-    loaderSub: $('loaderSub'),
-    hoverPopup: $('hoverPopup'),
+    loader: $("loader"),
+    loaderText: $("loaderText"),
+    loaderSub: $("loaderSub"),
+    cellHoverPopup: $("cellHoverPopup"),
 
-    loginWrap: $('loginWrap'),
-    pin1: $('pin1'),
-    pin2: $('pin2'),
-    pin3: $('pin3'),
-    pin4: $('pin4'),
-    unlockBtn: $('unlockBtn'),
-    clearPinBtn: $('clearPinBtn'),
-    themeToggleLogin: $('themeToggleLogin'),
+    pinGate: $("pinGate"),
+    pin1: $("pin1"),
+    pin2: $("pin2"),
+    pin3: $("pin3"),
+    pin4: $("pin4"),
+    unlockBtn: $("unlockBtn"),
+    clearPinBtn: $("clearPinBtn"),
 
-    appShell: $('appShell'),
-    themeToggleApp: $('themeToggleApp'),
-    activeCount: $('activeCount'),
-    expiredCount: $('expiredCount'),
-    globalSearch: $('globalSearch'),
-    reseqBtn: $('resequenceBtn'),
-    copySelectedBtn: $('copySelectedBtn'),
-    deleteSelectedBtn: $('deleteSelectedBtn'),
-    selectedInfo: $('selectedInfo'),
-    activeCellInfo: $('activeCellInfo'),
-    clearSelectionBtn: $('clearSelectionBtn'),
-    clearActiveCellBtn: $('clearActiveCellBtn'),
+    appShell: $("appShell"),
+    activeCount: $("activeCount"),
+    expiredCount: $("expiredCount"),
+    globalSearch: $("globalSearch"),
+    migrateSeqBtn: $("migrateSeqBtn"),
+    copySelectedRatesBtn: $("copySelectedRatesBtn"),
+    bulkDeleteBtn: $("bulkDeleteBtn"),
+    selectedCountInfo: $("selectedCountInfo"),
+    activeCellInfo: $("activeCellInfo"),
+    clearSelectionBtn: $("clearSelectionBtn"),
+    clearActiveCellBtn: $("clearActiveCellBtn"),
 
-    templateBtn: $('templateBtn'),
-    importBtn: $('importBtn'),
-    exportBtn: $('exportBtn'),
-    fileInput: $('fileInput'),
+    tabActiveBtn: $("tabActiveBtn"),
+    tabExpiredBtn: $("tabExpiredBtn"),
+    tabAllBtn: $("tabAllBtn"),
+    tabCarrierBtn: $("tabCarrierBtn"),
+    tabDimBtn: $("tabDimBtn"),
+    tabMarkupBtn: $("tabMarkupBtn"),
+    tabDashBtn: $("tabDashBtn"),
 
-    tabActiveBtn: $('tabActiveBtn'),
-    tabExpiredBtn: $('tabExpiredBtn'),
-    tabAllBtn: $('tabAllBtn'),
-    tabCarrierBtn: $('tabCarrierBtn'),
-    tabDimensionBtn: $('tabDimensionBtn'),
-    tabMarkupBtn: $('tabMarkupBtn'),
-    tabDashboardBtn: $('tabDashboardBtn'),
+    viewRates: $("viewRates"),
+    viewCarrier: $("viewCarrier"),
+    viewDim: $("viewDim"),
+    viewMarkup: $("viewMarkup"),
+    viewDashboard: $("viewDashboard"),
 
-    viewRates: $('viewRates'),
-    viewCarrier: $('viewCarrier'),
-    viewDimensions: $('viewDimensions'),
-    viewMarkup: $('viewMarkup'),
-    viewDashboard: $('viewDashboard'),
+    sectionLabel: $("sectionLabel"),
+    editorState: $("editorState"),
 
-    rateSectionTitle: $('rateSectionTitle'),
-    editorState: $('editorState'),
-    carrierInput: $('carrierInput'),
-    carrierDropdown: $('carrierDropdown'),
+    carrierSearch: $("carrierSearch"),
+    quickAddCarrierBtn: $("quickAddCarrierBtn"),
+    carrier: $("carrier"),
+    por: $("por"),
+    pol: $("pol"),
+    pod: $("pod"),
+    fpod: $("fpod"),
+    container20Type: $("container20Type"),
+    dv20: $("dv20"),
+    container40Type: $("container40Type"),
+    hc40: $("hc40"),
+    ft: $("ft"),
+    validity: $("validity"),
+    tt: $("tt"),
+    rateType: $("rateType"),
+    via: $("via"),
+    remarks: $("remarks"),
+    saveBtn: $("saveBtn"),
+    updateBtn: $("updateBtn"),
+    clearBtn: $("clearBtn"),
+    duplicateBtn: $("duplicateBtn"),
 
-    por: $('por'),
-    pol: $('pol'),
-    pod: $('pod'),
-    fpod: $('fpod'),
-    type20: $('type20'),
-    rate20: $('rate20'),
-    type40: $('type40'),
-    rate40: $('rate40'),
-    ft: $('ft'),
-    validity: $('validity'),
-    tt: $('tt'),
-    rateType: $('rateType'),
-    routing: $('routing'),
-    remarks: $('remarks'),
+    tbody: $("tbody"),
+    mobileRates: $("mobileRates"),
+    selectAllRows: $("selectAllRows"),
 
-    saveBtn: $('saveBtn'),
-    updateBtn: $('updateBtn'),
-    clearBtn: $('clearBtn'),
-    duplicateBtn: $('duplicateBtn'),
+    newCarrierName: $("newCarrierName"),
+    addCarrierBtn: $("addCarrierBtn"),
+    resetCarrierBtn: $("resetCarrierBtn"),
+    carrierList: $("carrierList"),
 
-    selectAllRows: $('selectAllRows'),
-    tbody: $('tbody'),
+    cargoUnit: $("cargoUnit"),
+    cargoL: $("cargoL"),
+    cargoW: $("cargoW"),
+    cargoH: $("cargoH"),
+    checkFitBtn: $("checkFitBtn"),
+    dimensionGuide: $("dimensionGuide"),
+    fitResult: $("fitResult"),
 
-    carrierCode: $('carrierCode'),
-    carrierName: $('carrierName'),
-    carrierEmail: $('carrierEmail'),
-    carrierPhone: $('carrierPhone'),
-    carrierContact: $('carrierContact'),
-    carrierNotes: $('carrierNotes'),
-    carrierSearch: $('carrierSearch'),
-    addCarrierBtn: $('addCarrierBtn'),
-    updateCarrierBtn: $('updateCarrierBtn'),
-    clearCarrierBtn: $('clearCarrierBtn'),
-    resetCarrierBtn: $('resetCarrierBtn'),
-    carrierList: $('carrierList'),
+    userMu20: $("userMu20"),
+    userMu40: $("userMu40"),
+    saveUserMarkupBtn: $("saveUserMarkupBtn"),
+    clearUserMarkupBtn: $("clearUserMarkupBtn"),
+    appliedMarkupsList: $("appliedMarkupsList"),
 
-    cargoUnit: $('cargoUnit'),
-    cargoL: $('cargoL'),
-    cargoW: $('cargoW'),
-    cargoH: $('cargoH'),
-    checkFitBtn: $('checkFitBtn'),
-    dimensionCards: $('dimensionCards'),
-    fitSummary: $('fitSummary'),
-    fitGrid: $('fitGrid'),
+    dashTotal: $("dashTotal"),
+    dashActive: $("dashActive"),
+    dashExpired: $("dashExpired"),
+    dashCarriers: $("dashCarriers"),
+    dashExpSoon: $("dashExpSoon"),
+    dashAvgRates: $("dashAvgRates"),
+    dashMetric: $("dashMetric"),
+    dashChartType: $("dashChartType"),
+    dashRefreshBtn: $("dashRefreshBtn"),
+    dashResult: $("dashResult"),
+    dashLastUpdated: $("dashLastUpdated"),
+    dashTopCarrier: $("dashTopCarrier"),
+    summaryChart: $("summaryChart"),
+    carrierChart: $("carrierChart"),
+    expiryChart: $("expiryChart"),
 
-    markup20: $('markup20'),
-    markup40: $('markup40'),
-    saveMarkupBtn: $('saveMarkupBtn'),
-    clearMarkupBtn: $('clearMarkupBtn'),
-    copyPreview: $('copyPreview'),
+    openImportBtn: $("openImportBtn"),
+    importPopup: $("importPopup"),
+    closeImportBtn: $("closeImportBtn"),
+    downloadTemplateBtn: $("downloadTemplateBtn"),
+    exportCsvBtn: $("exportCsvBtn"),
+    chooseImportBtn: $("chooseImportBtn"),
+    importFileInput: $("importFileInput"),
+    importPreview: $("importPreview"),
+    applyImportBtn: $("applyImportBtn"),
+    clearImportBtn: $("clearImportBtn"),
+    importStatus: $("importStatus"),
 
-    dashUpdated: $('dashUpdated'),
-    dashTotal: $('dashTotal'),
-    dashActive: $('dashActive'),
-    dashExpired: $('dashExpired'),
-    dashSoon: $('dashSoon'),
-    dashCarriers: $('dashCarriers'),
-    dashRoutes: $('dashRoutes'),
-    dashAvg20: $('dashAvg20'),
-    dashAvg40: $('dashAvg40'),
-    refreshDashboardBtn: $('refreshDashboardBtn'),
-    statusChart: $('statusChart'),
-    carrierChart: $('carrierChart'),
-    routeChart: $('routeChart')
+    openCalcBtn: $("openCalcBtn"),
+    calcPopup: $("calcPopup"),
+    closeCalcBtn: $("closeCalcBtn"),
+    calcExpr: $("calcExpr"),
+    calcNormalized: $("calcNormalized"),
+    calcResult: $("calcResult"),
+    copyCalcResultBtn: $("copyCalcResultBtn"),
+
+    openFxBtn: $("openFxBtn"),
+    fxPopup: $("fxPopup"),
+    closeFxBtn: $("closeFxBtn"),
+    refreshFxBtn: $("refreshFxBtn"),
+    fxStatus: $("fxStatus"),
+    fxGrid: $("fxGrid"),
+    fxAmount: $("fxAmount"),
+    fxFrom: $("fxFrom"),
+    fxTo: $("fxTo"),
+    fxResult: $("fxResult"),
+    copyFxResultBtn: $("copyFxResultBtn")
   };
 
-  const STORAGE = {
-    THEME: 'fr8x_theme_v2',
-    UNLOCKED: 'fr8x_session_unlocked_v2',
-    RATES: 'fr8x_rates_v2',
-    CARRIERS: 'fr8x_carriers_v2',
-    MARKUP20: 'fr8x_markup20_pct_v2',
-    MARKUP40: 'fr8x_markup40_pct_v2'
-  };
+  const PIN = "2710";
+  const SESSION_KEY = "fr8x_admin_unlocked";
+  const USERMU20KEY = "fr8x_user_mu20";
+  const USERMU40KEY = "fr8x_user_mu40";
+  const CARRIERKEY = "fr8x_carriers";
+  const MAJOR_CURRENCIES = ["USD","EUR","GBP","JPY","CNY","INR","AED","SGD","HKD","CAD","AUD"];
+  const TEMPLATE_HEADERS = ["SEQ","CARRIER","POR","POL","POD","FPOD","20DV","20TYPE","40HC","40TYPE","F/T","DATE","TYPE","TT","ROUTING","REMARKS"];
+  const TEMPLATE_CSV =
+`SEQ,CARRIER,POR,POL,POD,FPOD,20DV,20TYPE,40HC,40TYPE,F/T,DATE,TYPE,TT,ROUTING,REMARKS
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,`;
 
-  const PIN = '2710';
-
-  const defaultCarriers = [
-    {id:idGen(), code:'CMA', name:'CMA CGM', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'MSC', name:'MSC', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'MAE', name:'MAERSK', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'ONE', name:'OCEAN NETWORK EXPRESS', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'HPL', name:'HAPAG-LLOYD', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'EMC', name:'EVERGREEN', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'YML', name:'YANG MING', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'WHL', name:'WAN HAI', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'HMM', name:'HMM', email:'', phone:'', contact:'', notes:''},
-    {id:idGen(), code:'ZIM', name:'ZIM', email:'', phone:'', contact:'', notes:''}
-  ];
+  const defaultCarriers = ["MAERSK","MSC","CMA CGM","HAPAG-LLOYD","ONE","EVERGREEN","YANG MING","HMM","ZIM","WAN HAI","OTHER"];
 
   const containerProfiles = [
-    {key:'20DV', label:'20DV STANDARD', icon:'bi-box-seam', l:5.90, w:2.35, h:2.39, type:'closed'},
-    {key:'40DV', label:'40DV STANDARD', icon:'bi-box', l:12.03, w:2.35, h:2.39, type:'closed'},
-    {key:'40HC', label:'40HC HIGH CUBE', icon:'bi-boxes', l:12.03, w:2.35, h:2.69, type:'closed'},
-    {key:'40FR', label:'40FR FLAT RACK', icon:'bi-truck-flatbed', l:12.03, w:2.40, h:null, type:'open'}
+    { key:"20DV", label:"20DV STANDARD", icon:"bi-box-seam", type:"closed", l:5.90, w:2.35, h:2.39, note:"Closed standard dry container" },
+    { key:"40DV", label:"40DV STANDARD", icon:"bi-box", type:"closed", l:12.03, w:2.35, h:2.39, note:"Longer standard dry container" },
+    { key:"40HC", label:"40HC HIGH CUBE", icon:"bi-boxes", type:"closed", l:12.03, w:2.35, h:2.69, note:"High cube dry container" },
+    { key:"40FR", label:"40FR FLAT RACK", icon:"bi-truck-flatbed", type:"open", l:12.00, w:2.40, h:null, note:"Special equipment for over-height review" }
   ];
 
+  let db = null;
+  try {
+    const app = initializeApp({ projectId: "swifty-52e05" });
+    db = getFirestore(app);
+  } catch (e) {
+    console.warn("Firebase init failed, local fallback only.", e);
+  }
+
   const state = {
-    rates: [],
-    carriers: [],
-    selectedCarrierCode: '',
-    editingRateId: null,
-    editingCarrierId: null,
-    currentView: 'active',
+    data: [],
+    fallbackData: [],
+    editId: null,
+    currentView: "active",
     selectedIds: new Set(),
-    activeCell: null,
+    activeCell: { id:null, key:null, value:null },
     filters: {
-      seq:'', carrier:'', por:'', pol:'', pod:'', fpod:'', rate20:'', type20:'', rate40:'', type40:'', ft:'', validity:'', rateType:'', tt:'', routing:'', remarks:''
+      seq:"",carrier:"",por:"",pol:"",pod:"",fpod:"",
+      dv20:"",container20Type:"",hc40:"",container40Type:"",
+      ft:"",validity:"",type:"",tt:"",via:"",remarks:""
     },
-    markup20: 0,
-    markup40: 0,
-    charts: {}
+    carriers: [...defaultCarriers],
+    importedRows: [],
+    fxRates: null,
+    fxUpdatedAt: "",
+    charts: {},
+    userMu20: 0,
+    userMu40: 0
   };
 
-  function idGen(){
-    return 'id-' + Math.random().toString(36).slice(2,10) + '-' + Date.now().toString(36);
-  }
-
-  function upper(v){ return String(v ?? '').trim().toUpperCase(); }
-  function esc(v){
-    return String(v ?? '')
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;');
-  }
-  function toast(msg){
-    const t = document.createElement('div');
-    t.className = 'toast';
+  const upper = (v) => (v ?? "").toString().trim().toUpperCase();
+  const esc = (v) => String(v ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+  const pad2 = (n) => String(n).padStart(2,"0");
+  const showLoader = (title="UPDATING...", sub="PLEASE WAIT") => {
+    els.loaderText.textContent = title;
+    els.loaderSub.textContent = sub;
+    els.loader.classList.add("show");
+  };
+  const hideLoader = () => els.loader.classList.remove("show");
+  const toast = (msg) => {
+    const t = document.createElement("div");
+    t.className = "copy-toast";
     t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 1800);
-  }
-  function showLoader(title='UPDATING', sub='PLEASE WAIT'){
-    els.loaderTitle.textContent = title;
-    els.loaderSub.textContent = sub;
-    els.loader.classList.add('show');
-  }
-  function hideLoader(){
-    els.loader.classList.remove('show');
-  }
-  async function copyText(text){
-    try{
+  };
+  const copyText = async (text) => {
+    try {
       await navigator.clipboard.writeText(text);
-    }catch(e){
-      const ta = document.createElement('textarea');
+    } catch {
+      const ta = document.createElement("textarea");
       ta.value = text;
       document.body.appendChild(ta);
       ta.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       ta.remove();
     }
-  }
-
-  function saveRates(){ localStorage.setItem(STORAGE.RATES, JSON.stringify(state.rates)); }
-  function saveCarriers(){ localStorage.setItem(STORAGE.CARRIERS, JSON.stringify(state.carriers)); }
-  function saveMarkups(){
-    localStorage.setItem(STORAGE.MARKUP20, String(state.markup20 || 0));
-    localStorage.setItem(STORAGE.MARKUP40, String(state.markup40 || 0));
-  }
-
-  function loadTheme(){
-    const theme = localStorage.getItem(STORAGE.THEME) || 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    updateThemeButtons();
-  }
-  function toggleTheme(){
-    const current = document.documentElement.getAttribute('data-theme') || 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem(STORAGE.THEME, next);
-    updateThemeButtons();
-    renderDashboard();
-  }
-  function updateThemeButtons(){
-    const dark = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark';
-    const icon = dark ? 'bi-sun-fill' : 'bi-moon-stars-fill';
-    const text = dark ? 'LIGHT' : 'DARK';
-    [els.themeToggleLogin, els.themeToggleApp].forEach(btn => {
-      if(!btn) return;
-      btn.innerHTML = `<i class="bi ${icon}"></i> ${text}`;
-    });
-  }
-
-  function loadState(){
-    try{
-      state.rates = JSON.parse(localStorage.getItem(STORAGE.RATES) || '[]');
-    }catch{ state.rates = []; }
-
-    try{
-      const carriers = JSON.parse(localStorage.getItem(STORAGE.CARRIERS) || 'null');
-      state.carriers = Array.isArray(carriers) && carriers.length ? carriers : [...defaultCarriers];
-    }catch{
-      state.carriers = [...defaultCarriers];
-    }
-
-    state.markup20 = parseFloat(localStorage.getItem(STORAGE.MARKUP20) || '0') || 0;
-    state.markup40 = parseFloat(localStorage.getItem(STORAGE.MARKUP40) || '0') || 0;
-
-    els.markup20.value = state.markup20 || '';
-    els.markup40.value = state.markup40 || '';
-  }
-
-  function setUnlocked(flag){
-    if(flag){
-      sessionStorage.setItem(STORAGE.UNLOCKED, '1');
-      els.loginWrap.classList.add('hidden');
-      els.appShell.classList.remove('hidden');
-    }else{
-      sessionStorage.removeItem(STORAGE.UNLOCKED);
-      els.loginWrap.classList.remove('hidden');
-      els.appShell.classList.add('hidden');
-    }
-  }
-
-  function pad2(n){ return String(n).padStart(2,'0'); }
-
-  function toDateInputValue(v){
-    if(!v) return '';
-    if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  };
+  const seqFromDate = (dateLike) => {
+    const dt = dateLike ? new Date(dateLike) : new Date();
+    return String(dt.getFullYear()).slice(-2) + pad2(dt.getMonth()+1) + pad2(dt.getDate()) + pad2(dt.getHours()) + pad2(dt.getMinutes()) + pad2(dt.getSeconds());
+  };
+  const generateSeq = () => seqFromDate(new Date());
+  const inputDateValue = (v) => {
+    if (!v) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
     const d = new Date(v);
-    if(Number.isNaN(d.getTime())) return '';
+    if (Number.isNaN(d.getTime())) return "";
     return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-  }
-
-  function parseLocalDate(v){
-    if(!v) return null;
-    if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
-      const [y,m,d] = v.split('-').map(Number);
-      return new Date(y, m - 1, d);
+  };
+  const localDateFromInput = (v) => {
+    if (!v) return null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+      const [y,m,d] = v.split("-").map(Number);
+      return new Date(y, m-1, d);
     }
-    const d = new Date(v);
-    return Number.isNaN(d.getTime()) ? null : d;
-  }
-
-  function formatDate(v){
-    const d = parseLocalDate(v);
-    if(!d) return '';
-    return d.toLocaleDateString('en-GB', {
-      weekday:'short',
-      day:'2-digit',
-      month:'short',
-      year:'numeric'
-    }).toUpperCase();
-  }
-
-  function isExpired(row){
-    const d = parseLocalDate(row.validity);
-    if(!d) return false;
-    const t = new Date();
-    t.setHours(0,0,0,0);
+    const dt = new Date(v);
+    return Number.isNaN(dt.getTime()) ? null : dt;
+  };
+  const fmtDate = (v) => {
+    const d = localDateFromInput(v);
+    if (!d) return "";
+    return d.toLocaleDateString("en-GB",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
+  };
+  const expired = (row) => {
+    const d = localDateFromInput(row.validity);
+    if (!d) return false;
+    const today = new Date();
+    today.setHours(0,0,0,0);
     d.setHours(0,0,0,0);
-    return d < t;
+    return d < today;
+  };
+
+  function normalizeType(v) {
+    const x = upper(v);
+    if (x === "HANDOVER" || x === "V") return "V";
+    if (x === "SAILING" || x === "S") return "S";
+    return x || "V";
   }
 
-  function expiringInDays(row, days){
-    const d = parseLocalDate(row.validity);
-    if(!d) return false;
-    const t = new Date();
-    t.setHours(0,0,0,0);
-    d.setHours(0,0,0,0);
-    const diff = Math.floor((d - t) / (1000*60*60*24));
-    return diff >= 0 && diff <= days;
+  function displayType(v) {
+    return v === "S" ? "SAILING" : "HANDOVER";
   }
 
-  function displayRateType(v){
-    return upper(v) === 'V' ? 'HANDOVER' : 'SAILING';
+  function truncate(v, len=16) {
+    const s = String(v ?? "");
+    return s.length > len ? `${s.slice(0, len-3)}...` : s;
   }
 
-  function selectedCarrierObj(){
-    return state.carriers.find(c => c.code === state.selectedCarrierCode) || null;
+  function loadCarrierState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CARRIERKEY) || "null");
+      if (Array.isArray(saved) && saved.length) state.carriers = saved;
+    } catch {}
+    renderCarrierSelect(state.carrier?.value || "", els.carrierSearch?.value || "");
+    renderCarrierList();
   }
 
-  function carrierLabel(carrier){
-    if(!carrier) return '';
-    return carrier.name ? `${carrier.code} - ${carrier.name}` : carrier.code;
+  function saveCarrierState() {
+    localStorage.setItem(CARRIERKEY, JSON.stringify(state.carriers));
   }
 
-  function ensureCarrierExists(code){
-    const clean = upper(code);
-    if(!clean) return;
-    if(state.carriers.some(c => c.code === clean)) return;
-    state.carriers.unshift({
-      id:idGen(),
-      code:clean,
-      name:clean,
-      email:'',
-      phone:'',
-      contact:'',
-      notes:''
-    });
-    saveCarriers();
+  function loadMarkupState() {
+    state.userMu20 = parseFloat(localStorage.getItem(USERMU20KEY) || "0") || 0;
+    state.userMu40 = parseFloat(localStorage.getItem(USERMU40KEY) || "0") || 0;
+    els.userMu20.value = state.userMu20 || "";
+    els.userMu40.value = state.userMu40 || "";
+    renderAppliedMarkups();
   }
 
-  function renderCarrierDropdown(selectedCode){
-    if(selectedCode){
-      state.selectedCarrierCode = selectedCode;
-      const obj = state.carriers.find(c => c.code === selectedCode);
-      els.carrierInput.value = obj ? carrierLabel(obj) : selectedCode;
+  function saveMarkupState() {
+    localStorage.setItem(USERMU20KEY, els.userMu20.value || "0");
+    localStorage.setItem(USERMU40KEY, els.userMu40.value || "0");
+    loadMarkupState();
+    toast("MARKUPS SAVED");
+  }
+
+  function clearMarkupState() {
+    localStorage.removeItem(USERMU20KEY);
+    localStorage.removeItem(USERMU40KEY);
+    loadMarkupState();
+  }
+
+  function renderAppliedMarkups() {
+    const m20 = parseFloat(localStorage.getItem(USERMU20KEY) || "0") || 0;
+    const m40 = parseFloat(localStorage.getItem(USERMU40KEY) || "0") || 0;
+    if (!m20 && !m40) {
+      els.appliedMarkupsList.textContent = "No user markup configured. COPY uses base rates.";
+      return;
     }
-
-    const q = upper(els.carrierInput.value);
-    const list = state.carriers.filter(c => {
-      return !q || upper(c.code).includes(q) || upper(c.name).includes(q) || upper(c.email).includes(q);
-    });
-
-    els.carrierDropdown.innerHTML = list.map(c => `
-      <div class="carrier-item" data-code="${esc(c.code)}">
-        <div class="carrier-item-name">${esc(c.code)}${c.name ? ` - ${esc(c.name)}` : ''}</div>
-        <div class="carrier-item-sub">${esc(c.email || c.phone || c.contact || 'NO DETAILS')}</div>
-      </div>
-    `).join('') + `
-      <div class="carrier-add" id="carrierAddNew"><i class="bi bi-plus-circle"></i> ADD CURRENT TEXT AS NEW CARRIER</div>
+    els.appliedMarkupsList.innerHTML = `
+      ${m20 ? `<div>20DV markup: ${esc(m20)}</div>` : ""}
+      ${m40 ? `<div>40HC markup: ${esc(m40)}</div>` : ""}
     `;
   }
 
-  function openCarrierDropdown(){
-    renderCarrierDropdown();
-    els.carrierDropdown.classList.add('open');
+  function renderCarrierSelect(selectedValue = "", filterText = "") {
+    const current = upper(selectedValue || els.carrier.value || els.carrierSearch.value || "");
+    const filter = upper(filterText || els.carrierSearch.value || "");
+    const list = state.carriers.filter(c => !filter || upper(c).includes(filter));
+    const finalList = current && !list.includes(current) && state.carriers.includes(current) ? [current, ...list] : list;
+    els.carrier.innerHTML = `<option value="">SELECT CARRIER</option>` + finalList.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+    if (current && [...els.carrier.options].some(o => o.value === current)) els.carrier.value = current;
   }
 
-  function closeCarrierDropdown(){
-    els.carrierDropdown.classList.remove('open');
+  function renderCarrierList() {
+    els.carrierList.innerHTML = state.carriers.map((c, i) => `
+      <div class="mobile-card">
+        <div class="mobile-card-head">
+          <div>
+            <div class="mobile-card-title">${esc(c)}</div>
+            <div class="mobile-card-sub">Carrier #${i + 1}</div>
+          </div>
+          <button class="danger" data-carrier-del="${i}"><i class="bi bi-trash3"></i></button>
+        </div>
+      </div>
+    `).join("") || `<div class="note">NO CARRIERS</div>`;
   }
 
-  function selectCarrier(code){
-    const clean = upper(code);
-    state.selectedCarrierCode = clean;
-    const obj = state.carriers.find(c => c.code === clean);
-    els.carrierInput.value = obj ? carrierLabel(obj) : clean;
-    closeCarrierDropdown();
+  function updateCounters() {
+    const ex = state.data.filter(expired).length;
+    els.expiredCount.textContent = `${ex} EXPIRED`;
+    els.activeCount.textContent = `${state.data.length - ex} ACTIVE`;
   }
 
-  function clearCarrierSelection(){
-    state.selectedCarrierCode = '';
-    els.carrierInput.value = '';
-  }
+  function getFilteredRows() {
+    let rows = [...state.data];
 
-  function currentEditorPayload(existing = {}){
-    return {
-      id: existing.id || idGen(),
-      seq: existing.seq || generateSeq(),
-      carrier: upper(state.selectedCarrierCode || els.carrierInput.value),
-      por: upper(els.por.value),
-      pol: upper(els.pol.value),
-      pod: upper(els.pod.value),
-      fpod: upper(els.fpod.value),
-      rate20: String(els.rate20.value || '').trim(),
-      type20: upper(els.type20.value || 'STANDARD'),
-      rate40: String(els.rate40.value || '').trim(),
-      type40: upper(els.type40.value || 'STANDARD'),
-      ft: upper(els.ft.value),
-      validity: toDateInputValue(els.validity.value),
-      rateType: upper(els.rateType.value || 'S'),
-      tt: upper(els.tt.value),
-      routing: upper(els.routing.value),
-      remarks: upper(els.remarks.value),
-      createdAt: existing.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-  }
+    if (state.currentView === "active") rows = rows.filter(r => !expired(r));
+    if (state.currentView === "expired") rows = rows.filter(r => expired(r));
 
-  function clearRateForm(resetEdit = true){
-    clearCarrierSelection();
-    els.por.value = '';
-    els.pol.value = '';
-    els.pod.value = '';
-    els.fpod.value = '';
-    els.type20.value = 'STANDARD';
-    els.rate20.value = '';
-    els.type40.value = 'STANDARD';
-    els.rate40.value = '';
-    els.ft.value = '';
-    els.validity.value = '';
-    els.tt.value = '';
-    els.rateType.value = 'S';
-    els.routing.value = '';
-    els.remarks.value = '';
-    if(resetEdit){
-      state.editingRateId = null;
-      els.editorState.textContent = 'CREATE OR UPDATE RATE';
-    }
-  }
-
-  function fillRateForm(row){
-    state.editingRateId = row.id;
-    els.editorState.textContent = `EDITING ${row.seq || ''}`.trim();
-    selectCarrier(row.carrier || '');
-    els.por.value = row.por || '';
-    els.pol.value = row.pol || '';
-    els.pod.value = row.pod || '';
-    els.fpod.value = row.fpod || '';
-    els.type20.value = row.type20 || 'STANDARD';
-    els.rate20.value = row.rate20 || '';
-    els.type40.value = row.type40 || 'STANDARD';
-    els.rate40.value = row.rate40 || '';
-    els.ft.value = row.ft || '';
-    els.validity.value = toDateInputValue(row.validity);
-    els.tt.value = row.tt || '';
-    els.rateType.value = row.rateType || 'S';
-    els.routing.value = row.routing || '';
-    els.remarks.value = row.remarks || '';
-    setMainView('active');
-  }
-
-  function generateSeq(){
-    const d = new Date();
-    return `${String(d.getFullYear()).slice(-2)}${pad2(d.getMonth()+1)}${pad2(d.getDate())}${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`;
-  }
-
-  function numberOrZero(v){
-    const n = parseFloat(v);
-    return Number.isFinite(n) ? n : 0;
-  }
-
-  function applyMarkup(base, pct){
-    const n = numberOrZero(base);
-    if(!n) return 0;
-    return Math.round((n * (1 + (numberOrZero(pct)/100))) * 100) / 100;
-  }
-
-  function findCarrier(code){
-    return state.carriers.find(c => c.code === upper(code)) || null;
-  }
-
-  function getCopyText(row){
-    const c = findCarrier(row.carrier);
-    const carrierCode = row.carrier || '';
-    const rate20 = applyMarkup(row.rate20, state.markup20);
-    const rate40 = applyMarkup(row.rate40, state.markup40);
-
-    const lines = [];
-    if(carrierCode) lines.push(`CARRIER: ${carrierCode}`);
-    if(row.por) lines.push(`POR: ${row.por}`);
-    if(row.pol) lines.push(`POL: ${row.pol}`);
-    if(row.pod) lines.push(`POD: ${row.pod}`);
-
-    const ofParts = [];
-    if(rate20) ofParts.push(`USD ${formatMoney(rate20)}/20DV`);
-    if(rate40) ofParts.push(`USD ${formatMoney(rate40)}/40HC`);
-    lines.push(`O/F FM ${row.pol || '-'} TO ${row.pod || '-'} @ ${ofParts.length ? ofParts.join(' & ') : '-'}`);
-
-    if(row.ft) lines.push(`F/T: ${row.ft}`);
-    if(row.validity) lines.push(`VALIDITY: ${formatDate(row.validity)} (${displayRateType(row.rateType)})`);
-    if(row.tt) lines.push(`TT: ${row.tt}`);
-    if(row.routing) lines.push(`ROUTING: ${row.routing}`);
-    if(row.remarks) lines.push(`REMARKS: ${row.remarks}`);
-
-    return lines.join('\n');
-  }
-
-  function formatMoney(v){
-    const n = numberOrZero(v);
-    if(Number.isInteger(n)) return String(n);
-    return n.toFixed(2).replace(/\.00$/,'');
-  }
-
-  function setActiveCell(id, key, val){
-    state.activeCell = {id, key, val};
-    els.activeCellInfo.textContent = `${upper(key)}: ${String(val || '').slice(0,60) || '-'}`;
-  }
-
-  function clearActiveCell(){
-    state.activeCell = null;
-    els.activeCellInfo.textContent = 'NO ACTIVE CELL';
-  }
-
-  function filteredRates(){
-    let rows = [...state.rates];
-
-    if(state.currentView === 'active') rows = rows.filter(r => !isExpired(r));
-    if(state.currentView === 'expired') rows = rows.filter(r => isExpired(r));
-
-    const search = upper(els.globalSearch.value);
-    if(search){
+    const g = upper(els.globalSearch.value);
+    if (g) {
       rows = rows.filter(r => [
-        r.seq, r.carrier, carrierNameByCode(r.carrier), r.por, r.pol, r.pod, r.fpod,
-        r.rate20, r.type20, r.rate40, r.type40, r.ft, r.validity, r.rateType, r.tt, r.routing, r.remarks
-      ].some(v => upper(v).includes(search)));
+        r.seq, r.carrier, r.por, r.pol, r.pod, r.fpod,
+        r.dv20, r.container20Type, r.hc40, r.container40Type,
+        r.ft, r.validity, r.type, r.tt, r.via, r.remarks
+      ].some(v => upper(v).includes(g)));
     }
 
-    Object.entries(state.filters).forEach(([k,v]) => {
-      const q = upper(v);
-      if(!q) return;
-      rows = rows.filter(r => upper(k === 'carrier' ? `${r.carrier} ${carrierNameByCode(r.carrier)}` : r[k]).includes(q));
-    });
-
-    rows.sort((a,b) => {
-      const da = parseLocalDate(a.validity)?.getTime() || 0;
-      const db = parseLocalDate(b.validity)?.getTime() || 0;
-      return db - da;
+    Object.entries(state.filters).forEach(([key, value]) => {
+      if (!value) return;
+      rows = rows.filter(r => upper(r[key]).includes(upper(value)));
     });
 
     return rows;
   }
 
-  function carrierNameByCode(code){
-    return findCarrier(code)?.name || '';
+  function buildRateCopyText(r) {
+    const mu20 = parseFloat(localStorage.getItem(USERMU20KEY) || "0") || 0;
+    const mu40 = parseFloat(localStorage.getItem(USERMU40KEY) || "0") || 0;
+    const base20 = parseFloat(r.dv20 || 0);
+    const base40 = parseFloat(r.hc40 || 0);
+    const final20 = base20 ? Math.round((base20 + mu20) * 100) / 100 : 0;
+    const final40 = base40 ? Math.round((base40 + mu40) * 100) / 100 : 0;
+    const lines = [];
+
+    if (r.carrier) lines.push(`CARRIER ${r.carrier}`);
+    if (r.por) lines.push(`POR ${r.por}`);
+    if (r.pol) lines.push(`POL ${r.pol}`);
+    if (r.pod) lines.push(`POD ${r.pod}`);
+    if (r.fpod) lines.push(`FPOD ${r.fpod}`);
+
+    const routeFrom = r.pol || r.por;
+    const routeTo = r.pod;
+    const parts = [];
+    if (final20) parts.push(`USD ${final20} 20DV ${r.container20Type || ""}`.trim());
+    if (final40) parts.push(`USD ${final40} 40HC ${r.container40Type || ""}`.trim());
+    if (routeFrom && routeTo && parts.length) lines.push(`OFR FM ${routeFrom} TO ${routeTo} ${parts.join(" / ")}`);
+
+    if (r.ft) lines.push(`F/T ${r.ft}`);
+    if (r.validity) lines.push(`DATE ${fmtDate(r.validity)}`);
+    if (r.type) lines.push(`TYPE ${displayType(r.type)}`);
+    if (r.tt) lines.push(`TT ${r.tt}`);
+    if (r.via) lines.push(`ROUTING ${r.via}`);
+    if (r.remarks) lines.push(`REMARKS ${r.remarks}`);
+
+    return lines.join("\n");
   }
 
-  function renderCounts(){
-    const expired = state.rates.filter(isExpired).length;
-    const active = state.rates.length - expired;
-    els.activeCount.textContent = `${active} ACTIVE`;
-    els.expiredCount.textContent = `${expired} EXPIRED`;
-    els.selectedInfo.textContent = `${state.selectedIds.size} SELECTED`;
-  }
-
-  function cellHtml(row, key, display, full){
-    return `<td class="reflect-cell" data-id="${esc(row.id)}" data-key="${esc(key)}" data-copy="${esc(full ?? display ?? '')}" data-full="${esc(full ?? display ?? '')}">${esc(display ?? '')}</td>`;
-  }
-
-  function truncate(v, n = 18){
-    const s = String(v ?? '');
-    return s.length > n ? s.slice(0, n - 3) + '...' : s;
-  }
-
-  function renderRates(){
-    renderCounts();
-    els.rateSectionTitle.textContent =
-      state.currentView === 'active' ? 'ACTIVE RATES' :
-      state.currentView === 'expired' ? 'EXPIRED RATES' : 'ALL RATES';
-
-    const rows = filteredRates();
-    els.tbody.innerHTML = rows.map(r => {
-      const fullCarrier = carrierLabel(findCarrier(r.carrier) || {code:r.carrier,name:carrierNameByCode(r.carrier)});
-      return `
-        <tr class="${state.editingRateId === r.id ? 'editing-row' : ''} ${state.activeCell?.id === r.id ? 'active-row' : ''}">
-          <td><input class="row-check" type="checkbox" data-id="${esc(r.id)}" ${state.selectedIds.has(r.id) ? 'checked' : ''}></td>
-          ${cellHtml(r,'seq',r.seq,r.seq)}
-          ${cellHtml(r,'carrier',r.carrier,fullCarrier)}
-          ${cellHtml(r,'por',r.por,r.por)}
-          ${cellHtml(r,'pol',r.pol,r.pol)}
-          ${cellHtml(r,'pod',r.pod,r.pod)}
-          ${cellHtml(r,'fpod',r.fpod,r.fpod)}
-          ${cellHtml(r,'rate20',r.rate20,r.rate20)}
-          ${cellHtml(r,'type20',r.type20,r.type20)}
-          ${cellHtml(r,'rate40',r.rate40,r.rate40)}
-          ${cellHtml(r,'type40',r.type40,r.type40)}
-          ${cellHtml(r,'ft',r.ft,r.ft)}
-          ${cellHtml(r,'validity',formatDate(r.validity),formatDate(r.validity))}
-          ${cellHtml(r,'rateType',displayRateType(r.rateType),displayRateType(r.rateType))}
-          ${cellHtml(r,'tt',r.tt,r.tt)}
-          ${cellHtml(r,'routing',truncate(r.routing,20),r.routing)}
-          ${cellHtml(r,'remarks',truncate(r.remarks,22),r.remarks)}
-          <td>
-            <div class="actions">
-              <button class="btn-ghost icon-btn" data-action="copy" data-id="${esc(r.id)}" title="COPY"><i class="bi bi-clipboard"></i></button>
-              <button class="btn-ghost icon-btn" data-action="duplicate" data-id="${esc(r.id)}" title="DUPLICATE"><i class="bi bi-copy"></i></button>
-              <button class="btn-ghost icon-btn" data-action="edit" data-id="${esc(r.id)}" title="EDIT"><i class="bi bi-pencil-square"></i></button>
-              <button class="btn-danger icon-btn" data-action="delete" data-id="${esc(r.id)}" title="DELETE"><i class="bi bi-x-lg"></i></button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join('') || `<tr><td colspan="18" style="padding:14px;color:var(--muted)">NO RECORDS FOUND</td></tr>`;
-
-    els.selectAllRows.checked = rows.length > 0 && rows.every(r => state.selectedIds.has(r.id));
-    renderCopyPreview();
-    renderDashboard();
-  }
-
-  function renderCopyPreview(){
-    const source = state.rates.find(r => r.id === state.editingRateId) || filteredRates()[0];
-    if(!source){
-      els.copyPreview.textContent = 'NO RATE AVAILABLE';
-      return;
-    }
-    els.copyPreview.textContent = getCopyText(source);
-  }
-
-  function validateRate(payload){
-    if(!payload.carrier) return 'CARRIER REQUIRED';
-    if(!payload.pol) return 'POL REQUIRED';
-    if(!payload.pod) return 'POD REQUIRED';
-    return '';
-  }
-
-  function saveRate(){
-    const payload = currentEditorPayload();
-    const error = validateRate(payload);
-    if(error) return alert(error);
-    ensureCarrierExists(payload.carrier);
-    state.rates.unshift(payload);
-    saveRates();
-    saveCarriers();
-    clearRateForm(true);
-    renderCarrierList();
-    renderCarrierDropdown();
-    renderRates();
-    toast('RATE SAVED');
-  }
-
-  function updateRate(){
-    if(!state.editingRateId) return alert('SELECT A RECORD TO UPDATE');
-    const existing = state.rates.find(r => r.id === state.editingRateId);
-    if(!existing) return alert('RECORD NOT FOUND');
-    const payload = currentEditorPayload(existing);
-    const error = validateRate(payload);
-    if(error) return alert(error);
-    ensureCarrierExists(payload.carrier);
-    const idx = state.rates.findIndex(r => r.id === state.editingRateId);
-    state.rates[idx] = payload;
-    saveRates();
-    saveCarriers();
-    clearRateForm(true);
-    renderCarrierList();
-    renderCarrierDropdown();
-    renderRates();
-    toast('RATE UPDATED');
-  }
-
-  function duplicateRate(id){
-    const row = state.rates.find(r => r.id === id);
-    if(!row) return;
-    const copy = {...row, id:idGen(), seq:generateSeq(), createdAt:new Date().toISOString(), updatedAt:new Date().toISOString()};
-    state.rates.unshift(copy);
-    saveRates();
-    renderRates();
-    toast('RATE DUPLICATED');
-  }
-
-  function deleteRate(id){
-    state.rates = state.rates.filter(r => r.id !== id);
-    state.selectedIds.delete(id);
-    if(state.editingRateId === id) clearRateForm(true);
-    saveRates();
-    renderRates();
-    toast('RATE DELETED');
-  }
-
-  function resequence(){
-    state.rates = state.rates.map(r => ({...r, seq: r.seq || generateSeq()}));
-    saveRates();
-    renderRates();
-    toast('SEQ UPDATED');
-  }
-
-  function clearCarrierForm(resetEdit = true){
-    els.carrierCode.value = '';
-    els.carrierName.value = '';
-    els.carrierEmail.value = '';
-    els.carrierPhone.value = '';
-    els.carrierContact.value = '';
-    els.carrierNotes.value = '';
-    if(resetEdit) state.editingCarrierId = null;
-  }
-
-  function carrierPayload(existing = {}){
+  function editorPayload(existing = null) {
     return {
-      id: existing.id || idGen(),
-      code: upper(els.carrierCode.value),
-      name: upper(els.carrierName.value),
-      email: upper(els.carrierEmail.value),
-      phone: upper(els.carrierPhone.value),
-      contact: upper(els.carrierContact.value),
-      notes: upper(els.carrierNotes.value)
+      seq: existing?.seq || generateSeq(),
+      createdAt: existing?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      carrier: upper(els.carrier.value || els.carrierSearch.value),
+      por: upper(els.por.value),
+      pol: upper(els.pol.value),
+      pod: upper(els.pod.value),
+      fpod: upper(els.fpod.value),
+      dv20: (els.dv20.value || "").trim(),
+      container20Type: upper(els.container20Type.value),
+      hc40: (els.hc40.value || "").trim(),
+      container40Type: upper(els.container40Type.value),
+      ft: upper(els.ft.value),
+      validity: inputDateValue(els.validity.value),
+      type: normalizeType(els.rateType.value),
+      tt: upper(els.tt.value),
+      via: upper(els.via.value),
+      remarks: upper(els.remarks.value)
     };
   }
 
-  function fillCarrierForm(carrier){
-    state.editingCarrierId = carrier.id;
-    els.carrierCode.value = carrier.code || '';
-    els.carrierName.value = carrier.name || '';
-    els.carrierEmail.value = carrier.email || '';
-    els.carrierPhone.value = carrier.phone || '';
-    els.carrierContact.value = carrier.contact || '';
-    els.carrierNotes.value = carrier.notes || '';
-  }
-
-  function addCarrier(){
-    const payload = carrierPayload();
-    if(!payload.code) return alert('CARRIER CODE REQUIRED');
-    if(state.carriers.some(c => c.code === payload.code && c.id !== payload.id)) return alert('CARRIER CODE ALREADY EXISTS');
-    state.carriers.unshift(payload);
-    saveCarriers();
-    clearCarrierForm(true);
-    renderCarrierList();
-    renderCarrierDropdown();
-    toast('CARRIER SAVED');
-  }
-
-  function updateCarrier(){
-    if(!state.editingCarrierId) return alert('SELECT CARRIER TO UPDATE');
-    const payload = carrierPayload(state.carriers.find(c => c.id === state.editingCarrierId) || {});
-    if(!payload.code) return alert('CARRIER CODE REQUIRED');
-    if(state.carriers.some(c => c.code === payload.code && c.id !== state.editingCarrierId)) return alert('CARRIER CODE ALREADY EXISTS');
-
-    const prev = state.carriers.find(c => c.id === state.editingCarrierId);
-    const oldCode = prev?.code || '';
-
-    const idx = state.carriers.findIndex(c => c.id === state.editingCarrierId);
-    if(idx >= 0) state.carriers[idx] = payload;
-
-    if(oldCode && oldCode !== payload.code){
-      state.rates = state.rates.map(r => r.carrier === oldCode ? {...r, carrier: payload.code, updatedAt:new Date().toISOString()} : r);
-      saveRates();
-      if(state.selectedCarrierCode === oldCode) state.selectedCarrierCode = payload.code;
-    }
-
-    saveCarriers();
-    clearCarrierForm(true);
-    renderCarrierList();
-    renderCarrierDropdown(payload.code);
+  function fillEditor(row) {
+    state.editId = row.id;
+    els.editorState.textContent = `EDITING RECORD ${row.seq}`;
+    els.carrier.value = row.carrier || "";
+    els.carrierSearch.value = row.carrier || "";
+    renderCarrierSelect(row.carrier || "", row.carrier || "");
+    els.por.value = row.por || "";
+    els.pol.value = row.pol || "";
+    els.pod.value = row.pod || "";
+    els.fpod.value = row.fpod || "";
+    els.dv20.value = row.dv20 || "";
+    els.container20Type.value = row.container20Type || "STANDARD";
+    els.hc40.value = row.hc40 || "";
+    els.container40Type.value = row.container40Type || "STANDARD";
+    els.ft.value = row.ft || "";
+    els.validity.value = inputDateValue(row.validity);
+    els.rateType.value = row.type || "V";
+    els.tt.value = row.tt || "";
+    els.via.value = row.via || "";
+    els.remarks.value = row.remarks || "";
     renderRates();
-    toast('CARRIER UPDATED');
   }
 
-  function deleteCarrier(id){
-    const carrier = state.carriers.find(c => c.id === id);
-    if(!carrier) return;
-    if(state.rates.some(r => r.carrier === carrier.code)){
-      if(!confirm(`DELETE ${carrier.code} FROM MASTER? EXISTING RATES WILL KEEP THE CODE.`)) return;
-    }
-    state.carriers = state.carriers.filter(c => c.id !== id);
-    saveCarriers();
-    if(state.editingCarrierId === id) clearCarrierForm(true);
-    if(state.selectedCarrierCode === carrier.code) clearCarrierSelection();
-    renderCarrierList();
-    renderCarrierDropdown();
+  function clearForm(resetEdit = true) {
+    [
+      els.carrierSearch, els.carrier, els.por, els.pol, els.pod, els.fpod,
+      els.dv20, els.hc40, els.ft, els.validity, els.tt,
+      els.via, els.remarks
+    ].forEach(el => el.value = "");
+    els.container20Type.value = "STANDARD";
+    els.container40Type.value = "STANDARD";
+    els.rateType.value = "V";
+    if (resetEdit) state.editId = null;
+    els.editorState.textContent = "CREATE OR UPDATE RATE";
+    renderCarrierSelect("", "");
     renderRates();
-    toast('CARRIER DELETED');
   }
 
-  function resetCarriers(){
-    if(!confirm('RESET CARRIER MASTER TO DEFAULTS?')) return;
-    state.carriers = [...defaultCarriers];
-    saveCarriers();
-    clearCarrierForm(true);
-    renderCarrierList();
-    renderCarrierDropdown();
+  function setActiveCell(id, key, value) {
+    state.activeCell = { id, key, value };
+    els.activeCellInfo.textContent = `${key.toUpperCase()}: ${value || ""}`;
     renderRates();
-    toast('CARRIER MASTER RESET');
   }
 
-  function filteredCarriers(){
-    const q = upper(els.carrierSearch.value);
-    return state.carriers.filter(c => {
-      return !q || [c.code, c.name, c.email, c.phone, c.contact, c.notes].some(v => upper(v).includes(q));
-    }).sort((a,b) => a.code.localeCompare(b.code));
+  function clearActiveCell() {
+    state.activeCell = { id:null, key:null, value:null };
+    els.activeCellInfo.textContent = "NO ACTIVE CELL";
+    renderRates();
   }
 
-  function renderCarrierList(){
-    const list = filteredCarriers();
-    els.carrierList.innerHTML = list.map(c => `
-      <div class="carrier-card glass">
-        <div class="carrier-head">
+  function dataCell(id, key, display, full) {
+    const fullValue = String(full ?? "");
+    const shown = String(display ?? "");
+    return `<td class="reflect-cell" data-id="${esc(id)}" data-key="${esc(key)}" data-copy="${esc(fullValue)}" title="${esc(fullValue)}">${esc(shown)}</td>`;
+  }
+
+  function renderRates() {
+    const rows = getFilteredRows();
+    els.sectionLabel.textContent =
+      state.currentView === "active" ? "ACTIVE RATES" :
+      state.currentView === "expired" ? "EXPIRED RATES" : "ALL RATES";
+
+    els.selectedCountInfo.textContent = `${state.selectedIds.size} SELECTED`;
+
+    els.tbody.innerHTML = rows.map(r => `
+      <tr class="${state.editId === r.id ? "editing-row" : ""} ${state.activeCell.id === r.id ? "active-row" : ""}">
+        <td><input class="row-check" type="checkbox" data-id="${esc(r.id)}" ${state.selectedIds.has(r.id) ? "checked" : ""}></td>
+        ${dataCell(r.id, "seq", r.seq, r.seq)}
+        ${dataCell(r.id, "carrier", r.carrier, r.carrier)}
+        ${dataCell(r.id, "por", r.por, r.por)}
+        ${dataCell(r.id, "pol", r.pol, r.pol)}
+        ${dataCell(r.id, "pod", r.pod, r.pod)}
+        ${dataCell(r.id, "fpod", r.fpod, r.fpod)}
+        ${dataCell(r.id, "dv20", r.dv20, r.dv20)}
+        ${dataCell(r.id, "container20Type", r.container20Type, r.container20Type)}
+        ${dataCell(r.id, "hc40", r.hc40, r.hc40)}
+        ${dataCell(r.id, "container40Type", r.container40Type, r.container40Type)}
+        ${dataCell(r.id, "ft", r.ft, r.ft)}
+        ${dataCell(r.id, "validity", fmtDate(r.validity), fmtDate(r.validity))}
+        ${dataCell(r.id, "type", displayType(r.type), displayType(r.type))}
+        ${dataCell(r.id, "tt", r.tt, r.tt)}
+        ${dataCell(r.id, "via", truncate(r.via, 18), r.via)}
+        ${dataCell(r.id, "remarks", truncate(r.remarks, 18), r.remarks)}
+        <td class="actions">
+          <button class="icon-btn" data-action="copy" data-id="${esc(r.id)}" title="Copy"><i class="bi bi-clipboard"></i></button>
+          <button class="icon-btn" data-action="duplicate" data-id="${esc(r.id)}" title="Duplicate"><i class="bi bi-copy"></i></button>
+          <button class="icon-btn" data-action="edit" data-id="${esc(r.id)}" title="Edit"><i class="bi bi-pencil-square"></i></button>
+          <button class="icon-btn danger" data-action="delete" data-id="${esc(r.id)}" title="Delete"><i class="bi bi-x-square"></i></button>
+        </td>
+      </tr>
+    `).join("") || `<tr><td colspan="18" style="padding:14px;color:var(--muted)">NO RECORDS FOUND</td></tr>`;
+
+    els.mobileRates.innerHTML = rows.map(r => `
+      <div class="mobile-card">
+        <div class="mobile-card-head">
           <div>
-            <div class="carrier-name">${esc(c.code)}${c.name ? ` - ${esc(c.name)}` : ''}</div>
-            <div class="carrier-sub">${esc(c.email || 'NO EMAIL')}</div>
+            <div class="mobile-card-title">${esc(r.carrier || "NO CARRIER")} · ${esc(r.seq)}</div>
+            <div class="mobile-card-sub">${esc(r.por)} → ${esc(r.pod)} · ${esc(fmtDate(r.validity))}</div>
           </div>
-          <div class="carrier-badges">
-            ${c.phone ? `<span class="pill">${esc(c.phone)}</span>` : ''}
-            ${c.contact ? `<span class="pill">${esc(c.contact)}</span>` : ''}
+          <div class="badge">${expired(r) ? "EXPIRED" : "ACTIVE"}</div>
+        </div>
+        <div class="mobile-grid">
+          <div class="mobile-item reflect-cell" data-id="${esc(r.id)}" data-key="dv20" data-copy="${esc(r.dv20 || "")}" title="${esc(r.dv20 || "")}">
+            <div class="k">20DV</div><div class="v">${esc(r.dv20)}</div>
+          </div>
+          <div class="mobile-item reflect-cell" data-id="${esc(r.id)}" data-key="hc40" data-copy="${esc(r.hc40 || "")}" title="${esc(r.hc40 || "")}">
+            <div class="k">40HC</div><div class="v">${esc(r.hc40)}</div>
+          </div>
+          <div class="mobile-item reflect-cell" data-id="${esc(r.id)}" data-key="tt" data-copy="${esc(r.tt || "")}" title="${esc(r.tt || "")}">
+            <div class="k">TT</div><div class="v">${esc(r.tt)}</div>
+          </div>
+          <div class="mobile-item reflect-cell" data-id="${esc(r.id)}" data-key="via" data-copy="${esc(r.via || "")}" title="${esc(r.via || "")}">
+            <div class="k">ROUTING</div><div class="v">${esc(r.via)}</div>
           </div>
         </div>
-
-        ${c.notes ? `<div class="note">${esc(c.notes)}</div>` : ''}
-
-        <div class="carrier-actions">
-          <button class="btn-ghost" data-carrier-select="${esc(c.code)}"><i class="bi bi-arrow-up-left-square"></i> USE</button>
-          <button class="btn-ghost" data-carrier-copy="${esc(c.email)}"><i class="bi bi-clipboard"></i> COPY EMAIL</button>
-          <button class="btn-success" data-carrier-edit="${esc(c.id)}"><i class="bi bi-pencil-square"></i> EDIT</button>
-          <button class="btn-danger" data-carrier-delete="${esc(c.id)}"><i class="bi bi-trash3"></i> DELETE</button>
+        <div class="mobile-actions">
+          <button data-action="copy" data-id="${esc(r.id)}"><i class="bi bi-clipboard"></i> COPY</button>
+          <button data-action="duplicate" data-id="${esc(r.id)}"><i class="bi bi-copy"></i> DUP</button>
+          <button data-action="edit" data-id="${esc(r.id)}"><i class="bi bi-pencil-square"></i> EDIT</button>
+          <button class="danger" data-action="delete" data-id="${esc(r.id)}"><i class="bi bi-x-square"></i> DEL</button>
         </div>
       </div>
-    `).join('') || `<div class="note">NO CARRIERS FOUND</div>`;
+    `).join("") || `<div class="mobile-card">NO RECORDS FOUND</div>`;
   }
 
-  function renderDimensionCards(){
-    els.dimensionCards.innerHTML = containerProfiles.map(p => `
-      <div class="dim-card glass">
-        <div class="dim-head">
-          <div class="dim-icon"><i class="bi ${p.icon}"></i></div>
-          <div>
-            <div class="dim-title">${esc(p.label)}</div>
-            <div class="note">${p.type === 'closed' ? 'INTERNAL DIMENSIONS' : 'BASE FOOTPRINT / OPEN TOP'}</div>
-          </div>
-        </div>
-        <div class="dim-meta">
-          <div>LENGTH: ${p.l} M</div>
-          <div>WIDTH: ${p.w} M</div>
-          <div>HEIGHT: ${p.h == null ? 'OPEN' : p.h + ' M'}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function toMeters(v, unit){
-    const n = parseFloat(v);
-    if(!Number.isFinite(n)) return NaN;
-    if(unit === 'cm') return n / 100;
-    if(unit === 'mm') return n / 1000;
-    return n;
-  }
-
-  function permutations(arr){
-    const out = [];
-    const rec = (curr, rest) => {
-      if(!rest.length){ out.push(curr); return; }
-      rest.forEach((x,i) => rec([...curr,x], [...rest.slice(0,i), ...rest.slice(i+1)]));
-    };
-    rec([], arr);
-    return out;
-  }
-
-  function checkClosedFit(cargo, profile){
-    const perms = permutations(cargo);
-    let ok = false;
-    let best = null;
-    perms.forEach(p => {
-      const pass = p[0] <= profile.l && p[1] <= profile.w && p[2] <= profile.h;
-      if(pass && !ok){
-        ok = true;
-        best = p;
-      }
-    });
-    return {ok, best};
-  }
-
-  function checkFlatRack(cargo, profile){
-    const perms = permutations(cargo);
-    let ok = false;
-    let best = null;
-    perms.forEach(p => {
-      const pass = p[0] <= profile.l && p[1] <= profile.w;
-      if(pass && !ok){
-        ok = true;
-        best = p;
-      }
-    });
-    return {ok, best};
-  }
-
-  function checkDimensions(){
-    const unit = els.cargoUnit.value;
-    const cargo = [
-      toMeters(els.cargoL.value, unit),
-      toMeters(els.cargoW.value, unit),
-      toMeters(els.cargoH.value, unit)
-    ];
-
-    if(cargo.some(v => !Number.isFinite(v) || v <= 0)){
-      els.fitSummary.textContent = 'ENTER VALID LENGTH, WIDTH AND HEIGHT';
-      els.fitGrid.innerHTML = '';
-      return;
-    }
-
-    const results = containerProfiles.map(p => {
-      if(p.type === 'closed'){
-        const x = checkClosedFit(cargo, p);
-        return {
-          ...p,
-          status: x.ok ? 'FITS' : 'NO FIT',
-          className: x.ok ? 'ok' : 'no',
-          detail: x.ok
-            ? `ROTATION FIT: ${x.best[0].toFixed(3)} X ${x.best[1].toFixed(3)} X ${x.best[2].toFixed(3)} M`
-            : `CARGO EXCEEDS INTERNAL LIMITS`
-        };
-      }
-      const x = checkFlatRack(cargo, p);
-      const tall = Math.max(...cargo) > 2.69;
-      return {
-        ...p,
-        status: x.ok ? (tall ? 'SPECIAL REVIEW' : 'POSSIBLE') : 'NO FIT',
-        className: x.ok ? 'warn' : 'no',
-        detail: x.ok
-          ? `BASE FIT: ${x.best[0].toFixed(3)} X ${x.best[1].toFixed(3)} M · HEIGHT OPEN/SPECIAL HANDLING`
-          : `CARGO FOOTPRINT EXCEEDS FLAT RACK BASE`
-      };
-    });
-
-    const bestClosed = results.find(r => r.type === 'closed' && r.status === 'FITS');
-    const bestOpen = results.find(r => r.key === '40FR' && (r.status === 'POSSIBLE' || r.status === 'SPECIAL REVIEW'));
-
-    if(bestClosed){
-      els.fitSummary.innerHTML = `<div class="title">${esc(bestClosed.label)} FIT AVAILABLE</div><div class="note" style="margin-top:4px">CARGO: ${cargo.map(v => v.toFixed(3)).join(' X ')} M</div>`;
-    }else if(bestOpen){
-      els.fitSummary.innerHTML = `<div class="title">${esc(bestOpen.label)} SPECIAL HANDLING</div><div class="note" style="margin-top:4px">CARGO DOES NOT FIT STANDARD CLOSED UNITS</div>`;
-    }else{
-      els.fitSummary.innerHTML = `<div class="title">NO STANDARD FIT</div><div class="note" style="margin-top:4px">SPECIAL EQUIPMENT / BREAK BULK REVIEW REQUIRED</div>`;
-    }
-
-    els.fitGrid.innerHTML = results.map(r => `
-      <div class="fit-card glass ${r.className}">
-        <div class="fit-top">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="dim-icon"><i class="bi ${r.icon}"></i></div>
-            <div>
-              <div class="dim-title">${esc(r.label)}</div>
-              <div class="note">${r.l} X ${r.w} X ${r.h == null ? 'OPEN' : r.h} M</div>
-            </div>
-          </div>
-          <span class="pill">${esc(r.status)}</span>
-        </div>
-        <div class="note">${esc(r.detail)}</div>
-      </div>
-    `).join('');
-  }
-
-  function renderDashboard(){
-    const total = state.rates.length;
-    const active = state.rates.filter(r => !isExpired(r)).length;
-    const expired = state.rates.filter(isExpired).length;
-    const soon = state.rates.filter(r => expiringInDays(r,15)).length;
-
+  function renderDashboard() {
+    const total = state.data.length;
+    const active = state.data.filter(r => !expired(r)).length;
+    const expiredCount = state.data.filter(expired).length;
     const carrierMap = {};
-    const routeMap = {};
-    let total20 = 0, count20 = 0, total40 = 0, count40 = 0;
-
-    state.rates.forEach(r => {
-      const c = r.carrier || 'UNKNOWN';
+    state.data.forEach(r => {
+      const c = r.carrier || "OTHER";
       carrierMap[c] = (carrierMap[c] || 0) + 1;
-
-      const route = `${r.pol || '-'} → ${r.pod || '-'}`;
-      routeMap[route] = (routeMap[route] || 0) + 1;
-
-      const n20 = numberOrZero(r.rate20);
-      const n40 = numberOrZero(r.rate40);
-      if(n20){ total20 += n20; count20++; }
-      if(n40){ total40 += n40; count40++; }
     });
 
-    const carrierEntries = Object.entries(carrierMap).sort((a,b) => b[1]-a[1]).slice(0,7);
-    const routeEntries = Object.entries(routeMap).sort((a,b) => b[1]-a[1]).slice(0,7);
+    const carrierLabels = Object.keys(carrierMap).sort((a,b) => carrierMap[b] - carrierMap[a]).slice(0, 8);
+    const carrierValues = carrierLabels.map(k => carrierMap[k]);
+
+    const expSoon = state.data.filter(r => {
+      const d = localDateFromInput(r.validity);
+      if (!d) return false;
+      const now = new Date();
+      const diff = (d - now) / (1000 * 60 * 60 * 24);
+      return diff >= 0 && diff <= 30;
+    }).length;
+
+    const avg20Rows = state.data.map(r => parseFloat(r.dv20)).filter(v => !Number.isNaN(v));
+    const avg40Rows = state.data.map(r => parseFloat(r.hc40)).filter(v => !Number.isNaN(v));
+    const avg20 = avg20Rows.length ? (avg20Rows.reduce((a,b)=>a+b,0) / avg20Rows.length).toFixed(2) : "0";
+    const avg40 = avg40Rows.length ? (avg40Rows.reduce((a,b)=>a+b,0) / avg40Rows.length).toFixed(2) : "0";
+    const topCarrier = carrierLabels[0] || "-";
 
     els.dashTotal.textContent = total;
     els.dashActive.textContent = active;
-    els.dashExpired.textContent = expired;
-    els.dashSoon.textContent = soon;
+    els.dashExpired.textContent = expiredCount;
     els.dashCarriers.textContent = Object.keys(carrierMap).length;
-    els.dashRoutes.textContent = Object.keys(routeMap).length;
-    els.dashAvg20.textContent = count20 ? Math.round(total20 / count20) : 0;
-    els.dashAvg40.textContent = count40 ? Math.round(total40 / count40) : 0;
-    els.dashUpdated.textContent = `UPDATED: ${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+    els.dashExpSoon.textContent = expSoon;
+    els.dashAvgRates.textContent = `20: ${avg20} | 40: ${avg40}`;
+    els.dashResult.textContent = `ACTIVE ${active} | EXPIRED ${expiredCount}`;
+    els.dashTopCarrier.textContent = `TOP CARRIER: ${topCarrier}`;
+    els.dashLastUpdated.textContent = `DATA VIEW ${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}`;
 
-    destroyChart('status');
-    destroyChart('carrier');
-    destroyChart('route');
+    if (state.charts.summary) state.charts.summary.destroy();
+    if (state.charts.carrier) state.charts.carrier.destroy();
+    if (state.charts.expiry) state.charts.expiry.destroy();
 
-    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
-    const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
-    const grid = 'rgba(148,163,184,.18)';
+    const chartType = els.dashChartType.value;
 
-    state.charts.status = new Chart(els.statusChart, {
-      type:'doughnut',
-      data:{
-        labels:['ACTIVE','EXPIRED','EXPIRING 15D'],
-        datasets:[{
-          data:[active, expired, soon],
-          backgroundColor:['#2563eb','#dc2626','#d97706'],
-          borderWidth:2,
-          borderColor:'rgba(255,255,255,.55)'
+    state.charts.summary = new Chart(els.summaryChart, {
+      type: chartType,
+      data: {
+        labels: ["Active","Expired","Total"],
+        datasets: [{
+          data: [active, expiredCount, total],
+          backgroundColor: ["#2563eb","#dc2626","#7c3aed"],
+          borderColor: "#ffffff",
+          borderWidth: 2
         }]
       },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins:{
-          legend:{
-            position:'bottom',
-            labels:{color:textColor, font:{size:11, family:'Aptos, Segoe UI, sans-serif'}}
-          }
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "bottom" }
         }
       }
     });
 
     state.charts.carrier = new Chart(els.carrierChart, {
-      type:'bar',
-      data:{
-        labels:carrierEntries.map(x => x[0]),
-        datasets:[{
-          label:'RATES',
-          data:carrierEntries.map(x => x[1]),
-          backgroundColor:['#2563eb','#7c3aed','#059669','#d97706','#0f766e','#dc2626','#475569'],
-          borderRadius:8
+      type: "bar",
+      data: {
+        labels: carrierLabels,
+        datasets: [{
+          label: "Rates",
+          data: carrierValues,
+          backgroundColor: ["#111827","#2563eb","#7c3aed","#059669","#d97706","#0f766e","#475569","#9333ea"]
         }]
       },
-      options:{
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins:{legend:{display:false}},
-        scales:{
-          x:{ticks:{color:muted,font:{size:10}}, grid:{display:false}},
-          y:{ticks:{color:muted,precision:0,font:{size:10}}, grid:{color:grid}, beginAtZero:true}
-        }
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
       }
     });
 
-    state.charts.route = new Chart(els.routeChart, {
-      type:'bar',
-      data:{
-        labels:routeEntries.map(x => x[0]),
-        datasets:[{
-          label:'RATES',
-          data:routeEntries.map(x => x[1]),
-          backgroundColor:'#7c3aed',
-          borderRadius:8
+    state.charts.expiry = new Chart(els.expiryChart, {
+      type: "pie",
+      data: {
+        labels: ["Expiry <30d","Other"],
+        datasets: [{
+          data: [expSoon, Math.max(total - expSoon, 0)],
+          backgroundColor: ["#d97706","#94a3b8"],
+          borderColor: "#ffffff",
+          borderWidth: 2
         }]
       },
-      options:{
-        indexAxis:'y',
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins:{legend:{display:false}},
-        scales:{
-          x:{ticks:{color:muted,precision:0,font:{size:10}}, grid:{color:grid}, beginAtZero:true},
-          y:{ticks:{color:muted,font:{size:10}}, grid:{display:false}}
-        }
+      options: {
+        responsive: true,
+        plugins: { legend: { position: "bottom" } }
       }
     });
   }
 
-  function destroyChart(key){
-    if(state.charts[key]){
-      state.charts[key].destroy();
-      state.charts[key] = null;
+  function renderDimensionGuide() {
+    els.dimensionGuide.innerHTML = containerProfiles.map(p => `
+      <div class="dimension-card">
+        <div class="dimension-card-head">
+          <div class="dimension-icon"><i class="bi ${p.icon}"></i></div>
+          <div>
+            <div class="dimension-title">${esc(p.label)}</div>
+            <div class="dimension-note">${esc(p.note)}</div>
+          </div>
+        </div>
+        <div class="dimension-metrics">
+          <div>LENGTH: ${p.l} M</div>
+          <div>WIDTH: ${p.w} M</div>
+          <div>HEIGHT: ${p.h == null ? "OPEN / REVIEW" : `${p.h} M`}</div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function convertToMeters(value, unit) {
+    const n = parseFloat(value);
+    if (Number.isNaN(n)) return NaN;
+    if (unit === "mm") return n / 1000;
+    if (unit === "cm") return n / 100;
+    return n;
+  }
+
+  function checkContainerFit() {
+    const unit = els.cargoUnit.value;
+    const l = convertToMeters(els.cargoL.value, unit);
+    const w = convertToMeters(els.cargoW.value, unit);
+    const h = convertToMeters(els.cargoH.value, unit);
+
+    if ([l, w, h].some(Number.isNaN)) {
+      els.fitResult.innerHTML = `<span class="fit-pill">ENTER LENGTH, WIDTH, HEIGHT TO CHECK</span>`;
+      return;
     }
+
+    const results = containerProfiles.map(p => {
+      let status = "NO FIT";
+      let css = "no";
+      let reason = "";
+
+      if (p.type === "closed") {
+        const ok = l <= p.l && w <= p.w && h <= p.h;
+        status = ok ? "FITS" : "NO FIT";
+        css = ok ? "ok" : "no";
+        reason = ok
+          ? `Cargo fits inside ${p.label}.`
+          : `Cargo exceeds one or more internal limits of ${p.label}.`;
+      } else {
+        const baseOk = l <= p.l && w <= p.w;
+        status = baseOk ? "SPECIAL REVIEW" : "NO FIT";
+        css = baseOk ? "warn" : "no";
+        reason = baseOk
+          ? `Base footprint may work on ${p.label}, but over-height / special handling review is required.`
+          : `Cargo footprint exceeds ${p.label} base allowance.`;
+      }
+
+      return { ...p, status, css, reason };
+    });
+
+    const closedFits = results.filter(r => r.type === "closed" && r.status === "FITS");
+    const openFits = results.filter(r => r.type === "open" && r.status === "SPECIAL REVIEW");
+
+    let headline = "";
+    let subline = "";
+
+    if (closedFits.length) {
+      headline = `FITS STANDARD CONTAINER: ${closedFits.map(x => x.label).join(", ")}`;
+      subline = `Cargo input converted to meters: L ${l.toFixed(3)} / W ${w.toFixed(3)} / H ${h.toFixed(3)}.`;
+    } else if (openFits.length) {
+      headline = `NO CLOSED STANDARD FIT. SPECIAL EQUIPMENT REVIEW: ${openFits.map(x => x.label).join(", ")}`;
+      subline = `Cargo may require open or special equipment handling instead of a closed standard container.`;
+    } else {
+      headline = `NO STANDARD CONTAINER FIT. BREAK BULK / SPECIAL REVIEW REQUIRED.`;
+      subline = `Cargo exceeds the listed closed and base special-equipment checks in this quick advisor.`;
+    }
+
+    els.fitResult.innerHTML = `
+      <div class="fit-summary-box">
+        <div class="summary-title">${esc(headline)}</div>
+        <div class="summary-line">${esc(subline)}</div>
+      </div>
+      <div class="fit-result-grid">
+        ${results.map(r => `
+          <div class="fit-card ${r.css}">
+            <div class="fit-card-head">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="dimension-icon"><i class="bi ${r.icon}"></i></div>
+                <div>
+                  <div>${esc(r.label)}</div>
+                  <div class="dimension-note">L ${r.l} / W ${r.w} / H ${r.h == null ? "OPEN" : r.h} M</div>
+                </div>
+              </div>
+              <div class="fit-status">${esc(r.status)}</div>
+            </div>
+            <div class="dimension-note">${esc(r.reason)}</div>
+          </div>
+        `).join("")}
+      </div>
+    `;
   }
 
-  function renderAll(){
-    renderCarrierDropdown();
-    renderCarrierList();
-    renderDimensionCards();
-    renderRates();
-  }
+  function setView(view) {
+    state.currentView = view;
+    [els.viewRates, els.viewCarrier, els.viewDim, els.viewMarkup, els.viewDashboard].forEach(v => v.classList.remove("active"));
+    [els.tabActiveBtn, els.tabExpiredBtn, els.tabAllBtn, els.tabCarrierBtn, els.tabDimBtn, els.tabMarkupBtn, els.tabDashBtn].forEach(b => b.classList.remove("active"));
 
-  function setMainView(view){
-    [els.viewRates, els.viewCarrier, els.viewDimensions, els.viewMarkup, els.viewDashboard].forEach(v => v.classList.remove('active'));
-    [els.tabActiveBtn, els.tabExpiredBtn, els.tabAllBtn, els.tabCarrierBtn, els.tabDimensionBtn, els.tabMarkupBtn, els.tabDashboardBtn].forEach(b => b.classList.remove('tab-active'));
-
-    if(view === 'active' || view === 'expired' || view === 'all'){
-      state.currentView = view;
-      els.viewRates.classList.add('active');
-      (view === 'active' ? els.tabActiveBtn : view === 'expired' ? els.tabExpiredBtn : els.tabAllBtn).classList.add('tab-active');
+    if (view === "active" || view === "expired" || view === "all") {
+      els.viewRates.classList.add("active");
+      (view === "active" ? els.tabActiveBtn : view === "expired" ? els.tabExpiredBtn : els.tabAllBtn).classList.add("active");
       renderRates();
-      return;
-    }
-    if(view === 'carrier'){
-      els.viewCarrier.classList.add('active');
-      els.tabCarrierBtn.classList.add('tab-active');
-      return;
-    }
-    if(view === 'dimension'){
-      els.viewDimensions.classList.add('active');
-      els.tabDimensionBtn.classList.add('tab-active');
-      return;
-    }
-    if(view === 'markup'){
-      els.viewMarkup.classList.add('active');
-      els.tabMarkupBtn.classList.add('tab-active');
-      renderCopyPreview();
-      return;
-    }
-    if(view === 'dashboard'){
-      els.viewDashboard.classList.add('active');
-      els.tabDashboardBtn.classList.add('tab-active');
+    } else if (view === "carriers") {
+      els.viewCarrier.classList.add("active");
+      els.tabCarrierBtn.classList.add("active");
+    } else if (view === "dimensions") {
+      els.viewDim.classList.add("active");
+      els.tabDimBtn.classList.add("active");
+      renderDimensionGuide();
+    } else if (view === "markups") {
+      els.viewMarkup.classList.add("active");
+      els.tabMarkupBtn.classList.add("active");
+      renderAppliedMarkups();
+    } else if (view === "dashboard") {
+      els.viewDashboard.classList.add("active");
+      els.tabDashBtn.classList.add("active");
       renderDashboard();
     }
   }
 
-  function attachHoverPopup(){
-    const show = (cell, e) => {
-      const full = cell?.dataset?.full || cell?.dataset?.copy || '';
-      if(!full) return;
-      els.hoverPopup.textContent = full;
-      els.hoverPopup.classList.add('show');
-      movePopup(e);
-    };
+  async function loadData() {
+    showLoader("UPDATING DATA", "FETCHING RECORDS");
+    try {
+      state.data = [];
+      if (db) {
+        const snap = await getDocs(collection(db, "rates"));
+        snap.forEach(d => state.data.push({ id: d.id, ...d.data() }));
+      } else {
+        state.data = [...state.fallbackData];
+      }
+      updateCounters();
+      renderRates();
+      renderDashboard();
+    } catch (e) {
+      console.error(e);
+      toast("LOAD FAILED");
+    } finally {
+      hideLoader();
+    }
+  }
 
-    const movePopup = (e) => {
-      const x = Math.min(window.innerWidth - 380, e.clientX + 14);
-      const y = Math.min(window.innerHeight - 80, e.clientY + 14);
-      els.hoverPopup.style.left = x + 'px';
-      els.hoverPopup.style.top = y + 'px';
-    };
+  async function persistRate(payload) {
+    if (db) {
+      return addDoc(collection(db, "rates"), payload);
+    }
+    const local = { id: `${Date.now()}_${Math.random().toString(36).slice(2,7)}`, ...payload };
+    state.fallbackData.push(local);
+    return local;
+  }
 
-    const hide = () => {
-      els.hoverPopup.classList.remove('show');
-    };
+  async function updateRate(id, payload) {
+    if (db) return updateDoc(doc(db, "rates", id), payload);
+    const idx = state.fallbackData.findIndex(x => x.id === id);
+    if (idx >= 0) state.fallbackData[idx] = { ...state.fallbackData[idx], ...payload };
+  }
 
-    els.tbody.addEventListener('mouseover', e => {
-      const cell = e.target.closest('.reflect-cell');
-      if(!cell) return;
-      show(cell, e);
-    });
+  async function deleteRate(id) {
+    if (db) return deleteDoc(doc(db, "rates", id));
+    state.fallbackData = state.fallbackData.filter(x => x.id !== id);
+  }
 
-    els.tbody.addEventListener('mousemove', e => {
-      const cell = e.target.closest('.reflect-cell');
-      if(!cell) return;
-      movePopup(e);
-    });
+  async function duplicateRate(row) {
+    const copy = { ...row };
+    delete copy.id;
+    copy.seq = generateSeq();
+    copy.createdAt = new Date().toISOString();
+    copy.updatedAt = new Date().toISOString();
+    await persistRate(copy);
+  }
 
-    els.tbody.addEventListener('mouseout', e => {
-      const fromCell = e.target.closest('.reflect-cell');
-      if(!fromCell) return;
-      const toCell = e.relatedTarget?.closest?.('.reflect-cell');
-      if(fromCell !== toCell) hide();
+  async function saveRate() {
+    showLoader("SAVING", "CREATING NEW RECORD");
+    try {
+      await persistRate(editorPayload());
+      clearForm(true);
+      await loadData();
+      toast("RATE SAVED");
+    } finally {
+      hideLoader();
+    }
+  }
+
+  async function applyUpdate() {
+    if (!state.editId) {
+      alert("SELECT A RECORD TO UPDATE.");
+      return;
+    }
+    showLoader("UPDATING", "SAVING CHANGES");
+    try {
+      const current = state.data.find(x => x.id === state.editId);
+      await updateRate(state.editId, editorPayload(current));
+      clearForm(true);
+      await loadData();
+      toast("RATE UPDATED");
+    } finally {
+      hideLoader();
+    }
+  }
+
+  function updateSelectedCount() {
+    els.selectedCountInfo.textContent = `${state.selectedIds.size} SELECTED`;
+  }
+
+  function normalizeCalcInput(input) {
+    return String(input || "").replace(/[^0-9.+\s]/g, "");
+  }
+
+  function getLiveCalc(input) {
+    const cleaned = normalizeCalcInput(input);
+    const normalized = cleaned.replace(/\s+/g, "+").replace(/\++/g, "+").replace(/^\+|\+$/g, "");
+    const parts = normalized ? normalized.split("+").filter(Boolean) : [];
+    const sum = parts.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+    return { cleaned, normalized, sum, hasValue: parts.length > 0 };
+  }
+
+  function refreshCalculator() {
+    const calc = getLiveCalc(els.calcExpr.value);
+    els.calcExpr.value = calc.cleaned;
+    els.calcNormalized.value = calc.normalized;
+    els.calcResult.value = calc.hasValue ? String(calc.sum) : "";
+  }
+
+  function downloadText(filename, text, mime = "text/plain;charset=utf-8") {
+    const blob = new Blob([text], { type: mime });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 300);
+  }
+
+  function toCsvValue(v) {
+    const s = String(v ?? "");
+    if (/[",\n]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
+    return s;
+  }
+
+  function exportCurrentCsv() {
+    const headers = TEMPLATE_HEADERS;
+    const rows = state.data.map(r => [
+      r.seq || "",
+      r.carrier || "",
+      r.por || "",
+      r.pol || "",
+      r.pod || "",
+      r.fpod || "",
+      r.dv20 || "",
+      r.container20Type || "",
+      r.hc40 || "",
+      r.container40Type || "",
+      r.ft || "",
+      inputDateValue(r.validity) || "",
+      displayType(r.type) || "",
+      r.tt || "",
+      r.via || "",
+      r.remarks || ""
+    ]);
+    const csv = [headers.join(","), ...rows.map(row => row.map(toCsvValue).join(","))].join("\n");
+    downloadText("fr8x_rates_export.csv", csv, "text/csv;charset=utf-8");
+  }
+
+  function parseCsvText(text) {
+    const rows = [];
+    let row = [];
+    let val = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i+1];
+
+      if (inQuotes) {
+        if (ch === '"' && next === '"') {
+          val += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = false;
+        } else {
+          val += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ",") {
+          row.push(val);
+          val = "";
+        } else if (ch === "\n") {
+          row.push(val.replace(/\r$/, ""));
+          rows.push(row);
+          row = [];
+          val = "";
+        } else {
+          val += ch;
+        }
+      }
+    }
+    row.push(val.replace(/\r$/, ""));
+    if (row.length && row.some(cell => String(cell).length)) rows.push(row);
+
+    if (!rows.length) return [];
+    const headers = rows[0].map(h => upper(h));
+    return rows.slice(1).map(r => {
+      const obj = {};
+      headers.forEach((h, idx) => obj[h] = r[idx] ?? "");
+      return obj;
     });
   }
 
-  function bindFilters(){
-    document.querySelectorAll('.filter-row input').forEach(inp => {
-      inp.addEventListener('input', () => {
+  function normalizeImportedRows(rawRows) {
+    const mapHeader = (h) => {
+      const x = upper(h).replace(/\s+/g, "");
+      if (x === "SEQ") return "seq";
+      if (x === "CARRIER") return "carrier";
+      if (x === "POR") return "por";
+      if (x === "POL") return "pol";
+      if (x === "POD") return "pod";
+      if (x === "FPOD") return "fpod";
+      if (x === "20DV") return "dv20";
+      if (x === "20TYPE") return "container20Type";
+      if (x === "40HC") return "hc40";
+      if (x === "40TYPE") return "container40Type";
+      if (x === "F/T" || x === "FT") return "ft";
+      if (x === "DATE" || x === "VALIDITY") return "validity";
+      if (x === "TYPE") return "type";
+      if (x === "TT") return "tt";
+      if (x === "ROUTING" || x === "VIA") return "via";
+      if (x === "REMARKS") return "remarks";
+      return null;
+    };
+
+    const normalized = rawRows.map(src => {
+      const out = {
+        seq: "",
+        carrier: "",
+        por: "",
+        pol: "",
+        pod: "",
+        fpod: "",
+        dv20: "",
+        container20Type: "STANDARD",
+        hc40: "",
+        container40Type: "STANDARD",
+        ft: "",
+        validity: "",
+        type: "V",
+        tt: "",
+        via: "",
+        remarks: ""
+      };
+
+      Object.keys(src).forEach(key => {
+        const m = mapHeader(key);
+        if (!m) return;
+        out[m] = src[key] ?? "";
+      });
+
+      return {
+        seq: upper(out.seq) || generateSeq(),
+        carrier: upper(out.carrier),
+        por: upper(out.por),
+        pol: upper(out.pol),
+        pod: upper(out.pod),
+        fpod: upper(out.fpod),
+        dv20: String(out.dv20 ?? "").trim(),
+        container20Type: upper(out.container20Type) || "STANDARD",
+        hc40: String(out.hc40 ?? "").trim(),
+        container40Type: upper(out.container40Type) || "STANDARD",
+        ft: upper(out.ft),
+        validity: inputDateValue(out.validity),
+        type: normalizeType(out.type),
+        tt: upper(out.tt),
+        via: upper(out.via),
+        remarks: upper(out.remarks)
+      };
+    }).filter(r =>
+      r.seq || r.carrier || r.por || r.pol || r.pod || r.fpod || r.dv20 || r.hc40 || r.via || r.remarks
+    );
+
+    return normalized;
+  }
+
+  async function parseImportFile(file) {
+    if (!file) return;
+    showLoader("READING FILE", "PARSING DATA");
+    try {
+      const ext = file.name.split(".").pop().toLowerCase();
+      let rawRows = [];
+
+      if (ext === "csv") {
+        const text = await file.text();
+        rawRows = parseCsvText(text);
+      } else {
+        const buffer = await file.arrayBuffer();
+        const wb = XLSX.read(buffer, { type: "array" });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        rawRows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+      }
+
+      state.importedRows = normalizeImportedRows(rawRows);
+
+      els.importPreview.textContent = state.importedRows.length
+        ? JSON.stringify(state.importedRows.slice(0, 12), null, 2)
+        : "No usable rows found in file.";
+
+      els.importStatus.textContent = state.importedRows.length
+        ? `${state.importedRows.length} ROW(S) READY TO IMPORT`
+        : "NO VALID ROWS FOUND";
+    } catch (e) {
+      console.error(e);
+      els.importPreview.textContent = "IMPORT PARSE FAILED";
+      els.importStatus.textContent = "FAILED TO READ FILE";
+      state.importedRows = [];
+    } finally {
+      hideLoader();
+    }
+  }
+
+  async function applyImport() {
+    if (!state.importedRows.length) {
+      alert("NO VALID IMPORT DATA.");
+      return;
+    }
+
+    showLoader("IMPORTING", "UPLOADING ACTIVE RATES");
+    try {
+      for (const row of state.importedRows) {
+        await persistRate({
+          ...row,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+      state.importedRows = [];
+      els.importPreview.textContent = "Import complete.";
+      els.importStatus.textContent = "IMPORT COMPLETE";
+      els.importFileInput.value = "";
+      await loadData();
+      setView("active");
+      closePopup(els.importPopup);
+      toast("IMPORT COMPLETE");
+    } finally {
+      hideLoader();
+    }
+  }
+
+  function clearImportState() {
+    state.importedRows = [];
+    els.importPreview.textContent = "No file selected.";
+    els.importStatus.textContent = "Template columns required.";
+    els.importFileInput.value = "";
+  }
+
+  async function fetchFxRates() {
+    els.fxStatus.textContent = "Loading live rates...";
+    try {
+      const symbols = MAJOR_CURRENCIES.filter(c => c !== "USD").join(",");
+      let data = null;
+
+      try {
+        const r1 = await fetch(`https://api.exchangerate.host/latest?base=USD&symbols=${symbols}`);
+        const j1 = await r1.json();
+        if (j1 && j1.rates) data = j1;
+      } catch {}
+
+      if (!data) {
+        const r2 = await fetch("https://open.er-api.com/v6/latest/USD");
+        const j2 = await r2.json();
+        if (j2 && j2.rates) data = { rates: j2.rates, date: j2.time_last_update_utc || new Date().toISOString() };
+      }
+
+      if (!data || !data.rates) throw new Error("FX unavailable");
+
+      state.fxRates = { USD: 1, ...data.rates };
+      state.fxUpdatedAt = data.date || new Date().toISOString();
+      els.fxStatus.textContent = `LIVE USD RATES UPDATED: ${state.fxUpdatedAt}`;
+      renderFxGrid();
+      renderFxSelects();
+      refreshFxCalc();
+    } catch (e) {
+      console.error(e);
+      els.fxStatus.textContent = "LIVE FX UNAVAILABLE";
+    }
+  }
+
+  function renderFxGrid() {
+    if (!state.fxRates) {
+      els.fxGrid.innerHTML = `<div class="note">No live rates available.</div>`;
+      return;
+    }
+    els.fxGrid.innerHTML = MAJOR_CURRENCIES.filter(c => c !== "USD").map(cur => `
+      <div class="rate-cell" data-fx-quote="${cur}">
+        <div class="k">1 USD</div>
+        <div class="v">${Number(state.fxRates[cur] || 0).toFixed(4)} ${cur}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderFxSelects() {
+    const opts = MAJOR_CURRENCIES.map(c => `<option value="${c}">${c}</option>`).join("");
+    els.fxFrom.innerHTML = opts;
+    els.fxTo.innerHTML = opts;
+    if (!els.fxFrom.value) els.fxFrom.value = "USD";
+    if (!els.fxTo.value) els.fxTo.value = "INR";
+  }
+
+  function fxConvert(amount, from, to) {
+    if (!state.fxRates) return "";
+    const a = parseFloat(amount || 0);
+    if (!a && a !== 0) return "";
+    const fromRate = state.fxRates[from];
+    const toRate = state.fxRates[to];
+    if (!fromRate || !toRate) return "";
+    return (a * (toRate / fromRate)).toFixed(4);
+  }
+
+  function refreshFxCalc() {
+    els.fxResult.value = fxConvert(els.fxAmount.value, els.fxFrom.value, els.fxTo.value);
+  }
+
+  function openPopup(el) { el.classList.remove("hidden"); }
+  function closePopup(el) { el.classList.add("hidden"); }
+
+  function setUnlocked(unlocked) {
+    if (unlocked) {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      els.pinGate.classList.add("hidden");
+      els.appShell.classList.remove("hidden");
+    } else {
+      sessionStorage.removeItem(SESSION_KEY);
+      els.pinGate.classList.remove("hidden");
+      els.appShell.classList.add("hidden");
+    }
+  }
+
+  function initPinInputs() {
+    const pins = [els.pin1, els.pin2, els.pin3, els.pin4];
+    pins.forEach((input, i) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "");
+        if (input.value && i < pins.length - 1) pins[i + 1].focus();
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && i > 0) pins[i - 1].focus();
+        if (e.key === "Enter") attemptUnlock();
+      });
+    });
+  }
+
+  function attemptUnlock() {
+    const pin = [els.pin1.value, els.pin2.value, els.pin3.value, els.pin4.value].join("");
+    if (pin !== PIN) {
+      alert("INVALID PIN");
+      return;
+    }
+    setUnlocked(true);
+    loadData();
+    fetchFxRates();
+  }
+
+  function initFilterInputs() {
+    document.querySelectorAll(".filter-row input").forEach(inp => {
+      inp.addEventListener("input", () => {
         state.filters[inp.dataset.col] = inp.value;
         renderRates();
       });
     });
   }
 
-  function downloadFile(name, text, mime='text/plain'){
-    const blob = new Blob([text], {type:mime});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    a.click();
-    URL.revokeObjectURL(url);
+  function addCarrierInline(value) {
+    const name = upper(value || els.carrierSearch.value || els.newCarrierName.value);
+    if (!name) return;
+    if (!state.carriers.includes(name)) state.carriers.unshift(name);
+    saveCarrierState();
+    renderCarrierSelect(name, name);
+    renderCarrierList();
+    els.carrier.value = name;
+    els.carrierSearch.value = name;
+    toast("CARRIER ADDED");
   }
 
-  function templateCsv(){
-    return 'SEQ,CARRIER,POR,POL,POD,FPOD,20DV,20TYPE,40HC,40TYPE,F/T,DATE,TYPE,TT,ROUTING,REMARKS\n';
-  }
-
-  function exportCsv(){
-    const rows = filteredRates();
-    const header = ['SEQ','CARRIER','POR','POL','POD','FPOD','20DV','20TYPE','40HC','40TYPE','F/T','DATE','TYPE','TT','ROUTING','REMARKS'];
-    const lines = rows.map(r => [
-      csvSafe(r.seq),
-      csvSafe(r.carrier),
-      csvSafe(r.por),
-      csvSafe(r.pol),
-      csvSafe(r.pod),
-      csvSafe(r.fpod),
-      csvSafe(r.rate20),
-      csvSafe(r.type20),
-      csvSafe(r.rate40),
-      csvSafe(r.type40),
-      csvSafe(r.ft),
-      csvSafe(r.validity),
-      csvSafe(r.rateType),
-      csvSafe(r.tt),
-      csvSafe(r.routing),
-      csvSafe(r.remarks)
-    ].join(','));
-    downloadFile('fr8x_rates_export.csv', [header.join(','), ...lines].join('\n'), 'text/csv;charset=utf-8');
-  }
-
-  function csvSafe(v){
-    return `"${String(v ?? '').replace(/"/g,'""')}"`;
-  }
-
-  async function importFile(file){
-    if(!file) return;
-    showLoader('IMPORTING','READING FILE');
-    try{
-      let rows = [];
-      if(/\.(xlsx|xls)$/i.test(file.name)){
-        const buf = await file.arrayBuffer();
-        const wb = XLSX.read(buf, {type:'array'});
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-      }else{
-        const txt = await file.text();
-        const wb = XLSX.read(txt, {type:'string'});
-        const ws = wb.Sheets[wb.SheetNames[0]];
-        rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+  function setupCarrierSearch() {
+    renderCarrierSelect("", "");
+    els.carrierSearch.addEventListener("input", () => {
+      renderCarrierSelect(els.carrier.value, els.carrierSearch.value);
+    });
+    els.carrierSearch.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const exact = upper(els.carrierSearch.value);
+        if (exact && state.carriers.includes(exact)) {
+          els.carrier.value = exact;
+          return;
+        }
+        if (exact && confirm(`ADD "${exact}" AS NEW CARRIER?`)) {
+          addCarrierInline(exact);
+        }
       }
+    });
+    els.carrier.addEventListener("change", () => {
+      els.carrierSearch.value = els.carrier.value;
+    });
+    els.quickAddCarrierBtn.addEventListener("click", () => {
+      const exact = upper(els.carrierSearch.value || prompt("ENTER NEW CARRIER NAME"));
+      if (!exact) return;
+      addCarrierInline(exact);
+    });
+  }
 
-      const mapKey = k => upper(k).replace(/\s+/g,'');
-      const normalized = rows.map(r => {
-        const out = {};
-        Object.entries(r).forEach(([k,v]) => out[mapKey(k)] = String(v ?? '').trim());
-        const carrier = upper(out.CARRIER || out.LINE || '');
-        ensureCarrierExists(carrier);
-        return {
-          id:idGen(),
-          seq: out.SEQ || generateSeq(),
-          carrier: carrier,
-          por: upper(out.POR),
-          pol: upper(out.POL),
-          pod: upper(out.POD),
-          fpod: upper(out.FPOD),
-          rate20: out['20DV'] || out.DV20 || '',
-          type20: upper(out['20TYPE'] || out.TYPE20 || 'STANDARD'),
-          rate40: out['40HC'] || out.HC40 || '',
-          type40: upper(out['40TYPE'] || out.TYPE40 || 'STANDARD'),
-          ft: upper(out['F/T'] || out.FT),
-          validity: toDateInputValue(out.DATE || out.VALIDITY),
-          rateType: upper(out.TYPE || 'S') === 'V' ? 'V' : 'S',
-          tt: upper(out.TT),
-          routing: upper(out.ROUTING || out.VIA),
-          remarks: upper(out.REMARKS),
-          createdAt:new Date().toISOString(),
-          updatedAt:new Date().toISOString()
-        };
-      }).filter(r => r.carrier || r.pol || r.pod);
+  function setupCellHoverAndCopy() {
+    const popup = els.cellHoverPopup;
 
-      if(!normalized.length){
+    const showPopup = (text, x, y) => {
+      if (!text) return;
+      popup.textContent = text;
+      popup.classList.add("show");
+      popup.style.left = `${Math.min(x + 14, window.innerWidth - 380)}px`;
+      popup.style.top = `${Math.min(y + 14, window.innerHeight - 120)}px`;
+    };
+
+    const hidePopup = () => {
+      popup.classList.remove("show");
+      popup.textContent = "";
+    };
+
+    document.addEventListener("mouseover", (e) => {
+      const cell = e.target.closest(".reflect-cell");
+      if (!cell) return;
+      const text = (cell.dataset.copy || cell.textContent || "").trim();
+      if (!text) return;
+      showPopup(text, e.clientX, e.clientY);
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!popup.classList.contains("show")) return;
+      popup.style.left = `${Math.min(e.clientX + 14, window.innerWidth - 380)}px`;
+      popup.style.top = `${Math.min(e.clientY + 14, window.innerHeight - 120)}px`;
+    });
+
+    document.addEventListener("mouseout", (e) => {
+      const cell = e.target.closest(".reflect-cell");
+      if (!cell) return;
+      hidePopup();
+    });
+
+    document.addEventListener("click", async (e) => {
+      const cell = e.target.closest(".reflect-cell");
+      if (!cell) return;
+      const text = (cell.dataset.copy || cell.textContent || "").trim();
+      if (!text) return;
+      await copyText(text);
+      toast("CELL COPIED");
+    });
+
+    window.addEventListener("scroll", hidePopup, true);
+    window.addEventListener("resize", hidePopup);
+  }
+
+  function initActions() {
+    els.unlockBtn.addEventListener("click", attemptUnlock);
+    els.clearPinBtn.addEventListener("click", () => {
+      [els.pin1, els.pin2, els.pin3, els.pin4].forEach(x => x.value = "");
+      els.pin1.focus();
+    });
+
+    els.tabActiveBtn.addEventListener("click", () => setView("active"));
+    els.tabExpiredBtn.addEventListener("click", () => setView("expired"));
+    els.tabAllBtn.addEventListener("click", () => setView("all"));
+    els.tabCarrierBtn.addEventListener("click", () => setView("carriers"));
+    els.tabDimBtn.addEventListener("click", () => setView("dimensions"));
+    els.tabMarkupBtn.addEventListener("click", () => setView("markups"));
+    els.tabDashBtn.addEventListener("click", () => setView("dashboard"));
+
+    els.saveBtn.addEventListener("click", saveRate);
+    els.updateBtn.addEventListener("click", applyUpdate);
+    els.clearBtn.addEventListener("click", () => clearForm(true));
+    els.duplicateBtn.addEventListener("click", async () => {
+      if (!state.editId) return alert("EDIT A RECORD FIRST TO DUPLICATE FROM FORM.");
+      const row = state.data.find(x => x.id === state.editId);
+      if (!row) return;
+      await duplicateRate(row);
+      await loadData();
+      toast("DUPLICATED");
+    });
+
+    els.globalSearch.addEventListener("input", renderRates);
+
+    els.clearSelectionBtn.addEventListener("click", () => {
+      state.selectedIds.clear();
+      updateSelectedCount();
+      renderRates();
+    });
+    els.clearActiveCellBtn.addEventListener("click", clearActiveCell);
+
+    els.selectAllRows.addEventListener("change", () => {
+      const rows = getFilteredRows();
+      if (els.selectAllRows.checked) rows.forEach(r => state.selectedIds.add(r.id));
+      else state.selectedIds.clear();
+      updateSelectedCount();
+      renderRates();
+    });
+
+    els.copySelectedRatesBtn.addEventListener("click", async () => {
+      const rows = state.data.filter(r => state.selectedIds.has(r.id));
+      if (!rows.length) return alert("NO ROWS SELECTED.");
+      await copyText(rows.map(buildRateCopyText).join("\n\n"));
+      toast("SELECTED RATES COPIED");
+    });
+
+    els.bulkDeleteBtn.addEventListener("click", async () => {
+      if (!state.selectedIds.size) return alert("NO ROWS SELECTED.");
+      if (!confirm("DELETE SELECTED RATES?")) return;
+      showLoader("DELETING", "REMOVING SELECTED RATES");
+      try {
+        for (const id of [...state.selectedIds]) await deleteRate(id);
+        state.selectedIds.clear();
+        await loadData();
+        toast("SELECTED DELETED");
+      } finally {
         hideLoader();
-        return alert('NO VALID ROWS FOUND');
       }
-
-      state.rates = [...normalized, ...state.rates];
-      saveRates();
-      saveCarriers();
-      renderAll();
-      toast(`${normalized.length} ROWS IMPORTED`);
-    }catch(err){
-      alert('IMPORT FAILED');
-      console.error(err);
-    }finally{
-      hideLoader();
-      els.fileInput.value = '';
-    }
-  }
-
-  function bindEvents(){
-    els.themeToggleLogin.addEventListener('click', toggleTheme);
-    els.themeToggleApp.addEventListener('click', toggleTheme);
-
-    [els.pin1, els.pin2, els.pin3, els.pin4].forEach((inp, i, arr) => {
-      inp.addEventListener('input', () => {
-        inp.value = inp.value.replace(/\D/g,'');
-        if(inp.value && i < arr.length - 1) arr[i+1].focus();
-      });
-      inp.addEventListener('keydown', e => {
-        if(e.key === 'Backspace' && !inp.value && i > 0) arr[i-1].focus();
-        if(e.key === 'Enter') attemptUnlock();
-      });
     });
 
-    els.unlockBtn.addEventListener('click', attemptUnlock);
-    els.clearPinBtn.addEventListener('click', () => {
-      [els.pin1, els.pin2, els.pin3, els.pin4].forEach(i => i.value = '');
-      els.pin1.focus();
-    });
-
-    els.tabActiveBtn.addEventListener('click', () => setMainView('active'));
-    els.tabExpiredBtn.addEventListener('click', () => setMainView('expired'));
-    els.tabAllBtn.addEventListener('click', () => setMainView('all'));
-    els.tabCarrierBtn.addEventListener('click', () => setMainView('carrier'));
-    els.tabDimensionBtn.addEventListener('click', () => setMainView('dimension'));
-    els.tabMarkupBtn.addEventListener('click', () => setMainView('markup'));
-    els.tabDashboardBtn.addEventListener('click', () => setMainView('dashboard'));
-
-    els.globalSearch.addEventListener('input', renderRates);
-
-    els.saveBtn.addEventListener('click', saveRate);
-    els.updateBtn.addEventListener('click', updateRate);
-    els.clearBtn.addEventListener('click', () => clearRateForm(true));
-    els.duplicateBtn.addEventListener('click', () => {
-      if(!state.editingRateId) return alert('SELECT A RECORD FIRST');
-      duplicateRate(state.editingRateId);
-    });
-
-    els.selectAllRows.addEventListener('change', () => {
-      const rows = filteredRates();
-      if(els.selectAllRows.checked){
-        rows.forEach(r => state.selectedIds.add(r.id));
-      }else{
-        rows.forEach(r => state.selectedIds.delete(r.id));
+    els.migrateSeqBtn.addEventListener("click", async () => {
+      const rows = state.data.filter(r => !r.seq);
+      if (!rows.length) return toast("NO EMPTY SEQ FOUND");
+      showLoader("UPDATING SEQ", "FILLING BLANK SEQ");
+      try {
+        for (const row of rows) {
+          await updateRate(row.id, { seq: generateSeq(), updatedAt: new Date().toISOString() });
+        }
+        await loadData();
+      } finally {
+        hideLoader();
       }
-      renderRates();
     });
 
-    els.clearSelectionBtn.addEventListener('click', () => {
-      state.selectedIds.clear();
-      renderRates();
-    });
-
-    els.clearActiveCellBtn.addEventListener('click', () => {
-      clearActiveCell();
-      renderRates();
-    });
-
-    els.copySelectedBtn.addEventListener('click', async () => {
-      const rows = state.rates.filter(r => state.selectedIds.has(r.id));
-      if(!rows.length) return alert('NO ROWS SELECTED');
-      await copyText(rows.map(getCopyText).join('\n\n'));
-      toast('SELECTED RATES COPIED');
-    });
-
-    els.deleteSelectedBtn.addEventListener('click', () => {
-      if(!state.selectedIds.size) return alert('NO ROWS SELECTED');
-      if(!confirm('DELETE SELECTED RATES?')) return;
-      state.rates = state.rates.filter(r => !state.selectedIds.has(r.id));
-      state.selectedIds.clear();
-      saveRates();
-      renderRates();
-      toast('SELECTED RATES DELETED');
-    });
-
-    els.reseqBtn.addEventListener('click', resequence);
-
-    els.tbody.addEventListener('change', e => {
-      const cb = e.target.closest('.row-check');
-      if(!cb) return;
-      if(cb.checked) state.selectedIds.add(cb.dataset.id);
+    els.tbody.addEventListener("change", (e) => {
+      const cb = e.target.closest(".row-check");
+      if (!cb) return;
+      if (cb.checked) state.selectedIds.add(cb.dataset.id);
       else state.selectedIds.delete(cb.dataset.id);
-      renderRates();
+      updateSelectedCount();
     });
 
-    els.tbody.addEventListener('click', async e => {
-      const cell = e.target.closest('.reflect-cell');
-      if(cell){
-        const id = cell.dataset.id;
-        const key = cell.dataset.key;
-        const val = cell.dataset.copy || '';
-        setActiveCell(id, key, val);
-        await copyText(val);
-        renderRates();
-        toast('CELL COPIED');
+    els.tbody.addEventListener("click", async (e) => {
+      const cell = e.target.closest(".reflect-cell");
+      if (cell) {
+        const row = state.data.find(x => x.id === cell.dataset.id);
+        setActiveCell(cell.dataset.id, cell.dataset.key, row?.[cell.dataset.key] || cell.dataset.copy || "");
         return;
       }
 
-      const btn = e.target.closest('button[data-action]');
-      if(!btn) return;
-      const row = state.rates.find(r => r.id === btn.dataset.id);
-      if(!row) return;
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const row = state.data.find(x => x.id === btn.dataset.id);
+      if (!row) return;
 
-      if(btn.dataset.action === 'copy'){
-        await copyText(getCopyText(row));
-        toast('RATE COPIED');
+      if (btn.dataset.action === "copy") {
+        await copyText(buildRateCopyText(row));
+        toast("RATE COPIED");
       }
-      if(btn.dataset.action === 'duplicate'){
-        duplicateRate(row.id);
+      if (btn.dataset.action === "duplicate") {
+        await duplicateRate(row);
+        await loadData();
+        toast("DUPLICATED");
       }
-      if(btn.dataset.action === 'edit'){
-        fillRateForm(row);
+      if (btn.dataset.action === "edit") {
+        fillEditor(row);
       }
-      if(btn.dataset.action === 'delete'){
-        if(!confirm('DELETE THIS RATE?')) return;
-        deleteRate(row.id);
+      if (btn.dataset.action === "delete") {
+        if (!confirm("DELETE THIS RATE?")) return;
+        await deleteRate(row.id);
+        await loadData();
+        toast("DELETED");
       }
     });
 
-    els.carrierInput.addEventListener('focus', openCarrierDropdown);
-    els.carrierInput.addEventListener('input', () => {
-      state.selectedCarrierCode = '';
-      openCarrierDropdown();
-    });
-    els.carrierInput.addEventListener('keydown', e => {
-      if(e.key === 'Escape') closeCarrierDropdown();
-      if(e.key === 'Enter'){
-        const typed = upper(els.carrierInput.value.split(' - ')[0]);
-        if(!typed) return;
-        if(state.carriers.some(c => c.code === typed)) selectCarrier(typed);
-        else{
-          if(confirm(`ADD ${typed} AS NEW CARRIER?`)){
-            state.carriers.unshift({id:idGen(), code:typed, name:typed, email:'', phone:'', contact:'', notes:''});
-            saveCarriers();
-            renderCarrierList();
-            renderCarrierDropdown();
-            selectCarrier(typed);
-          }
-        }
-      }
-    });
-
-    els.carrierDropdown.addEventListener('mousedown', e => {
-      const item = e.target.closest('.carrier-item');
-      if(item){
-        selectCarrier(item.dataset.code);
+    els.mobileRates.addEventListener("click", async (e) => {
+      const cell = e.target.closest(".reflect-cell");
+      if (cell) {
+        const row = state.data.find(x => x.id === cell.dataset.id);
+        setActiveCell(cell.dataset.id, cell.dataset.key, row?.[cell.dataset.key] || cell.dataset.copy || "");
         return;
       }
-      const add = e.target.closest('#carrierAddNew');
-      if(add){
-        const typed = upper(els.carrierInput.value.split(' - ')[0]);
-        if(!typed) return;
-        if(!state.carriers.some(c => c.code === typed)){
-          state.carriers.unshift({id:idGen(), code:typed, name:typed, email:'', phone:'', contact:'', notes:''});
-          saveCarriers();
-          renderCarrierList();
-          renderCarrierDropdown();
-        }
-        selectCarrier(typed);
-        toast('CARRIER ADDED');
+
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const row = state.data.find(x => x.id === btn.dataset.id);
+      if (!row) return;
+
+      if (btn.dataset.action === "copy") {
+        await copyText(buildRateCopyText(row));
+        toast("RATE COPIED");
+      }
+      if (btn.dataset.action === "duplicate") {
+        await duplicateRate(row);
+        await loadData();
+        toast("DUPLICATED");
+      }
+      if (btn.dataset.action === "edit") {
+        fillEditor(row);
+      }
+      if (btn.dataset.action === "delete") {
+        if (!confirm("DELETE THIS RATE?")) return;
+        await deleteRate(row.id);
+        await loadData();
+        toast("DELETED");
       }
     });
 
-    document.addEventListener('click', e => {
-      if(!e.target.closest('#carrierComboWrap')) closeCarrierDropdown();
+    els.addCarrierBtn.addEventListener("click", () => {
+      const name = upper(els.newCarrierName.value);
+      if (!name) return;
+      if (!state.carriers.includes(name)) state.carriers.unshift(name);
+      els.newCarrierName.value = "";
+      saveCarrierState();
+      renderCarrierSelect(name, name);
+      renderCarrierList();
+      els.carrier.value = name;
+      els.carrierSearch.value = name;
     });
 
-    els.carrierSearch.addEventListener('input', renderCarrierList);
-    els.addCarrierBtn.addEventListener('click', addCarrier);
-    els.updateCarrierBtn.addEventListener('click', updateCarrier);
-    els.clearCarrierBtn.addEventListener('click', () => clearCarrierForm(true));
-    els.resetCarrierBtn.addEventListener('click', resetCarriers);
-
-    els.carrierList.addEventListener('click', async e => {
-      const selectBtn = e.target.closest('[data-carrier-select]');
-      if(selectBtn){
-        selectCarrier(selectBtn.dataset.carrierSelect);
-        setMainView('active');
-        toast('CARRIER SELECTED');
-        return;
-      }
-      const copyBtn = e.target.closest('[data-carrier-copy]');
-      if(copyBtn){
-        const email = copyBtn.dataset.carrierCopy;
-        if(!email) return alert('NO EMAIL AVAILABLE');
-        await copyText(email);
-        toast('EMAIL COPIED');
-        return;
-      }
-      const editBtn = e.target.closest('[data-carrier-edit]');
-      if(editBtn){
-        const carrier = state.carriers.find(c => c.id === editBtn.dataset.carrierEdit);
-        if(carrier) fillCarrierForm(carrier);
-        return;
-      }
-      const delBtn = e.target.closest('[data-carrier-delete]');
-      if(delBtn){
-        deleteCarrier(delBtn.dataset.carrierDelete);
-      }
+    els.resetCarrierBtn.addEventListener("click", () => {
+      state.carriers = [...defaultCarriers];
+      saveCarrierState();
+      renderCarrierSelect("", "");
+      renderCarrierList();
     });
 
-    els.checkFitBtn.addEventListener('click', checkDimensions);
-
-    els.saveMarkupBtn.addEventListener('click', () => {
-      state.markup20 = numberOrZero(els.markup20.value);
-      state.markup40 = numberOrZero(els.markup40.value);
-      saveMarkups();
-      renderCopyPreview();
-      toast('MARKUP SAVED');
+    els.carrierList.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-carrier-del]");
+      if (!btn) return;
+      state.carriers.splice(Number(btn.dataset.carrierDel), 1);
+      saveCarrierState();
+      renderCarrierSelect("", els.carrierSearch.value);
+      renderCarrierList();
     });
 
-    els.clearMarkupBtn.addEventListener('click', () => {
-      state.markup20 = 0;
-      state.markup40 = 0;
-      els.markup20.value = '';
-      els.markup40.value = '';
-      saveMarkups();
-      renderCopyPreview();
-      toast('MARKUP CLEARED');
+    els.checkFitBtn.addEventListener("click", checkContainerFit);
+
+    els.saveUserMarkupBtn.addEventListener("click", saveMarkupState);
+    els.clearUserMarkupBtn.addEventListener("click", clearMarkupState);
+
+    els.dashRefreshBtn.addEventListener("click", renderDashboard);
+    els.dashMetric.addEventListener("change", renderDashboard);
+    els.dashChartType.addEventListener("change", renderDashboard);
+
+    els.openImportBtn.addEventListener("click", () => openPopup(els.importPopup));
+    els.closeImportBtn.addEventListener("click", () => closePopup(els.importPopup));
+    els.downloadTemplateBtn.addEventListener("click", () => downloadText("fr8x_template.csv", TEMPLATE_CSV, "text/csv;charset=utf-8"));
+    els.exportCsvBtn.addEventListener("click", exportCurrentCsv);
+    els.chooseImportBtn.addEventListener("click", () => els.importFileInput.click());
+    els.importFileInput.addEventListener("change", async () => {
+      const file = els.importFileInput.files?.[0];
+      await parseImportFile(file);
+    });
+    els.applyImportBtn.addEventListener("click", applyImport);
+    els.clearImportBtn.addEventListener("click", clearImportState);
+
+    els.openCalcBtn.addEventListener("click", () => openPopup(els.calcPopup));
+    els.closeCalcBtn.addEventListener("click", () => closePopup(els.calcPopup));
+    els.calcExpr.addEventListener("input", refreshCalculator);
+    els.copyCalcResultBtn.addEventListener("click", async () => {
+      if (!els.calcResult.value) return;
+      await copyText(els.calcResult.value);
+      toast("RESULT COPIED");
     });
 
-    els.refreshDashboardBtn.addEventListener('click', renderDashboard);
-
-    bindFilters();
-    attachHoverPopup();
-
-    els.templateBtn.addEventListener('click', () => {
-      downloadFile('fr8x_template.csv', templateCsv(), 'text/csv;charset=utf-8');
+    els.openFxBtn.addEventListener("click", async () => {
+      openPopup(els.fxPopup);
+      if (!state.fxRates) await fetchFxRates();
+    });
+    els.closeFxBtn.addEventListener("click", () => closePopup(els.fxPopup));
+    els.refreshFxBtn.addEventListener("click", fetchFxRates);
+    els.fxAmount.addEventListener("input", refreshFxCalc);
+    els.fxFrom.addEventListener("change", refreshFxCalc);
+    els.fxTo.addEventListener("change", refreshFxCalc);
+    els.copyFxResultBtn.addEventListener("click", async () => {
+      if (!els.fxResult.value) return;
+      await copyText(els.fxResult.value);
+      toast("FX RESULT COPIED");
     });
 
-    els.exportBtn.addEventListener('click', exportCsv);
-    els.importBtn.addEventListener('click', () => els.fileInput.click());
-    els.fileInput.addEventListener('change', () => importFile(els.fileInput.files?.[0]));
-  }
+    els.fxGrid.addEventListener("click", (e) => {
+      const cell = e.target.closest("[data-fx-quote]");
+      if (!cell) return;
+      els.fxFrom.value = "USD";
+      els.fxTo.value = cell.dataset.fxQuote;
+      refreshFxCalc();
+    });
 
-  function attemptUnlock(){
-    const pin = [els.pin1.value, els.pin2.value, els.pin3.value, els.pin4.value].join('');
-    if(pin !== PIN) return alert('INVALID PIN');
-    setUnlocked(true);
-    renderAll();
-  }
-
-  function boot(){
-    loadTheme();
-    loadState();
-    bindEvents();
-    renderAll();
-    checkDimensions();
-    if(sessionStorage.getItem(STORAGE.UNLOCKED) === '1'){
-      setUnlocked(true);
-    }else{
-      setUnlocked(false);
-      els.pin1.focus();
+    document.querySelectorAll(".overlay").forEach(overlay => {
+      overlay.addEventListener("click", (e) => {
+                  if (e.target === overlay && overlay !== els.pinGate) closePopup(overlay);
+        });
+      });
     }
-  }
 
-  boot();
-})();
+    function renderFxOnLoad() {
+      renderFxSelects();
+      renderFxGrid();
+      refreshFxCalc();
+    }
+
+    function boot() {
+      loadCarrierState();
+      loadMarkupState();
+      initPinInputs();
+      initFilterInputs();
+      initActions();
+      setupCarrierSearch();
+      setupCellHoverAndCopy();
+      renderCarrierSelect("", "");
+      renderCarrierList();
+      renderAppliedMarkups();
+      renderDimensionGuide();
+      els.fitResult.innerHTML = `<span class="fit-pill">ENTER LENGTH, WIDTH, HEIGHT TO CHECK</span>`;
+      renderFxOnLoad();
+
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        setUnlocked(true);
+        loadData();
+        fetchFxRates();
+      } else {
+        setUnlocked(false);
+        els.pin1.focus();
+      }
+    }
+
+    boot();
 </script>
 </body>
 </html>
