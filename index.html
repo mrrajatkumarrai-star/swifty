@@ -766,12 +766,6 @@ td.actions{
   align-items:center!important;justify-content:center!important;
 }
 col.col-act{width:140px!important}
-.icon-btn.lc-act{
-  background:rgba(5,150,105,.10)!important;
-  border-color:rgba(5,150,105,.26)!important;
-  color:#065f46!important;
-}
-.icon-btn.lc-act:hover{background:rgba(5,150,105,.22)!important;transform:translateY(-1px)}
 
 /* Draggable popup — Tahoe glass */
 .draggable-popup{
@@ -866,45 +860,6 @@ col.col-act{width:140px!important}
   background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.55);white-space:nowrap;
 }
 .fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
-
-/* ---- LOCAL CHARGES ---- */
-#lcPopup{width:min(860px,calc(100vw - 20px))}
-.lc-header-row{
-  display:grid;grid-template-columns:1fr 80px 80px 90px 90px auto;
-  gap:6px;align-items:end;margin-bottom:8px;
-  padding:10px;border-radius:14px;
-  background:rgba(255,255,255,.44);border:1px solid rgba(148,163,184,.13);
-}
-.lc-header-row .field{margin:0}
-.lc-header-row input,.lc-header-row select{min-height:30px}
-.lc-table-scroll{
-  max-height:55vh;overflow-y:auto;border-radius:12px;
-  border:1px solid rgba(148,163,184,.13);background:rgba(255,255,255,.44);
-}
-.lc-table-scroll::-webkit-scrollbar{width:5px}
-.lc-table-scroll::-webkit-scrollbar-thumb{background:rgba(148,163,184,.36);border-radius:999px}
-.lc-main-table{width:100%;border-collapse:collapse;font-size:12px}
-.lc-main-table th{
-  background:rgba(248,250,252,.88);padding:5px 8px;text-align:left;
-  border-bottom:1px solid rgba(148,163,184,.13);font-size:11px;color:var(--muted);
-  position:sticky;top:0;z-index:2;
-}
-.lc-main-table td{padding:5px 8px;border-bottom:1px solid rgba(148,163,184,.07)}
-.lc-main-table tbody tr:last-child td{border-bottom:none}
-.lc-main-table tbody tr:hover{background:rgba(255,255,255,.44)}
-.lc-main-table td input,.lc-main-table td select{
-  min-height:26px!important;padding:3px 6px!important;font-size:11px!important;
-  border-radius:7px!important;
-}
-.lc-group-head td{
-  background:rgba(17,24,39,.04)!important;
-  font-size:11px!important;color:var(--muted)!important;
-  padding:4px 8px!important;border-top:1px solid rgba(148,163,184,.14)!important;
-}
-@media(max-width:640px){
-  .lc-header-row{grid-template-columns:1fr 1fr}
-  #fxPopup,#lcPopup{width:calc(100vw - 14px)}
-}
 
 </style>
 </head>
@@ -1013,7 +968,6 @@ col.col-act{width:140px!important}
       <span class="badge" id="activeCount">0 ACTIVE</span>
       <button class="ghost ios-btn icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
       <button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
-      <button class="ghost ios-btn icon-only" id="openLcBtn" title="LOCAL CHARGES RECORD"><i class="bi bi-receipt"></i></button>
       <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
     </div>
   </div>
@@ -1139,10 +1093,6 @@ col.col-act{width:140px!important}
               <option value="V">HANDOVER</option>
               <option value="S">SAILING</option>
             </select>
-          </div>
-
-          <div class="field span12" style="margin-bottom:0">
-            <button class="ghost ios-btn" id="openLcEditorBtn" style="width:100%;font-size:12px"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES FOR THIS RATE</button>
           </div>
 
           <div class="field span12">
@@ -1798,7 +1748,6 @@ function renderDesktopRows(rows){
       ${desktopCell(r.id, r.seq || i+1, "remarks", "REMARKS", r.remarks, 18)}
       <td class="actions">
         <button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button>
-        <button class="icon-btn lc-act" data-action="lc" data-id="${r.id}" title="Local Charges"><i class="bi bi-receipt-cutoff"></i></button>
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
         <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
         <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
@@ -1832,7 +1781,6 @@ function renderMobileRows(rows){
       </div>
       <div class="mobile-actions">
         <button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button>
-        <button class="lc-act" data-action="lc" data-id="${r.id}"><i class="bi bi-receipt-cutoff"></i> LC</button>
         <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
         <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
         <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
@@ -2471,9 +2419,7 @@ document.addEventListener("click", e => {
   const btn = e.target.closest("button[data-action]");
   if(btn){
     const id = btn.dataset.id;
-    if(btn.dataset.action === "copy") window.copyRate(id);
-    if(btn.dataset.action === "lc")   window.openLcForRate(id);
-    if(btn.dataset.action === "duplicate") duplicateRate(id);
+    if(btn.dataset.action === "copy") window.copyRate(id);    if(btn.dataset.action === "duplicate") duplicateRate(id);
     if(btn.dataset.action === "edit") window.editRate(id);
     if(btn.dataset.action === "delete") window.delRate(id);
     return;
@@ -2559,7 +2505,6 @@ function makeDraggable(popup, handle) {
 }
 makeDraggable($('calcPopup'), $('calcPopupHeader'));
 makeDraggable($('fxPopup'),   $('fxPopupHeader'));
-makeDraggable($('lcPopup'),   $('lcPopupHeader'));
 
 // ---- SMART NUMBER PARSER ----
 function parseSmartNum(raw) {
@@ -2680,289 +2625,6 @@ $('fxConvAmt').addEventListener('keydown', e => { if(e.key==='Enter') fxConvert(
 $('openFxBtn').onclick    = () => { tahoeOpen($('fxPopup')); if(!Object.keys(fxRates).length) fetchFxRates(); };
 $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
 
-// ================================================================
-//  LOCAL CHARGES — PER RATE, SEQ-BASED, EDITABLE
-// ================================================================
-const LC_STORE_KEY = 'fr8x_lc_v5';
-// lcDB = { [seq]: { seq, carrier, pol, pod, dv20, hc40, lines:[{id,desc,type,cur,amt,app}] } }
-let lcDB = {};
-let lcActiveSeq = null;
-
-function lcDbLoad() { try { lcDB = JSON.parse(localStorage.getItem(LC_STORE_KEY)||'{}'); } catch(e){ lcDB={}; } }
-function lcDbSave() { localStorage.setItem(LC_STORE_KEY, JSON.stringify(lcDB)); }
-
-// Populate SEQ datalist from live rates + stored keys
-function lcPopulateSeqList() {
-  const dl = $('lcSeqList');
-  const fromRates  = data.map(r => r.seq).filter(Boolean);
-  const fromStored = Object.keys(lcDB);
-  const all = [...new Set([...fromRates, ...fromStored])].sort();
-  dl.innerHTML = all.map(s=>`<option value="${escapeHtml(s)}">`).join('');
-}
-
-// Fetch rate info from live data by SEQ
-function lcFetchRate() {
-  const seq = $('lcSeqPick').value.trim().toUpperCase();
-  if (!seq) { alert('ENTER A SEQ NUMBER FIRST.'); return; }
-  lcActiveSeq = seq;
-
-  // Try to fetch from live rates
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq);
-  if (r) {
-    $('lcCarrierField').value = r.carrier || '';
-    $('lcPolField').value     = r.pol || r.por || '';
-    $('lcPodField').value     = r.pod || r.fpod || '';
-    $('lcDv20Field').value    = r.dv20 || '';
-    $('lcHc40Field').value    = r.hc40 || '';
-  } else if (lcDB[seq]) {
-    $('lcCarrierField').value = lcDB[seq].carrier || '';
-    $('lcPolField').value     = lcDB[seq].pol     || '';
-    $('lcPodField').value     = lcDB[seq].pod     || '';
-    $('lcDv20Field').value    = lcDB[seq].dv20    || '';
-    $('lcHc40Field').value    = lcDB[seq].hc40    || '';
-  }
-
-  // Render saved lines for this SEQ
-  lcRenderTable(seq);
-  $('lcSaveStatus').textContent = r ? `✓ RATE FOUND: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''}` : 'NEW SEQ — FILL DETAILS AND SAVE';
-}
-
-// Auto-fill when SEQ input changes
-$('lcSeqPick').addEventListener('change', lcFetchRate);
-$('lcFetchRateBtn').onclick = lcFetchRate;
-
-// Render lines for a SEQ into editable table
-function lcRenderTable(seq) {
-  const lines = (lcDB[seq]||{}).lines || [];
-  const tbody = $('lcTableBody');
-  if (!lines.length) {
-    tbody.innerHTML = '<tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:10px">NO CHARGES YET — ADD BELOW</td></tr>';
-    return;
-  }
-  tbody.innerHTML = lines.map((l,i) => `
-    <tr data-lid="${escapeHtml(l.id)}">
-      <td><input value="${escapeHtml(l.desc)}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','desc',this.value)" style="width:100%"></td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','type',this.value)" style="width:100%">
-          ${['per_container','per_bl','per_cbm','per_ton','lumpsum'].map(t=>
-            `<option value="${t}" ${l.type===t?'selected':''}>${t.replace(/_/g,' ').toUpperCase()}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','cur',this.value)" style="width:100%">
-          ${['USD','INR','EUR','AED','GBP','CNY'].map(c=>
-            `<option value="${c}" ${l.cur===c?'selected':''}>${c}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td><input type="number" value="${escapeHtml(String(l.amt))}" onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','amt',this.value)" style="width:100%"></td>
-      <td>
-        <select onchange="lcEditField('${escapeHtml(seq)}','${escapeHtml(l.id)}','app',this.value)" style="width:100%">
-          ${['both','20dv','40hc'].map(a=>
-            `<option value="${a}" ${l.app===a?'selected':''}>${a==='both'?'BOTH':a.toUpperCase()}</option>`
-          ).join('')}
-        </select>
-      </td>
-      <td>
-        <button class="icon-btn danger" onclick="lcDeleteLine('${escapeHtml(seq)}','${escapeHtml(l.id)}')" title="Delete"><i class="bi bi-x"></i></button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// Inline edit a field
-window.lcEditField = function(seq, lid, field, val) {
-  if (!lcDB[seq]) return;
-  const line = lcDB[seq].lines.find(l=>l.id===lid);
-  if (!line) return;
-  line[field] = field === 'amt' ? (parseFloat(val)||0) : val.trim().toUpperCase();
-  lcDbSave();
-};
-
-// Delete a line
-window.lcDeleteLine = function(seq, lid) {
-  if (!lcDB[seq]) return;
-  lcDB[seq].lines = lcDB[seq].lines.filter(l=>l.id!==lid);
-  lcDbSave(); lcRenderTable(seq);
-};
-
-// Add new row
-$('lcAddRowBtn').onclick = () => {
-  const seq = lcActiveSeq;
-  if (!seq) { alert('FETCH A RATE FIRST.'); return; }
-  const desc = $('lcNewDesc').value.trim().toUpperCase();
-  const type = $('lcNewType').value;
-  const cur  = $('lcNewCur').value;
-  const amt  = parseFloat($('lcNewAmt').value||'0')||0;
-  const app  = $('lcNewApp').value;
-  if (!desc || !amt) { alert('ENTER DESCRIPTION AND AMOUNT.'); return; }
-  if (!lcDB[seq]) lcDB[seq] = { seq, carrier:'', pol:'', pod:'', dv20:'', hc40:'', lines:[] };
-  const lid = 'lc'+Date.now()+Math.random().toString(36).slice(2,5);
-  lcDB[seq].lines.push({ id:lid, desc, type, cur, amt, app });
-  lcDbSave(); lcRenderTable(seq);
-  $('lcNewDesc').value=''; $('lcNewAmt').value='';
-  showCopyToast('CHARGE ADDED');
-};
-
-// Save header fields
-$('lcSaveBtn').onclick = () => {
-  const seq = lcActiveSeq || $('lcSeqPick').value.trim().toUpperCase();
-  if (!seq) { alert('NO SEQ SELECTED.'); return; }
-  lcActiveSeq = seq;
-  if (!lcDB[seq]) lcDB[seq] = { lines:[] };
-  lcDB[seq].seq     = seq;
-  lcDB[seq].carrier = $('lcCarrierField').value.trim().toUpperCase();
-  lcDB[seq].pol     = $('lcPolField').value.trim().toUpperCase();
-  lcDB[seq].pod     = $('lcPodField').value.trim().toUpperCase();
-  lcDB[seq].dv20    = $('lcDv20Field').value.trim();
-  lcDB[seq].hc40    = $('lcHc40Field').value.trim();
-  lcDbSave();
-  $('lcSaveStatus').textContent = '✓ SAVED: ' + seq;
-  showCopyToast('LOCAL CHARGES SAVED — ' + seq);
-};
-
-// Clear all lines for current SEQ
-$('lcClearAllBtn').onclick = () => {
-  const seq = lcActiveSeq;
-  if (!seq || !confirm('CLEAR ALL CHARGES FOR SEQ ' + seq + '?')) return;
-  if (lcDB[seq]) lcDB[seq].lines = [];
-  lcDbSave(); lcRenderTable(seq);
-};
-
-// Build LC text for copy
-function buildLcBlock(seq) {
-  const entry = lcDB[seq];
-  if (!entry || !entry.lines || !entry.lines.length) return '';
-  const lines = ['LOCAL CHARGES:'];
-  entry.lines.forEach(l => {
-    lines.push(`  ${l.desc}: ${l.cur} ${l.amt} (${l.type.replace(/_/g,' ').toUpperCase()}, ${l.app==='both'?'BOTH':l.app.toUpperCase()})`);
-  });
-  return lines.join('\n');
-}
-
-// COPY RATE ONLY (for current LC popup rate)
-$('lcCopyRateOnlyBtn').onclick = async () => {
-  const seq = lcActiveSeq;
-  if (!seq) return;
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
-  let text = '';
-  if (r) {
-    text = buildRateCopyText(r);
-  } else if (lcDB[seq]) {
-    const e = lcDB[seq];
-    const parts = [];
-    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
-    if (e.pol) parts.push(`POL: ${e.pol}`);
-    if (e.pod) parts.push(`POD: ${e.pod}`);
-    if (e.dv20) parts.push(`20DV: USD ${e.dv20}`);
-    if (e.hc40) parts.push(`40HC: USD ${e.hc40}`);
-    text = parts.join('\n');
-  }
-  if (!text) { showCopyToast('NO RATE DATA'); return; }
-  await copyText(text);
-  showCopyToast('RATE COPIED');
-};
-
-// COPY RATE + LOCAL CHARGES
-$('lcCopyRatePlusLcBtn').onclick = async () => {
-  const seq = lcActiveSeq;
-  if (!seq) { showCopyToast('FETCH A RATE FIRST'); return; }
-  const r = data.find(x => (x.seq||'').toUpperCase() === seq.toUpperCase());
-  let rateText = '';
-  if (r) {
-    rateText = buildRateCopyText(r);
-  } else if (lcDB[seq]) {
-    const e = lcDB[seq];
-    const parts = [];
-    if (e.carrier) parts.push(`CARRIER: ${e.carrier}`);
-    if (e.pol) parts.push(`POL: ${e.pol}`);
-    if (e.pod) parts.push(`POD: ${e.pod}`);
-    if (e.dv20) parts.push(`O/F: 20DV USD ${e.dv20}`);
-    if (e.hc40) parts.push(`O/F: 40HC USD ${e.hc40}`);
-    rateText = parts.join('\n');
-  }
-  const lcText = buildLcBlock(seq);
-  const combined = [rateText, lcText].filter(Boolean).join('\n');
-  if (!combined) { showCopyToast('NO DATA TO COPY'); return; }
-  await copyText(combined);
-  showCopyToast('RATE + LOCAL CHARGES COPIED');
-};
-
-// Row action button — copy rate (now includes LC if available)
-const _origCopyRate = window.copyRate;
-window.copyRate = async function(id) {
-  lcDbLoad();
-  const r = data.find(x => x.id === id);
-  if (!r) return;
-  const rateText = buildRateCopyText(r);
-  const seq = (r.seq||'').toUpperCase();
-  const lcText = seq ? buildLcBlock(seq) : '';
-  const combined = [rateText, lcText].filter(Boolean).join('\n');
-  await copyText(combined);
-  showCopyToast(lcText ? 'RATE + LOCAL CHARGES COPIED' : 'RATE COPIED');
-};
-
-// Row LC button — open LC popup for that rate
-window.openLcForRate = function(id) {
-  lcDbLoad();
-  const r = data.find(x => x.id === id);
-  if (!r) return;
-  const seq = (r.seq||'').toUpperCase();
-  lcPopulateSeqList();
-  $('lcSeqPick').value    = seq;
-  $('lcCarrierField').value = r.carrier || '';
-  $('lcPolField').value     = r.pol || r.por || '';
-  $('lcPodField').value     = r.pod || r.fpod || '';
-  $('lcDv20Field').value    = r.dv20 || '';
-  $('lcHc40Field').value    = r.hc40 || '';
-  lcActiveSeq = seq;
-  lcRenderTable(seq);
-  $('lcSaveStatus').textContent = `RATE: ${r.carrier||''} ${(r.pol||r.por||'')} → ${r.pod||''} | ${r.validity||''}`;
-  tahoeOpen($('lcPopup'));
-};
-
-// LC button in editor (above remarks)
-const _lcEdBtn = document.getElementById('openLcEditorBtn');
-if (_lcEdBtn) {
-  _lcEdBtn.onclick = () => {
-    lcDbLoad();
-    lcPopulateSeqList();
-    if (editId) {
-      const r = data.find(x=>x.id===editId);
-      if (r) { window.openLcForRate(editId); return; }
-    }
-    tahoeOpen($('lcPopup'));
-  };
-}
-
-// LC header button
-$('openLcBtn').onclick = () => {
-  lcDbLoad();
-  lcPopulateSeqList();
-  tahoeOpen($('lcPopup'));
-};
-$('closeLcBtn').onclick = () => tahoeClose($('lcPopup'));
-
-// Also patch COPY SELECTED to include LC
-document.getElementById('copySelectedRatesBtn').onclick = async function() {
-  lcDbLoad();
-  let rows = (typeof filteredRows === 'function' ? filteredRows() : data).filter(r => selectedIds.has(r.id));
-  if (!rows.length) rows = data.filter(r => selectedIds.has(r.id));
-  if (!rows.length) return alert('SELECT RECORDS FIRST.');
-  const parts = rows.map(r => {
-    const rateText = buildRateCopyText(r);
-    const seq = (r.seq||'').toUpperCase();
-    const lcText = seq ? buildLcBlock(seq) : '';
-    return [rateText, lcText].filter(Boolean).join('\n');
-  });
-  await copyText(parts.join('\n\n──────────────────────\n\n'));
-  showCopyToast(rows.length + ' RATE(S) COPIED');
-};
-
-// Initial load
-lcDbLoad();
-
 </script>
 
 <!-- ============================================================
@@ -3051,103 +2713,6 @@ lcDbLoad();
   </div>
 </div>
 
-<!-- ============================================================
-     LOCAL CHARGES RECORD — PER RATE (SEQ-BASED, EDITABLE TABLE)
-     ============================================================ -->
-<div id="lcPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="lcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-receipt"></i>&nbsp; LOCAL CHARGES RECORD</div>
-    <button class="ghost icon-only dp-close-btn" id="closeLcBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-
-    <!-- RATE FETCH: type SEQ or pick from dropdown, auto-fills carrier + POL -->
-    <div class="note" style="margin-bottom:7px">SELECT AN EXISTING RATE BY SEQ, OR ENTER A NEW SEQ MANUALLY TO ADD LOCAL CHARGES.</div>
-    <div class="lc-header-row" id="lcHeaderRow">
-      <div class="field">
-        <label>SEQ — PICK RATE OR TYPE NEW</label>
-        <input id="lcSeqPick" list="lcSeqList" placeholder="Type or select SEQ..." autocomplete="off">
-        <datalist id="lcSeqList"></datalist>
-      </div>
-      <div class="field">
-        <label>CARRIER</label>
-        <input id="lcCarrierField" placeholder="Auto or manual">
-      </div>
-      <div class="field">
-        <label>POL</label>
-        <input id="lcPolField" placeholder="POL">
-      </div>
-      <div class="field">
-        <label>POD</label>
-        <input id="lcPodField" placeholder="POD">
-      </div>
-      <div class="field">
-        <label>20DV RATE</label>
-        <input id="lcDv20Field" placeholder="USD">
-      </div>
-      <div class="field">
-        <label>40HC RATE</label>
-        <input id="lcHc40Field" placeholder="USD">
-      </div>
-      <div class="field" style="justify-content:flex-end">
-        <label>&nbsp;</label>
-        <button class="primary ios-btn" id="lcFetchRateBtn" style="min-height:30px;padding:0 10px;white-space:nowrap">
-          <i class="bi bi-arrow-down-circle"></i> FETCH
-        </button>
-      </div>
-    </div>
-
-    <!-- CHARGES TABLE — inline editable -->
-    <div class="lc-table-scroll">
-      <table class="lc-main-table">
-        <thead>
-          <tr>
-            <th style="width:180px">DESCRIPTION</th>
-            <th style="width:120px">TYPE</th>
-            <th style="width:72px">CURRENCY</th>
-            <th style="width:80px">AMOUNT</th>
-            <th style="width:100px">APPLIES TO</th>
-            <th style="width:60px">ACTION</th>
-          </tr>
-        </thead>
-        <tbody id="lcTableBody">
-          <tr id="lcEmptyRow"><td colspan="6" style="text-align:center;color:var(--muted);padding:12px">NO CHARGES — FETCH A RATE OR USE BUTTONS BELOW</td></tr>
-        </tbody>
-        <!-- ADD NEW ROW (always at bottom of table) -->
-        <tfoot>
-          <tr style="background:rgba(255,255,255,.5)">
-            <td><input id="lcNewDesc" placeholder="Description e.g. THC"></td>
-            <td>
-              <select id="lcNewType">
-                <option value="per_container">PER CONTAINER</option>
-                <option value="per_bl">PER B/L</option>
-                <option value="per_cbm">PER CBM</option>
-                <option value="per_ton">PER TON</option>
-                <option value="lumpsum">LUMPSUM</option>
-              </select>
-            </td>
-            <td>
-              <select id="lcNewCur">
-                <option value="USD">USD</option><option value="INR">INR</option>
-                <option value="EUR">EUR</option><option value="AED">AED</option>
-                <option value="GBP">GBP</option><option value="CNY">CNY</option>
-              </select>
-            </td>
-            <td><input id="lcNewAmt" type="number" placeholder="0"></td>
-            <td>
-              <select id="lcNewApp">
-                <option value="both">BOTH</option>
-                <option value="20dv">20DV</option>
-                <option value="40hc">40HC</option>
-              </select>
-            </td>
-            <td>
-              <button class="icon-btn success" id="lcAddRowBtn" title="Add row"><i class="bi bi-plus-lg"></i></button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
 
     <!-- ACTIONS -->
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
