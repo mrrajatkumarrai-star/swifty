@@ -1,7 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/global", "destination": "/global-rates.html" },
-    { "source": "/user", "destination": "/user.html" }
+    {
+      "source": "/locals",
+      "destination": "/locals.html"
+    },
+    {
+      "source": "/global",
+      "destination": "/global-rates.html"
+    },
+    {
+      "source": "/user",
+      "destination": "/user.html"
+    }
   ]
 }
