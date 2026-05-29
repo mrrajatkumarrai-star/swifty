@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>FR8X ADMIN</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
 <style>
 :root{
   --bg1:#e9f2ff;
@@ -155,11 +156,7 @@ button,input,select,textarea{font:inherit}
   padding:0 10px;
   font-size:12px;
 }
-.section-tabs button.active{
-  background:rgba(17,24,39,.94);
-  color:#fff;
-  border-color:rgba(17,24,39,.88);
-}
+.section-tabs button.active { background: #87CEEB !important; color: #111827 !important; border-color: #87CEEB !important; font-weight: 600; }
 
 input,select,textarea{
   width:100%;
@@ -862,518 +859,1655 @@ col.col-act{width:140px!important}
 .fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
 
 </style>
+
+<meta content="true" name="merged-locals"/>
+<style>
+#sectionLocals{display:none}
+#sectionLocals.active{display:block}
+#sectionLocals .workspace-container{height:auto;min-height:70vh}
+#sectionLocals header{display:block}
+</style>
+<style>
+:root {
+  --bg1: #ffffff;
+  --bg2: #ffffff;
+  --bg3: #ffffff;
+  --glass: #ffffff;
+  --border: #d0d0d0;
+  --text: #000000;
+  --muted: #000000;
+  --primary: #000000;
+  --success: #000000;
+  --danger: #000000;
+  --warning: #000000;
+  --yellow-btn: #f0f0f0;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --header-h: 52px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Navine", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-weight: normal !important;
+  text-transform: uppercase !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+body {
+  font-size: 11px;
+  color: #000000;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+body, body * {
+  color: #000000 !important;
+}
+
+header {
+  height: var(--header-h);
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: var(--shadow-soft);
+  z-index: 100;
+}
+
+.dark-heading {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+
+.feedable-input {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #b0b0b0;
+  background: #ffffff;
+  color: #000000 !important;
+  font-size: 11px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.feedable-input:focus {
+  border-color: #808080;
+  background: #ffffff;
+  color: #000000 !important;
+}
+
+.wa-paste-input {
+  border: 2px solid #25D366 !important;
+  background-color: #f6fdf8 !important;
+}
+.wa-paste-input::placeholder {
+  color: #1a9647 !important;
+  font-weight: bold;
+}
+
+.yellow-master-trigger {
+  background-color: #f0f0f0 !important;
+  color: #000000 !important;
+  border: 1px solid #a0a0a0 !important;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.yellow-master-trigger:hover {
+  filter: brightness(0.97);
+}
+
+.workspace-container {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - var(--header-h));
+  padding: 12px;
+  gap: 0;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.left-workspace-panel {
+  width: 40%;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-drag-splitter {
+  width: 10px;
+  cursor: col-resize;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.2s;
+  z-index: 50;
+}
+
+.ui-drag-splitter:hover,
+.ui-drag-splitter.active {
+  background: #f0f0f0;
+}
+
+.ui-drag-splitter::after {
+  content: "";
+  width: 2px;
+  height: 24px;
+  background: #a0a0a0;
+  border-radius: 1px;
+}
+
+.right-workspace-panel {
+  flex: 1;
+  min-width: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.combobox-root {
+  position: relative;
+  width: 100%;
+}
+
+.suggestions-dropdown-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #b0b0b0;
+  border-radius: var(--radius-sm);
+  max-height: 140px;
+  overflow-y: auto;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: none;
+}
+
+.suggestions-dropdown-wrapper div {
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #000000;
+}
+
+.suggestions-dropdown-wrapper div:hover {
+  background: #f2f2f2;
+  color: #000000;
+}
+
+.table-scroll-container {
+  overflow-y: auto;
+  flex: 1;
+  border: 1px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  background: #f2f2f2;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+tr:hover td {
+  background: #f9f9f9;
+}
+
+.btn {
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  background: #f0f0f0;
+  color: #000000 !important;
+}
+
+.btn-primary,
+.btn-success,
+.btn-warning,
+.btn-danger,
+.btn-neutral {
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+  border: 1px solid #a0a0a0 !important;
+}
+
+.grid-btn-icon {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #000000 !important;
+  transition: opacity 0.15s;
+}
+
+.grid-btn-icon:hover { opacity: 0.85; }
+
+.btn-icon-action {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #000000 !important;
+}
+
+.charge-row-item {
+  display: grid;
+  grid-template-columns: auto 1.4fr 0.9fr 0.8fr 1fr;
+  gap: 6px;
+  margin-bottom: 4px;
+  align-items: center;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.popup-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.popup-window {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 650px;
+  max-width: 95vw;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+}
+</style>
+<style>
+/* Make layout full width specifically when locals tab is active */
+body:has(#sectionLocals.active) .layout-grid {
+    grid-template-columns: 1fr !important;
+}
+body:has(#sectionLocals.active) .container {
+    max-width: 100% !important;
+    padding: 0 16px !important;
+}
+</style>
 </head>
 <body>
-
-<div id="loader" class="loader">
-  <div class="loader-box">
-    <div class="spinner"></div>
-    <div id="loaderText" class="title">UPDATING...</div>
-    <div id="loaderSub" class="note" style="margin-top:4px">PLEASE WAIT</div>
-  </div>
+<div class="loader" id="loader">
+<div class="loader-box">
+<div class="spinner"></div>
+<div class="title" id="loaderText">UPDATING...</div>
+<div class="note" id="loaderSub" style="margin-top:4px">PLEASE WAIT</div>
 </div>
-
-<div id="pinGate" class="overlay">
-  <div class="card narrow">
-    <div class="title">FR8X ACCESS</div>
-    <div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
-    <div class="pin-row">
-      <input class="pin-input" id="pin1" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin2" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin3" maxlength="1" inputmode="numeric" type="password">
-      <input class="pin-input" id="pin4" maxlength="1" inputmode="numeric" type="password">
-    </div>
-    <div class="toolbar">
-      <button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
-      <button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser-fill"></i> CLEAR</button>
-    </div>
-  </div>
 </div>
-
-<div id="uploadOverlay" class="overlay hidden">
-  <div class="card">
-    <div class="modal-head">
-      <div class="title" style="text-align:left">UPLOAD / EXPORT</div>
-      <button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <div class="note" style="margin-bottom:8px">
+<div class="overlay" id="pinGate">
+<div class="card narrow">
+<div class="title">FR8X ACCESS</div>
+<div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
+<div class="pin-row">
+<input class="pin-input" id="pin1" inputmode="numeric" maxlength="1" type="password"/>
+<input class="pin-input" id="pin2" inputmode="numeric" maxlength="1" type="password"/>
+<input class="pin-input" id="pin3" inputmode="numeric" maxlength="1" type="password"/>
+<input class="pin-input" id="pin4" inputmode="numeric" maxlength="1" type="password"/>
+</div>
+<div class="toolbar">
+<button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
+<button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser-fill"></i> CLEAR</button>
+</div>
+</div>
+</div>
+<div class="overlay hidden" id="uploadOverlay">
+<div class="card">
+<div class="modal-head">
+<div class="title" style="text-align:left">UPLOAD / EXPORT</div>
+<button class="ghost icon-only" id="closeUploadBtn"><i class="bi bi-x-lg"></i></button>
+</div>
+<div class="note" style="margin-bottom:8px">
       CSV IMPORT SUPPORTED. TYPE: V = HANDOVER, S = SAILING. ROUTING CAN BE IN ROUTING / VIA / ROUTE.
     </div>
-
-    <div class="import-options">
-      <label class="option-chip">
-        <input type="checkbox" id="clearEditorAfterImport">
+<div class="import-options">
+<label class="option-chip">
+<input id="clearEditorAfterImport" type="checkbox"/>
         CLEAR UPDATED RECORD / EDITOR AFTER IMPORT
       </label>
-      <label class="option-chip">
-        <input type="checkbox" id="clearImportPreviewAfterApply" checked>
+<label class="option-chip">
+<input checked="" id="clearImportPreviewAfterApply" type="checkbox"/>
         CLEAR IMPORT PREVIEW AFTER APPLY
       </label>
-    </div>
-
-    <div class="toolbar" style="margin-bottom:8px">
-      <button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
-      <button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
-      <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
-      <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
-    </div>
-
-    <input type="file" id="fileInput" class="file-input" accept=".csv,.txt" />
-
-    <div class="table-wrap desktop-table">
-      <table>
-        <colgroup>
-          <col class="col-chk">
-          <col class="col-seq">
-          <col class="col-carrier">
-          <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-          <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-          <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt"><col class="col-route"><col class="col-rem">
-        </colgroup>
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAllUpload"></th>
-            <th>SEQ</th>
-            <th>CARRIER</th>
-            <th>POR</th>
-            <th>POL</th>
-            <th>POD</th>
-            <th>FPOD</th>
-            <th>20DV</th>
-            <th>20 TYPE</th>
-            <th>40HC</th>
-            <th>40 TYPE</th>
-            <th>F/T</th>
-            <th>DATE</th>
-            <th>TYPE</th>
-            <th>TT</th>
-            <th>ROUTING</th>
-            <th>REMARKS</th>
-          </tr>
-        </thead>
-        <tbody id="uploadBody"></tbody>
-      </table>
-    </div>
-
-    <div class="mobile-list" id="uploadMobile"></div>
-  </div>
 </div>
+<div class="toolbar" style="margin-bottom:8px">
+<button class="primary" id="downloadTemplateBtn"><i class="bi bi-download"></i> TEMPLATE</button>
+<button class="success" id="pickFileBtn"><i class="bi bi-upload"></i> IMPORT FILE</button>
+<button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
+<button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
+</div>
+<input accept=".csv,.txt" class="file-input" id="fileInput" type="file">
+<div class="table-wrap desktop-table">
+<table>
+<colgroup>
+<col class="col-chk"/>
+<col class="col-seq"/>
+<col class="col-carrier"/>
+<col class="col-loc"/><col class="col-loc"/><col class="col-loc"/><col class="col-loc"/>
+<col class="col-rate"/><col class="col-type"/><col class="col-rate"/><col class="col-type"/>
+<col class="col-rate"/><col class="col-date"/><col class="col-type"/><col class="col-tt"/><col class="col-route"/><col class="col-rem"/>
+</colgroup>
+<thead>
+<tr>
+<th><input id="selectAllUpload" type="checkbox"/></th>
+<th>SEQ</th>
+<th>CARRIER</th>
+<th>POR</th>
+<th>POL</th>
+<th>POD</th>
+<th>FPOD</th>
+<th>20DV</th>
+<th>20 TYPE</th>
+<th>40HC</th>
+<th>40 TYPE</th>
+<th>F/T</th>
+<th>DATE</th>
+<th>TYPE</th>
+<th>TT</th>
+<th>ROUTING</th>
+<th>REMARKS</th>
+</tr>
+</thead>
+<tbody id="uploadBody"></tbody>
+</table>
+</div>
+<div class="mobile-list" id="uploadMobile"></div>
+</input></div>
+</div>
+<div class="hidden" id="appShell">
+<div class="header">
+<div class="brand">FR8X ADMIN</div>
+<div class="header-right">
+<button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
+<span class="badge" id="activeCount">0 ACTIVE</span>
+<button class="ghost ios-btn icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
+<button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
+<span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
+</div>
+</div>
+<div class="container">
+<div class="topbar">
+<input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:340px"/>
+<div class="toolbar">
+<button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
+<button class="primary" id="copySelectedRatesBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
+<button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
+</div>
+</div>
+<div class="bulk-bar">
+<div class="bulk-info">
+<div class="note" id="selectedCountInfo">0 SELECTED</div>
+<div class="note" id="activeCellInfo">NO ACTIVE CELL</div>
+</div>
+<div class="bulk-actions">
+<button class="ghost" id="clearActiveCellBtn"><i class="bi bi-grid-3x3-gap"></i> CLEAR ACTIVE CELL</button>
+</div>
+</div>
+<div class="section-tabs">
+<button class="active" data-view="active" id="tabActiveBtn">ACTIVE RATES</button>
+<button data-view="expired" id="tabExpiredBtn">EXPIRED RATES</button>
+<button data-view="all" id="tabAllBtn">ALL RATES</button>
+<button data-view="dimensions" id="tabDimBtn">DIMENSIONS</button>
+<button data-view="markups" id="tabMarkupBtn">MARKUP</button>
 
-<div id="appShell" class="hidden">
-  <div class="header">
-    <div class="brand">FR8X ADMIN</div>
-    <div class="header-right">
-      <button class="ghost icon-only" id="openUploadBtn" title="UPLOAD / EXPORT"><i class="bi bi-file-earmark-spreadsheet"></i></button>
-      <span class="badge" id="activeCount">0 ACTIVE</span>
-      <button class="ghost ios-btn icon-only" id="openCalcBtn" title="CALCULATOR"><i class="bi bi-calculator-fill"></i></button>
-      <button class="ghost ios-btn icon-only" id="openFxBtn" title="EXCHANGE RATES"><i class="bi bi-currency-exchange"></i></button>
-      <span class="badge" id="expiredCount" style="color:var(--danger)">0 EXPIRED</span>
+      <button data-view="locals" id="tabLocalsBtn">LOCALS</button>
     </div>
-  </div>
-
-  <div class="container">
-    <div class="topbar">
-      <input id="globalSearch" placeholder="GLOBAL SEARCH" style="max-width:340px">
-      <div class="toolbar">
-        <button class="warning" id="migrateSeqBtn"><i class="bi bi-arrow-repeat"></i> UPDATE SEQ</button>
-        <button class="primary" id="copySelectedRatesBtn"><i class="bi bi-clipboard2-check"></i> COPY SELECTED</button>
-        <button class="danger" id="bulkDeleteBtn"><i class="bi bi-trash3"></i> DELETE SELECTED</button>
-      </div>
-    </div>
-
-    <div class="bulk-bar">
-      <div class="bulk-info">
-        <div class="note" id="selectedCountInfo">0 SELECTED</div>
-        <div class="note" id="activeCellInfo">NO ACTIVE CELL</div>
-      </div>
-      <div class="bulk-actions">
-        <button class="ghost" id="clearActiveCellBtn"><i class="bi bi-grid-3x3-gap"></i> CLEAR ACTIVE CELL</button>
-      </div>
-    </div>
-
-    <div class="section-tabs">
-      <button class="active" id="tabActiveBtn" data-view="active">ACTIVE RATES</button>
-      <button id="tabExpiredBtn" data-view="expired">EXPIRED RATES</button>
-      <button id="tabAllBtn" data-view="all">ALL RATES</button>
-      <button id="tabDimBtn" data-view="dimensions">DIMENSIONS</button>
-      <button id="tabMarkupBtn" data-view="markups">MARKUP</button>
-    </div>
-
-    <div class="layout-grid">
-      <div class="panel" id="editorPanel">
-        <div class="section-head">
-          <div>
-            <div style="font-size:13px;">RATE EDITOR</div>
-            <div class="note" id="editorState">CREATE OR UPDATE RATE</div>
-          </div>
-        </div>
-
-        <div class="form">
-          <div class="field span12">
-            <label for="carrier">CARRIER</label>
-            <input id="carrier" placeholder="Carrier">
-          </div>
-
-          <div class="field span6">
-            <label for="por">POR</label>
-            <input id="por" placeholder="POR">
-          </div>
-          <div class="field span6">
-            <label for="pol">POL</label>
-            <input id="pol" placeholder="POL">
-          </div>
-
-          <div class="field span6">
-            <label for="pod">POD</label>
-            <input id="pod" placeholder="POD">
-          </div>
-          <div class="field span6">
-            <label for="fpod">FPOD</label>
-            <input id="fpod" placeholder="FPOD">
-          </div>
-
-          <div class="inline-pair">
-            <div class="field">
-              <label for="container20Type">20DV TYPE</label>
-              <select id="container20Type">
-                <option value="">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="dv20">USD 20DV</label>
-              <input id="dv20" placeholder="USD 20DV">
-            </div>
-          </div>
-
-          <div class="inline-pair">
-            <div class="field">
-              <label for="container40Type">40HC TYPE</label>
-              <select id="container40Type">
-                <option value="">STANDARD</option>
-                <option value="OT">OT</option>
-                <option value="OG">OG</option>
-                <option value="FR">FR</option>
-                <option value="DG">DG</option>
-                <option value="RF">RF</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="hc40">USD 40HC</label>
-              <input id="hc40" placeholder="USD 40HC">
-            </div>
-          </div>
-
-          <div class="field span6">
-            <label for="ft">F/T</label>
-            <input id="ft" placeholder="F/T">
-          </div>
-          <div class="field span6">
-            <label for="validity">VALIDITY</label>
-            <input id="validity" type="date">
-          </div>
-
-          <div class="field span6">
-            <label for="tt">TT</label>
-            <input id="tt" placeholder="TT">
-          </div>
-          <div class="field span6">
-            <label for="via">ROUTING</label>
-            <input id="via" placeholder="Routing">
-          </div>
-
-          <div class="field span6">
-            <label for="rateType">TYPE</label>
-            <select id="rateType">
-              <option value="V">HANDOVER</option>
-              <option value="S">SAILING</option>
-            </select>
-          </div>
-
-          <div class="field span12">
-            <label for="remarks">REMARKS</label>
-            <textarea id="remarks" placeholder="Remarks" maxlength="250"></textarea>
-          </div>
-
-          <div class="editor-actions span12">
-            <button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
-            <button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
-            <button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-            <button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="rightPanel">
-        <div class="panel section active" id="sectionRates">
-          <div class="section-head">
-            <div class="note" id="sectionLabel">ACTIVE RATES</div>
-            <div class="note">CLICK ANY CELL TO REFLECT IT. HOVER TO VIEW FULL TEXT.</div>
-          </div>
-
-          <div class="table-wrap desktop-table">
-            <table>
-              <colgroup>
-                <col class="col-chk">
-                <col class="col-seq">
-                <col class="col-carrier">
-                <col class="col-loc"><col class="col-loc"><col class="col-loc"><col class="col-loc">
-                <col class="col-rate"><col class="col-type"><col class="col-rate"><col class="col-type">
-                <col class="col-rate"><col class="col-date"><col class="col-type"><col class="col-tt">
-                <col class="col-route"><col class="col-rem"><col class="col-act">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th><input type="checkbox" id="selectAllRows"></th>
-                  <th><div class="sort-head"><span>SEQ</span><button class="sort-btn" data-sort="seq"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>CARRIER</span><button class="sort-btn" data-sort="carrier"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POR</span><button class="sort-btn" data-sort="por"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POL</span><button class="sort-btn" data-sort="pol"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>POD</span><button class="sort-btn" data-sort="pod"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>FPOD</span><button class="sort-btn" data-sort="fpod"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>20DV</span><button class="sort-btn" data-sort="dv20"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>20TYPE</span><button class="sort-btn" data-sort="container20Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>40HC</span><button class="sort-btn" data-sort="hc40"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>40TYPE</span><button class="sort-btn" data-sort="container40Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>F/T</span><button class="sort-btn" data-sort="ft"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>DATE</span><button class="sort-btn" data-sort="validity"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>TYPE</span><button class="sort-btn" data-sort="type"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>TT</span><button class="sort-btn" data-sort="tt"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>ROUTING</span><button class="sort-btn" data-sort="via"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th><div class="sort-head"><span>REMARKS</span><button class="sort-btn" data-sort="remarks"><i class="bi bi-caret-down-fill"></i></button></div></th>
-                  <th>ACTION</th>
-                </tr>
-                <tr class="filter-row">
-                  <th></th>
-                  <th><input data-col="seq" placeholder="FILTER"></th>
-                  <th><input data-col="carrier" placeholder="FILTER"></th>
-                  <th><input data-col="por" placeholder="FILTER"></th>
-                  <th><input data-col="pol" placeholder="FILTER"></th>
-                  <th><input data-col="pod" placeholder="FILTER"></th>
-                  <th><input data-col="fpod" placeholder="FILTER"></th>
-                  <th><input data-col="dv20" placeholder="FILTER"></th>
-                  <th><input data-col="container20Type" placeholder="FILTER"></th>
-                  <th><input data-col="hc40" placeholder="FILTER"></th>
-                  <th><input data-col="container40Type" placeholder="FILTER"></th>
-                  <th><input data-col="ft" placeholder="FILTER"></th>
-                  <th><input data-col="validity" placeholder="FILTER"></th>
-                  <th><input data-col="type" placeholder="FILTER"></th>
-                  <th><input data-col="tt" placeholder="FILTER"></th>
-                  <th><input data-col="via" placeholder="FILTER"></th>
-                  <th><input data-col="remarks" placeholder="FILTER"></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="tbody"></tbody>
-            </table>
-          </div>
-
-          <div class="mobile-list" id="mobileRates"></div>
-        </div>
-
-        <div class="panel section" id="sectionDim">
-          <div style="font-size:13px;margin-bottom:6px">CONTAINER DIMENSIONS</div>
-
-          <div class="fit-card">
-            <div style="font-size:13px;margin-bottom:4px">CARGO FIT ADVISOR</div>
-            <div class="note">ENTER CARGO SIZE. IF IT EXCEEDS CONTAINER LIMITS, TREAT IT AS BREAK BULK.</div>
-            <div class="fit-grid">
-              <div class="field" style="margin:0">
-                <label for="cargoL">LENGTH (M)</label>
-                <input id="cargoL" type="number" step="0.01" placeholder="e.g. 5.8">
-              </div>
-              <div class="field" style="margin:0">
-                <label for="cargoW">WIDTH (M)</label>
-                <input id="cargoW" type="number" step="0.01" placeholder="e.g. 2.2">
-              </div>
-              <div class="field" style="margin:0">
-                <label for="cargoH">HEIGHT (M)</label>
-                <input id="cargoH" type="number" step="0.01" placeholder="e.g. 2.3">
-              </div>
-              <div class="field" style="margin:0;justify-content:flex-end">
-                <label>&nbsp;</label>
-                <button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK</button>
-              </div>
-            </div>
-            <div class="fit-result" id="fitResult">
-              <span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>
-            </div>
-          </div>
-
-          <div class="info-strip">
+<div class="layout-grid">
+<div class="panel" id="editorPanel">
+<div class="section-head">
+<div>
+<div style="font-size:13px;">RATE EDITOR</div>
+<div class="note" id="editorState">CREATE OR UPDATE RATE</div>
+</div>
+</div>
+<div class="form">
+<div class="field span12">
+<label for="carrier">CARRIER</label>
+<input id="carrier" placeholder="Carrier"/>
+</div>
+<div class="field span6">
+<label for="por">POR</label>
+<input id="por" placeholder="POR"/>
+</div>
+<div class="field span6">
+<label for="pol">POL</label>
+<input id="pol" placeholder="POL"/>
+</div>
+<div class="field span6">
+<label for="pod">POD</label>
+<input id="pod" placeholder="POD"/>
+</div>
+<div class="field span6">
+<label for="fpod">FPOD</label>
+<input id="fpod" placeholder="FPOD"/>
+</div>
+<div class="inline-pair">
+<div class="field">
+<label for="container20Type">20DV TYPE</label>
+<select id="container20Type">
+<option value="">STANDARD</option>
+<option value="OT">OT</option>
+<option value="OG">OG</option>
+<option value="FR">FR</option>
+<option value="DG">DG</option>
+<option value="RF">RF</option>
+</select>
+</div>
+<div class="field">
+<label for="dv20">USD 20DV</label>
+<input id="dv20" placeholder="USD 20DV"/>
+</div>
+</div>
+<div class="inline-pair">
+<div class="field">
+<label for="container40Type">40HC TYPE</label>
+<select id="container40Type">
+<option value="">STANDARD</option>
+<option value="OT">OT</option>
+<option value="OG">OG</option>
+<option value="FR">FR</option>
+<option value="DG">DG</option>
+<option value="RF">RF</option>
+</select>
+</div>
+<div class="field">
+<label for="hc40">USD 40HC</label>
+<input id="hc40" placeholder="USD 40HC"/>
+</div>
+</div>
+<div class="field span6">
+<label for="ft">F/T</label>
+<input id="ft" placeholder="F/T"/>
+</div>
+<div class="field span6">
+<label for="validity">VALIDITY</label>
+<input id="validity" type="date"/>
+</div>
+<div class="field span6">
+<label for="tt">TT</label>
+<input id="tt" placeholder="TT"/>
+</div>
+<div class="field span6">
+<label for="via">ROUTING</label>
+<input id="via" placeholder="Routing"/>
+</div>
+<div class="field span6">
+<label for="rateType">TYPE</label>
+<select id="rateType">
+<option value="V">HANDOVER</option>
+<option value="S">SAILING</option>
+</select>
+</div>
+<div class="field span12">
+<label for="remarks">REMARKS</label>
+<textarea id="remarks" maxlength="250" placeholder="Remarks"></textarea>
+</div>
+<div class="editor-actions span12">
+<button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
+<button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
+<button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
+<button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
+</div>
+</div>
+</div>
+<div id="rightPanel">
+<div class="panel section active" id="sectionRates">
+<div class="section-head">
+<div class="note" id="sectionLabel">ACTIVE RATES</div>
+<div class="note">CLICK ANY CELL TO REFLECT IT. HOVER TO VIEW FULL TEXT.</div>
+</div>
+<div class="table-wrap desktop-table">
+<table>
+<colgroup>
+<col class="col-chk"/>
+<col class="col-seq"/>
+<col class="col-carrier"/>
+<col class="col-loc"/><col class="col-loc"/><col class="col-loc"/><col class="col-loc"/>
+<col class="col-rate"/><col class="col-type"/><col class="col-rate"/><col class="col-type"/>
+<col class="col-rate"/><col class="col-date"/><col class="col-type"/><col class="col-tt"/>
+<col class="col-route"/><col class="col-rem"/><col class="col-act"/>
+</colgroup>
+<thead>
+<tr>
+<th><input id="selectAllRows" type="checkbox"/></th>
+<th><div class="sort-head"><span>SEQ</span><button class="sort-btn" data-sort="seq"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>CARRIER</span><button class="sort-btn" data-sort="carrier"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>POR</span><button class="sort-btn" data-sort="por"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>POL</span><button class="sort-btn" data-sort="pol"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>POD</span><button class="sort-btn" data-sort="pod"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>FPOD</span><button class="sort-btn" data-sort="fpod"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>20DV</span><button class="sort-btn" data-sort="dv20"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>20TYPE</span><button class="sort-btn" data-sort="container20Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>40HC</span><button class="sort-btn" data-sort="hc40"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>40TYPE</span><button class="sort-btn" data-sort="container40Type"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>F/T</span><button class="sort-btn" data-sort="ft"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>DATE</span><button class="sort-btn" data-sort="validity"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>TYPE</span><button class="sort-btn" data-sort="type"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>TT</span><button class="sort-btn" data-sort="tt"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>ROUTING</span><button class="sort-btn" data-sort="via"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th><div class="sort-head"><span>REMARKS</span><button class="sort-btn" data-sort="remarks"><i class="bi bi-caret-down-fill"></i></button></div></th>
+<th>ACTION</th>
+</tr>
+<tr class="filter-row">
+<th></th>
+<th><input data-col="seq" placeholder="FILTER"/></th>
+<th><input data-col="carrier" placeholder="FILTER"/></th>
+<th><input data-col="por" placeholder="FILTER"/></th>
+<th><input data-col="pol" placeholder="FILTER"/></th>
+<th><input data-col="pod" placeholder="FILTER"/></th>
+<th><input data-col="fpod" placeholder="FILTER"/></th>
+<th><input data-col="dv20" placeholder="FILTER"/></th>
+<th><input data-col="container20Type" placeholder="FILTER"/></th>
+<th><input data-col="hc40" placeholder="FILTER"/></th>
+<th><input data-col="container40Type" placeholder="FILTER"/></th>
+<th><input data-col="ft" placeholder="FILTER"/></th>
+<th><input data-col="validity" placeholder="FILTER"/></th>
+<th><input data-col="type" placeholder="FILTER"/></th>
+<th><input data-col="tt" placeholder="FILTER"/></th>
+<th><input data-col="via" placeholder="FILTER"/></th>
+<th><input data-col="remarks" placeholder="FILTER"/></th>
+<th></th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+<div class="mobile-list" id="mobileRates"></div>
+</div>
+<div class="panel section" id="sectionDim">
+<div style="font-size:13px;margin-bottom:6px">CONTAINER DIMENSIONS</div>
+<div class="fit-card">
+<div style="font-size:13px;margin-bottom:4px">CARGO FIT ADVISOR</div>
+<div class="note">ENTER CARGO SIZE. IF IT EXCEEDS CONTAINER LIMITS, TREAT IT AS BREAK BULK.</div>
+<div class="fit-grid">
+<div class="field" style="margin:0">
+<label for="cargoL">LENGTH (M)</label>
+<input id="cargoL" placeholder="e.g. 5.8" step="0.01" type="number"/>
+</div>
+<div class="field" style="margin:0">
+<label for="cargoW">WIDTH (M)</label>
+<input id="cargoW" placeholder="e.g. 2.2" step="0.01" type="number"/>
+</div>
+<div class="field" style="margin:0">
+<label for="cargoH">HEIGHT (M)</label>
+<input id="cargoH" placeholder="e.g. 2.3" step="0.01" type="number"/>
+</div>
+<div class="field" style="margin:0;justify-content:flex-end">
+<label> </label>
+<button class="primary" id="checkFitBtn"><i class="bi bi-box-seam"></i> CHECK</button>
+</div>
+</div>
+<div class="fit-result" id="fitResult">
+<span class="fit-pill">ENTER LENGTH / WIDTH / HEIGHT TO CHECK</span>
+</div>
+</div>
+<div class="info-strip">
             ALL VALUES BELOW ARE STANDARD REFERENCE FIGURES. FINAL ACCEPTANCE, INTERNAL CLEARANCE, DOOR OPENING, PAYLOAD, OPEN-TOP BOW HEIGHT, FLAT-RACK END WALL CONDITION, AND LINE-SPECIFIC TOLERANCE MUST ALWAYS BE CONFIRMED WITH THE CARRIER. IF CARGO EXCEEDS CONTAINER CAPABILITY, TREAT IT AS BREAK BULK.
           </div>
-
-          <div class="dim-grid">
-            <div class="dim-card">
-              <div class="dim-card-title">20GP / 20DV</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">6.058 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.900 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">33.2 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~28.25 t</span></div>
-              </div>
-              <div class="dim-note">Standard dry container for dense cargo, pallets, cartons, and short machinery.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40GP</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.591 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.393 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">67.7 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.78 t</span></div>
-              </div>
-              <div class="dim-note">Longer dry container with standard height clearance.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">76.3 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.51 t</span></div>
-              </div>
-              <div class="dim-note">Most common export container when extra internal height is needed.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">45HC</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">13.716 × 2.438 × 2.896 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">13.556 × 2.352 × 2.698 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">86.0 CBM</span></div>
-                <div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">Carrier specific</span></div>
-              </div>
-              <div class="dim-note">For extra volume and length, subject to service acceptance.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.895 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">5.44 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Bow / tarp height varies</span></div>
-              </div>
-              <div class="dim-note">Useful when cargo cannot be stuffed through standard rear doors.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40OT</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.029 × 2.350 × 2.350 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">11.58 × 2.23 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Confirm removable bows</span></div>
-              </div>
-              <div class="dim-note">Used for tall cargo where top loading is required.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">5.63 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Lashing / point load</span></div>
-              </div>
-              <div class="dim-note">Good for heavy machinery and project cargo with special lashing needs.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40FR</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">11.65 × 2.20 m</span></div>
-                <div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Special stowage may apply</span></div>
-              </div>
-              <div class="dim-note">For long machinery and outsized project cargo.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">20RF</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.45 × 2.29 × 2.26 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Machinery reduces cube</span></div>
-              </div>
-              <div class="dim-note">For chilled or frozen cargo with strict temperature profile.</div>
-            </div>
-
-            <div class="dim-card">
-              <div class="dim-card-title">40RH</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">11.58 × 2.29 × 2.55 m</span></div>
-                <div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
-                <div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
-                <div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Do not block air channels</span></div>
-              </div>
-              <div class="dim-note">Most common reefer size for larger temperature-controlled shipments.</div>
-            </div>
-
-            <div class="dim-card" style="background:rgba(254,242,242,.76)">
-              <div class="dim-card-title">BREAK BULK</div>
-              <div class="dim-specs">
-                <div class="dim-spec"><span class="dim-label">When to use</span><span class="dim-value">If cargo exceeds container limits</span></div>
-                <div class="dim-spec"><span class="dim-label">Typical cases</span><span class="dim-value">Extreme length / width / height / non-containerizable cargo</span></div>
-                <div class="dim-spec"><span class="dim-label">Handling</span><span class="dim-value">Special stowage / lifting / planning</span></div>
-              </div>
-              <div class="dim-note">If it does not safely fit a suitable container type, treat it as break bulk.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel section" id="sectionMarkup">
-          <div style="font-size:13px;margin-bottom:6px">COPY MARKUP SETTINGS</div>
-          <div class="note" style="margin-bottom:8px">
+<div class="dim-grid">
+<div class="dim-card">
+<div class="dim-card-title">20GP / 20DV</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">6.058 × 2.438 × 2.591 m</span></div>
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.900 × 2.352 × 2.393 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
+<div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">33.2 CBM</span></div>
+<div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~28.25 t</span></div>
+</div>
+<div class="dim-note">Standard dry container for dense cargo, pallets, cartons, and short machinery.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">40GP</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.591 m</span></div>
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.393 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.280 m</span></div>
+<div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">67.7 CBM</span></div>
+<div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.78 t</span></div>
+</div>
+<div class="dim-note">Longer dry container with standard height clearance.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">40HC</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">12.192 × 2.438 × 2.896 m</span></div>
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.032 × 2.352 × 2.698 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
+<div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">76.3 CBM</span></div>
+<div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">~26.51 t</span></div>
+</div>
+<div class="dim-note">Most common export container when extra internal height is needed.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">45HC</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">External L×W×H</span><span class="dim-value">13.716 × 2.438 × 2.896 m</span></div>
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">13.556 × 2.352 × 2.698 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">2.340 × 2.585 m</span></div>
+<div class="dim-spec"><span class="dim-label">Capacity</span><span class="dim-value">86.0 CBM</span></div>
+<div class="dim-spec"><span class="dim-label">Payload</span><span class="dim-value">Carrier specific</span></div>
+</div>
+<div class="dim-note">For extra volume and length, subject to service acceptance.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">20OT</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.895 × 2.350 × 2.350 m</span></div>
+<div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">5.44 × 2.23 m</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Bow / tarp height varies</span></div>
+</div>
+<div class="dim-note">Useful when cargo cannot be stuffed through standard rear doors.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">40OT</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">12.029 × 2.350 × 2.350 m</span></div>
+<div class="dim-spec"><span class="dim-label">Roof Opening</span><span class="dim-value">11.58 × 2.23 m</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Top loading / over-height</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Confirm removable bows</span></div>
+</div>
+<div class="dim-note">Used for tall cargo where top loading is required.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">20FR</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">5.63 × 2.20 m</span></div>
+<div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Lashing / point load</span></div>
+</div>
+<div class="dim-note">Good for heavy machinery and project cargo with special lashing needs.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">40FR</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Platform L×W</span><span class="dim-value">11.65 × 2.20 m</span></div>
+<div class="dim-spec"><span class="dim-label">End Walls</span><span class="dim-value">Fixed / collapsible</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Over-width / over-height</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Special stowage may apply</span></div>
+</div>
+<div class="dim-note">For long machinery and outsized project cargo.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">20RF</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">5.45 × 2.29 × 2.26 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Machinery reduces cube</span></div>
+</div>
+<div class="dim-note">For chilled or frozen cargo with strict temperature profile.</div>
+</div>
+<div class="dim-card">
+<div class="dim-card-title">40RH</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">Internal L×W×H</span><span class="dim-value">11.58 × 2.29 × 2.55 m</span></div>
+<div class="dim-spec"><span class="dim-label">Door W×H</span><span class="dim-value">Reduced vs dry</span></div>
+<div class="dim-spec"><span class="dim-label">Use</span><span class="dim-value">Temperature control</span></div>
+<div class="dim-spec"><span class="dim-label">Caution</span><span class="dim-value">Do not block air channels</span></div>
+</div>
+<div class="dim-note">Most common reefer size for larger temperature-controlled shipments.</div>
+</div>
+<div class="dim-card" style="background:rgba(254,242,242,.76)">
+<div class="dim-card-title">BREAK BULK</div>
+<div class="dim-specs">
+<div class="dim-spec"><span class="dim-label">When to use</span><span class="dim-value">If cargo exceeds container limits</span></div>
+<div class="dim-spec"><span class="dim-label">Typical cases</span><span class="dim-value">Extreme length / width / height / non-containerizable cargo</span></div>
+<div class="dim-spec"><span class="dim-label">Handling</span><span class="dim-value">Special stowage / lifting / planning</span></div>
+</div>
+<div class="dim-note">If it does not safely fit a suitable container type, treat it as break bulk.</div>
+</div>
+</div>
+</div>
+<div class="panel section" id="sectionMarkup">
+<div style="font-size:13px;margin-bottom:6px">COPY MARKUP SETTINGS</div>
+<div class="note" style="margin-bottom:8px">
             BASE ADMIN RATES STAY EXACTLY AS ENTERED. ONLY USER MARKUP IS APPLIED WHEN YOU PRESS COPY.
           </div>
-
-          <div class="markup-card">
-            <div class="markup-row">
-              <label>USER 20DV MARKUP (%)</label>
-              <input type="number" id="userMu20" step="0.01" placeholder="e.g. 1">
-              <span class="badge" id="userMu20Status">NOT SET</span>
-            </div>
-            <div class="markup-row" style="margin-bottom:0">
-              <label>USER 40HC MARKUP (%)</label>
-              <input type="number" id="userMu40" step="0.01" placeholder="e.g. 2">
-              <span class="badge" id="userMu40Status">NOT SET</span>
-            </div>
-          </div>
-
-          <div class="toolbar">
-            <button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
-            <button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
-          </div>
-
-          <div class="applied-markups">
-            <div style="margin-bottom:4px">CURRENT COPY CALCULATION</div>
-            <div id="appliedMarkupsList">
-              <div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="markup-card">
+<div class="markup-row">
+<label>USER 20DV MARKUP (%)</label>
+<input id="userMu20" placeholder="e.g. 1" step="0.01" type="number"/>
+<span class="badge" id="userMu20Status">NOT SET</span>
+</div>
+<div class="markup-row" style="margin-bottom:0">
+<label>USER 40HC MARKUP (%)</label>
+<input id="userMu40" placeholder="e.g. 2" step="0.01" type="number"/>
+<span class="badge" id="userMu40Status">NOT SET</span>
+</div>
+</div>
+<div class="toolbar">
+<button class="primary" id="saveUserMarkupBtn" style="flex:1"><i class="bi bi-floppy-fill"></i> SAVE USER</button>
+<button class="ghost" id="clearUserMarkupBtn" style="flex:1"><i class="bi bi-x-octagon-fill"></i> CLEAR USER</button>
+</div>
+<div class="applied-markups">
+<div style="margin-bottom:4px">CURRENT COPY CALCULATION</div>
+<div id="appliedMarkupsList">
+<div style="padding:4px;color:var(--muted)">No user markup configured. COPY uses base rates.</div>
+</div>
+</div>
 </div>
 
-<div id="globalPopup"></div>
+      <div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot" style="width:100%;height:100%;"><header>
+<div style="display:flex; align-items:center; gap:8px;">
+<i class="bi bi-shield-shaded" style="font-size:16px;"></i>
+<span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
+</div>
+<div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; align-items:center;">
+<input class="feedable-input wa-paste-input" id="waFetchInput" oninput="handleWaSeqPaste(this)" placeholder="PASTE SEQ NO TO COPY WHATSAPP..." style="width:230px; margin-right:15px;" type="text"/>
+<button class="yellow-master-trigger" onclick="launchMasterPopup('carrier')"><i class="bi bi-plus"></i> CARRIER MASTER</button>
+<button class="yellow-master-trigger" onclick="launchMasterPopup('pol')"><i class="bi bi-plus"></i> LOCATION PORT MASTER</button>
+<button class="yellow-master-trigger" onclick="launchMasterPopup('chargeHead')"><i class="bi bi-plus"></i> CHARGES HEAD MASTER</button>
+<button class="yellow-master-trigger" onclick="launchCountsCalculatorPopup()"><i class="bi bi-calculator"></i> COUNTS</button>
+</div>
+</header><div class="workspace-container" id="uiSplitWorkspace">
+<div class="left-workspace-panel" id="leftPanel">
+<div class="glass-card">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+<span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES DATABASE</span>
+<input class="feedable-input" id="gridSearchFilter" oninput="refreshRecordsGrid(this.value)" placeholder="SEARCH RECORDS..." style="width:150px; padding:4px 8px;" type="text"/>
+</div>
+<div class="table-scroll-container">
+<table>
+<thead>
+<tr>
+<th class="dark-heading">SEQ NO</th>
+<th class="dark-heading">CARRIER</th>
+<th class="dark-heading">POL/POD</th>
+<th class="dark-heading" style="text-align:center; width:130px;">ACTIONS</th>
+</tr>
+</thead>
+<tbody id="recordsGridBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="ui-drag-splitter" id="uiSplitter"></div>
+<div class="right-workspace-panel" id="rightPanel">
+<div class="glass-card" style="overflow-y: auto;">
+<div class="dark-heading" id="formEditorHeader" style="margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+        NEW RATES
+      </div>
+<input id="activeWorkingId" type="hidden" value=""/>
+<div style="margin-bottom:8px;">
+<label class="dark-heading" style="display:block; margin-bottom:2px;">CARRIER</label>
+<div class="combobox-root">
+<input class="feedable-input" id="formCarrierInput" onfocus="displayMenuOptions('carrier')" oninput="filterMenuOptions('carrier')" placeholder="TYPE TO SEARCH CARRIER..." type="text"/>
+<div class="suggestions-dropdown-wrapper" id="carrierOptionsWrapper"></div>
+</div>
+</div>
+<div style="margin-bottom:8px;">
+<label class="dark-heading" style="display:block; margin-bottom:2px;">SHIPMENT TYPE</label>
+<select class="feedable-input" id="formShipmentTypeSelect" onchange="onShipmentTypeToggleChange()">
+<option value="EXPORT">EXPORT</option>
+<option value="IMPORT">IMPORT</option>
+</select>
+</div>
+<div style="margin-bottom:10px;">
+<label class="dark-heading" id="lblDynamicLocationPort" style="display:block; margin-bottom:2px;">POL (PORT OF LOADING)</label>
+<div class="combobox-root">
+<input class="feedable-input" id="formPolInput" onfocus="displayMenuOptions('pol')" oninput="filterMenuOptions('pol')" placeholder="TYPE TO SEARCH LOCATION PORT..." type="text"/>
+<div class="suggestions-dropdown-wrapper" id="polOptionsWrapper"></div>
+</div>
+</div>
+<div style="border-top:1px dashed rgba(0,0,0,0.1); padding-top:8px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+<span class="dark-heading">CHARGES HEAD CONFIGURATION GRID</span>
+<button class="btn btn-primary" onclick="injectBlankChargeRowLine()" style="padding:2px 6px; font-size:9px;" type="button"><i class="bi bi-plus-lg"></i> ADD CHARGE LINE</button>
+</div>
+<div style="display:grid; grid-template-columns: 28px 1.4fr 0.9fr 0.8fr 1fr; gap:6px; margin-bottom:2px;">
+<span class="dark-heading" style="font-size:8px;">ACT</span>
+<span class="dark-heading" style="font-size:8px;">CHARGES HEAD</span>
+<span class="dark-heading" style="font-size:8px;">BASIS</span>
+<span class="dark-heading" style="font-size:8px;">CURR</span>
+<span class="dark-heading" style="font-size:8px;">AMOUNT</span>
+</div>
+<div id="nestedChargesLinesContainer"></div>
+</div>
+<div style="display:flex; gap:6px; margin-top:12px;">
+<button class="btn btn-success" onclick="commitEditorToDatabase()" style="flex:1;"><i class="bi bi-check-circle"></i> SAVE CONFIGURATION</button>
+<button class="btn btn-neutral" onclick="resetFormEditorState()">CLEAR</button>
+</div>
+</div>
+</div>
+</div><!-- Popups Below --><div class="popup-overlay" id="masterManagementPopup">
+<div class="popup-window">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<span class="dark-heading" id="popupScopeTitle">CONFIGURATION REGISTRY METRICS</span>
+<button class="btn-icon-action remove" onclick="dismissMasterPopup()"><i class="bi bi-x-lg"></i></button>
+</div>
+<div style="margin-bottom:10px;">
+<input class="feedable-input" id="txtMasterDirectorySearch" oninput="generatePopupDataViewItems()" placeholder="SEARCH CURRENT SYSTEM MASTER REGISTRY MATCHES..." type="text"/>
+</div>
+<div style="display:flex; gap:6px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed rgba(0,0,0,0.1);">
+<input class="feedable-input" id="txtNewMasterEntry" placeholder="INSERT NEW DIRECTORY ENTITY DESIGNATION..." type="text"/>
+<button class="btn btn-primary" onclick="appendNewItemToActiveMaster()" style="padding:0 16px;">INSERT</button>
+</div>
+<span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">EXISTING SYSTEM ALLOCATED ENTRIES:</span>
+<div id="popupMasterItemsListView" style="max-height:220px; overflow-y:auto; border:1px solid rgba(0,0,0,0.08); background:#ffffff; border-radius:6px;"></div>
+</div>
+</div><div class="popup-overlay" id="countsCalculatorPopup">
+<div class="popup-window" style="width:600px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+<span class="dark-heading"><i class="bi bi-calculator"></i> VOLUME MULTI-CONTAINER CALCULATION ESTIMATOR MATRIX</span>
+<button class="btn-icon-action remove" onclick="dismissCountsCalculatorPopup()"><i class="bi bi-x-lg"></i></button>
+</div>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+<div>
+<label class="dark-heading" style="display:block; margin-bottom:2px;">CARRIER</label>
+<select class="feedable-input" id="countsCarrierSelect" onchange="runVolumeCountsCalculation()"></select>
+</div>
+<div>
+<label class="dark-heading" style="display:block; margin-bottom:2px;">LOCATION PORT (POL / POD)</label>
+<select class="feedable-input" id="countsPolSelect" onchange="runVolumeCountsCalculation()"></select>
+</div>
+</div>
+<div style="margin-bottom:12px;">
+<label class="dark-heading" style="display:block; margin-bottom:2px;">CONTAINER LOAD VOLUME COUNT QUANTITY (E.G. 4-5 BOXES)</label>
+<input class="feedable-input" id="countsVolumeInput" max="999" min="1" oninput="runVolumeCountsCalculation()" type="number" value="4"/>
+</div>
+<span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">LIVE SPECIFIC CALCULATION RUN MATRIX SUMMARY:</span>
+<div id="countsBreakdownResultView" style="flex:1; max-height:240px; overflow-y:auto; padding:10px; font-size:11px; background:#f7f7f7; border: 1px solid #c0c0c0; border-radius: 6px;"></div>
+</div>
+</div><script>
+const LocalDBMS = {
+  carriers: [],
+  pols: [],
+  chargeHeads: [],
+  records: []
+};
 
+window.LocalDBMS = LocalDBMS;
+let currentScopeMasterType = '';
+const fixedFxToInrRates = { USD: 83.50, EUR: 89.40, AED: 22.73, GBP: 105.10, INR: 1.00 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  initMouseSplitterResizeEngine();
+  refreshRecordsGrid();
+  resetFormEditorState();
+  document.addEventListener("click", (evt) => {
+    if (!evt.target.closest('.combobox-root')) {
+      document.querySelectorAll('.suggestions-dropdown-wrapper').forEach(w => w.style.display = 'none');
+    }
+  });
+});
+
+function initMouseSplitterResizeEngine() {
+  const splitter = document.getElementById("uiSplitter");
+  const leftPanel = document.getElementById("leftPanel");
+  const container = document.getElementById("uiSplitWorkspace");
+  let isDragging = false;
+
+  splitter.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    splitter.classList.add("active");
+    document.body.style.cursor = "col-resize";
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    const containerRect = container.getBoundingClientRect();
+    const relativeX = e.clientX - containerRect.left;
+    let computedWidthPercentage = (relativeX / containerRect.width) * 100;
+    if (computedWidthPercentage > 15 && computedWidthPercentage < 80) {
+      leftPanel.style.width = computedWidthPercentage + "%";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (isDragging) {
+      isDragging = false;
+      splitter.classList.remove("active");
+      document.body.style.cursor = "default";
+    }
+  });
+}
+
+function onShipmentTypeToggleChange() {
+  const mode = document.getElementById("formShipmentTypeSelect").value;
+  const labelElement = document.getElementById("lblDynamicLocationPort");
+  labelElement.innerText = mode === "IMPORT" ? "POD (PORT OF DISCHARGE)" : "POL (PORT OF LOADING)";
+}
+
+// Handler for WhatsApp Seq Number Quick Paste
+function handleWaSeqPaste(el) {
+  const val = el.value.trim().toUpperCase();
+  if (!val) return;
+
+  const matchedRecord = LocalDBMS.records.find(r => (r.seqNo || "").toUpperCase() === val);
+  
+  if (matchedRecord) {
+    exportRowToWhatsAppFriendly(matchedRecord.id);
+    el.value = ""; // Clear immediately after generating
+  }
+}
+
+function refreshRecordsGrid(filterQuery = "") {
+  const tbody = document.getElementById("recordsGridBody");
+  tbody.innerHTML = "";
+  
+  let filteredSet = [...LocalDBMS.records];
+  filterQuery = filterQuery.trim().toUpperCase();
+
+  if (filterQuery) {
+    filteredSet = filteredSet.filter(r => 
+      (r.seqNo || "").includes(filterQuery) || 
+      (r.carrier || "").includes(filterQuery) || 
+      (r.pol || "").includes(filterQuery)
+    );
+  }
+
+  if (filteredSet.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align:center; padding:16px; color:#666;">NO ACTIVE RATES FOUND</td>
+      </tr>
+    `;
+    return;
+  }
+
+  filteredSet.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td style="font-size:10px; font-weight:700; color:#1a9647 !important;">${item.seqNo || "N/A"}</td>
+      <td style="font-weight:700 !important; font-size:10px;">${item.carrier || ""}</td>
+      <td style="font-size:10px;">${item.pol || ""}</td>
+      <td style="text-align:center; white-space:nowrap;">
+        <button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT RATE"><i class="bi bi-pencil"></i></button>
+        <button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE RATE"><i class="bi bi-ui-checks"></i></button>
+        <button class="grid-btn-icon grid-btn-copy" onclick="exportRowToWhatsAppFriendly('${item.id}')" title="COPY AS WHATSAPP DATA TEMPLATE"><i class="bi bi-whatsapp"></i></button>
+        <button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE RATE"><i class="bi bi-trash"></i></button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function exportRowToWhatsAppFriendly(id) {
+  const record = LocalDBMS.records.find(r => r.id === id);
+  if(!record) return;
+
+  let messageLines = [];
+  messageLines.push(`*SEQ NO:* ${record.seqNo || 'N/A'}`);
+  messageLines.push(`*CARRIER:* ${record.carrier}`);
+  messageLines.push(`*ROUTE:* ${record.pol}`);
+  messageLines.push(`*TYPE:* ${record.shipmentType || 'EXPORT'}`);
+  messageLines.push(``);
+  messageLines.push(`*CHARGES:*`);
+  
+  record.charges.forEach(ch => {
+    let mappedBasis = "CONTAINER";
+    if(ch.basis === 'BL') mappedBasis = "DOCS";
+    if(ch.basis === 'SHPMT') mappedBasis = "SHIPMENT";
+    messageLines.push(`• ${ch.head} : ${ch.currency} ${ch.amount} / ${mappedBasis}`);
+  });
+
+  const finalStringTextFormat = messageLines.join('\n');
+
+  navigator.clipboard.writeText(finalStringTextFormat).then(() => {
+    alert("WHATSAPP TEXT TEMPLATE COPIED TO SYSTEM CLIPBOARD:\n\n" + finalStringTextFormat);
+  }).catch(() => {
+    alert("CLIPBOARD WRITING OPERATION INTERRUPTED.");
+  });
+}
+
+function injectBlankChargeRowLine(values = { head: '', currency: 'INR', amount: '', basis: 'CTR' }) {
+  const targetContainer = document.getElementById("nestedChargesLinesContainer");
+  const specificRowId = 'line_' + Math.random().toString(36).substr(2, 9);
+
+  const wrapperElement = document.createElement("div");
+  wrapperElement.className = "charge-row-item";
+  wrapperElement.id = specificRowId;
+
+  wrapperElement.innerHTML = `
+    <div>
+      <button class="btn-icon-action remove" type="button" onclick="evictChargeRowLine('${specificRowId}')"><i class="bi bi-dash-lg"></i></button>
+    </div>
+    <div class="combobox-root">
+      <input type="text" class="feedable-input txt-charge-row-head" placeholder="SELECT HEAD..." value="${values.head}" onfocus="displayRowSuggestions('${specificRowId}')" oninput="filterRowSuggestions('${specificRowId}')">
+      <div class="suggestions-dropdown-wrapper row-suggest-box"></div>
+    </div>
+    <select class="feedable-input sel-charge-row-basis">
+      <option value="CTR" ${values.basis==='CTR'?'selected':''}>CTR</option>
+      <option value="BL" ${values.basis==='BL'?'selected':''}>B/L</option>
+      <option value="SHPMT" ${values.basis==='SHPMT'?'selected':''}>SHPMT</option>
+    </select>
+    <select class="feedable-input sel-charge-row-currency">
+      <option value="INR" ${values.currency==='INR'?'selected':''}>INR</option>
+      <option value="USD" ${values.currency==='USD'?'selected':''}>USD</option>
+      <option value="EUR" ${values.currency==='EUR'?'selected':''}>EUR</option>
+      <option value="AED" ${values.currency==='AED'?'selected':''}>AED</option>
+    </select>
+    <input type="number" class="feedable-input num-charge-row-amount" placeholder="AMT" value="${values.amount}">
+  `;
+  targetContainer.appendChild(wrapperElement);
+}
+
+function evictChargeRowLine(id) {
+  const element = document.getElementById(id);
+  if(element) element.remove();
+}
+
+function displayMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function filterMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function displayRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function filterRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function populateMenuFilter(txt, wrapper, source, selectionCallback) {
+  wrapper.innerHTML = "";
+  const match = source.filter(i => i.toLowerCase().includes(txt.toLowerCase()));
+  if(match.length === 0) {
+    const emptyDiv = document.createElement("div");
+    emptyDiv.innerText = "NO ENTRY MATCH FOUND";
+    emptyDiv.style.color = "#000000";
+    wrapper.appendChild(emptyDiv);
+  } else {
+    match.forEach(matchedValue => {
+      const entryDiv = document.createElement("div");
+      entryDiv.innerText = matchedValue;
+      entryDiv.onclick = () => selectionCallback(matchedValue);
+      wrapper.appendChild(entryDiv);
+    });
+  }
+  wrapper.style.display = "block";
+}
+
+function resetFormEditorState() {
+  document.getElementById("activeWorkingId").value = "";
+  document.getElementById("formEditorHeader").innerText = "NEW RATES";
+  document.getElementById("formCarrierInput").value = "";
+  document.getElementById("formPolInput").value = "";
+  document.getElementById("formShipmentTypeSelect").value = "EXPORT";
+  onShipmentTypeToggleChange();
+  document.getElementById("nestedChargesLinesContainer").innerHTML = "";
+  injectBlankChargeRowLine();
+}
+
+function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
+  const foundItem = LocalDBMS.records.find(r => r.id === id);
+  if(!foundItem) return;
+
+  if (runDuplicateExtraction) {
+    document.getElementById("activeWorkingId").value = "";
+    document.getElementById("formEditorHeader").innerText = "DUPLICATE RATE";
+  } else {
+    document.getElementById("activeWorkingId").value = foundItem.id;
+    document.getElementById("formEditorHeader").innerText = `EDIT RATE (SEQ: ${foundItem.seqNo || 'N/A'})`;
+  }
+
+  document.getElementById("formCarrierInput").value = foundItem.carrier || "";
+  document.getElementById("formPolInput").value = foundItem.pol || "";
+  document.getElementById("formShipmentTypeSelect").value = foundItem.shipmentType || "EXPORT";
+  onShipmentTypeToggleChange();
+
+  const targetBox = document.getElementById("nestedChargesLinesContainer");
+  targetBox.innerHTML = "";
+  (foundItem.charges || []).forEach(chItem => {
+    injectBlankChargeRowLine(chItem);
+  });
+
+  if (!targetBox.children.length) {
+    injectBlankChargeRowLine();
+  }
+}
+
+async function commitEditorToDatabase() {
+  const currentId = document.getElementById("activeWorkingId").value;
+  const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
+  const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
+  const shipmentTypeVal = document.getElementById("formShipmentTypeSelect").value;
+
+  if(!carrierVal || !polVal) {
+    alert("VALIDATION FAULT: CARRIER AND PORT DESIGNATION CHANNELS MUST BE MANUALLY SET.");
+    return;
+  }
+  if(!LocalDBMS.carriers.includes(carrierVal) || !LocalDBMS.pols.includes(polVal)) {
+    alert("DIRECTORY FAULT: SPECIFIED VALUES NOT CONFIRMED INSIDE INDEPENDENT REGISTRIES.");
+    return;
+  }
+
+  const linesRows = document.querySelectorAll("#nestedChargesLinesContainer .charge-row-item");
+  const aggregatedCharges = [];
+  let brokenLineDetected = false;
+
+  linesRows.forEach(el => {
+    const head = el.querySelector(".txt-charge-row-head").value.trim().toUpperCase();
+    const curr = el.querySelector(".sel-charge-row-currency").value;
+    const amt = parseFloat(el.querySelector(".num-charge-row-amount").value);
+    const bas = el.querySelector(".sel-charge-row-basis").value;
+
+    if(!head || isNaN(amt)) {
+      brokenLineDetected = true;
+      return;
+    }
+    if(!LocalDBMS.chargeHeads.includes(head)) {
+      alert(`VALIDATION FAULT: "${head}" HAS NOT BEEN INDEPENDENTLY PROVISIONED IN CHARGE SYSTEMS.`);
+      brokenLineDetected = true;
+      return;
+    }
+    aggregatedCharges.push({ head, currency: curr, amount: amt, basis: bas });
+  });
+
+  if(brokenLineDetected || aggregatedCharges.length === 0) {
+    alert("PROCESSING REJECTED: PLEASE VERIFY UNIFORM DATA FIELDS EXIST ACROSS EVERY CHARGE LINE INJECTED.");
+    return;
+  }
+
+  // Dynamic Sequence Number Generation
+  let seqNoToSave = "";
+  const existingRec = LocalDBMS.records.find(r => r.id === currentId);
+  
+  if (existingRec && existingRec.seqNo && !currentId.includes("duplicate")) {
+    seqNoToSave = existingRec.seqNo;
+  } else {
+    // Car + Pol 3 letter combo setup
+    const carCode = carrierVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const polCode = polVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    seqNoToSave = `${carCode}${polCode}${dd}:${hh}`;
+  }
+
+  const payload = {
+    seqNo: seqNoToSave,
+    carrier: carrierVal,
+    shipmentType: shipmentTypeVal,
+    pol: polVal,
+    charges: aggregatedCharges
+  };
+
+  try {
+    if(currentId) {
+      payload.id = currentId;
+      await window.saveRecordToFirebase(payload);
+    } else {
+      const newId = await window.saveRecordToFirebase(payload);
+      payload.id = newId;
+    }
+
+    resetFormEditorState();
+    await loadRecordsFromFirebase();
+  } catch (error) {
+    console.error("Record save failed:", error);
+  }
+}
+
+async function removeRecordFromDatabase(id) {
+  if(confirm("CONFIRM COMMAND: REMOVE THIS RATE FROM ACTIVE STORAGE?")) {
+    try {
+      await window.deleteRecordFromFirebase(id);
+      if (document.getElementById("activeWorkingId").value === id) {
+        resetFormEditorState();
+      }
+      await loadRecordsFromFirebase();
+    } catch (error) {
+      console.error("Record delete failed:", error);
+    }
+  }
+}
+
+// Master Popups and Calculator Code Logic (Persisted intact)
+function launchMasterPopup(type) {
+  currentScopeMasterType = type;
+  document.getElementById("txtNewMasterEntry").value = "";
+  document.getElementById("txtMasterDirectorySearch").value = "";
+  const winTitle = document.getElementById("popupScopeTitle");
+  
+  if(type === 'carrier') winTitle.innerText = "CARRIER MASTER DATABASE SETUP CONFIGURATIONS";
+  if(type === 'pol') winTitle.innerText = "LOCATION PORT (POL / POD) REGISTRY MANAGEMENT";
+  if(type === 'chargeHead') winTitle.innerText = "CHARGES HEAD NOMENCLATURE ASSIGNMENTS REGISTRY";
+
+  generatePopupDataViewItems();
+  document.getElementById("masterManagementPopup").classList.add("visible");
+}
+function dismissMasterPopup() { document.getElementById("masterManagementPopup").classList.remove("visible"); }
+
+function generatePopupDataViewItems() {
+  const container = document.getElementById("popupMasterItemsListView");
+  const queryStr = document.getElementById("txtMasterDirectorySearch").value.toLowerCase();
+  container.innerHTML = "";
+  let targetSrc = [];
+
+  if(currentScopeMasterType === 'carrier') targetSrc = LocalDBMS.carriers;
+  if(currentScopeMasterType === 'pol') targetSrc = LocalDBMS.pols;
+  if(currentScopeMasterType === 'chargeHead') targetSrc = LocalDBMS.chargeHeads;
+
+  const filteredDataset = targetSrc.filter(item => item.toLowerCase().includes(queryStr));
+
+  if(filteredDataset.length === 0) {
+    container.innerHTML = `<div style="padding:12px; text-align:center;">NO COMPATIBLE DATA RECORDS MATCH FOUND</div>`;
+    return;
+  }
+  
+  filteredDataset.forEach((item) => {
+    const listRow = document.createElement("div");
+    listRow.style.padding = "6px 10px";
+    listRow.style.borderBottom = "1px solid rgba(0,0,0,0.04)";
+    listRow.style.display = "flex";
+    listRow.style.justifyContent = "space-between";
+    listRow.style.alignItems = "center";
+    listRow.innerHTML = `
+      <span style="font-size:11px; font-weight:700;">${item}</span>
+      <button class="btn-icon-action remove" style="width:18px; height:18px;" onclick='evictMasterDataEntry(${JSON.stringify(item)})'><i class="bi bi-trash" style="font-size:9px;"></i></button>
+    `;
+    container.appendChild(listRow);
+  });
+}
+
+async function appendNewItemToActiveMaster() {
+  const val = document.getElementById("txtNewMasterEntry").value.trim().toUpperCase();
+  if(!val) return;
+  try {
+    await window.saveMasterToFirebase(currentScopeMasterType, val);
+    document.getElementById("txtNewMasterEntry").value = "";
+    generatePopupDataViewItems();
+  } catch (error) { console.error("Master save failed:", error); }
+}
+
+async function evictMasterDataEntry(value) {
+  try {
+    await window.deleteMasterFromFirebase(currentScopeMasterType, value);
+    generatePopupDataViewItems();
+  } catch (error) { console.error("Master delete failed:", error); }
+}
+
+function launchCountsCalculatorPopup() {
+  const carrierSelect = document.getElementById("countsCarrierSelect");
+  const polSelect = document.getElementById("countsPolSelect");
+
+  carrierSelect.innerHTML = "";
+  LocalDBMS.carriers.forEach(c => carrierSelect.appendChild(new Option(c, c)));
+
+  polSelect.innerHTML = "";
+  LocalDBMS.pols.forEach(p => polSelect.appendChild(new Option(p, p)));
+
+  document.getElementById("countsVolumeInput").value = "4";
+  runVolumeCountsCalculation();
+  document.getElementById("countsCalculatorPopup").classList.add("visible");
+}
+function dismissCountsCalculatorPopup() { document.getElementById("countsCalculatorPopup").classList.remove("visible"); }
+
+function runVolumeCountsCalculation() {
+  const selectedCarrier = document.getElementById("countsCarrierSelect").value;
+  const selectedPort = document.getElementById("countsPolSelect").value;
+  const boxVolumeCount = parseInt(document.getElementById("countsVolumeInput").value) || 0;
+  const outputContainer = document.getElementById("countsBreakdownResultView");
+  outputContainer.innerHTML = "";
+
+  const matchedRecords = LocalDBMS.records.filter(r => r.carrier === selectedCarrier && r.pol === selectedPort);
+
+  if (matchedRecords.length === 0) {
+    outputContainer.innerHTML = `<div style="text-align:center; padding:20px 0;">NO CURRENT COMPATIBLE RATE FRAMEWORKS DETECTED MATCHING THIS SPECIFIC CARRIER + PORT PAIRING SELECTION.</div>`;
+    return;
+  }
+
+  let aggregatedSummaryHTML = "";
+  let overallRunningInrGrandTotal = 0;
+
+  matchedRecords.forEach((record, index) => {
+    aggregatedSummaryHTML += `<div style="margin-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.06); padding-bottom:6px;">
+      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (SEQ: ${record.seqNo || 'N/A'}) (${record.shipmentType || "EXPORT"})</span>
+      <table style="width:100%; margin-top:4px;">
+        <thead>
+          <tr>
+            <th style="font-size:8px; padding:4px;">CHARGE HEAD</th>
+            <th style="font-size:8px; padding:4px;">BASIS</th>
+            <th style="font-size:8px; padding:4px;">BASE RATE</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">MULTIPLIER RUN</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">TOTAL (INR)</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    let subRecordInrTotal = 0;
+    record.charges.forEach(ch => {
+      let runMultiplierFactor = 1;
+      let labelBasisMappingText = "ONE-TIME BL FLAT";
+
+      if (ch.basis === 'CTR') {
+        runMultiplierFactor = boxVolumeCount;
+        labelBasisMappingText = `${boxVolumeCount} X CONTAINERS`;
+      } else if (ch.basis === 'SHPMT') {
+        labelBasisMappingText = "ONE-TIME SHIPMENT FLAT";
+      }
+
+      const totalChargeLineCostInBaseCurrency = ch.amount * runMultiplierFactor;
+      const conversionWeightFactor = fixedFxToInrRates[ch.currency] || 1.00;
+      const finalLineInrValuation = totalChargeLineCostInBaseCurrency * conversionWeightFactor;
+      subRecordInrTotal += finalLineInrValuation;
+
+      aggregatedSummaryHTML += `
+        <tr>
+          <td style="padding:4px;">${ch.head}</td>
+          <td style="padding:4px; font-size:9px;">${ch.basis}</td>
+          <td style="padding:4px;">${ch.currency} ${ch.amount.toFixed(2)}</td>
+          <td style="padding:4px; text-align:right; font-size:9px;">${labelBasisMappingText}</td>
+          <td style="padding:4px; text-align:right; font-weight:700;">₹ ${finalLineInrValuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>`;
+    });
+
+    overallRunningInrGrandTotal += subRecordInrTotal;
+    aggregatedSummaryHTML += `
+        <tr>
+          <td colspan="4" style="padding:4px; font-weight:700; text-align:right;">FRAMEWORK CALCULATION TOTAL:</td>
+          <td style="padding:4px; font-weight:700; text-align:right;">₹ ${subRecordInrTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>`;
+  });
+
+  outputContainer.innerHTML = `
+    <div style="padding:10px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:700; font-size:10px;">VOLUME CALCULATION CONSOLIDATED SUMMARY VALUATION:</span>
+      <span style="font-size:13px; font-weight:700;">₹ ${overallRunningInrGrandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} INR</span>
+    </div>
+  ` + aggregatedSummaryHTML;
+}
+
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) { 
+    dismissMasterPopup(); 
+    dismissCountsCalculatorPopup();
+  }
+};
+</script><script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc, serverTimestamp, onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR5ad1W7bVRzXha6LPAGDsYjcy44Nlx3Q",
+  authDomain: "local-508e0.firebaseapp.com",
+  projectId: "local-508e0",
+  storageBucket: "local-508e0.firebasestorage.app",
+  messagingSenderId: "1041782996227",
+  appId: "1:1041782996227:web:4faf0e739bb7904c9cfd36"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.doc = doc;
+window.updateDoc = updateDoc;
+window.deleteDoc = deleteDoc;
+window.getDocs = getDocs;
+window.setDoc = setDoc;
+window.serverTimestamp = serverTimestamp;
+
+function masterDocId(type, value) {
+  return `${type}__${encodeURIComponent(String(value || "").trim().toUpperCase())}`;
+}
+
+function rebuildMasterArrays(snapshot) {
+  const carriers = [];
+  const pols = [];
+  const chargeHeads = [];
+
+  snapshot.docs.forEach((docSnap) => {
+    const data = docSnap.data() || {};
+    const type = String(data.type || "").toLowerCase();
+    const value = String(data.value || "").trim().toUpperCase();
+    if (!value) return;
+
+    if (type === "carrier") carriers.push(value);
+    if (type === "pol") pols.push(value);
+    if (type === "chargehead") chargeHeads.push(value);
+  });
+
+  LocalDBMS.carriers = [...new Set(carriers)].sort();
+  LocalDBMS.pols = [...new Set(pols)].sort();
+  LocalDBMS.chargeHeads = [...new Set(chargeHeads)].sort();
+
+  if (document.getElementById("masterManagementPopup")?.classList.contains("visible")) {
+    generatePopupDataViewItems();
+  }
+}
+
+function rebuildRateArray(snapshot) {
+  const firebaseRecords = snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data()
+  }));
+
+  LocalDBMS.records = firebaseRecords;
+  
+  // Uses the global un-namespaced function from earlier scripts to update UI
+  if (typeof refreshRecordsGrid === "function") {
+    const currentSearch = document.getElementById("gridSearchFilter")?.value || "";
+    refreshRecordsGrid(currentSearch);
+  }
+
+  const activeId = document.getElementById("activeWorkingId").value;
+  if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
+    if (typeof resetFormEditorState === "function") resetFormEditorState();
+  }
+}
+
+window.saveRecordToFirebase = async function(payload) {
+  try {
+    if (payload.id) {
+      const recordId = payload.id;
+      const { id, ...data } = payload;
+      await updateDoc(doc(db, "rates", recordId), {
+        ...data,
+        updatedAt: serverTimestamp()
+      });
+      return recordId;
+    }
+
+    const docRef = await addDoc(collection(db, "rates"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Firebase save failed:", error);
+    alert("Firebase save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteRecordFromFirebase = async function(recordId) {
+  try {
+    await deleteDoc(doc(db, "rates", recordId));
+  } catch (error) {
+    console.error("Firebase delete failed:", error);
+    alert("Firebase delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.saveMasterToFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await setDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)), {
+      type: normalizedType,
+      value: normalizedValue,
+      updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Master save failed:", error);
+    alert("Master save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteMasterFromFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await deleteDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)));
+  } catch (error) {
+    console.error("Master delete failed:", error);
+    alert("Master delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+async function loadRecordsFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "rates"));
+    rebuildRateArray(snapshot);
+  } catch (error) {
+    console.error("Firebase load failed:", error);
+  }
+}
+
+async function loadMastersFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "masters"));
+    rebuildMasterArrays(snapshot);
+  } catch (error) {
+    console.error("Firebase master load failed:", error);
+  }
+}
+
+window.listenToFirebaseRates = function() {
+  onSnapshot(collection(db, "rates"), (snapshot) => {
+    rebuildRateArray(snapshot);
+  }, (error) => {
+    console.error("Firebase realtime listener failed:", error);
+    loadRecordsFromFirebase();
+  });
+};
+
+window.listenToFirebaseMasters = function() {
+  onSnapshot(collection(db, "masters"), (snapshot) => {
+    rebuildMasterArrays(snapshot);
+  }, (error) => {
+    console.error("Firebase master realtime listener failed:", error);
+    loadMastersFromFirebase();
+  });
+};
+
+window.listenToFirebaseMasters();
+window.listenToFirebaseRates();
+</script></div></div>
+    </div>
+</div>
+</div>
+</div>
+<div id="globalPopup"></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -1651,7 +2785,7 @@ function updateSelectedInfo(){
 }
 function switchView(mode){
   viewMode = mode;
-  ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn"].forEach(id => $(id).classList.remove("active"));
+  ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn","tabLocalsBtn"].forEach(id => $(id).classList.remove("active"));
   ["sectionRates","sectionDim","sectionMarkup"].forEach(id => $(id).classList.remove("active"));
   $("editorPanel").classList.remove("hidden");
   $("sectionRates").classList.add("active");
@@ -1672,6 +2806,14 @@ function switchView(mode){
     $("sectionRates").classList.remove("active");
     $("sectionMarkup").classList.add("active");
     $("editorPanel").classList.add("hidden");
+  }
+  if(mode === "locals"){
+    $("tabLocalsBtn")?.classList.add("active");
+    $("sectionRates")?.classList.remove("active");
+    $("sectionDim")?.classList.remove("active");
+    $("sectionMarkup")?.classList.remove("active");
+    $("sectionLocals")?.classList.add("active");
+    $("editorPanel")?.classList.add("hidden");
   }
 
   if(["active","expired","all"].includes(mode)) render();
@@ -2626,93 +3768,89 @@ $('openFxBtn').onclick    = () => { tahoeOpen($('fxPopup')); if(!Object.keys(fxR
 $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
 
 </script>
-
 <!-- ============================================================
      CALCULATOR POPUP
      ============================================================ -->
-<div id="calcPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="calcPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-calculator-fill"></i>&nbsp; CALCULATOR</div>
-    <button class="ghost icon-only dp-close-btn" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-    <div class="calc-total-row">
-      <span class="lbl">TOTAL</span>
-      <span class="val" id="calcTotalVal">0.00</span>
-    </div>
-    <div class="calc-tape" id="calcTape">
-      <div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR + TO ADD</div>
-    </div>
-    <div class="calc-input-row">
-      <input id="calcNotepadInput" class="calc-notepad-input" placeholder="e.g.  1,925  ·  500+200  ·  (300)  ·  500x2" autocomplete="off" spellcheck="false">
-      <button class="primary" id="calcAddBtn"><i class="bi bi-plus-lg"></i></button>
-      <button class="ghost" id="calcUndoBtn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
-      <button class="ghost" id="calcClearBtn" title="Clear all"><i class="bi bi-trash3"></i></button>
-    </div>
-    <div style="display:flex;gap:5px;margin-top:5px">
-      <button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY TAPE</button>
-    </div>
-    <div class="note" style="margin-top:6px">ACCEPTS: <b>1,925</b> &nbsp;·&nbsp; <b>1000+500</b> &nbsp;·&nbsp; <b>1000 500</b> (space=add) &nbsp;·&nbsp; <b>(300)</b> &nbsp;·&nbsp; <b>500x2</b></div>
-  </div>
+<div class="draggable-popup hidden" id="calcPopup">
+<div class="dp-header" id="calcPopupHeader">
+<div class="dp-header-title"><i class="bi bi-calculator-fill"></i>  CALCULATOR</div>
+<button class="ghost icon-only dp-close-btn" id="closeCalcBtn"><i class="bi bi-x-lg"></i></button>
 </div>
-
+<div class="dp-body">
+<div class="calc-total-row">
+<span class="lbl">TOTAL</span>
+<span class="val" id="calcTotalVal">0.00</span>
+</div>
+<div class="calc-tape" id="calcTape">
+<div style="color:var(--muted);font-size:11px;text-align:center;padding:8px">TYPE A VALUE AND PRESS ENTER OR + TO ADD</div>
+</div>
+<div class="calc-input-row">
+<input autocomplete="off" class="calc-notepad-input" id="calcNotepadInput" placeholder="e.g.  1,925  ·  500+200  ·  (300)  ·  500x2" spellcheck="false"/>
+<button class="primary" id="calcAddBtn"><i class="bi bi-plus-lg"></i></button>
+<button class="ghost" id="calcUndoBtn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+<button class="ghost" id="calcClearBtn" title="Clear all"><i class="bi bi-trash3"></i></button>
+</div>
+<div style="display:flex;gap:5px;margin-top:5px">
+<button class="ghost" id="copyCalcBtn" style="flex:1"><i class="bi bi-clipboard"></i> COPY TAPE</button>
+</div>
+<div class="note" style="margin-top:6px">ACCEPTS: <b>1,925</b>  ·  <b>1000+500</b>  ·  <b>1000 500</b> (space=add)  ·  <b>(300)</b>  ·  <b>500x2</b></div>
+</div>
+</div>
 <!-- ============================================================
      EXCHANGE RATES POPUP
      ============================================================ -->
-<div id="fxPopup" class="draggable-popup hidden">
-  <div class="dp-header" id="fxPopupHeader">
-    <div class="dp-header-title"><i class="bi bi-currency-exchange"></i>&nbsp; LIVE EXCHANGE RATES</div>
-    <button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div class="dp-body">
-    <div class="toolbar" style="margin-bottom:8px">
-      <button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
-      <span class="badge" id="fxTimestamp">NOT LOADED</span>
-      <span style="font-size:11px;color:var(--muted)" id="fxStatusMsg"></span>
-    </div>
-    <div id="fxRateGrid" class="fx-rate-grid">
-      <div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
-
-    <!-- AMOUNT CONVERTER -->
-    <div class="fx-converter">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>&nbsp; AMOUNT CONVERTER</div>
-      <div class="fx-conv-grid">
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">AMOUNT</label>
-          <input id="fxConvAmt" type="number" placeholder="e.g. 1000" style="min-height:30px">
-        </div>
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">FROM</label>
-          <select id="fxConvFrom" style="min-height:30px">
-            <option value="USD">USD</option><option value="INR">INR</option>
-            <option value="EUR">EUR</option><option value="GBP">GBP</option>
-            <option value="AED">AED</option><option value="CNY">CNY</option>
-            <option value="SGD">SGD</option><option value="JPY">JPY</option>
-          </select>
-        </div>
-        <div class="field" style="margin:0">
-          <label style="font-size:11px">TO (MAIN)</label>
-          <select id="fxConvTo" style="min-height:30px">
-            <option value="INR">INR</option><option value="USD">USD</option>
-            <option value="EUR">EUR</option><option value="GBP">GBP</option>
-            <option value="AED">AED</option><option value="CNY">CNY</option>
-            <option value="SGD">SGD</option><option value="JPY">JPY</option>
-          </select>
-        </div>
-        <div class="field" style="margin:0;justify-content:flex-end">
-          <label style="font-size:11px">&nbsp;</label>
-          <button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button>
-        </div>
-      </div>
-      <div class="fx-conv-pills" id="fxConvResult">
-        <span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span>
-      </div>
-    </div>
-  </div>
+<div class="draggable-popup hidden" id="fxPopup">
+<div class="dp-header" id="fxPopupHeader">
+<div class="dp-header-title"><i class="bi bi-currency-exchange"></i>  LIVE EXCHANGE RATES</div>
+<button class="ghost icon-only dp-close-btn" id="closeFxBtn"><i class="bi bi-x-lg"></i></button>
 </div>
-
+<div class="dp-body">
+<div class="toolbar" style="margin-bottom:8px">
+<button class="primary ios-btn" id="refreshFxBtn"><i class="bi bi-arrow-clockwise"></i> REFRESH</button>
+<span class="badge" id="fxTimestamp">NOT LOADED</span>
+<span id="fxStatusMsg" style="font-size:11px;color:var(--muted)"></span>
+</div>
+<div class="fx-rate-grid" id="fxRateGrid">
+<div style="color:var(--muted);font-size:12px">CLICK REFRESH TO LOAD LIVE RATES...</div>
+</div>
+<div style="font-size:11px;color:var(--muted);margin-top:8px">SOURCE: OPEN.ER-API.COM — FREE TIER, UPDATES EVERY 24H.</div>
+<!-- AMOUNT CONVERTER -->
+<div class="fx-converter">
+<div style="font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:.02em"><i class="bi bi-calculator"></i>  AMOUNT CONVERTER</div>
+<div class="fx-conv-grid">
+<div class="field" style="margin:0">
+<label style="font-size:11px">AMOUNT</label>
+<input id="fxConvAmt" placeholder="e.g. 1000" style="min-height:30px" type="number"/>
+</div>
+<div class="field" style="margin:0">
+<label style="font-size:11px">FROM</label>
+<select id="fxConvFrom" style="min-height:30px">
+<option value="USD">USD</option><option value="INR">INR</option>
+<option value="EUR">EUR</option><option value="GBP">GBP</option>
+<option value="AED">AED</option><option value="CNY">CNY</option>
+<option value="SGD">SGD</option><option value="JPY">JPY</option>
+</select>
+</div>
+<div class="field" style="margin:0">
+<label style="font-size:11px">TO (MAIN)</label>
+<select id="fxConvTo" style="min-height:30px">
+<option value="INR">INR</option><option value="USD">USD</option>
+<option value="EUR">EUR</option><option value="GBP">GBP</option>
+<option value="AED">AED</option><option value="CNY">CNY</option>
+<option value="SGD">SGD</option><option value="JPY">JPY</option>
+</select>
+</div>
+<div class="field" style="margin:0;justify-content:flex-end">
+<label style="font-size:11px"> </label>
+<button class="primary ios-btn" id="fxConvBtn" style="min-height:30px;padding:0 10px"><i class="bi bi-arrow-left-right"></i> CONVERT</button>
+</div>
+</div>
+<div class="fx-conv-pills" id="fxConvResult">
+<span style="color:var(--muted);font-size:11px">ENTER AMOUNT AND PRESS CONVERT</span>
+</div>
+</div>
+</div>
+</div>
 <!-- ===== TOP RIGHT BUTTON + POPUP START ===== -->
 <style>
   #openDbmsPopupBtn{
@@ -2801,24 +3939,19 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
   }
 </style>
 
-<button id="openDbmsPopupBtn">OPEN DBMS</button>
-
 <div id="dbmsPopupOverlay">
-  <div class="dbms-popup-window">
-    <div class="dbms-popup-header">
-      <div class="dbms-popup-title">FR8X LOCALS</div>
-
-      <div class="dbms-popup-actions">
-        <button class="dbms-btn light" id="extractFromSecondHtmlBtn">EXTRACT / COPY</button>
-        <button class="dbms-btn" id="closeDbmsPopupBtn">X</button>
-      </div>
-    </div>
-
-    <!-- change locals.html to your 2nd HTML file name -->
-    <iframe id="dbmsFrame" src="locals.html"></iframe>
-  </div>
+<div class="dbms-popup-window">
+<div class="dbms-popup-header">
+<div class="dbms-popup-title">FR8X LOCALS</div>
+<div class="dbms-popup-actions">
+<button class="dbms-btn light" id="extractFromSecondHtmlBtn">EXTRACT / COPY</button>
+<button class="dbms-btn" id="closeDbmsPopupBtn">X</button>
 </div>
-
+</div>
+<!-- change locals.html to your 2nd HTML file name -->
+<iframe id="dbmsFrame" src="locals.html"></iframe>
+</div>
+</div>
 <script>
   const openDbmsPopupBtn = document.getElementById('openDbmsPopupBtn');
   const dbmsPopupOverlay = document.getElementById('dbmsPopupOverlay');
@@ -2868,6 +4001,751 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
 </script>
 <!-- ===== TOP RIGHT BUTTON + POPUP END ===== -->
 
+<script>
+(function(){
+  const oldSetView = window.setView;
+  window.setView = function(mode){
+    if(typeof oldSetView === 'function'){ oldSetView(mode); }
 
+    const ids = ['tabActiveBtn','tabExpiredBtn','tabAllBtn','tabDimBtn','tabMarkupBtn','tabLocalsBtn'];
+    ids.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
+
+    const sections = ['sectionRates','sectionDim','sectionMarkup','sectionLocals'];
+    sections.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
+
+    if(mode === 'locals'){
+      const btn = document.getElementById('tabLocalsBtn');
+      const sec = document.getElementById('sectionLocals');
+      const editor = document.getElementById('editorPanel');
+      if(btn) btn.classList.add('active');
+      if(sec) sec.classList.add('active');
+      if(editor) editor.classList.add('hidden');
+      return;
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = document.getElementById('tabLocalsBtn');
+    if(btn){
+      btn.addEventListener('click', function(){
+        if(typeof window.setView === 'function') window.setView('locals');
+      });
+    }
+  });
+})();
+</script>
+<script>
+const LocalDBMS = {
+  carriers: [],
+  pols: [],
+  chargeHeads: [],
+  records: []
+};
+
+window.LocalDBMS = LocalDBMS;
+let currentScopeMasterType = '';
+const fixedFxToInrRates = { USD: 83.50, EUR: 89.40, AED: 22.73, GBP: 105.10, INR: 1.00 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  initMouseSplitterResizeEngine();
+  refreshRecordsGrid();
+  resetFormEditorState();
+  document.addEventListener("click", (evt) => {
+    if (!evt.target.closest('.combobox-root')) {
+      document.querySelectorAll('.suggestions-dropdown-wrapper').forEach(w => w.style.display = 'none');
+    }
+  });
+});
+
+function initMouseSplitterResizeEngine() {
+  const splitter = document.getElementById("uiSplitter");
+  const leftPanel = document.getElementById("leftPanel");
+  const container = document.getElementById("uiSplitWorkspace");
+  let isDragging = false;
+
+  splitter.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    splitter.classList.add("active");
+    document.body.style.cursor = "col-resize";
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    const containerRect = container.getBoundingClientRect();
+    const relativeX = e.clientX - containerRect.left;
+    let computedWidthPercentage = (relativeX / containerRect.width) * 100;
+    if (computedWidthPercentage > 15 && computedWidthPercentage < 80) {
+      leftPanel.style.width = computedWidthPercentage + "%";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (isDragging) {
+      isDragging = false;
+      splitter.classList.remove("active");
+      document.body.style.cursor = "default";
+    }
+  });
+}
+
+function onShipmentTypeToggleChange() {
+  const mode = document.getElementById("formShipmentTypeSelect").value;
+  const labelElement = document.getElementById("lblDynamicLocationPort");
+  labelElement.innerText = mode === "IMPORT" ? "POD (PORT OF DISCHARGE)" : "POL (PORT OF LOADING)";
+}
+
+// Handler for WhatsApp Seq Number Quick Paste
+function handleWaSeqPaste(el) {
+  const val = el.value.trim().toUpperCase();
+  if (!val) return;
+
+  const matchedRecord = LocalDBMS.records.find(r => (r.seqNo || "").toUpperCase() === val);
+  
+  if (matchedRecord) {
+    exportRowToWhatsAppFriendly(matchedRecord.id);
+    el.value = ""; // Clear immediately after generating
+  }
+}
+
+function refreshRecordsGrid(filterQuery = "") {
+  const tbody = document.getElementById("recordsGridBody");
+  tbody.innerHTML = "";
+  
+  let filteredSet = [...LocalDBMS.records];
+  filterQuery = filterQuery.trim().toUpperCase();
+
+  if (filterQuery) {
+    filteredSet = filteredSet.filter(r => 
+      (r.seqNo || "").includes(filterQuery) || 
+      (r.carrier || "").includes(filterQuery) || 
+      (r.pol || "").includes(filterQuery)
+    );
+  }
+
+  if (filteredSet.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align:center; padding:16px; color:#666;">NO ACTIVE RATES FOUND</td>
+      </tr>
+    `;
+    return;
+  }
+
+  filteredSet.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td style="font-size:10px; font-weight:700; color:#1a9647 !important;">${item.seqNo || "N/A"}</td>
+      <td style="font-weight:700 !important; font-size:10px;">${item.carrier || ""}</td>
+      <td style="font-size:10px;">${item.pol || ""}</td>
+      <td style="text-align:center; white-space:nowrap;">
+        <button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT RATE"><i class="bi bi-pencil"></i></button>
+        <button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE RATE"><i class="bi bi-ui-checks"></i></button>
+        <button class="grid-btn-icon grid-btn-copy" onclick="exportRowToWhatsAppFriendly('${item.id}')" title="COPY AS WHATSAPP DATA TEMPLATE"><i class="bi bi-whatsapp"></i></button>
+        <button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE RATE"><i class="bi bi-trash"></i></button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function exportRowToWhatsAppFriendly(id) {
+  const record = LocalDBMS.records.find(r => r.id === id);
+  if(!record) return;
+
+  let messageLines = [];
+  messageLines.push(`*SEQ NO:* ${record.seqNo || 'N/A'}`);
+  messageLines.push(`*CARRIER:* ${record.carrier}`);
+  messageLines.push(`*ROUTE:* ${record.pol}`);
+  messageLines.push(`*TYPE:* ${record.shipmentType || 'EXPORT'}`);
+  messageLines.push(``);
+  messageLines.push(`*CHARGES:*`);
+  
+  record.charges.forEach(ch => {
+    let mappedBasis = "CONTAINER";
+    if(ch.basis === 'BL') mappedBasis = "DOCS";
+    if(ch.basis === 'SHPMT') mappedBasis = "SHIPMENT";
+    messageLines.push(`• ${ch.head} : ${ch.currency} ${ch.amount} / ${mappedBasis}`);
+  });
+
+  const finalStringTextFormat = messageLines.join('\n');
+
+  navigator.clipboard.writeText(finalStringTextFormat).then(() => {
+    alert("WHATSAPP TEXT TEMPLATE COPIED TO SYSTEM CLIPBOARD:\n\n" + finalStringTextFormat);
+  }).catch(() => {
+    alert("CLIPBOARD WRITING OPERATION INTERRUPTED.");
+  });
+}
+
+function injectBlankChargeRowLine(values = { head: '', currency: 'INR', amount: '', basis: 'CTR' }) {
+  const targetContainer = document.getElementById("nestedChargesLinesContainer");
+  const specificRowId = 'line_' + Math.random().toString(36).substr(2, 9);
+
+  const wrapperElement = document.createElement("div");
+  wrapperElement.className = "charge-row-item";
+  wrapperElement.id = specificRowId;
+
+  wrapperElement.innerHTML = `
+    <div>
+      <button class="btn-icon-action remove" type="button" onclick="evictChargeRowLine('${specificRowId}')"><i class="bi bi-dash-lg"></i></button>
+    </div>
+    <div class="combobox-root">
+      <input type="text" class="feedable-input txt-charge-row-head" placeholder="SELECT HEAD..." value="${values.head}" onfocus="displayRowSuggestions('${specificRowId}')" oninput="filterRowSuggestions('${specificRowId}')">
+      <div class="suggestions-dropdown-wrapper row-suggest-box"></div>
+    </div>
+    <select class="feedable-input sel-charge-row-basis">
+      <option value="CTR" ${values.basis==='CTR'?'selected':''}>CTR</option>
+      <option value="BL" ${values.basis==='BL'?'selected':''}>B/L</option>
+      <option value="SHPMT" ${values.basis==='SHPMT'?'selected':''}>SHPMT</option>
+    </select>
+    <select class="feedable-input sel-charge-row-currency">
+      <option value="INR" ${values.currency==='INR'?'selected':''}>INR</option>
+      <option value="USD" ${values.currency==='USD'?'selected':''}>USD</option>
+      <option value="EUR" ${values.currency==='EUR'?'selected':''}>EUR</option>
+      <option value="AED" ${values.currency==='AED'?'selected':''}>AED</option>
+    </select>
+    <input type="number" class="feedable-input num-charge-row-amount" placeholder="AMT" value="${values.amount}">
+  `;
+  targetContainer.appendChild(wrapperElement);
+}
+
+function evictChargeRowLine(id) {
+  const element = document.getElementById(id);
+  if(element) element.remove();
+}
+
+function displayMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function filterMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function displayRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function filterRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function populateMenuFilter(txt, wrapper, source, selectionCallback) {
+  wrapper.innerHTML = "";
+  const match = source.filter(i => i.toLowerCase().includes(txt.toLowerCase()));
+  if(match.length === 0) {
+    const emptyDiv = document.createElement("div");
+    emptyDiv.innerText = "NO ENTRY MATCH FOUND";
+    emptyDiv.style.color = "#000000";
+    wrapper.appendChild(emptyDiv);
+  } else {
+    match.forEach(matchedValue => {
+      const entryDiv = document.createElement("div");
+      entryDiv.innerText = matchedValue;
+      entryDiv.onclick = () => selectionCallback(matchedValue);
+      wrapper.appendChild(entryDiv);
+    });
+  }
+  wrapper.style.display = "block";
+}
+
+function resetFormEditorState() {
+  document.getElementById("activeWorkingId").value = "";
+  document.getElementById("formEditorHeader").innerText = "NEW RATES";
+  document.getElementById("formCarrierInput").value = "";
+  document.getElementById("formPolInput").value = "";
+  document.getElementById("formShipmentTypeSelect").value = "EXPORT";
+  onShipmentTypeToggleChange();
+  document.getElementById("nestedChargesLinesContainer").innerHTML = "";
+  injectBlankChargeRowLine();
+}
+
+function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
+  const foundItem = LocalDBMS.records.find(r => r.id === id);
+  if(!foundItem) return;
+
+  if (runDuplicateExtraction) {
+    document.getElementById("activeWorkingId").value = "";
+    document.getElementById("formEditorHeader").innerText = "DUPLICATE RATE";
+  } else {
+    document.getElementById("activeWorkingId").value = foundItem.id;
+    document.getElementById("formEditorHeader").innerText = `EDIT RATE (SEQ: ${foundItem.seqNo || 'N/A'})`;
+  }
+
+  document.getElementById("formCarrierInput").value = foundItem.carrier || "";
+  document.getElementById("formPolInput").value = foundItem.pol || "";
+  document.getElementById("formShipmentTypeSelect").value = foundItem.shipmentType || "EXPORT";
+  onShipmentTypeToggleChange();
+
+  const targetBox = document.getElementById("nestedChargesLinesContainer");
+  targetBox.innerHTML = "";
+  (foundItem.charges || []).forEach(chItem => {
+    injectBlankChargeRowLine(chItem);
+  });
+
+  if (!targetBox.children.length) {
+    injectBlankChargeRowLine();
+  }
+}
+
+async function commitEditorToDatabase() {
+  const currentId = document.getElementById("activeWorkingId").value;
+  const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
+  const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
+  const shipmentTypeVal = document.getElementById("formShipmentTypeSelect").value;
+
+  if(!carrierVal || !polVal) {
+    alert("VALIDATION FAULT: CARRIER AND PORT DESIGNATION CHANNELS MUST BE MANUALLY SET.");
+    return;
+  }
+  if(!LocalDBMS.carriers.includes(carrierVal) || !LocalDBMS.pols.includes(polVal)) {
+    alert("DIRECTORY FAULT: SPECIFIED VALUES NOT CONFIRMED INSIDE INDEPENDENT REGISTRIES.");
+    return;
+  }
+
+  const linesRows = document.querySelectorAll("#nestedChargesLinesContainer .charge-row-item");
+  const aggregatedCharges = [];
+  let brokenLineDetected = false;
+
+  linesRows.forEach(el => {
+    const head = el.querySelector(".txt-charge-row-head").value.trim().toUpperCase();
+    const curr = el.querySelector(".sel-charge-row-currency").value;
+    const amt = parseFloat(el.querySelector(".num-charge-row-amount").value);
+    const bas = el.querySelector(".sel-charge-row-basis").value;
+
+    if(!head || isNaN(amt)) {
+      brokenLineDetected = true;
+      return;
+    }
+    if(!LocalDBMS.chargeHeads.includes(head)) {
+      alert(`VALIDATION FAULT: "${head}" HAS NOT BEEN INDEPENDENTLY PROVISIONED IN CHARGE SYSTEMS.`);
+      brokenLineDetected = true;
+      return;
+    }
+    aggregatedCharges.push({ head, currency: curr, amount: amt, basis: bas });
+  });
+
+  if(brokenLineDetected || aggregatedCharges.length === 0) {
+    alert("PROCESSING REJECTED: PLEASE VERIFY UNIFORM DATA FIELDS EXIST ACROSS EVERY CHARGE LINE INJECTED.");
+    return;
+  }
+
+  // Dynamic Sequence Number Generation
+  let seqNoToSave = "";
+  const existingRec = LocalDBMS.records.find(r => r.id === currentId);
+  
+  if (existingRec && existingRec.seqNo && !currentId.includes("duplicate")) {
+    seqNoToSave = existingRec.seqNo;
+  } else {
+    // Car + Pol 3 letter combo setup
+    const carCode = carrierVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const polCode = polVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    seqNoToSave = `${carCode}${polCode}${dd}:${hh}`;
+  }
+
+  const payload = {
+    seqNo: seqNoToSave,
+    carrier: carrierVal,
+    shipmentType: shipmentTypeVal,
+    pol: polVal,
+    charges: aggregatedCharges
+  };
+
+  try {
+    if(currentId) {
+      payload.id = currentId;
+      await window.saveRecordToFirebase(payload);
+    } else {
+      const newId = await window.saveRecordToFirebase(payload);
+      payload.id = newId;
+    }
+
+    resetFormEditorState();
+    await loadRecordsFromFirebase();
+  } catch (error) {
+    console.error("Record save failed:", error);
+  }
+}
+
+async function removeRecordFromDatabase(id) {
+  if(confirm("CONFIRM COMMAND: REMOVE THIS RATE FROM ACTIVE STORAGE?")) {
+    try {
+      await window.deleteRecordFromFirebase(id);
+      if (document.getElementById("activeWorkingId").value === id) {
+        resetFormEditorState();
+      }
+      await loadRecordsFromFirebase();
+    } catch (error) {
+      console.error("Record delete failed:", error);
+    }
+  }
+}
+
+// Master Popups and Calculator Code Logic (Persisted intact)
+function launchMasterPopup(type) {
+  currentScopeMasterType = type;
+  document.getElementById("txtNewMasterEntry").value = "";
+  document.getElementById("txtMasterDirectorySearch").value = "";
+  const winTitle = document.getElementById("popupScopeTitle");
+  
+  if(type === 'carrier') winTitle.innerText = "CARRIER MASTER DATABASE SETUP CONFIGURATIONS";
+  if(type === 'pol') winTitle.innerText = "LOCATION PORT (POL / POD) REGISTRY MANAGEMENT";
+  if(type === 'chargeHead') winTitle.innerText = "CHARGES HEAD NOMENCLATURE ASSIGNMENTS REGISTRY";
+
+  generatePopupDataViewItems();
+  document.getElementById("masterManagementPopup").classList.add("visible");
+}
+function dismissMasterPopup() { document.getElementById("masterManagementPopup").classList.remove("visible"); }
+
+function generatePopupDataViewItems() {
+  const container = document.getElementById("popupMasterItemsListView");
+  const queryStr = document.getElementById("txtMasterDirectorySearch").value.toLowerCase();
+  container.innerHTML = "";
+  let targetSrc = [];
+
+  if(currentScopeMasterType === 'carrier') targetSrc = LocalDBMS.carriers;
+  if(currentScopeMasterType === 'pol') targetSrc = LocalDBMS.pols;
+  if(currentScopeMasterType === 'chargeHead') targetSrc = LocalDBMS.chargeHeads;
+
+  const filteredDataset = targetSrc.filter(item => item.toLowerCase().includes(queryStr));
+
+  if(filteredDataset.length === 0) {
+    container.innerHTML = `<div style="padding:12px; text-align:center;">NO COMPATIBLE DATA RECORDS MATCH FOUND</div>`;
+    return;
+  }
+  
+  filteredDataset.forEach((item) => {
+    const listRow = document.createElement("div");
+    listRow.style.padding = "6px 10px";
+    listRow.style.borderBottom = "1px solid rgba(0,0,0,0.04)";
+    listRow.style.display = "flex";
+    listRow.style.justifyContent = "space-between";
+    listRow.style.alignItems = "center";
+    listRow.innerHTML = `
+      <span style="font-size:11px; font-weight:700;">${item}</span>
+      <button class="btn-icon-action remove" style="width:18px; height:18px;" onclick='evictMasterDataEntry(${JSON.stringify(item)})'><i class="bi bi-trash" style="font-size:9px;"></i></button>
+    `;
+    container.appendChild(listRow);
+  });
+}
+
+async function appendNewItemToActiveMaster() {
+  const val = document.getElementById("txtNewMasterEntry").value.trim().toUpperCase();
+  if(!val) return;
+  try {
+    await window.saveMasterToFirebase(currentScopeMasterType, val);
+    document.getElementById("txtNewMasterEntry").value = "";
+    generatePopupDataViewItems();
+  } catch (error) { console.error("Master save failed:", error); }
+}
+
+async function evictMasterDataEntry(value) {
+  try {
+    await window.deleteMasterFromFirebase(currentScopeMasterType, value);
+    generatePopupDataViewItems();
+  } catch (error) { console.error("Master delete failed:", error); }
+}
+
+function launchCountsCalculatorPopup() {
+  const carrierSelect = document.getElementById("countsCarrierSelect");
+  const polSelect = document.getElementById("countsPolSelect");
+
+  carrierSelect.innerHTML = "";
+  LocalDBMS.carriers.forEach(c => carrierSelect.appendChild(new Option(c, c)));
+
+  polSelect.innerHTML = "";
+  LocalDBMS.pols.forEach(p => polSelect.appendChild(new Option(p, p)));
+
+  document.getElementById("countsVolumeInput").value = "4";
+  runVolumeCountsCalculation();
+  document.getElementById("countsCalculatorPopup").classList.add("visible");
+}
+function dismissCountsCalculatorPopup() { document.getElementById("countsCalculatorPopup").classList.remove("visible"); }
+
+function runVolumeCountsCalculation() {
+  const selectedCarrier = document.getElementById("countsCarrierSelect").value;
+  const selectedPort = document.getElementById("countsPolSelect").value;
+  const boxVolumeCount = parseInt(document.getElementById("countsVolumeInput").value) || 0;
+  const outputContainer = document.getElementById("countsBreakdownResultView");
+  outputContainer.innerHTML = "";
+
+  const matchedRecords = LocalDBMS.records.filter(r => r.carrier === selectedCarrier && r.pol === selectedPort);
+
+  if (matchedRecords.length === 0) {
+    outputContainer.innerHTML = `<div style="text-align:center; padding:20px 0;">NO CURRENT COMPATIBLE RATE FRAMEWORKS DETECTED MATCHING THIS SPECIFIC CARRIER + PORT PAIRING SELECTION.</div>`;
+    return;
+  }
+
+  let aggregatedSummaryHTML = "";
+  let overallRunningInrGrandTotal = 0;
+
+  matchedRecords.forEach((record, index) => {
+    aggregatedSummaryHTML += `<div style="margin-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.06); padding-bottom:6px;">
+      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (SEQ: ${record.seqNo || 'N/A'}) (${record.shipmentType || "EXPORT"})</span>
+      <table style="width:100%; margin-top:4px;">
+        <thead>
+          <tr>
+            <th style="font-size:8px; padding:4px;">CHARGE HEAD</th>
+            <th style="font-size:8px; padding:4px;">BASIS</th>
+            <th style="font-size:8px; padding:4px;">BASE RATE</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">MULTIPLIER RUN</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">TOTAL (INR)</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    let subRecordInrTotal = 0;
+    record.charges.forEach(ch => {
+      let runMultiplierFactor = 1;
+      let labelBasisMappingText = "ONE-TIME BL FLAT";
+
+      if (ch.basis === 'CTR') {
+        runMultiplierFactor = boxVolumeCount;
+        labelBasisMappingText = `${boxVolumeCount} X CONTAINERS`;
+      } else if (ch.basis === 'SHPMT') {
+        labelBasisMappingText = "ONE-TIME SHIPMENT FLAT";
+      }
+
+      const totalChargeLineCostInBaseCurrency = ch.amount * runMultiplierFactor;
+      const conversionWeightFactor = fixedFxToInrRates[ch.currency] || 1.00;
+      const finalLineInrValuation = totalChargeLineCostInBaseCurrency * conversionWeightFactor;
+      subRecordInrTotal += finalLineInrValuation;
+
+      aggregatedSummaryHTML += `
+        <tr>
+          <td style="padding:4px;">${ch.head}</td>
+          <td style="padding:4px; font-size:9px;">${ch.basis}</td>
+          <td style="padding:4px;">${ch.currency} ${ch.amount.toFixed(2)}</td>
+          <td style="padding:4px; text-align:right; font-size:9px;">${labelBasisMappingText}</td>
+          <td style="padding:4px; text-align:right; font-weight:700;">₹ ${finalLineInrValuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>`;
+    });
+
+    overallRunningInrGrandTotal += subRecordInrTotal;
+    aggregatedSummaryHTML += `
+        <tr>
+          <td colspan="4" style="padding:4px; font-weight:700; text-align:right;">FRAMEWORK CALCULATION TOTAL:</td>
+          <td style="padding:4px; font-weight:700; text-align:right;">₹ ${subRecordInrTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>`;
+  });
+
+  outputContainer.innerHTML = `
+    <div style="padding:10px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:700; font-size:10px;">VOLUME CALCULATION CONSOLIDATED SUMMARY VALUATION:</span>
+      <span style="font-size:13px; font-weight:700;">₹ ${overallRunningInrGrandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} INR</span>
+    </div>
+  ` + aggregatedSummaryHTML;
+}
+
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) { 
+    dismissMasterPopup(); 
+    dismissCountsCalculatorPopup();
+  }
+};
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc, serverTimestamp, onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAR5ad1W7bVRzXha6LPAGDsYjcy44Nlx3Q",
+  authDomain: "local-508e0.firebaseapp.com",
+  projectId: "local-508e0",
+  storageBucket: "local-508e0.firebasestorage.app",
+  messagingSenderId: "1041782996227",
+  appId: "1:1041782996227:web:4faf0e739bb7904c9cfd36"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.doc = doc;
+window.updateDoc = updateDoc;
+window.deleteDoc = deleteDoc;
+window.getDocs = getDocs;
+window.setDoc = setDoc;
+window.serverTimestamp = serverTimestamp;
+
+function masterDocId(type, value) {
+  return `${type}__${encodeURIComponent(String(value || "").trim().toUpperCase())}`;
+}
+
+function rebuildMasterArrays(snapshot) {
+  const carriers = [];
+  const pols = [];
+  const chargeHeads = [];
+
+  snapshot.docs.forEach((docSnap) => {
+    const data = docSnap.data() || {};
+    const type = String(data.type || "").toLowerCase();
+    const value = String(data.value || "").trim().toUpperCase();
+    if (!value) return;
+
+    if (type === "carrier") carriers.push(value);
+    if (type === "pol") pols.push(value);
+    if (type === "chargehead") chargeHeads.push(value);
+  });
+
+  LocalDBMS.carriers = [...new Set(carriers)].sort();
+  LocalDBMS.pols = [...new Set(pols)].sort();
+  LocalDBMS.chargeHeads = [...new Set(chargeHeads)].sort();
+
+  if (document.getElementById("masterManagementPopup")?.classList.contains("visible")) {
+    generatePopupDataViewItems();
+  }
+}
+
+function rebuildRateArray(snapshot) {
+  const firebaseRecords = snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data()
+  }));
+
+  LocalDBMS.records = firebaseRecords;
+  
+  // Uses the global un-namespaced function from earlier scripts to update UI
+  if (typeof refreshRecordsGrid === "function") {
+    const currentSearch = document.getElementById("gridSearchFilter")?.value || "";
+    refreshRecordsGrid(currentSearch);
+  }
+
+  const activeId = document.getElementById("activeWorkingId").value;
+  if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
+    if (typeof resetFormEditorState === "function") resetFormEditorState();
+  }
+}
+
+window.saveRecordToFirebase = async function(payload) {
+  try {
+    if (payload.id) {
+      const recordId = payload.id;
+      const { id, ...data } = payload;
+      await updateDoc(doc(db, "rates", recordId), {
+        ...data,
+        updatedAt: serverTimestamp()
+      });
+      return recordId;
+    }
+
+    const docRef = await addDoc(collection(db, "rates"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Firebase save failed:", error);
+    alert("Firebase save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteRecordFromFirebase = async function(recordId) {
+  try {
+    await deleteDoc(doc(db, "rates", recordId));
+  } catch (error) {
+    console.error("Firebase delete failed:", error);
+    alert("Firebase delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.saveMasterToFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await setDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)), {
+      type: normalizedType,
+      value: normalizedValue,
+      updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Master save failed:", error);
+    alert("Master save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteMasterFromFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await deleteDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)));
+  } catch (error) {
+    console.error("Master delete failed:", error);
+    alert("Master delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+async function loadRecordsFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "rates"));
+    rebuildRateArray(snapshot);
+  } catch (error) {
+    console.error("Firebase load failed:", error);
+  }
+}
+
+async function loadMastersFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "masters"));
+    rebuildMasterArrays(snapshot);
+  } catch (error) {
+    console.error("Firebase master load failed:", error);
+  }
+}
+
+window.listenToFirebaseRates = function() {
+  onSnapshot(collection(db, "rates"), (snapshot) => {
+    rebuildRateArray(snapshot);
+  }, (error) => {
+    console.error("Firebase realtime listener failed:", error);
+    loadRecordsFromFirebase();
+  });
+};
+
+window.listenToFirebaseMasters = function() {
+  onSnapshot(collection(db, "masters"), (snapshot) => {
+    rebuildMasterArrays(snapshot);
+  }, (error) => {
+    console.error("Firebase master realtime listener failed:", error);
+    loadMastersFromFirebase();
+  });
+};
+
+window.listenToFirebaseMasters();
+window.listenToFirebaseRates();
+</script>
 </body>
 </html>
