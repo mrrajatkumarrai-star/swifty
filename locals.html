@@ -551,31 +551,10 @@ const LocalDBMS = {
   carriers: ['MAERSK LINE', 'MSC SHIPPING', 'CMA CGM', 'HAPAG LLOYD', 'COSCO GROUP'],
   pols: ['NHAVA SHEVA (INNSA)', 'MUNDRA (INMUN)', 'CHENNAI (MAA)', 'HAZIRA (INHZA)'],
   chargeHeads: ['THC 20DV', 'THC 40HC', 'BL', 'DOCUMENTATION FEES', 'SURRENDER SURCHARGE'],
-  records: [
-    {
-      id: "rec_101",
-      carrier: "MAERSK LINE",
-      exportType: "EXPORT FCL",
-      shipmentType: "EXPORT",
-      pol: "NHAVA SHEVA (INNSA)",
-      charges: [
-        { head: "THC 20DV", currency: "INR", amount: 14200, basis: "CTR" },
-        { head: "BL", currency: "INR", amount: 4500, basis: "BL" }
-      ]
-    },
-    {
-      id: "rec_102",
-      carrier: "CMA CGM",
-      exportType: "EXPORT OBL",
-      shipmentType: "IMPORT",
-      pol: "MUNDRA (INMUN)",
-      charges: [
-        { head: "THC 40HC", currency: "USD", amount: 250, basis: "CTR" },
-        { head: "DOCUMENTATION FEES", currency: "INR", amount: 3800, basis: "SHPMT" }
-      ]
-    }
-  ]
+  records: []
 };
+
+window.LocalDBMS = LocalDBMS;
 
 let currentScopeMasterType = '';
 const fixedFxToInrRates = { USD: 83.50, EUR: 89.40, AED: 22.73, GBP: 105.10, INR: 1.00 };
@@ -800,7 +779,7 @@ function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
   });
 }
 
-function commitEditorToDatabase() {
+async function commitEditorToDatabase() {
   const currentId = document.getElementById("activeWorkingId").value;
   const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
   const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
@@ -845,28 +824,33 @@ function commitEditorToDatabase() {
 
   const payload = { carrier: carrierVal, exportType: expType, shipmentType: shpmtType, pol: polVal, charges: aggregatedCharges };
 
-  if(currentId) {
-    const matchIdx = LocalDBMS.records.findIndex(x => x.id === currentId);
-    if(matchIdx !== -1) {
+  try {
+    if(currentId) {
       payload.id = currentId;
-      LocalDBMS.records[matchIdx] = payload;
+      await window.saveRecordToFirebase(payload);
+    } else {
+      const newId = await window.saveRecordToFirebase(payload);
+      payload.id = newId;
     }
-  } else {
-    payload.id = 'rec_' + Date.now();
-    LocalDBMS.records.push(payload);
+
+    resetFormEditorState();
+    await loadRecordsFromFirebase();
+  } catch (error) {
+    console.error("Record save failed:", error);
   }
-
-window.saveRecordToFirebase(payload);
-
-resetFormEditorState();
-refreshRecordsGrid();
-
 }
 
-function removeRecordFromDatabase(id) {
+async function removeRecordFromDatabase(id) {
   if(confirm("CONFIRM COMMAND: REMOVE THIS RATE MAP MATRIX ENTORY FROM ACTIVE STORAGE?")) {
-    LocalDBMS.records = LocalDBMS.records.filter(x => x.id !== id);
-    refreshRecordsGrid();
+    try {
+      await window.deleteRecordFromFirebase(id);
+      if (document.getElementById("activeWorkingId").value === id) {
+        resetFormEditorState();
+      }
+      await loadRecordsFromFirebase();
+    } catch (error) {
+      console.error("Record delete failed:", error);
+    }
   }
 }
 
@@ -1042,6 +1026,68 @@ function runVolumeCountsCalculation() {
   outputContainer.innerHTML = summaryHeaderHTML + aggregatedSummaryHTML;
 }
 
+async function loadRecordsFromFirebase() {
+  try {
+    const snapshot = await window.getDocs(window.collection(window.db, "rates"));
+    const firebaseRecords = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+
+    LocalDBMS.records = firebaseRecords;
+    refreshRecordsGrid();
+    return firebaseRecords;
+  } catch (error) {
+    console.error("Firebase load failed:", error);
+    return [];
+  }
+}
+
+window.saveRecordToFirebase = async function(payload) {
+  try {
+    if (payload.id) {
+      const recordId = payload.id;
+      const { id, ...data } = payload;
+      await window.updateDoc(window.doc(window.db, "rates", recordId), {
+        ...data,
+        updatedAt: window.serverTimestamp()
+      });
+      return recordId;
+    }
+
+    const docRef = await window.addDoc(window.collection(window.db, "rates"), {
+      ...payload,
+      createdAt: window.serverTimestamp(),
+      updatedAt: window.serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Firebase save failed:", error);
+    alert("Firebase save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteRecordFromFirebase = async function(recordId) {
+  try {
+    await window.deleteDoc(window.doc(window.db, "rates", recordId));
+  } catch (error) {
+    console.error("Firebase delete failed:", error);
+    alert("Firebase delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.syncLocalRecordsFromSnapshot = function(firebaseRecords) {
+  LocalDBMS.records = firebaseRecords;
+  refreshRecordsGrid();
+  const activeId = document.getElementById("activeWorkingId").value;
+  if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
+    resetFormEditorState();
+  }
+};
+
+
 document.onkeydown = function(evt) {
   evt = evt || window.event;
   if (evt.keyCode == 27) { 
@@ -1057,7 +1103,12 @@ import {
   getFirestore,
   collection,
   addDoc,
-  serverTimestamp
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  serverTimestamp,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1072,19 +1123,77 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+window.doc = doc;
+window.updateDoc = updateDoc;
+window.deleteDoc = deleteDoc;
+window.getDocs = getDocs;
+window.serverTimestamp = serverTimestamp;
+
 window.saveRecordToFirebase = async function(payload) {
   try {
-    await addDoc(collection(db, "rates"), {
-      ...payload,
-      createdAt: serverTimestamp()
-    });
+    if (payload.id) {
+      const recordId = payload.id;
+      const { id, ...data } = payload;
+      await updateDoc(doc(db, "rates", recordId), {
+        ...data,
+        updatedAt: serverTimestamp()
+      });
+      return recordId;
+    }
 
-    console.log("Saved to Firebase");
+    const docRef = await addDoc(collection(db, "rates"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    return docRef.id;
   } catch (error) {
     console.error("Firebase save failed:", error);
     alert("Firebase save failed. Check browser console.");
+    throw error;
   }
 };
+
+window.deleteRecordFromFirebase = async function(recordId) {
+  try {
+    await deleteDoc(doc(db, "rates", recordId));
+  } catch (error) {
+    console.error("Firebase delete failed:", error);
+    alert("Firebase delete failed. Check browser console.");
+    throw error;
+  }
+};
+
+async function loadRecordsFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "rates"));
+    const firebaseRecords = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+    window.syncLocalRecordsFromSnapshot(firebaseRecords);
+  } catch (error) {
+    console.error("Firebase load failed:", error);
+  }
+}
+
+window.listenToFirebaseRates = function() {
+  onSnapshot(collection(db, "rates"), (snapshot) => {
+    const firebaseRecords = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+    window.syncLocalRecordsFromSnapshot(firebaseRecords);
+  }, (error) => {
+    console.error("Firebase realtime listener failed:", error);
+    loadRecordsFromFirebase();
+  });
+};
+
+window.listenToFirebaseRates();
 </script>
 
 </body>
