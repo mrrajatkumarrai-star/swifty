@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FR8X - FREIGHT RATE MANAGEMENT PLATFORM</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root {
+  --bg1: #ffffff;
+  --bg2: #ffffff;
+  --bg3: #ffffff;
+  --glass: #ffffff;
+  --border: #d0d0d0;
+  --text: #000000;
+  --muted: #000000;
+  --primary: #000000;
+  --success: #000000;
+  --danger: #000000;
+  --warning: #000000;
+  --yellow-btn: #f0f0f0;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --radius: 16px;
+  --radius-sm: 8px;
+  --header-h: 52px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Navine", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-weight: normal !important;
+  text-transform: uppercase !important;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+body {
+  font-size: 11px;
+  color: #000000;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+body, body * {
+  color: #000000 !important;
+}
+
+header {
+  height: var(--header-h);
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: var(--shadow-soft);
+  z-index: 100;
+}
+
+.dark-heading {
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+
+.feedable-input {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #b0b0b0;
+  background: #ffffff;
+  color: #000000 !important;
+  font-size: 11px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.feedable-input:focus {
+  border-color: #808080;
+  background: #ffffff;
+  color: #000000 !important;
+}
+
+.yellow-master-trigger {
+  background-color: #f0f0f0 !important;
+  color: #000000 !important;
+  border: 1px solid #a0a0a0 !important;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.yellow-master-trigger:hover {
+  filter: brightness(0.97);
+}
+
+.workspace-container {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - var(--header-h));
+  padding: 12px;
+  gap: 0;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.left-workspace-panel {
+  width: 35%;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-drag-splitter {
+  width: 10px;
+  cursor: col-resize;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.2s;
+  z-index: 50;
+}
+
+.ui-drag-splitter:hover,
+.ui-drag-splitter.active {
+  background: #f0f0f0;
+}
+
+.ui-drag-splitter::after {
+  content: "";
+  width: 2px;
+  height: 24px;
+  background: #a0a0a0;
+  border-radius: 1px;
+}
+
+.right-workspace-panel {
+  flex: 1;
+  min-width: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.combobox-root {
+  position: relative;
+  width: 100%;
+}
+
+.suggestions-dropdown-wrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #b0b0b0;
+  border-radius: var(--radius-sm);
+  max-height: 140px;
+  overflow-y: auto;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: none;
+}
+
+.suggestions-dropdown-wrapper div {
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #000000;
+}
+
+.suggestions-dropdown-wrapper div:hover {
+  background: #f2f2f2;
+  color: #000000;
+}
+
+.table-scroll-container {
+  overflow-y: auto;
+  flex: 1;
+  border: 1px solid #d0d0d0;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  background: #f2f2f2;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: middle;
+}
+
+tr:hover td {
+  background: #f9f9f9;
+}
+
+.btn {
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  background: #f0f0f0;
+  color: #000000 !important;
+}
+
+.btn-primary,
+.btn-success,
+.btn-warning,
+.btn-danger,
+.btn-neutral {
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+  border: 1px solid #a0a0a0 !important;
+}
+
+.grid-btn-icon {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #000000 !important;
+  transition: opacity 0.15s;
+}
+
+.grid-btn-icon:hover { opacity: 0.85; }
+
+.grid-btn-edit,
+.grid-btn-duplicate,
+.grid-btn-copy,
+.grid-btn-delete {
+  background: #f0f0f0 !important;
+}
+
+.btn-icon-action {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #a0a0a0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #000000 !important;
+}
+
+.btn-icon-action.add,
+.btn-icon-action.remove {
+  background: #f0f0f0 !important;
+}
+
+.charge-row-item {
+  display: grid;
+  grid-template-columns: auto 1.4fr 0.9fr 0.8fr 1fr;
+  gap: 6px;
+  margin-bottom: 4px;
+  align-items: center;
+}
+
+.exchange-rates-bar {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  margin-bottom: 10px;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.popup-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup-window {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 650px;
+  max-width: 95vw;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+}
+
+.bi {
+  color: #000000 !important;
+}
+
+#countsBreakdownResultView {
+  background: #f7f7f7 !important;
+  border: 1px solid #c0c0c0 !important;
+  border-radius: 6px;
+}
+
+#countsBreakdownResultView > div {
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+}
+
+#countsBreakdownResultView table tr {
+  background: #ffffff !important;
+}
+
+#countsBreakdownResultView table thead tr {
+  background: #f2f2f2 !important;
+}
+
+span[style*="background:rgba(0,0,0,0.05)"] {
+  background: #f2f2f2 !important;
+}
+
+[style*="border-top:1px dashed"],
+[style*="border-bottom:1px dashed"],
+[style*="border:1px solid rgba(0,0,0,0.08)"] {
+  border-color: #c0c0c0 !important;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
+    <span class="dark-heading" style="font-size:12px;">FR8X CARGO SYSTEM</span>
+  </div>
+  <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+    <button class="yellow-master-trigger" onclick="launchMasterPopup('carrier')"><i class="bi bi-plus"></i> CARRIER MASTER</button>
+    <button class="yellow-master-trigger" onclick="launchMasterPopup('pol')"><i class="bi bi-plus"></i> LOCATION PORT MASTER</button>
+    <button class="yellow-master-trigger" onclick="launchMasterPopup('chargeHead')"><i class="bi bi-plus"></i> CHARGES HEAD MASTER</button>
+    <button class="yellow-master-trigger" onclick="launchCountsCalculatorPopup()"><i class="bi bi-calculator"></i> COUNTS</button>
+  </div>
+</header>
+
+<div class="workspace-container" id="uiSplitWorkspace">
+  <div class="left-workspace-panel" id="leftPanel">
+    <div class="glass-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
+        <span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES RECORD DATABASE DIRECTORY</span>
+        <input type="text" id="directoryFilter" class="feedable-input" placeholder="SEARCH SYSTEM RECORDS..." oninput="refreshRecordsGrid()">
+      </div>
+      <div class="table-scroll-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="dark-heading">CARRIER</th>
+              <th class="dark-heading">EXPORT</th>
+              <th class="dark-heading">POL/POD</th>
+              <th class="dark-heading" style="text-align:center; width:130px;">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="recordsGridBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-drag-splitter" id="uiSplitter"></div>
+
+  <div class="right-workspace-panel" id="rightPanel">
+    <div class="glass-card" style="overflow-y: auto;">
+      <div class="dark-heading" id="formEditorHeader" style="margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+        NEW RATE ASSIGNMENT EDITOR
+      </div>
+
+      <div class="exchange-rates-bar" style="display:flex; align-items:center; justify-content:space-between; font-size:10px; gap:10px; flex-wrap:wrap;">
+        <span class="dark-heading" style="font-size:9px;"><i class="bi bi-currency-exchange"></i> LIVE EXCHANGE RATES VALUES REFERENCE BOARD:</span>
+        <div>
+          <span style="margin-left:12px; font-weight:700;">1 USD = 83.50 INR</span>
+          <span style="margin-left:12px; font-weight:700;">1 EUR = 89.40 INR</span>
+          <span style="margin-left:12px; font-weight:700;">1 AED = 22.73 INR</span>
+          <span style="margin-left:12px; font-weight:700;">1 GBP = 105.10 INR</span>
+        </div>
+      </div>
+
+      <input type="hidden" id="activeWorkingId" value="">
+      
+      <div style="margin-bottom:8px;">
+        <label class="dark-heading" style="display:block; margin-bottom:2px;">CARRIER</label>
+        <div class="combobox-root">
+          <input type="text" id="formCarrierInput" class="feedable-input" placeholder="TYPE TO SEARCH CARRIER..." onfocus="displayMenuOptions('carrier')" oninput="filterMenuOptions('carrier')">
+          <div id="carrierOptionsWrapper" class="suggestions-dropdown-wrapper"></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px;">
+        <label class="dark-heading" style="display:block; margin-bottom:2px;">EXPORT</label>
+        <select id="formExportSelect" class="feedable-input">
+          <option value="EXPORT OBL">EXPORT OBL</option>
+          <option value="EXPORT FCL">EXPORT FCL</option>
+          <option value="EXPORT LCL">EXPORT LCL</option>
+          <option value="AIR EXPORT">AIR EXPORT</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:8px;">
+        <label class="dark-heading" style="display:block; margin-bottom:2px;">SHIPMENT TYPE</label>
+        <select id="formShipmentTypeSelect" class="feedable-input" onchange="onShipmentTypeToggleChange()">
+          <option value="EXPORT">EXPORT</option>
+          <option value="IMPORT">IMPORT</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label class="dark-heading" id="lblDynamicLocationPort" style="display:block; margin-bottom:2px;">POL (PORT OF LOADING)</label>
+        <div class="combobox-root">
+          <input type="text" id="formPolInput" class="feedable-input" placeholder="TYPE TO SEARCH LOCATION PORT..." onfocus="displayMenuOptions('pol')" oninput="filterMenuOptions('pol')">
+          <div id="polOptionsWrapper" class="suggestions-dropdown-wrapper"></div>
+        </div>
+      </div>
+
+      <div style="border-top:1px dashed rgba(0,0,0,0.1); padding-top:8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <span class="dark-heading">CHARGES HEAD CONFIGURATION GRID</span>
+          <button type="button" class="btn btn-primary" style="padding:2px 6px; font-size:9px;" onclick="injectBlankChargeRowLine()"><i class="bi bi-plus-lg"></i> ADD CHARGE LINE</button>
+        </div>
+        <div style="display:grid; grid-template-columns: 28px 1.4fr 0.9fr 0.8fr 1fr; gap:6px; margin-bottom:2px;">
+          <span class="dark-heading" style="font-size:8px;">ACT</span>
+          <span class="dark-heading" style="font-size:8px;">CHARGES HEAD</span>
+          <span class="dark-heading" style="font-size:8px;">BASIS</span>
+          <span class="dark-heading" style="font-size:8px;">CURR</span>
+          <span class="dark-heading" style="font-size:8px;">AMOUNT</span>
+        </div>
+        <div id="nestedChargesLinesContainer"></div>
+      </div>
+
+      <div style="display:flex; gap:6px; margin-top:12px;">
+        <button class="btn btn-success" style="flex:1;" onclick="commitEditorToDatabase()"><i class="bi bi-check-circle"></i> SAVE FRAMEWORK RECORD</button>
+        <button class="btn btn-neutral" onclick="resetFormEditorState()">CLEAR LAYOUT FRAME</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-overlay" id="masterManagementPopup">
+  <div class="popup-window">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <span class="dark-heading" id="popupScopeTitle">CONFIGURATION REGISTRY METRICS</span>
+      <button class="btn-icon-action remove" onclick="dismissMasterPopup()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    
+    <div style="margin-bottom:10px;">
+      <input type="text" id="txtMasterDirectorySearch" class="feedable-input" placeholder="SEARCH CURRENT SYSTEM MASTER REGISTRY MATCHES..." oninput="generatePopupDataViewItems()">
+    </div>
+
+    <div style="display:flex; gap:6px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed rgba(0,0,0,0.1);">
+      <input type="text" id="txtNewMasterEntry" class="feedable-input" placeholder="INSERT NEW DIRECTORY ENTITY DESIGNATION...">
+      <button class="btn btn-primary" style="padding:0 16px;" onclick="appendNewItemToActiveMaster()">INSERT</button>
+    </div>
+
+    <span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">EXISTING SYSTEM ALLOCATED ENTRIES:</span>
+    <div id="popupMasterItemsListView" style="max-height:220px; overflow-y:auto; border:1px solid rgba(0,0,0,0.08); background:#ffffff; border-radius:6px;"></div>
+  </div>
+</div>
+
+<div class="popup-overlay" id="countsCalculatorPopup">
+  <div class="popup-window" style="width:600px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <span class="dark-heading"><i class="bi bi-calculator"></i> VOLUME MULTI-CONTAINER CALCULATION ESTIMATOR MATRIX</span>
+      <button class="btn-icon-action remove" onclick="dismissCountsCalculatorPopup()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+      <div>
+        <label class="dark-heading" style="display:block; margin-bottom:2px;">CARRIER</label>
+        <select id="countsCarrierSelect" class="feedable-input" onchange="runVolumeCountsCalculation()"></select>
+      </div>
+      <div>
+        <label class="dark-heading" style="display:block; margin-bottom:2px;">LOCATION PORT (POL / POD)</label>
+        <select id="countsPolSelect" class="feedable-input" onchange="runVolumeCountsCalculation()"></select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <label class="dark-heading" style="display:block; margin-bottom:2px;">CONTAINER LOAD VOLUME COUNT QUANTITY (E.G. 4-5 BOXES)</label>
+      <input type="number" id="countsVolumeInput" class="feedable-input" value="4" min="1" max="999" oninput="runVolumeCountsCalculation()">
+    </div>
+
+    <span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">LIVE SPECIFIC CALCULATION RUN MATRIX SUMMARY:</span>
+    <div id="countsBreakdownResultView" style="flex:1; max-height:240px; overflow-y:auto; padding:10px; font-size:11px;"></div>
+  </div>
+</div>
+
+<script>
+const LocalDBMS = {
+  carriers: ['MAERSK LINE', 'MSC SHIPPING', 'CMA CGM', 'HAPAG LLOYD', 'COSCO GROUP'],
+  pols: ['NHAVA SHEVA (INNSA)', 'MUNDRA (INMUN)', 'CHENNAI (MAA)', 'HAZIRA (INHZA)'],
+  chargeHeads: ['THC 20DV', 'THC 40HC', 'BL', 'DOCUMENTATION FEES', 'SURRENDER SURCHARGE'],
+  records: [
+    {
+      id: "rec_101",
+      carrier: "MAERSK LINE",
+      exportType: "EXPORT FCL",
+      shipmentType: "EXPORT",
+      pol: "NHAVA SHEVA (INNSA)",
+      charges: [
+        { head: "THC 20DV", currency: "INR", amount: 14200, basis: "CTR" },
+        { head: "BL", currency: "INR", amount: 4500, basis: "BL" }
+      ]
+    },
+    {
+      id: "rec_102",
+      carrier: "CMA CGM",
+      exportType: "EXPORT OBL",
+      shipmentType: "IMPORT",
+      pol: "MUNDRA (INMUN)",
+      charges: [
+        { head: "THC 40HC", currency: "USD", amount: 250, basis: "CTR" },
+        { head: "DOCUMENTATION FEES", currency: "INR", amount: 3800, basis: "SHPMT" }
+      ]
+    }
+  ]
+};
+
+let currentScopeMasterType = '';
+const fixedFxToInrRates = { USD: 83.50, EUR: 89.40, AED: 22.73, GBP: 105.10, INR: 1.00 };
+
+document.addEventListener("DOMContentLoaded", () => {
+  initMouseSplitterResizeEngine();
+  refreshRecordsGrid();
+  resetFormEditorState();
+  document.addEventListener("click", (evt) => {
+    if (!evt.target.closest('.combobox-root')) {
+      document.querySelectorAll('.suggestions-dropdown-wrapper').forEach(w => w.style.display = 'none');
+    }
+  });
+});
+
+function initMouseSplitterResizeEngine() {
+  const splitter = document.getElementById("uiSplitter");
+  const leftPanel = document.getElementById("leftPanel");
+  const container = document.getElementById("uiSplitWorkspace");
+  let isDragging = false;
+
+  splitter.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    splitter.classList.add("active");
+    document.body.style.cursor = "col-resize";
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    const containerRect = container.getBoundingClientRect();
+    const relativeX = e.clientX - containerRect.left;
+    let computedWidthPercentage = (relativeX / containerRect.width) * 100;
+    if (computedWidthPercentage > 15 && computedWidthPercentage < 80) {
+      leftPanel.style.width = computedWidthPercentage + "%";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (isDragging) {
+      isDragging = false;
+      splitter.classList.remove("active");
+      document.body.style.cursor = "default";
+    }
+  });
+}
+
+function onShipmentTypeToggleChange() {
+  const mode = document.getElementById("formShipmentTypeSelect").value;
+  const labelElement = document.getElementById("lblDynamicLocationPort");
+  labelElement.innerText = mode === "IMPORT" ? "POD (PORT OF DISCHARGE)" : "POL (PORT OF LOADING)";
+}
+
+function refreshRecordsGrid() {
+  const tbody = document.getElementById("recordsGridBody");
+  const filterText = document.getElementById("directoryFilter").value.toLowerCase();
+  tbody.innerHTML = "";
+
+  const filteredSet = LocalDBMS.records.filter(r => 
+    r.carrier.toLowerCase().includes(filterText) ||
+    r.pol.toLowerCase().includes(filterText) ||
+    r.exportType.toLowerCase().includes(filterText)
+  );
+
+  filteredSet.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td style="font-weight:700 !important; font-size:10px;">${item.carrier}</td>
+      <td><span style="background:rgba(0,0,0,0.05); padding:2px 4px; border-radius:4px; font-size:9px;">${item.exportType}</span></td>
+      <td style="font-size:10px;">${item.pol}</td>
+      <td style="text-align:center; white-space:nowrap;">
+        <button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT FRAMEWORK ENTRY"><i class="bi bi-pencil"></i></button>
+        <button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE FRAMEWORK MATRIX"><i class="bi bi-ui-checks"></i></button>
+        <button class="grid-btn-icon grid-btn-copy" onclick="exportRowToWhatsAppFriendly('${item.id}')" title="COPY AS WHATSAPP DATA TEMPLATE"><i class="bi bi-whatsapp"></i></button>
+        <button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE SYSTEM ENTRY"><i class="bi bi-trash"></i></button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function exportRowToWhatsAppFriendly(id) {
+  const record = LocalDBMS.records.find(r => r.id === id);
+  if(!record) return;
+
+  let messageLines = [];
+  record.charges.forEach(ch => {
+    let mappedBasis = "CONTAINER";
+    if(ch.basis === 'BL') mappedBasis = "DOCS";
+    if(ch.basis === 'SHPMT') mappedBasis = "SHIPMENT";
+    messageLines.push(`${ch.head} : ${ch.currency} ${ch.amount}/${mappedBasis}`);
+  });
+
+  const finalStringTextFormat = messageLines.join('\n').toUpperCase();
+
+  navigator.clipboard.writeText(finalStringTextFormat).then(() => {
+    alert("WHATSAPP TEXT TEMPLATE COPIED TO SYSTEM CLIPBOARD:\n\n" + finalStringTextFormat);
+  }).catch(() => {
+    alert("CLIPBOARD WRITING OPERATION INTERRUPTED.");
+  });
+}
+
+function injectBlankChargeRowLine(values = { head: '', currency: 'INR', amount: '', basis: 'CTR' }) {
+  const targetContainer = document.getElementById("nestedChargesLinesContainer");
+  const specificRowId = 'line_' + Math.random().toString(36).substr(2, 9);
+
+  const wrapperElement = document.createElement("div");
+  wrapperElement.className = "charge-row-item";
+  wrapperElement.id = specificRowId;
+
+  wrapperElement.innerHTML = `
+    <div>
+      <button class="btn-icon-action remove" type="button" onclick="evictChargeRowLine('${specificRowId}')"><i class="bi bi-dash-lg"></i></button>
+    </div>
+    <div class="combobox-root">
+      <input type="text" class="feedable-input txt-charge-row-head" placeholder="SELECT HEAD..." value="${values.head}" onfocus="displayRowSuggestions('${specificRowId}')" oninput="filterRowSuggestions('${specificRowId}')">
+      <div class="suggestions-dropdown-wrapper row-suggest-box"></div>
+    </div>
+    <select class="feedable-input sel-charge-row-basis">
+      <option value="CTR" ${values.basis==='CTR'?'selected':''}>CTR</option>
+      <option value="BL" ${values.basis==='BL'?'selected':''}>B/L</option>
+      <option value="SHPMT" ${values.basis==='SHPMT'?'selected':''}>SHPMT</option>
+    </select>
+    <select class="feedable-input sel-charge-row-currency">
+      <option value="INR" ${values.currency==='INR'?'selected':''}>INR</option>
+      <option value="USD" ${values.currency==='USD'?'selected':''}>USD</option>
+      <option value="EUR" ${values.currency==='EUR'?'selected':''}>EUR</option>
+      <option value="AED" ${values.currency==='AED'?'selected':''}>AED</option>
+    </select>
+    <input type="number" class="feedable-input num-charge-row-amount" placeholder="AMT" value="${values.amount}">
+  `;
+
+  targetContainer.appendChild(wrapperElement);
+}
+
+function evictChargeRowLine(id) {
+  const element = document.getElementById(id);
+  if(element) element.remove();
+}
+
+function displayMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function filterMenuOptions(type) {
+  const fieldInput = type === 'carrier' ? document.getElementById("formCarrierInput") : document.getElementById("formPolInput");
+  const popupMenu = type === 'carrier' ? document.getElementById("carrierOptionsWrapper") : document.getElementById("polOptionsWrapper");
+  const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols;
+  populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, (chosen) => { fieldInput.value = chosen; popupMenu.style.display = 'none'; });
+}
+
+function displayRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function filterRowSuggestions(rowId) {
+  const targetParent = document.getElementById(rowId);
+  const input = targetParent.querySelector(".txt-charge-row-head");
+  const dropdown = targetParent.querySelector(".row-suggest-box");
+  populateMenuFilter(input.value, dropdown, LocalDBMS.chargeHeads, (chosen) => { input.value = chosen; dropdown.style.display = 'none'; });
+}
+
+function populateMenuFilter(txt, wrapper, source, selectionCallback) {
+  wrapper.innerHTML = "";
+  const match = source.filter(i => i.toLowerCase().includes(txt.toLowerCase()));
+  if(match.length === 0) {
+    const emptyDiv = document.createElement("div");
+    emptyDiv.innerText = "NO ENTRY REGISTERED MATCH FOUND";
+    emptyDiv.style.color = "#000000";
+    wrapper.appendChild(emptyDiv);
+  } else {
+    match.forEach(matchedValue => {
+      const entryDiv = document.createElement("div");
+      entryDiv.innerText = matchedValue;
+      entryDiv.onclick = () => selectionCallback(matchedValue);
+      wrapper.appendChild(entryDiv);
+    });
+  }
+  wrapper.style.display = "block";
+}
+
+function resetFormEditorState() {
+  document.getElementById("activeWorkingId").value = "";
+  document.getElementById("formEditorHeader").innerText = "NEW RATE ASSIGNMENT EDITOR";
+  document.getElementById("formCarrierInput").value = "";
+  document.getElementById("formPolInput").value = "";
+  document.getElementById("formExportSelect").selectedIndex = 0;
+  document.getElementById("formShipmentTypeSelect").value = "EXPORT";
+  onShipmentTypeToggleChange();
+  document.getElementById("nestedChargesLinesContainer").innerHTML = "";
+  injectBlankChargeRowLine();
+}
+
+function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
+  const foundItem = LocalDBMS.records.find(r => r.id === id);
+  if(!foundItem) return;
+
+  if (runDuplicateExtraction) {
+    document.getElementById("activeWorkingId").value = "";
+    document.getElementById("formEditorHeader").innerText = "DUPLICATE CONFIGURATION WORKSPACE FRAMEWORK";
+  } else {
+    document.getElementById("activeWorkingId").value = foundItem.id;
+    document.getElementById("formEditorHeader").innerText = "MODIFY EXISTING RATE FRAMEWORK";
+  }
+
+  document.getElementById("formCarrierInput").value = foundItem.carrier;
+  document.getElementById("formPolInput").value = foundItem.pol;
+  document.getElementById("formExportSelect").value = foundItem.exportType;
+  document.getElementById("formShipmentTypeSelect").value = foundItem.shipmentType || "EXPORT";
+  onShipmentTypeToggleChange();
+
+  const targetBox = document.getElementById("nestedChargesLinesContainer");
+  targetBox.innerHTML = "";
+  foundItem.charges.forEach(chItem => {
+    injectBlankChargeRowLine(chItem);
+  });
+}
+
+function commitEditorToDatabase() {
+  const currentId = document.getElementById("activeWorkingId").value;
+  const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
+  const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
+  const expType = document.getElementById("formExportSelect").value;
+  const shpmtType = document.getElementById("formShipmentTypeSelect").value;
+
+  if(!carrierVal || !polVal) {
+    alert("VALIDATION FAULT: CARRIER AND PORT DESIGNATION CHANNELS MUST BE MANUALLY SET.");
+    return;
+  }
+  if(!LocalDBMS.carriers.includes(carrierVal) || !LocalDBMS.pols.includes(polVal)) {
+    alert("DIRECTORY FAULT: SPECIFIED VALUES NOT CONFIRMED INSIDE INDEPENDENT REGISTRIES.");
+    return;
+  }
+
+  const linesRows = document.querySelectorAll("#nestedChargesLinesContainer .charge-row-item");
+  const aggregatedCharges = [];
+  let brokenLineDetected = false;
+
+  linesRows.forEach(el => {
+    const head = el.querySelector(".txt-charge-row-head").value.trim().toUpperCase();
+    const curr = el.querySelector(".sel-charge-row-currency").value;
+    const amt = parseFloat(el.querySelector(".num-charge-row-amount").value);
+    const bas = el.querySelector(".sel-charge-row-basis").value;
+
+    if(!head || isNaN(amt)) {
+      brokenLineDetected = true;
+      return;
+    }
+    if(!LocalDBMS.chargeHeads.includes(head)) {
+      alert(`VALIDATION FAULT: "${head}" HAS NOT BEEN INDEPENDENTLY PROVISIONED IN CHARGE SYSTEMS.`);
+      brokenLineDetected = true;
+      return;
+    }
+    aggregatedCharges.push({ head, currency: curr, amount: amt, basis: bas });
+  });
+
+  if(brokenLineDetected || aggregatedCharges.length === 0) {
+    alert("PROCESSING REJECTED: PLEASE VERIFY UNIFORM DATA FIELDS EXIST ACROSS EVERY CHARGE LINE INJECTED.");
+    return;
+  }
+
+  const payload = { carrier: carrierVal, exportType: expType, shipmentType: shpmtType, pol: polVal, charges: aggregatedCharges };
+
+  if(currentId) {
+    const matchIdx = LocalDBMS.records.findIndex(x => x.id === currentId);
+    if(matchIdx !== -1) {
+      payload.id = currentId;
+      LocalDBMS.records[matchIdx] = payload;
+    }
+  } else {
+    payload.id = 'rec_' + Date.now();
+    LocalDBMS.records.push(payload);
+  }
+
+  resetFormEditorState();
+  refreshRecordsGrid();
+}
+
+function removeRecordFromDatabase(id) {
+  if(confirm("CONFIRM COMMAND: REMOVE THIS RATE MAP MATRIX ENTORY FROM ACTIVE STORAGE?")) {
+    LocalDBMS.records = LocalDBMS.records.filter(x => x.id !== id);
+    refreshRecordsGrid();
+  }
+}
+
+function launchMasterPopup(type) {
+  currentScopeMasterType = type;
+  document.getElementById("txtNewMasterEntry").value = "";
+  document.getElementById("txtMasterDirectorySearch").value = "";
+  const winTitle = document.getElementById("popupScopeTitle");
+  
+  if(type === 'carrier') winTitle.innerText = "CARRIER MASTER DATABASE SETUP CONFIGURATIONS";
+  if(type === 'pol') winTitle.innerText = "LOCATION PORT (POL / POD) REGISTRY MANAGEMENT";
+  if(type === 'chargeHead') winTitle.innerText = "CHARGES HEAD NOMENCLATURE ASSIGNMENTS REGISTRY";
+
+  generatePopupDataViewItems();
+  document.getElementById("masterManagementPopup").classList.add("visible");
+}
+
+function dismissMasterPopup() {
+  document.getElementById("masterManagementPopup").classList.remove("visible");
+}
+
+function generatePopupDataViewItems() {
+  const container = document.getElementById("popupMasterItemsListView");
+  const queryStr = document.getElementById("txtMasterDirectorySearch").value.toLowerCase();
+  container.innerHTML = "";
+  let targetSrc = [];
+
+  if(currentScopeMasterType === 'carrier') targetSrc = LocalDBMS.carriers;
+  if(currentScopeMasterType === 'pol') targetSrc = LocalDBMS.pols;
+  if(currentScopeMasterType === 'chargeHead') targetSrc = LocalDBMS.chargeHeads;
+
+  const filteredDataset = targetSrc.filter(item => item.toLowerCase().includes(queryStr));
+
+  if(filteredDataset.length === 0) {
+    container.innerHTML = `<div style="padding:12px; text-align:center;">NO COMPATIBLE DATA RECORDS MATCH FOUND</div>`;
+    return;
+  }
+
+  filteredDataset.forEach((item) => {
+    const absoluteArrayIndexPointer = targetSrc.indexOf(item);
+    const listRow = document.createElement("div");
+    listRow.style.padding = "6px 10px";
+    listRow.style.borderBottom = "1px solid rgba(0,0,0,0.04)";
+    listRow.style.display = "flex";
+    listRow.style.justifyContent = "space-between";
+    listRow.style.alignItems = "center";
+    listRow.innerHTML = `
+      <span style="font-size:11px; font-weight:700;">${item}</span>
+      <button class="btn-icon-action remove" style="width:18px; height:18px;" onclick="evictMasterDataEntry(${absoluteArrayIndexPointer})"><i class="bi bi-trash" style="font-size:9px;"></i></button>
+    `;
+    container.appendChild(listRow);
+  });
+}
+
+function appendNewItemToActiveMaster() {
+  const val = document.getElementById("txtNewMasterEntry").value.trim().toUpperCase();
+  if(!val) return;
+
+  if(currentScopeMasterType === 'carrier' && !LocalDBMS.carriers.includes(val)) LocalDBMS.carriers.push(val);
+  if(currentScopeMasterType === 'pol' && !LocalDBMS.pols.includes(val)) LocalDBMS.pols.push(val);
+  if(currentScopeMasterType === 'chargeHead' && !LocalDBMS.chargeHeads.includes(val)) LocalDBMS.chargeHeads.push(val);
+
+  document.getElementById("txtNewMasterEntry").value = "";
+  generatePopupDataViewItems();
+}
+
+function evictMasterDataEntry(index) {
+  if(currentScopeMasterType === 'carrier') LocalDBMS.carriers.splice(index, 1);
+  if(currentScopeMasterType === 'pol') LocalDBMS.pols.splice(index, 1);
+  if(currentScopeMasterType === 'chargeHead') LocalDBMS.chargeHeads.splice(index, 1);
+  generatePopupDataViewItems();
+}
+
+function launchCountsCalculatorPopup() {
+  const carrierSelect = document.getElementById("countsCarrierSelect");
+  const polSelect = document.getElementById("countsPolSelect");
+
+  carrierSelect.innerHTML = "";
+  LocalDBMS.carriers.forEach(c => carrierSelect.appendChild(new Option(c, c)));
+
+  polSelect.innerHTML = "";
+  LocalDBMS.pols.forEach(p => polSelect.appendChild(new Option(p, p)));
+
+  document.getElementById("countsVolumeInput").value = "4";
+  runVolumeCountsCalculation();
+  document.getElementById("countsCalculatorPopup").classList.add("visible");
+}
+
+function dismissCountsCalculatorPopup() {
+  document.getElementById("countsCalculatorPopup").classList.remove("visible");
+}
+
+function runVolumeCountsCalculation() {
+  const selectedCarrier = document.getElementById("countsCarrierSelect").value;
+  const selectedPort = document.getElementById("countsPolSelect").value;
+  const boxVolumeCount = parseInt(document.getElementById("countsVolumeInput").value) || 0;
+  const outputContainer = document.getElementById("countsBreakdownResultView");
+
+  outputContainer.innerHTML = "";
+
+  const matchedRecords = LocalDBMS.records.filter(r => r.carrier === selectedCarrier && r.pol === selectedPort);
+
+  if (matchedRecords.length === 0) {
+    outputContainer.innerHTML = `<div style="text-align:center; padding:20px 0;">NO CURRENT COMPATIBLE RATE FRAMEWORKS DETECTED MATCHING THIS SPECIFIC CARRIER + PORT PAIRING SELECTION.</div>`;
+    return;
+  }
+
+  let aggregatedSummaryHTML = "";
+  let overallRunningInrGrandTotal = 0;
+
+  matchedRecords.forEach((record, index) => {
+    aggregatedSummaryHTML += `<div style="margin-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.06); padding-bottom:6px;">
+      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (${record.exportType} / ${record.shipmentType})</span>
+      <table style="width:100%; margin-top:4px;">
+        <thead>
+          <tr>
+            <th style="font-size:8px; padding:4px;">CHARGE HEAD</th>
+            <th style="font-size:8px; padding:4px;">BASIS</th>
+            <th style="font-size:8px; padding:4px;">BASE RATE</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">MULTIPLIER RUN</th>
+            <th style="font-size:8px; padding:4px; text-align:right;">TOTAL (INR)</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    let subRecordInrTotal = 0;
+
+    record.charges.forEach(ch => {
+      let runMultiplierFactor = 1;
+      let labelBasisMappingText = "ONE-TIME BL FLAT";
+
+      if (ch.basis === 'CTR') {
+        runMultiplierFactor = boxVolumeCount;
+        labelBasisMappingText = `${boxVolumeCount} X CONTAINERS`;
+      } else if (ch.basis === 'SHPMT') {
+        labelBasisMappingText = "ONE-TIME SHIPMENT FLAT";
+      }
+
+      const totalChargeLineCostInBaseCurrency = ch.amount * runMultiplierFactor;
+      const conversionWeightFactor = fixedFxToInrRates[ch.currency] || 1.00;
+      const finalLineInrValuation = totalChargeLineCostInBaseCurrency * conversionWeightFactor;
+
+      subRecordInrTotal += finalLineInrValuation;
+
+      aggregatedSummaryHTML += `
+        <tr>
+          <td style="padding:4px;">${ch.head}</td>
+          <td style="padding:4px; font-size:9px;">${ch.basis}</td>
+          <td style="padding:4px;">${ch.currency} ${ch.amount.toFixed(2)}</td>
+          <td style="padding:4px; text-align:right; font-size:9px;">${labelBasisMappingText}</td>
+          <td style="padding:4px; text-align:right; font-weight:700;">₹ ${finalLineInrValuation.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>`;
+    });
+
+    overallRunningInrGrandTotal += subRecordInrTotal;
+    aggregatedSummaryHTML += `
+        <tr>
+          <td colspan="4" style="padding:4px; font-weight:700; text-align:right;">FRAMEWORK CALCULATION TOTAL:</td>
+          <td style="padding:4px; font-weight:700; text-align:right;">₹ ${subRecordInrTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>`;
+  });
+
+  let summaryHeaderHTML = `
+    <div style="padding:10px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-weight:700; font-size:10px;">VOLUME CALCULATION CONSOLIDATED SUMMARY VALUATION:</span>
+      <span style="font-size:13px; font-weight:700;">₹ ${overallRunningInrGrandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} INR</span>
+    </div>
+  `;
+
+  outputContainer.innerHTML = summaryHeaderHTML + aggregatedSummaryHTML;
+}
+
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) { 
+    dismissMasterPopup(); 
+    dismissCountsCalculatorPopup();
+  }
+};
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAR5ad1W7bVRzXha6LPAGDsYjcy44Nlx3Q",
+    authDomain: "local-508e0.firebaseapp.com",
+    projectId: "local-508e0",
+    storageBucket: "local-508e0.firebasestorage.app",
+    messagingSenderId: "1041782996227",
+    appId: "1:1041782996227:web:4faf0e739bb7904c9cfd36"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  window.firebaseApp = app;
+</script>
+
+</body>
+</html>
