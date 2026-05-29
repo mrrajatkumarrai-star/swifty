@@ -856,8 +856,11 @@ function commitEditorToDatabase() {
     LocalDBMS.records.push(payload);
   }
 
-  resetFormEditorState();
-  refreshRecordsGrid();
+window.saveRecordToFirebase(payload);
+
+resetFormEditorState();
+refreshRecordsGrid();
+
 }
 
 function removeRecordFromDatabase(id) {
@@ -1049,19 +1052,39 @@ document.onkeydown = function(evt) {
 </script>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAR5ad1W7bVRzXha6LPAGDsYjcy44Nlx3Q",
-    authDomain: "local-508e0.firebaseapp.com",
-    projectId: "local-508e0",
-    storageBucket: "local-508e0.firebasestorage.app",
-    messagingSenderId: "1041782996227",
-    appId: "1:1041782996227:web:4faf0e739bb7904c9cfd36"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAR5ad1W7bVRzXha6LPAGDsYjcy44Nlx3Q",
+  authDomain: "local-508e0.firebaseapp.com",
+  projectId: "local-508e0",
+  storageBucket: "local-508e0.firebasestorage.app",
+  messagingSenderId: "1041782996227",
+  appId: "1:1041782996227:web:4faf0e739bb7904c9cfd36"
+};
 
-  const app = initializeApp(firebaseConfig);
-  window.firebaseApp = app;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.saveRecordToFirebase = async function(payload) {
+  try {
+    await addDoc(collection(db, "rates"), {
+      ...payload,
+      createdAt: serverTimestamp()
+    });
+
+    console.log("Saved to Firebase");
+  } catch (error) {
+    console.error("Firebase save failed:", error);
+    alert("Firebase save failed. Check browser console.");
+  }
+};
 </script>
 
 </body>
