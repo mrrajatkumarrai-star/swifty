@@ -2713,6 +2713,160 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
   </div>
 </div>
 
+<!-- ===== TOP RIGHT BUTTON + POPUP START ===== -->
+<style>
+  #openDbmsPopupBtn{
+    position:fixed;
+    top:14px;
+    right:14px;
+    z-index:99998;
+    padding:10px 14px;
+    border:none;
+    border-radius:12px;
+    background:#111827;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+  }
+  #openDbmsPopupBtn:hover{opacity:.92}
+
+  #dbmsPopupOverlay{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+  #dbmsPopupOverlay.show{display:flex}
+
+  .dbms-popup-window{
+    width:min(96vw, 1400px);
+    height:min(94vh, 900px);
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+  }
+
+  .dbms-popup-header{
+    height:54px;
+    flex:0 0 54px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:0 12px;
+    border-bottom:1px solid #e5e7eb;
+    background:#f8fafc;
+  }
+
+  .dbms-popup-title{
+    font-size:14px;
+    font-weight:600;
+    color:#111827;
+  }
+
+  .dbms-popup-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .dbms-btn{
+    border:none;
+    border-radius:10px;
+    padding:8px 12px;
+    cursor:pointer;
+    font-size:13px;
+    background:#111827;
+    color:#fff;
+  }
+  .dbms-btn.light{
+    background:#e5e7eb;
+    color:#111827;
+  }
+
+  #dbmsFrame{
+    width:100%;
+    height:100%;
+    border:none;
+    flex:1;
+    background:#fff;
+  }
+</style>
+
+<button id="openDbmsPopupBtn">OPEN DBMS</button>
+
+<div id="dbmsPopupOverlay">
+  <div class="dbms-popup-window">
+    <div class="dbms-popup-header">
+      <div class="dbms-popup-title">FR8X LOCALS</div>
+
+      <div class="dbms-popup-actions">
+        <button class="dbms-btn light" id="extractFromSecondHtmlBtn">EXTRACT / COPY</button>
+        <button class="dbms-btn" id="closeDbmsPopupBtn">X</button>
+      </div>
+    </div>
+
+    <!-- change locals.html to your 2nd HTML file name -->
+    <iframe id="dbmsFrame" src="locals.html"></iframe>
+  </div>
+</div>
+
+<script>
+  const openDbmsPopupBtn = document.getElementById('openDbmsPopupBtn');
+  const dbmsPopupOverlay = document.getElementById('dbmsPopupOverlay');
+  const closeDbmsPopupBtn = document.getElementById('closeDbmsPopupBtn');
+  const extractFromSecondHtmlBtn = document.getElementById('extractFromSecondHtmlBtn');
+  const dbmsFrame = document.getElementById('dbmsFrame');
+
+  openDbmsPopupBtn.addEventListener('click', () => {
+    dbmsPopupOverlay.classList.add('show');
+  });
+
+  closeDbmsPopupBtn.addEventListener('click', () => {
+    dbmsPopupOverlay.classList.remove('show');
+  });
+
+  dbmsPopupOverlay.addEventListener('click', (e) => {
+    if (e.target === dbmsPopupOverlay) {
+      dbmsPopupOverlay.classList.remove('show');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dbmsPopupOverlay.classList.remove('show');
+    }
+  });
+
+  extractFromSecondHtmlBtn.addEventListener('click', () => {
+    try {
+      const win = dbmsFrame.contentWindow;
+      const db = win.LocalDBMS;
+
+      if (!db) {
+        alert('LocalDBMS not found in the second HTML.');
+        return;
+      }
+
+      const records = db.records || [];
+      console.log('Extracted records:', records);
+
+      alert('Extracted ' + records.length + ' record(s) from the second HTML.');
+      // Put your merge / copy code here.
+    } catch (err) {
+      alert('Cannot access the second HTML. Make sure both files are on the same domain/folder.');
+    }
+  });
+</script>
+<!-- ===== TOP RIGHT BUTTON + POPUP END ===== -->
 
 
 </body>
