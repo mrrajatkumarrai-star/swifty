@@ -92,6 +92,15 @@ header {
   color: #000000 !important;
 }
 
+.wa-paste-input {
+  border: 2px solid #25D366 !important;
+  background-color: #f6fdf8 !important;
+}
+.wa-paste-input::placeholder {
+  color: #1a9647 !important;
+  font-weight: bold;
+}
+
 .yellow-master-trigger {
   background-color: #f0f0f0 !important;
   color: #000000 !important;
@@ -120,7 +129,7 @@ header {
 }
 
 .left-workspace-panel {
-  width: 35%;
+  width: 40%;
   min-width: 320px;
   display: flex;
   flex-direction: column;
@@ -277,13 +286,6 @@ tr:hover td {
 
 .grid-btn-icon:hover { opacity: 0.85; }
 
-.grid-btn-edit,
-.grid-btn-duplicate,
-.grid-btn-copy,
-.grid-btn-delete {
-  background: #f0f0f0 !important;
-}
-
 .btn-icon-action {
   width: 24px;
   height: 24px;
@@ -297,25 +299,12 @@ tr:hover td {
   color: #000000 !important;
 }
 
-.btn-icon-action.add,
-.btn-icon-action.remove {
-  background: #f0f0f0 !important;
-}
-
 .charge-row-item {
   display: grid;
   grid-template-columns: auto 1.4fr 0.9fr 0.8fr 1fr;
   gap: 6px;
   margin-bottom: 4px;
   align-items: center;
-}
-
-.exchange-rates-bar {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
-  margin-bottom: 10px;
 }
 
 .popup-overlay {
@@ -330,12 +319,10 @@ tr:hover td {
   pointer-events: none;
   transition: opacity 0.15s ease;
 }
-
 .popup-overlay.visible {
   opacity: 1;
   pointer-events: auto;
 }
-
 .popup-window {
   background: #ffffff;
   border: 1px solid var(--border);
@@ -347,39 +334,6 @@ tr:hover td {
   display: flex;
   flex-direction: column;
 }
-
-.bi {
-  color: #000000 !important;
-}
-
-#countsBreakdownResultView {
-  background: #f7f7f7 !important;
-  border: 1px solid #c0c0c0 !important;
-  border-radius: 6px;
-}
-
-#countsBreakdownResultView > div {
-  background: #f0f0f0 !important;
-  color: #000000 !important;
-}
-
-#countsBreakdownResultView table tr {
-  background: #ffffff !important;
-}
-
-#countsBreakdownResultView table thead tr {
-  background: #f2f2f2 !important;
-}
-
-span[style*="background:rgba(0,0,0,0.05)"] {
-  background: #f2f2f2 !important;
-}
-
-[style*="border-top:1px dashed"],
-[style*="border-bottom:1px dashed"],
-[style*="border:1px solid rgba(0,0,0,0.08)"] {
-  border-color: #c0c0c0 !important;
-}
 </style>
 </head>
 <body>
@@ -389,7 +343,9 @@ span[style*="background:rgba(0,0,0,0.05)"] {
     <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
     <span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
   </div>
-  <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+  <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; align-items:center;">
+    <input type="text" id="waFetchInput" class="feedable-input wa-paste-input" style="width:230px; margin-right:15px;" placeholder="PASTE SEQ NO TO COPY WHATSAPP..." oninput="handleWaSeqPaste(this)">
+    
     <button class="yellow-master-trigger" onclick="launchMasterPopup('carrier')"><i class="bi bi-plus"></i> CARRIER MASTER</button>
     <button class="yellow-master-trigger" onclick="launchMasterPopup('pol')"><i class="bi bi-plus"></i> LOCATION PORT MASTER</button>
     <button class="yellow-master-trigger" onclick="launchMasterPopup('chargeHead')"><i class="bi bi-plus"></i> CHARGES HEAD MASTER</button>
@@ -401,12 +357,14 @@ span[style*="background:rgba(0,0,0,0.05)"] {
   <div class="left-workspace-panel" id="leftPanel">
     <div class="glass-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
-        <span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES</span>
+        <span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES DATABASE</span>
+        <input type="text" id="gridSearchFilter" class="feedable-input" style="width:150px; padding:4px 8px;" placeholder="SEARCH RECORDS..." oninput="refreshRecordsGrid(this.value)">
       </div>
       <div class="table-scroll-container">
         <table>
           <thead>
             <tr>
+              <th class="dark-heading">SEQ NO</th>
               <th class="dark-heading">CARRIER</th>
               <th class="dark-heading">POL/POD</th>
               <th class="dark-heading" style="text-align:center; width:130px;">ACTIONS</th>
@@ -467,29 +425,27 @@ span[style*="background:rgba(0,0,0,0.05)"] {
       </div>
 
       <div style="display:flex; gap:6px; margin-top:12px;">
-        <button class="btn btn-success" style="flex:1;" onclick="commitEditorToDatabase()"><i class="bi bi-check-circle"></i> SAVE</button>
+        <button class="btn btn-success" style="flex:1;" onclick="commitEditorToDatabase()"><i class="bi bi-check-circle"></i> SAVE CONFIGURATION</button>
         <button class="btn btn-neutral" onclick="resetFormEditorState()">CLEAR</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Popups Below -->
 <div class="popup-overlay" id="masterManagementPopup">
   <div class="popup-window">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
       <span class="dark-heading" id="popupScopeTitle">CONFIGURATION REGISTRY METRICS</span>
       <button class="btn-icon-action remove" onclick="dismissMasterPopup()"><i class="bi bi-x-lg"></i></button>
     </div>
-    
     <div style="margin-bottom:10px;">
       <input type="text" id="txtMasterDirectorySearch" class="feedable-input" placeholder="SEARCH CURRENT SYSTEM MASTER REGISTRY MATCHES..." oninput="generatePopupDataViewItems()">
     </div>
-
     <div style="display:flex; gap:6px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed rgba(0,0,0,0.1);">
       <input type="text" id="txtNewMasterEntry" class="feedable-input" placeholder="INSERT NEW DIRECTORY ENTITY DESIGNATION...">
       <button class="btn btn-primary" style="padding:0 16px;" onclick="appendNewItemToActiveMaster()">INSERT</button>
     </div>
-
     <span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">EXISTING SYSTEM ALLOCATED ENTRIES:</span>
     <div id="popupMasterItemsListView" style="max-height:220px; overflow-y:auto; border:1px solid rgba(0,0,0,0.08); background:#ffffff; border-radius:6px;"></div>
   </div>
@@ -501,7 +457,6 @@ span[style*="background:rgba(0,0,0,0.05)"] {
       <span class="dark-heading"><i class="bi bi-calculator"></i> VOLUME MULTI-CONTAINER CALCULATION ESTIMATOR MATRIX</span>
       <button class="btn-icon-action remove" onclick="dismissCountsCalculatorPopup()"><i class="bi bi-x-lg"></i></button>
     </div>
-    
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
       <div>
         <label class="dark-heading" style="display:block; margin-bottom:2px;">CARRIER</label>
@@ -512,14 +467,12 @@ span[style*="background:rgba(0,0,0,0.05)"] {
         <select id="countsPolSelect" class="feedable-input" onchange="runVolumeCountsCalculation()"></select>
       </div>
     </div>
-
     <div style="margin-bottom:12px;">
       <label class="dark-heading" style="display:block; margin-bottom:2px;">CONTAINER LOAD VOLUME COUNT QUANTITY (E.G. 4-5 BOXES)</label>
       <input type="number" id="countsVolumeInput" class="feedable-input" value="4" min="1" max="999" oninput="runVolumeCountsCalculation()">
     </div>
-
     <span class="dark-heading" style="font-size:9px; display:block; margin-bottom:4px;">LIVE SPECIFIC CALCULATION RUN MATRIX SUMMARY:</span>
-    <div id="countsBreakdownResultView" style="flex:1; max-height:240px; overflow-y:auto; padding:10px; font-size:11px;"></div>
+    <div id="countsBreakdownResultView" style="flex:1; max-height:240px; overflow-y:auto; padding:10px; font-size:11px; background:#f7f7f7; border: 1px solid #c0c0c0; border-radius: 6px;"></div>
   </div>
 </div>
 
@@ -532,9 +485,6 @@ const LocalDBMS = {
 };
 
 window.LocalDBMS = LocalDBMS;
-
-window.LocalDBMS = LocalDBMS;
-
 let currentScopeMasterType = '';
 const fixedFxToInrRates = { USD: 83.50, EUR: 89.40, AED: 22.73, GBP: 105.10, INR: 1.00 };
 
@@ -587,16 +537,38 @@ function onShipmentTypeToggleChange() {
   labelElement.innerText = mode === "IMPORT" ? "POD (PORT OF DISCHARGE)" : "POL (PORT OF LOADING)";
 }
 
-function refreshRecordsGrid() {
+// Handler for WhatsApp Seq Number Quick Paste
+function handleWaSeqPaste(el) {
+  const val = el.value.trim().toUpperCase();
+  if (!val) return;
+
+  const matchedRecord = LocalDBMS.records.find(r => (r.seqNo || "").toUpperCase() === val);
+  
+  if (matchedRecord) {
+    exportRowToWhatsAppFriendly(matchedRecord.id);
+    el.value = ""; // Clear immediately after generating
+  }
+}
+
+function refreshRecordsGrid(filterQuery = "") {
   const tbody = document.getElementById("recordsGridBody");
   tbody.innerHTML = "";
+  
+  let filteredSet = [...LocalDBMS.records];
+  filterQuery = filterQuery.trim().toUpperCase();
 
-  const filteredSet = [...LocalDBMS.records];
+  if (filterQuery) {
+    filteredSet = filteredSet.filter(r => 
+      (r.seqNo || "").includes(filterQuery) || 
+      (r.carrier || "").includes(filterQuery) || 
+      (r.pol || "").includes(filterQuery)
+    );
+  }
 
   if (filteredSet.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="3" style="text-align:center; padding:16px; color:#666;">NO ACTIVE RATES FOUND</td>
+        <td colspan="4" style="text-align:center; padding:16px; color:#666;">NO ACTIVE RATES FOUND</td>
       </tr>
     `;
     return;
@@ -605,6 +577,7 @@ function refreshRecordsGrid() {
   filteredSet.forEach(item => {
     const row = document.createElement("tr");
     row.innerHTML = `
+      <td style="font-size:10px; font-weight:700; color:#1a9647 !important;">${item.seqNo || "N/A"}</td>
       <td style="font-weight:700 !important; font-size:10px;">${item.carrier || ""}</td>
       <td style="font-size:10px;">${item.pol || ""}</td>
       <td style="text-align:center; white-space:nowrap;">
@@ -623,14 +596,21 @@ function exportRowToWhatsAppFriendly(id) {
   if(!record) return;
 
   let messageLines = [];
+  messageLines.push(`*SEQ NO:* ${record.seqNo || 'N/A'}`);
+  messageLines.push(`*CARRIER:* ${record.carrier}`);
+  messageLines.push(`*ROUTE:* ${record.pol}`);
+  messageLines.push(`*TYPE:* ${record.shipmentType || 'EXPORT'}`);
+  messageLines.push(``);
+  messageLines.push(`*CHARGES:*`);
+  
   record.charges.forEach(ch => {
     let mappedBasis = "CONTAINER";
     if(ch.basis === 'BL') mappedBasis = "DOCS";
     if(ch.basis === 'SHPMT') mappedBasis = "SHIPMENT";
-    messageLines.push(`${ch.head} : ${ch.currency} ${ch.amount}/${mappedBasis}`);
+    messageLines.push(`• ${ch.head} : ${ch.currency} ${ch.amount} / ${mappedBasis}`);
   });
 
-  const finalStringTextFormat = messageLines.join('\n').toUpperCase();
+  const finalStringTextFormat = messageLines.join('\n');
 
   navigator.clipboard.writeText(finalStringTextFormat).then(() => {
     alert("WHATSAPP TEXT TEMPLATE COPIED TO SYSTEM CLIPBOARD:\n\n" + finalStringTextFormat);
@@ -668,7 +648,6 @@ function injectBlankChargeRowLine(values = { head: '', currency: 'INR', amount: 
     </select>
     <input type="number" class="feedable-input num-charge-row-amount" placeholder="AMT" value="${values.amount}">
   `;
-
   targetContainer.appendChild(wrapperElement);
 }
 
@@ -710,7 +689,7 @@ function populateMenuFilter(txt, wrapper, source, selectionCallback) {
   const match = source.filter(i => i.toLowerCase().includes(txt.toLowerCase()));
   if(match.length === 0) {
     const emptyDiv = document.createElement("div");
-    emptyDiv.innerText = "NO ENTRY REGISTERED MATCH FOUND";
+    emptyDiv.innerText = "NO ENTRY MATCH FOUND";
     emptyDiv.style.color = "#000000";
     wrapper.appendChild(emptyDiv);
   } else {
@@ -729,6 +708,8 @@ function resetFormEditorState() {
   document.getElementById("formEditorHeader").innerText = "NEW RATES";
   document.getElementById("formCarrierInput").value = "";
   document.getElementById("formPolInput").value = "";
+  document.getElementById("formShipmentTypeSelect").value = "EXPORT";
+  onShipmentTypeToggleChange();
   document.getElementById("nestedChargesLinesContainer").innerHTML = "";
   injectBlankChargeRowLine();
 }
@@ -742,11 +723,13 @@ function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
     document.getElementById("formEditorHeader").innerText = "DUPLICATE RATE";
   } else {
     document.getElementById("activeWorkingId").value = foundItem.id;
-    document.getElementById("formEditorHeader").innerText = "EDIT RATE";
+    document.getElementById("formEditorHeader").innerText = `EDIT RATE (SEQ: ${foundItem.seqNo || 'N/A'})`;
   }
 
   document.getElementById("formCarrierInput").value = foundItem.carrier || "";
   document.getElementById("formPolInput").value = foundItem.pol || "";
+  document.getElementById("formShipmentTypeSelect").value = foundItem.shipmentType || "EXPORT";
+  onShipmentTypeToggleChange();
 
   const targetBox = document.getElementById("nestedChargesLinesContainer");
   targetBox.innerHTML = "";
@@ -763,6 +746,7 @@ async function commitEditorToDatabase() {
   const currentId = document.getElementById("activeWorkingId").value;
   const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
   const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
+  const shipmentTypeVal = document.getElementById("formShipmentTypeSelect").value;
 
   if(!carrierVal || !polVal) {
     alert("VALIDATION FAULT: CARRIER AND PORT DESIGNATION CHANNELS MUST BE MANUALLY SET.");
@@ -800,8 +784,26 @@ async function commitEditorToDatabase() {
     return;
   }
 
+  // Dynamic Sequence Number Generation
+  let seqNoToSave = "";
+  const existingRec = LocalDBMS.records.find(r => r.id === currentId);
+  
+  if (existingRec && existingRec.seqNo && !currentId.includes("duplicate")) {
+    seqNoToSave = existingRec.seqNo;
+  } else {
+    // Car + Pol 3 letter combo setup
+    const carCode = carrierVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const polCode = polVal.replace(/[^A-Z]/ig, '').padEnd(3, 'X').substring(0,3).toUpperCase();
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    seqNoToSave = `${carCode}${polCode}${dd}:${hh}`;
+  }
+
   const payload = {
+    seqNo: seqNoToSave,
     carrier: carrierVal,
+    shipmentType: shipmentTypeVal,
     pol: polVal,
     charges: aggregatedCharges
   };
@@ -836,6 +838,7 @@ async function removeRecordFromDatabase(id) {
   }
 }
 
+// Master Popups and Calculator Code Logic (Persisted intact)
 function launchMasterPopup(type) {
   currentScopeMasterType = type;
   document.getElementById("txtNewMasterEntry").value = "";
@@ -849,10 +852,7 @@ function launchMasterPopup(type) {
   generatePopupDataViewItems();
   document.getElementById("masterManagementPopup").classList.add("visible");
 }
-
-function dismissMasterPopup() {
-  document.getElementById("masterManagementPopup").classList.remove("visible");
-}
+function dismissMasterPopup() { document.getElementById("masterManagementPopup").classList.remove("visible"); }
 
 function generatePopupDataViewItems() {
   const container = document.getElementById("popupMasterItemsListView");
@@ -870,7 +870,7 @@ function generatePopupDataViewItems() {
     container.innerHTML = `<div style="padding:12px; text-align:center;">NO COMPATIBLE DATA RECORDS MATCH FOUND</div>`;
     return;
   }
-
+  
   filteredDataset.forEach((item) => {
     const listRow = document.createElement("div");
     listRow.style.padding = "6px 10px";
@@ -889,23 +889,18 @@ function generatePopupDataViewItems() {
 async function appendNewItemToActiveMaster() {
   const val = document.getElementById("txtNewMasterEntry").value.trim().toUpperCase();
   if(!val) return;
-
   try {
     await window.saveMasterToFirebase(currentScopeMasterType, val);
     document.getElementById("txtNewMasterEntry").value = "";
     generatePopupDataViewItems();
-  } catch (error) {
-    console.error("Master save failed:", error);
-  }
+  } catch (error) { console.error("Master save failed:", error); }
 }
 
 async function evictMasterDataEntry(value) {
   try {
     await window.deleteMasterFromFirebase(currentScopeMasterType, value);
     generatePopupDataViewItems();
-  } catch (error) {
-    console.error("Master delete failed:", error);
-  }
+  } catch (error) { console.error("Master delete failed:", error); }
 }
 
 function launchCountsCalculatorPopup() {
@@ -922,17 +917,13 @@ function launchCountsCalculatorPopup() {
   runVolumeCountsCalculation();
   document.getElementById("countsCalculatorPopup").classList.add("visible");
 }
-
-function dismissCountsCalculatorPopup() {
-  document.getElementById("countsCalculatorPopup").classList.remove("visible");
-}
+function dismissCountsCalculatorPopup() { document.getElementById("countsCalculatorPopup").classList.remove("visible"); }
 
 function runVolumeCountsCalculation() {
   const selectedCarrier = document.getElementById("countsCarrierSelect").value;
   const selectedPort = document.getElementById("countsPolSelect").value;
   const boxVolumeCount = parseInt(document.getElementById("countsVolumeInput").value) || 0;
   const outputContainer = document.getElementById("countsBreakdownResultView");
-
   outputContainer.innerHTML = "";
 
   const matchedRecords = LocalDBMS.records.filter(r => r.carrier === selectedCarrier && r.pol === selectedPort);
@@ -947,7 +938,7 @@ function runVolumeCountsCalculation() {
 
   matchedRecords.forEach((record, index) => {
     aggregatedSummaryHTML += `<div style="margin-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.06); padding-bottom:6px;">
-      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (${record.shipmentType || "EXPORT"})</span>
+      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (SEQ: ${record.seqNo || 'N/A'}) (${record.shipmentType || "EXPORT"})</span>
       <table style="width:100%; margin-top:4px;">
         <thead>
           <tr>
@@ -961,7 +952,6 @@ function runVolumeCountsCalculation() {
         <tbody>`;
 
     let subRecordInrTotal = 0;
-
     record.charges.forEach(ch => {
       let runMultiplierFactor = 1;
       let labelBasisMappingText = "ONE-TIME BL FLAT";
@@ -976,7 +966,6 @@ function runVolumeCountsCalculation() {
       const totalChargeLineCostInBaseCurrency = ch.amount * runMultiplierFactor;
       const conversionWeightFactor = fixedFxToInrRates[ch.currency] || 1.00;
       const finalLineInrValuation = totalChargeLineCostInBaseCurrency * conversionWeightFactor;
-
       subRecordInrTotal += finalLineInrValuation;
 
       aggregatedSummaryHTML += `
@@ -1000,76 +989,13 @@ function runVolumeCountsCalculation() {
     </div>`;
   });
 
-  let summaryHeaderHTML = `
+  outputContainer.innerHTML = `
     <div style="padding:10px; border-radius:6px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
       <span style="font-weight:700; font-size:10px;">VOLUME CALCULATION CONSOLIDATED SUMMARY VALUATION:</span>
       <span style="font-size:13px; font-weight:700;">₹ ${overallRunningInrGrandTotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})} INR</span>
     </div>
-  `;
-
-  outputContainer.innerHTML = summaryHeaderHTML + aggregatedSummaryHTML;
+  ` + aggregatedSummaryHTML;
 }
-
-async function loadRecordsFromFirebase() {
-  try {
-    const snapshot = await window.getDocs(window.collection(window.db, "rates"));
-    const firebaseRecords = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data()
-    }));
-
-    LocalDBMS.records = firebaseRecords;
-    refreshRecordsGrid();
-    return firebaseRecords;
-  } catch (error) {
-    console.error("Firebase load failed:", error);
-    return [];
-  }
-}
-
-window.saveRecordToFirebase = async function(payload) {
-  try {
-    if (payload.id) {
-      const recordId = payload.id;
-      const { id, ...data } = payload;
-      await window.updateDoc(window.doc(window.db, "rates", recordId), {
-        ...data,
-        updatedAt: window.serverTimestamp()
-      });
-      return recordId;
-    }
-
-    const docRef = await window.addDoc(window.collection(window.db, "rates"), {
-      ...payload,
-      createdAt: window.serverTimestamp(),
-      updatedAt: window.serverTimestamp()
-    });
-    return docRef.id;
-  } catch (error) {
-    console.error("Firebase save failed:", error);
-    alert("Firebase save failed. Check browser console.");
-    throw error;
-  }
-};
-
-window.deleteRecordFromFirebase = async function(recordId) {
-  try {
-    await window.deleteDoc(window.doc(window.db, "rates", recordId));
-  } catch (error) {
-    console.error("Firebase delete failed:", error);
-    alert("Firebase delete failed. Check browser console.");
-    throw error;
-  }
-};
-
-window.syncLocalRecordsFromSnapshot = function(firebaseRecords) {
-  LocalDBMS.records = firebaseRecords;
-  refreshRecordsGrid();
-  const activeId = document.getElementById("activeWorkingId").value;
-  if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
-    resetFormEditorState();
-  }
-};
 
 document.onkeydown = function(evt) {
   evt = evt || window.event;
@@ -1083,16 +1009,7 @@ document.onkeydown = function(evt) {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-  setDoc,
-  serverTimestamp,
-  onSnapshot
+  getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, getDocs, setDoc, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1153,11 +1070,16 @@ function rebuildRateArray(snapshot) {
   }));
 
   LocalDBMS.records = firebaseRecords;
-  refreshRecordsGrid();
+  
+  // Uses the global un-namespaced function from earlier scripts to update UI
+  if (typeof refreshRecordsGrid === "function") {
+    const currentSearch = document.getElementById("gridSearchFilter")?.value || "";
+    refreshRecordsGrid(currentSearch);
+  }
 
   const activeId = document.getElementById("activeWorkingId").value;
   if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
-    resetFormEditorState();
+    if (typeof resetFormEditorState === "function") resetFormEditorState();
   }
 }
 
@@ -1267,7 +1189,6 @@ window.listenToFirebaseMasters = function() {
 
 window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
-
 </script>
 
 </body>
