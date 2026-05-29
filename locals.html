@@ -387,7 +387,7 @@ span[style*="background:rgba(0,0,0,0.05)"] {
 <header>
   <div style="display:flex; align-items:center; gap:8px;">
     <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
-    <span class="dark-heading" style="font-size:12px;">FR8X CARGO SYSTEM</span>
+    <span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
   </div>
   <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
     <button class="yellow-master-trigger" onclick="launchMasterPopup('carrier')"><i class="bi bi-plus"></i> CARRIER MASTER</button>
@@ -401,15 +401,13 @@ span[style*="background:rgba(0,0,0,0.05)"] {
   <div class="left-workspace-panel" id="leftPanel">
     <div class="glass-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px;">
-        <span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES RECORD DATABASE DIRECTORY</span>
-        <input type="text" id="directoryFilter" class="feedable-input" placeholder="SEARCH SYSTEM RECORDS..." oninput="refreshRecordsGrid()">
+        <span class="dark-heading" style="white-space: nowrap;">ACTIVE RATES</span>
       </div>
       <div class="table-scroll-container">
         <table>
           <thead>
             <tr>
               <th class="dark-heading">CARRIER</th>
-              <th class="dark-heading">EXPORT</th>
               <th class="dark-heading">POL/POD</th>
               <th class="dark-heading" style="text-align:center; width:130px;">ACTIONS</th>
             </tr>
@@ -425,19 +423,8 @@ span[style*="background:rgba(0,0,0,0.05)"] {
   <div class="right-workspace-panel" id="rightPanel">
     <div class="glass-card" style="overflow-y: auto;">
       <div class="dark-heading" id="formEditorHeader" style="margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:4px;">
-        NEW RATE ASSIGNMENT EDITOR
+        NEW RATES
       </div>
-
-      <div class="exchange-rates-bar" style="display:flex; align-items:center; justify-content:space-between; font-size:10px; gap:10px; flex-wrap:wrap;">
-        <span class="dark-heading" style="font-size:9px;"><i class="bi bi-currency-exchange"></i> LIVE EXCHANGE RATES VALUES REFERENCE BOARD:</span>
-        <div>
-          <span style="margin-left:12px; font-weight:700;">1 USD = 83.50 INR</span>
-          <span style="margin-left:12px; font-weight:700;">1 EUR = 89.40 INR</span>
-          <span style="margin-left:12px; font-weight:700;">1 AED = 22.73 INR</span>
-          <span style="margin-left:12px; font-weight:700;">1 GBP = 105.10 INR</span>
-        </div>
-      </div>
-
       <input type="hidden" id="activeWorkingId" value="">
       
       <div style="margin-bottom:8px;">
@@ -446,16 +433,6 @@ span[style*="background:rgba(0,0,0,0.05)"] {
           <input type="text" id="formCarrierInput" class="feedable-input" placeholder="TYPE TO SEARCH CARRIER..." onfocus="displayMenuOptions('carrier')" oninput="filterMenuOptions('carrier')">
           <div id="carrierOptionsWrapper" class="suggestions-dropdown-wrapper"></div>
         </div>
-      </div>
-
-      <div style="margin-bottom:8px;">
-        <label class="dark-heading" style="display:block; margin-bottom:2px;">EXPORT</label>
-        <select id="formExportSelect" class="feedable-input">
-          <option value="EXPORT OBL">EXPORT OBL</option>
-          <option value="EXPORT FCL">EXPORT FCL</option>
-          <option value="EXPORT LCL">EXPORT LCL</option>
-          <option value="AIR EXPORT">AIR EXPORT</option>
-        </select>
       </div>
 
       <div style="margin-bottom:8px;">
@@ -490,8 +467,8 @@ span[style*="background:rgba(0,0,0,0.05)"] {
       </div>
 
       <div style="display:flex; gap:6px; margin-top:12px;">
-        <button class="btn btn-success" style="flex:1;" onclick="commitEditorToDatabase()"><i class="bi bi-check-circle"></i> SAVE FRAMEWORK RECORD</button>
-        <button class="btn btn-neutral" onclick="resetFormEditorState()">CLEAR LAYOUT FRAME</button>
+        <button class="btn btn-success" style="flex:1;" onclick="commitEditorToDatabase()"><i class="bi bi-check-circle"></i> SAVE</button>
+        <button class="btn btn-neutral" onclick="resetFormEditorState()">CLEAR</button>
       </div>
     </div>
   </div>
@@ -548,11 +525,13 @@ span[style*="background:rgba(0,0,0,0.05)"] {
 
 <script>
 const LocalDBMS = {
-  carriers: ['MAERSK LINE', 'MSC SHIPPING', 'CMA CGM', 'HAPAG LLOYD', 'COSCO GROUP'],
-  pols: ['NHAVA SHEVA (INNSA)', 'MUNDRA (INMUN)', 'CHENNAI (MAA)', 'HAZIRA (INHZA)'],
-  chargeHeads: ['THC 20DV', 'THC 40HC', 'BL', 'DOCUMENTATION FEES', 'SURRENDER SURCHARGE'],
+  carriers: [],
+  pols: [],
+  chargeHeads: [],
   records: []
 };
+
+window.LocalDBMS = LocalDBMS;
 
 window.LocalDBMS = LocalDBMS;
 
@@ -610,26 +589,29 @@ function onShipmentTypeToggleChange() {
 
 function refreshRecordsGrid() {
   const tbody = document.getElementById("recordsGridBody");
-  const filterText = document.getElementById("directoryFilter").value.toLowerCase();
   tbody.innerHTML = "";
 
-  const filteredSet = LocalDBMS.records.filter(r => 
-    r.carrier.toLowerCase().includes(filterText) ||
-    r.pol.toLowerCase().includes(filterText) ||
-    r.exportType.toLowerCase().includes(filterText)
-  );
+  const filteredSet = [...LocalDBMS.records];
+
+  if (filteredSet.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align:center; padding:16px; color:#666;">NO ACTIVE RATES FOUND</td>
+      </tr>
+    `;
+    return;
+  }
 
   filteredSet.forEach(item => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td style="font-weight:700 !important; font-size:10px;">${item.carrier}</td>
-      <td><span style="background:rgba(0,0,0,0.05); padding:2px 4px; border-radius:4px; font-size:9px;">${item.exportType}</span></td>
-      <td style="font-size:10px;">${item.pol}</td>
+      <td style="font-weight:700 !important; font-size:10px;">${item.carrier || ""}</td>
+      <td style="font-size:10px;">${item.pol || ""}</td>
       <td style="text-align:center; white-space:nowrap;">
-        <button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT FRAMEWORK ENTRY"><i class="bi bi-pencil"></i></button>
-        <button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE FRAMEWORK MATRIX"><i class="bi bi-ui-checks"></i></button>
+        <button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT RATE"><i class="bi bi-pencil"></i></button>
+        <button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE RATE"><i class="bi bi-ui-checks"></i></button>
         <button class="grid-btn-icon grid-btn-copy" onclick="exportRowToWhatsAppFriendly('${item.id}')" title="COPY AS WHATSAPP DATA TEMPLATE"><i class="bi bi-whatsapp"></i></button>
-        <button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE SYSTEM ENTRY"><i class="bi bi-trash"></i></button>
+        <button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE RATE"><i class="bi bi-trash"></i></button>
       </td>
     `;
     tbody.appendChild(row);
@@ -744,12 +726,9 @@ function populateMenuFilter(txt, wrapper, source, selectionCallback) {
 
 function resetFormEditorState() {
   document.getElementById("activeWorkingId").value = "";
-  document.getElementById("formEditorHeader").innerText = "NEW RATE ASSIGNMENT EDITOR";
+  document.getElementById("formEditorHeader").innerText = "NEW RATES";
   document.getElementById("formCarrierInput").value = "";
   document.getElementById("formPolInput").value = "";
-  document.getElementById("formExportSelect").selectedIndex = 0;
-  document.getElementById("formShipmentTypeSelect").value = "EXPORT";
-  onShipmentTypeToggleChange();
   document.getElementById("nestedChargesLinesContainer").innerHTML = "";
   injectBlankChargeRowLine();
 }
@@ -760,31 +739,30 @@ function loadRecordToWorkspaceEditor(id, runDuplicateExtraction = false) {
 
   if (runDuplicateExtraction) {
     document.getElementById("activeWorkingId").value = "";
-    document.getElementById("formEditorHeader").innerText = "DUPLICATE CONFIGURATION WORKSPACE FRAMEWORK";
+    document.getElementById("formEditorHeader").innerText = "DUPLICATE RATE";
   } else {
     document.getElementById("activeWorkingId").value = foundItem.id;
-    document.getElementById("formEditorHeader").innerText = "MODIFY EXISTING RATE FRAMEWORK";
+    document.getElementById("formEditorHeader").innerText = "EDIT RATE";
   }
 
-  document.getElementById("formCarrierInput").value = foundItem.carrier;
-  document.getElementById("formPolInput").value = foundItem.pol;
-  document.getElementById("formExportSelect").value = foundItem.exportType;
-  document.getElementById("formShipmentTypeSelect").value = foundItem.shipmentType || "EXPORT";
-  onShipmentTypeToggleChange();
+  document.getElementById("formCarrierInput").value = foundItem.carrier || "";
+  document.getElementById("formPolInput").value = foundItem.pol || "";
 
   const targetBox = document.getElementById("nestedChargesLinesContainer");
   targetBox.innerHTML = "";
-  foundItem.charges.forEach(chItem => {
+  (foundItem.charges || []).forEach(chItem => {
     injectBlankChargeRowLine(chItem);
   });
+
+  if (!targetBox.children.length) {
+    injectBlankChargeRowLine();
+  }
 }
 
 async function commitEditorToDatabase() {
   const currentId = document.getElementById("activeWorkingId").value;
   const carrierVal = document.getElementById("formCarrierInput").value.trim().toUpperCase();
   const polVal = document.getElementById("formPolInput").value.trim().toUpperCase();
-  const expType = document.getElementById("formExportSelect").value;
-  const shpmtType = document.getElementById("formShipmentTypeSelect").value;
 
   if(!carrierVal || !polVal) {
     alert("VALIDATION FAULT: CARRIER AND PORT DESIGNATION CHANNELS MUST BE MANUALLY SET.");
@@ -822,7 +800,11 @@ async function commitEditorToDatabase() {
     return;
   }
 
-  const payload = { carrier: carrierVal, exportType: expType, shipmentType: shpmtType, pol: polVal, charges: aggregatedCharges };
+  const payload = {
+    carrier: carrierVal,
+    pol: polVal,
+    charges: aggregatedCharges
+  };
 
   try {
     if(currentId) {
@@ -841,7 +823,7 @@ async function commitEditorToDatabase() {
 }
 
 async function removeRecordFromDatabase(id) {
-  if(confirm("CONFIRM COMMAND: REMOVE THIS RATE MAP MATRIX ENTORY FROM ACTIVE STORAGE?")) {
+  if(confirm("CONFIRM COMMAND: REMOVE THIS RATE FROM ACTIVE STORAGE?")) {
     try {
       await window.deleteRecordFromFirebase(id);
       if (document.getElementById("activeWorkingId").value === id) {
@@ -890,7 +872,6 @@ function generatePopupDataViewItems() {
   }
 
   filteredDataset.forEach((item) => {
-    const absoluteArrayIndexPointer = targetSrc.indexOf(item);
     const listRow = document.createElement("div");
     listRow.style.padding = "6px 10px";
     listRow.style.borderBottom = "1px solid rgba(0,0,0,0.04)";
@@ -899,29 +880,32 @@ function generatePopupDataViewItems() {
     listRow.style.alignItems = "center";
     listRow.innerHTML = `
       <span style="font-size:11px; font-weight:700;">${item}</span>
-      <button class="btn-icon-action remove" style="width:18px; height:18px;" onclick="evictMasterDataEntry(${absoluteArrayIndexPointer})"><i class="bi bi-trash" style="font-size:9px;"></i></button>
+      <button class="btn-icon-action remove" style="width:18px; height:18px;" onclick='evictMasterDataEntry(${JSON.stringify(item)})'><i class="bi bi-trash" style="font-size:9px;"></i></button>
     `;
     container.appendChild(listRow);
   });
 }
 
-function appendNewItemToActiveMaster() {
+async function appendNewItemToActiveMaster() {
   const val = document.getElementById("txtNewMasterEntry").value.trim().toUpperCase();
   if(!val) return;
 
-  if(currentScopeMasterType === 'carrier' && !LocalDBMS.carriers.includes(val)) LocalDBMS.carriers.push(val);
-  if(currentScopeMasterType === 'pol' && !LocalDBMS.pols.includes(val)) LocalDBMS.pols.push(val);
-  if(currentScopeMasterType === 'chargeHead' && !LocalDBMS.chargeHeads.includes(val)) LocalDBMS.chargeHeads.push(val);
-
-  document.getElementById("txtNewMasterEntry").value = "";
-  generatePopupDataViewItems();
+  try {
+    await window.saveMasterToFirebase(currentScopeMasterType, val);
+    document.getElementById("txtNewMasterEntry").value = "";
+    generatePopupDataViewItems();
+  } catch (error) {
+    console.error("Master save failed:", error);
+  }
 }
 
-function evictMasterDataEntry(index) {
-  if(currentScopeMasterType === 'carrier') LocalDBMS.carriers.splice(index, 1);
-  if(currentScopeMasterType === 'pol') LocalDBMS.pols.splice(index, 1);
-  if(currentScopeMasterType === 'chargeHead') LocalDBMS.chargeHeads.splice(index, 1);
-  generatePopupDataViewItems();
+async function evictMasterDataEntry(value) {
+  try {
+    await window.deleteMasterFromFirebase(currentScopeMasterType, value);
+    generatePopupDataViewItems();
+  } catch (error) {
+    console.error("Master delete failed:", error);
+  }
 }
 
 function launchCountsCalculatorPopup() {
@@ -963,7 +947,7 @@ function runVolumeCountsCalculation() {
 
   matchedRecords.forEach((record, index) => {
     aggregatedSummaryHTML += `<div style="margin-bottom:12px; border-bottom:1px solid rgba(0,0,0,0.06); padding-bottom:6px;">
-      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (${record.exportType} / ${record.shipmentType})</span>
+      <span class="dark-heading">RECORD FRAMEWORK #${index+1} (${record.shipmentType || "EXPORT"})</span>
       <table style="width:100%; margin-top:4px;">
         <thead>
           <tr>
@@ -1087,7 +1071,6 @@ window.syncLocalRecordsFromSnapshot = function(firebaseRecords) {
   }
 };
 
-
 document.onkeydown = function(evt) {
   evt = evt || window.event;
   if (evt.keyCode == 27) { 
@@ -1107,6 +1090,7 @@ import {
   updateDoc,
   deleteDoc,
   getDocs,
+  setDoc,
   serverTimestamp,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
@@ -1130,7 +1114,52 @@ window.doc = doc;
 window.updateDoc = updateDoc;
 window.deleteDoc = deleteDoc;
 window.getDocs = getDocs;
+window.setDoc = setDoc;
 window.serverTimestamp = serverTimestamp;
+
+function masterDocId(type, value) {
+  return `${type}__${encodeURIComponent(String(value || "").trim().toUpperCase())}`;
+}
+
+function rebuildMasterArrays(snapshot) {
+  const carriers = [];
+  const pols = [];
+  const chargeHeads = [];
+
+  snapshot.docs.forEach((docSnap) => {
+    const data = docSnap.data() || {};
+    const type = String(data.type || "").toLowerCase();
+    const value = String(data.value || "").trim().toUpperCase();
+    if (!value) return;
+
+    if (type === "carrier") carriers.push(value);
+    if (type === "pol") pols.push(value);
+    if (type === "chargehead") chargeHeads.push(value);
+  });
+
+  LocalDBMS.carriers = [...new Set(carriers)].sort();
+  LocalDBMS.pols = [...new Set(pols)].sort();
+  LocalDBMS.chargeHeads = [...new Set(chargeHeads)].sort();
+
+  if (document.getElementById("masterManagementPopup")?.classList.contains("visible")) {
+    generatePopupDataViewItems();
+  }
+}
+
+function rebuildRateArray(snapshot) {
+  const firebaseRecords = snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...docSnap.data()
+  }));
+
+  LocalDBMS.records = firebaseRecords;
+  refreshRecordsGrid();
+
+  const activeId = document.getElementById("activeWorkingId").value;
+  if (activeId && !LocalDBMS.records.some(r => r.id === activeId)) {
+    resetFormEditorState();
+  }
+}
 
 window.saveRecordToFirebase = async function(payload) {
   try {
@@ -1167,33 +1196,78 @@ window.deleteRecordFromFirebase = async function(recordId) {
   }
 };
 
+window.saveMasterToFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await setDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)), {
+      type: normalizedType,
+      value: normalizedValue,
+      updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Master save failed:", error);
+    alert("Master save failed. Check browser console.");
+    throw error;
+  }
+};
+
+window.deleteMasterFromFirebase = async function(type, value) {
+  try {
+    const normalizedType = String(type || "").toLowerCase();
+    const normalizedValue = String(value || "").trim().toUpperCase();
+    if (!normalizedType || !normalizedValue) return;
+
+    await deleteDoc(doc(db, "masters", masterDocId(normalizedType, normalizedValue)));
+  } catch (error) {
+    console.error("Master delete failed:", error);
+    alert("Master delete failed. Check browser console.");
+    throw error;
+  }
+};
+
 async function loadRecordsFromFirebase() {
   try {
     const snapshot = await getDocs(collection(db, "rates"));
-    const firebaseRecords = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data()
-    }));
-    window.syncLocalRecordsFromSnapshot(firebaseRecords);
+    rebuildRateArray(snapshot);
   } catch (error) {
     console.error("Firebase load failed:", error);
   }
 }
 
+async function loadMastersFromFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "masters"));
+    rebuildMasterArrays(snapshot);
+  } catch (error) {
+    console.error("Firebase master load failed:", error);
+  }
+}
+
 window.listenToFirebaseRates = function() {
   onSnapshot(collection(db, "rates"), (snapshot) => {
-    const firebaseRecords = snapshot.docs.map((docSnap) => ({
-      id: docSnap.id,
-      ...docSnap.data()
-    }));
-    window.syncLocalRecordsFromSnapshot(firebaseRecords);
+    rebuildRateArray(snapshot);
   }, (error) => {
     console.error("Firebase realtime listener failed:", error);
     loadRecordsFromFirebase();
   });
 };
 
+window.listenToFirebaseMasters = function() {
+  onSnapshot(collection(db, "masters"), (snapshot) => {
+    rebuildMasterArrays(snapshot);
+  }, (error) => {
+    console.error("Firebase master realtime listener failed:", error);
+    loadMastersFromFirebase();
+  });
+};
+
+window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
+
 </script>
 
 </body>
