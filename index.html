@@ -80,8 +80,8 @@ button,input,select,textarea{font:inherit}
   padding:12px 16px;
   margin:8px;
   border-radius:20px;
-  background:rgba(255,255,255,.52);
-  border:1px solid rgba(255,255,255,.5);
+  background:rgba(17,221,222,.52);
+  border:0.5px solid rgba(255,255,255,.5);
   backdrop-filter:blur(26px) saturate(170%);
   -webkit-backdrop-filter:blur(26px) saturate(170%);
   box-shadow:var(--shadow);
@@ -187,7 +187,7 @@ button{
   min-height:32px;
   border-radius:11px;
   border:1px solid rgba(148,163,184,.22);
-  background:rgba(255,255,255,.76);
+  background:rgba(247,216,186,.76);
   color:var(--text);
   font-size:12px;
   padding:0 11px;
@@ -204,7 +204,7 @@ button:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .primary,.success{
   background:rgba(17,24,39,.94);
   color:#fff;
-  border-color:rgba(17,24,39,.88);
+  border-color:rgba(225,24,39,.88);
 }
 .danger{
   background:rgba(220,38,38,.92);
@@ -336,7 +336,7 @@ th{
   line-height:1;
 }
 .sort-btn.active{
-  background:rgba(17,24,39,.92);
+  background:rgba(247,216,186,.92);
   color:#fff;
   border-color:rgba(17,24,39,.88);
 }
@@ -773,11 +773,11 @@ col.col-act{width:140px!important}
   position:fixed;z-index:1100;
   display:flex;flex-direction:column;
   min-width:300px;max-height:92vh;overflow:hidden;
-  background:rgba(245,247,252,.76);
+  background:rgba(172,221,222,.76);
   border:1px solid rgba(255,255,255,.80);
   backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
   -webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04);
-  box-shadow:0 2px 0 rgba(255,255,255,.72) inset,0 24px 56px rgba(15,23,42,.15),0 1px 0 rgba(255,255,255,.6);
+  box-shadow:0 6px 0 rgba(255,255,255,.72) inset,0 24px 56px rgba(15,23,42,.15),0 1px 0 rgba(255,255,255,.6);
   border-radius:22px;
   user-select:none;
   top:80px;left:50%;transform:translateX(-50%);
@@ -816,7 +816,7 @@ col.col-act{width:140px!important}
 .calc-total-row .lbl{font-size:11px;color:var(--muted)}
 .calc-total-row .val{font-size:18px;letter-spacing:.02em;font-family:'SF Mono','Consolas',monospace}
 .calc-tape{
-  background:rgba(255,255,255,.65);border:1px solid rgba(148,163,184,.14);
+  background:rgba(247,216,186,.65);border:1px solid rgba(148,163,184,.14);
   border-radius:12px;padding:8px 10px;min-height:70px;max-height:40vh;
   overflow-y:auto;font-family:'SF Mono','Consolas',monospace;
   font-size:12px;line-height:1.8;margin-bottom:8px;
@@ -863,7 +863,6 @@ col.col-act{width:140px!important}
 .fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
 
 </style>
-
 <style>
 /* Locals Section Visibility */
 #sectionLocals{display:none}
@@ -1177,7 +1176,18 @@ body:has(#sectionLocals.active) .container {
   flex-direction: column;
 }
 </style>
-</head>
+<style>
+/* Visibility isolation fix */
+#rightPanel > .section { display: none !important; }
+#rightPanel > .section.active { display: block !important; }
+#sectionLocals { display: none !important; width: 100%; max-width: 100%; }
+#sectionLocals.active { display: block !important; }
+#localsEmbeddedRoot { width: 100%; max-width: 100%; }
+body:not(:has(#sectionLocals.active)) #sectionLocals * { visibility: hidden; }
+body:has(#sectionLocals.active) #sectionLocals * { visibility: visible; }
+body:has(#sectionLocals.active) .layout-grid { grid-template-columns: 1fr !important; }
+body:not(:has(#sectionLocals.active)) .layout-grid { grid-template-columns: var(--editor-w) minmax(0,1fr) !important; }
+</style></head>
 <body>
 <div class="loader" id="loader">
 <div class="loader-box">
@@ -1189,7 +1199,6 @@ body:has(#sectionLocals.active) .container {
 <div class="overlay" id="pinGate">
 <div class="card narrow">
 <div class="title">FR8X ACCESS</div>
-<div class="subtitle">ENTER 4 DIGIT PIN. ACCESS REMAINS OPEN FOR THIS TAB ONLY.</div>
 <div class="pin-row">
 <input class="pin-input" id="pin1" inputmode="numeric" maxlength="1" type="password"/>
 <input class="pin-input" id="pin2" inputmode="numeric" maxlength="1" type="password"/>
@@ -1197,8 +1206,12 @@ body:has(#sectionLocals.active) .container {
 <input class="pin-input" id="pin4" inputmode="numeric" maxlength="1" type="password"/>
 </div>
 <div class="toolbar">
-<button class="primary" id="unlockBtn" style="flex:1"><i class="bi bi-shield-lock-fill"></i> UNLOCK</button>
-<button class="ghost" id="clearPinBtn" style="flex:1"><i class="bi bi-eraser-fill"></i> CLEAR</button>
+<button class="primary" id="unlockBtn" style="flex:1; background-color: rgb(172, 221, 222);">
+<i class="bi bi-shield-lock-fill"></i> UNLOCK
+    </button>
+<button class="ghost" id="clearPinBtn" style="flex:1; background-color: rgb(172, 221, 222);">
+<i class="bi bi-eraser-fill"></i> CLEAR
+    </button>
 </div>
 </div>
 </div>
@@ -1227,7 +1240,7 @@ body:has(#sectionLocals.active) .container {
 <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
 <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
 </div>
-<input accept=".csv,.txt" class="file-input" id="fileInput" type="file">
+<input accept=".csv,.txt" class="file-input" id="fileInput" type="file"/>
 <div class="table-wrap desktop-table">
 <table>
 <colgroup>
@@ -1263,7 +1276,7 @@ body:has(#sectionLocals.active) .container {
 </table>
 </div>
 <div class="mobile-list" id="uploadMobile"></div>
-</input></div>
+</div>
 </div>
 <div class="hidden" id="appShell">
 <div class="header">
@@ -1300,9 +1313,8 @@ body:has(#sectionLocals.active) .container {
 <button data-view="all" id="tabAllBtn">ALL RATES</button>
 <button data-view="dimensions" id="tabDimBtn">DIMENSIONS</button>
 <button data-view="markups" id="tabMarkupBtn">MARKUP</button>
-
-      <button data-view="locals" id="tabLocalsBtn">LOCALS</button>
-    </div>
+<button data-view="locals" id="tabLocalsBtn">LOCALS</button>
+</div>
 <div class="layout-grid">
 <div class="panel" id="editorPanel">
 <div class="section-head">
@@ -1394,10 +1406,18 @@ body:has(#sectionLocals.active) .container {
 <textarea id="remarks" maxlength="250" placeholder="Remarks"></textarea>
 </div>
 <div class="editor-actions span12">
-<button class="primary" id="save"><i class="bi bi-floppy-fill"></i> SAVE</button>
-<button class="success" id="update"><i class="bi bi-file-arrow-up-fill"></i> UPDATE</button>
-<button class="danger" id="clear"><i class="bi bi-x-octagon-fill"></i> CLEAR</button>
-<button class="ghost" id="duplicateBtn"><i class="bi bi-copy"></i> DUPLICATE</button>
+<button class="primary" id="save" style="background-color: rgb(172, 221, 222);">
+<i class="bi bi-floppy-fill"></i> SAVE
+</button>
+<button class="success" id="update" style="background-color: rgb(172, 221, 222);">
+<i class="bi bi-file-arrow-up-fill"></i> UPDATE
+</button>
+<button class="danger" id="clear" style="background-color: rgb(172, 221, 222);">
+<i class="bi bi-x-octagon-fill"></i> CLEAR
+</button>
+<button class="ghost" id="duplicateBtn" style="background-color: rgb(172, 221, 222);">
+<i class="bi bi-copy"></i> DUPLICATE
+</button>
 </div>
 </div>
 </div>
@@ -1639,8 +1659,7 @@ body:has(#sectionLocals.active) .container {
 </div>
 </div>
 </div>
-
-      <div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot"><header>
+<div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot"><header>
 <div style="display:flex; align-items:center; gap:8px;">
 <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
 <span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
@@ -2473,7 +2492,7 @@ window.listenToFirebaseMasters = function() {
 window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
 </script></div></div>
-    </div>
+</div>
 </div>
 </div>
 </div>
@@ -3905,10 +3924,9 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
     height:100%;
     border:none;
     flex:1;
-    background:#fff;
+    background:#acddde;
   }
 </style>
-
 <div id="dbmsPopupOverlay">
 <div class="dbms-popup-window">
 <div class="dbms-popup-header">
@@ -4682,6 +4700,54 @@ window.listenToFirebaseMasters = function() {
 
 window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
+</script>
+
+<script>
+(function(){
+  function enforceSections(mode){
+    const map = {
+      active:'sectionRates',
+      expired:'sectionRates',
+      all:'sectionRates',
+      dimensions:'sectionDim',
+      markups:'sectionMarkup',
+      locals:'sectionLocals'
+    };
+    ['sectionRates','sectionDim','sectionMarkup','sectionLocals'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('active');
+    });
+    const target = document.getElementById(map[mode] || 'sectionRates');
+    if(target) target.classList.add('active');
+    const editor = document.getElementById('editorPanel');
+    if(editor){
+      if(mode === 'dimensions' || mode === 'markups' || mode === 'locals') editor.classList.add('hidden');
+      else editor.classList.remove('hidden');
+    }
+  }
+
+  const oldSwitchView = window.switchView;
+  window.switchView = function(mode){
+    if(typeof oldSwitchView === 'function') oldSwitchView(mode);
+    enforceSections(mode);
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const localsBtn = document.getElementById('tabLocalsBtn');
+    if(localsBtn){
+      localsBtn.addEventListener('click', function(){ enforceSections('locals'); });
+    }
+    ['tabActiveBtn','tabExpiredBtn','tabAllBtn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if(btn) btn.addEventListener('click', function(){ enforceSections(this.dataset.view || 'active'); });
+    });
+    const dimBtn = document.getElementById('tabDimBtn');
+    if(dimBtn) dimBtn.addEventListener('click', function(){ enforceSections('dimensions'); });
+    const markupBtn = document.getElementById('tabMarkupBtn');
+    if(markupBtn) markupBtn.addEventListener('click', function(){ enforceSections('markups'); });
+    enforceSections('active');
+  });
+})();
 </script>
 </body>
 </html>
