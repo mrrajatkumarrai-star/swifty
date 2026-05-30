@@ -156,7 +156,11 @@ button,input,select,textarea{font:inherit}
   padding:0 10px;
   font-size:12px;
 }
-.section-tabs button.active { background: #87CEEB !important; color: #111827 !important; border-color: #87CEEB !important; font-weight: 600; }
+.section-tabs button.active{
+  background:rgba(17,24,39,.94);
+  color:#fff;
+  border-color:rgba(17,24,39,.88);
+}
 
 input,select,textarea{
   width:100%;
@@ -860,15 +864,30 @@ col.col-act{width:140px!important}
 
 </style>
 
-<meta content="true" name="merged-locals"/>
 <style>
+/* Locals Section Visibility */
 #sectionLocals{display:none}
 #sectionLocals.active{display:block}
 #sectionLocals .workspace-container{height:auto;min-height:70vh}
-#sectionLocals header{display:block}
+
+/* Skyblue active tab color */
+.section-tabs button.active { 
+    background: #87CEEB !important; 
+    color: #111827 !important; 
+    border-color: #87CEEB !important; 
+    font-weight: 600; 
+}
+
+/* Make layout full width specifically when locals tab is active */
+body:has(#sectionLocals.active) .layout-grid {
+    grid-template-columns: 1fr !important;
+}
+body:has(#sectionLocals.active) .container {
+    max-width: 100% !important;
+    padding: 0 16px !important;
+}
 </style>
-<style>
-:root {
+<style>:root {
   --bg1: #ffffff;
   --bg2: #ffffff;
   --bg3: #ffffff;
@@ -886,8 +905,7 @@ col.col-act{width:140px!important}
   --radius-sm: 8px;
   --header-h: 52px;
 }
-
-* {
+#sectionLocals * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -895,14 +913,12 @@ col.col-act{width:140px!important}
   font-weight: normal !important;
   text-transform: uppercase !important;
 }
-
-html, body {
+#sectionLocals, #sectionLocals {
   width: 100%;
   height: 100%;
   background: #ffffff;
 }
-
-body {
+#sectionLocals {
   font-size: 11px;
   color: #000000;
   height: 100vh;
@@ -912,12 +928,10 @@ body {
   flex-direction: column;
   user-select: none;
 }
-
-body, body * {
+#sectionLocals, #sectionLocals * {
   color: #000000 !important;
 }
-
-header {
+#sectionLocals header {
   height: var(--header-h);
   background: #ffffff;
   border-bottom: 1px solid var(--border);
@@ -928,15 +942,13 @@ header {
   box-shadow: var(--shadow-soft);
   z-index: 100;
 }
-
-.dark-heading {
+#sectionLocals .dark-heading {
   color: #000000 !important;
   font-weight: 700 !important;
   font-size: 11px;
   letter-spacing: 0.3px;
 }
-
-.feedable-input {
+#sectionLocals .feedable-input {
   width: 100%;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
@@ -947,23 +959,20 @@ header {
   outline: none;
   transition: all 0.15s ease;
 }
-
-.feedable-input:focus {
+#sectionLocals .feedable-input:focus {
   border-color: #808080;
   background: #ffffff;
   color: #000000 !important;
 }
-
-.wa-paste-input {
+#sectionLocals .wa-paste-input {
   border: 2px solid #25D366 !important;
   background-color: #f6fdf8 !important;
 }
-.wa-paste-input::placeholder {
+#sectionLocals .wa-paste-input::placeholder {
   color: #1a9647 !important;
   font-weight: bold;
 }
-
-.yellow-master-trigger {
+#sectionLocals .yellow-master-trigger {
   background-color: #f0f0f0 !important;
   color: #000000 !important;
   border: 1px solid #a0a0a0 !important;
@@ -975,12 +984,10 @@ header {
   align-items: center;
   gap: 4px;
 }
-
-.yellow-master-trigger:hover {
+#sectionLocals .yellow-master-trigger:hover {
   filter: brightness(0.97);
 }
-
-.workspace-container {
+#sectionLocals .workspace-container {
   display: flex;
   width: 100%;
   height: calc(100vh - var(--header-h));
@@ -989,15 +996,13 @@ header {
   box-sizing: border-box;
   background: #ffffff;
 }
-
-.left-workspace-panel {
+#sectionLocals .left-workspace-panel {
   width: 40%;
   min-width: 320px;
   display: flex;
   flex-direction: column;
 }
-
-.ui-drag-splitter {
+#sectionLocals .ui-drag-splitter {
   width: 10px;
   cursor: col-resize;
   background: transparent;
@@ -1008,28 +1013,23 @@ header {
   transition: background 0.2s;
   z-index: 50;
 }
-
-.ui-drag-splitter:hover,
-.ui-drag-splitter.active {
+#sectionLocals .ui-drag-splitter:hover, #sectionLocals .ui-drag-splitter.active {
   background: #f0f0f0;
 }
-
-.ui-drag-splitter::after {
+#sectionLocals .ui-drag-splitter::after {
   content: "";
   width: 2px;
   height: 24px;
   background: #a0a0a0;
   border-radius: 1px;
 }
-
-.right-workspace-panel {
+#sectionLocals .right-workspace-panel {
   flex: 1;
   min-width: 450px;
   display: flex;
   flex-direction: column;
 }
-
-.glass-card {
+#sectionLocals .glass-card {
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1040,13 +1040,11 @@ header {
   overflow: hidden;
   height: 100%;
 }
-
-.combobox-root {
+#sectionLocals .combobox-root {
   position: relative;
   width: 100%;
 }
-
-.suggestions-dropdown-wrapper {
+#sectionLocals .suggestions-dropdown-wrapper {
   position: absolute;
   top: 100%;
   left: 0;
@@ -1060,33 +1058,28 @@ header {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   display: none;
 }
-
-.suggestions-dropdown-wrapper div {
+#sectionLocals .suggestions-dropdown-wrapper div {
   padding: 6px 10px;
   cursor: pointer;
   color: #000000;
 }
-
-.suggestions-dropdown-wrapper div:hover {
+#sectionLocals .suggestions-dropdown-wrapper div:hover {
   background: #f2f2f2;
   color: #000000;
 }
-
-.table-scroll-container {
+#sectionLocals .table-scroll-container {
   overflow-y: auto;
   flex: 1;
   border: 1px solid #d0d0d0;
   border-radius: var(--radius-sm);
   background: #ffffff;
 }
-
-table {
+#sectionLocals table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
-
-th {
+#sectionLocals th {
   background: #f2f2f2;
   padding: 8px 10px;
   text-align: left;
@@ -1095,18 +1088,15 @@ th {
   top: 0;
   z-index: 10;
 }
-
-td {
+#sectionLocals td {
   padding: 6px 8px;
   border-bottom: 1px solid #e0e0e0;
   vertical-align: middle;
 }
-
-tr:hover td {
+#sectionLocals tr:hover td {
   background: #f9f9f9;
 }
-
-.btn {
+#sectionLocals .btn {
   padding: 5px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid #a0a0a0;
@@ -1120,18 +1110,12 @@ tr:hover td {
   background: #f0f0f0;
   color: #000000 !important;
 }
-
-.btn-primary,
-.btn-success,
-.btn-warning,
-.btn-danger,
-.btn-neutral {
+#sectionLocals .btn-primary, #sectionLocals .btn-success, #sectionLocals .btn-warning, #sectionLocals .btn-danger, #sectionLocals .btn-neutral {
   background: #f0f0f0 !important;
   color: #000000 !important;
   border: 1px solid #a0a0a0 !important;
 }
-
-.grid-btn-icon {
+#sectionLocals .grid-btn-icon {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -1145,10 +1129,8 @@ tr:hover td {
   color: #000000 !important;
   transition: opacity 0.15s;
 }
-
-.grid-btn-icon:hover { opacity: 0.85; }
-
-.btn-icon-action {
+#sectionLocals .grid-btn-icon:hover { opacity: 0.85; }
+#sectionLocals .btn-icon-action {
   width: 24px;
   height: 24px;
   border-radius: 4px;
@@ -1160,16 +1142,14 @@ tr:hover td {
   background: #f0f0f0;
   color: #000000 !important;
 }
-
-.charge-row-item {
+#sectionLocals .charge-row-item {
   display: grid;
   grid-template-columns: auto 1.4fr 0.9fr 0.8fr 1fr;
   gap: 6px;
   margin-bottom: 4px;
   align-items: center;
 }
-
-.popup-overlay {
+#sectionLocals .popup-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.3);
@@ -1181,11 +1161,11 @@ tr:hover td {
   pointer-events: none;
   transition: opacity 0.15s ease;
 }
-.popup-overlay.visible {
+#sectionLocals .popup-overlay.visible {
   opacity: 1;
   pointer-events: auto;
 }
-.popup-window {
+#sectionLocals .popup-window {
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1195,16 +1175,6 @@ tr:hover td {
   box-shadow: 0 20px 40px rgba(0,0,0,0.18);
   display: flex;
   flex-direction: column;
-}
-</style>
-<style>
-/* Make layout full width specifically when locals tab is active */
-body:has(#sectionLocals.active) .layout-grid {
-    grid-template-columns: 1fr !important;
-}
-body:has(#sectionLocals.active) .container {
-    max-width: 100% !important;
-    padding: 0 16px !important;
 }
 </style>
 </head>
@@ -1670,7 +1640,7 @@ body:has(#sectionLocals.active) .container {
 </div>
 </div>
 
-      <div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot" style="width:100%;height:100%;"><header>
+      <div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot"><header>
 <div style="display:flex; align-items:center; gap:8px;">
 <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
 <span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
@@ -2786,7 +2756,7 @@ function updateSelectedInfo(){
 function switchView(mode){
   viewMode = mode;
   ["tabActiveBtn","tabExpiredBtn","tabAllBtn","tabDimBtn","tabMarkupBtn","tabLocalsBtn"].forEach(id => $(id).classList.remove("active"));
-  ["sectionRates","sectionDim","sectionMarkup"].forEach(id => $(id).classList.remove("active"));
+  ["sectionRates","sectionDim","sectionMarkup","sectionLocals"].forEach(id => $(id).classList.remove("active"));
   $("editorPanel").classList.remove("hidden");
   $("sectionRates").classList.add("active");
 
@@ -4000,40 +3970,6 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
   });
 </script>
 <!-- ===== TOP RIGHT BUTTON + POPUP END ===== -->
-
-<script>
-(function(){
-  const oldSetView = window.setView;
-  window.setView = function(mode){
-    if(typeof oldSetView === 'function'){ oldSetView(mode); }
-
-    const ids = ['tabActiveBtn','tabExpiredBtn','tabAllBtn','tabDimBtn','tabMarkupBtn','tabLocalsBtn'];
-    ids.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
-
-    const sections = ['sectionRates','sectionDim','sectionMarkup','sectionLocals'];
-    sections.forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
-
-    if(mode === 'locals'){
-      const btn = document.getElementById('tabLocalsBtn');
-      const sec = document.getElementById('sectionLocals');
-      const editor = document.getElementById('editorPanel');
-      if(btn) btn.classList.add('active');
-      if(sec) sec.classList.add('active');
-      if(editor) editor.classList.add('hidden');
-      return;
-    }
-  };
-
-  document.addEventListener('DOMContentLoaded', function(){
-    const btn = document.getElementById('tabLocalsBtn');
-    if(btn){
-      btn.addEventListener('click', function(){
-        if(typeof window.setView === 'function') window.setView('locals');
-      });
-    }
-  });
-})();
-</script>
 <script>
 const LocalDBMS = {
   carriers: [],
