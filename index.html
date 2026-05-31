@@ -5021,5 +5021,88 @@ body:has(#sectionLocals.active) #editorPanel{display:none !important;}
 })();
 </script>
 
+
+<script id="architect-edit-fix-v3">
+(function(){
+  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function $(id){ return document.getElementById(id); }
+  function inputDateValue(v){ if(!v) return ''; if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v; const d=new Date(v); if(isNaN(d)) return ''; const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+
+  function activateActiveRates(){
+    try{
+      ['tabActiveBtn','tabExpiredBtn','tabAllBtn','tabDimBtn','tabMarkupBtn','tabLocalsBtn'].forEach(id => { const el=$(id); if(el) el.classList.remove('active'); });
+      const activeBtn = $('tabActiveBtn'); if(activeBtn) activeBtn.classList.add('active');
+      ['sectionRates','sectionDim','sectionMarkup','sectionLocals'].forEach(id => { const el=$(id); if(el) el.classList.remove('active'); });
+      const rates = $('sectionRates'); if(rates) rates.classList.add('active');
+      const editor = $('editorPanel'); if(editor) editor.classList.remove('hidden');
+      if(typeof viewMode !== 'undefined') viewMode = 'active';
+    } catch(e) {}
+  }
+
+  function populateRateEditor(id){
+    try{
+      if(typeof data === 'undefined' || !Array.isArray(data)) return false;
+      const r = data.find(x => x.id === id);
+      if(!r) return false;
+      activateActiveRates();
+      if(typeof editId !== 'undefined') editId = id;
+      if(typeof setEditorState === 'function') setEditorState(`EDITING ${r.seq || ''} · SELECTED RATE`);
+      if($('carrier')) $('carrier').value = r.carrier || '';
+      if($('por')) $('por').value = r.por || '';
+      if($('pol')) $('pol').value = r.pol || '';
+      if($('pod')) $('pod').value = r.pod || '';
+      if($('fpod')) $('fpod').value = r.fpod || '';
+      if($('dv20')) $('dv20').value = r.dv20 || '';
+      if($('container20Type')) $('container20Type').value = r.container20Type || '';
+      if($('hc40')) $('hc40').value = r.hc40 || '';
+      if($('container40Type')) $('container40Type').value = r.container40Type || '';
+      if($('ft')) $('ft').value = r.ft || '';
+      if($('validity')) $('validity').value = inputDateValue(r.validity);
+      if($('tt')) $('tt').value = r.tt || '';
+      if($('via')) $('via').value = r.via || '';
+      if($('remarks')) $('remarks').value = r.remarks || '';
+      if($('rateType')) $('rateType').value = r.type === 'S' ? 'S' : 'V';
+      if(typeof render === 'function') render();
+      return true;
+    } catch(err) {
+      console.error('Edit populate failed', err);
+      return false;
+    }
+  }
+
+  ready(function(){
+    window.editRate = populateRateEditor;
+    window.delRate = typeof window.delRate === 'function' ? window.delRate : (typeof deleteRate === 'function' ? deleteRate : undefined);
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action="edit"]');
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      populateRateEditor(btn.dataset.id);
+    }, true);
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action="copy"]');
+      if(!btn) return;
+      if(typeof window.copyRate === 'function') { e.preventDefault(); e.stopPropagation(); window.copyRate(btn.dataset.id); }
+    }, true);
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action="duplicate"]');
+      if(!btn) return;
+      if(typeof duplicateRate === 'function') { e.preventDefault(); e.stopPropagation(); duplicateRate(btn.dataset.id); }
+    }, true);
+
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('button[data-action="delete"]');
+      if(!btn) return;
+      if(typeof deleteRate === 'function') { e.preventDefault(); e.stopPropagation(); deleteRate(btn.dataset.id); }
+    }, true);
+  });
+})();
+</script>
+
 </body>
 </html>
