@@ -5638,6 +5638,84 @@ img,table,iframe,canvas,svg{
 })();
 </script>
 
+
+<script id="apply-import-fix-v8">
+(function(){
+  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function $(id){ return document.getElementById(id); }
+  function bindApplyImport(){
+    const btn = $('applyImportBtn');
+    if(!btn || btn.dataset.applyImportFixed === '1') return;
+    btn.dataset.applyImportFixed = '1';
+    btn.onclick = async function(){
+      try{
+        const rows = (typeof selectedUploadRows !== 'undefined' && selectedUploadRows.size)
+          ? uploadRows.filter((_,i) => selectedUploadRows.has(i))
+          : (Array.isArray(uploadRows) ? uploadRows : []);
+        if(!rows.length){
+          if(typeof showCopyToast === 'function') showCopyToast('NO DATA TO IMPORT');
+          return;
+        }
+        if(typeof showLoader === 'function') showLoader('IMPORTING','ADDING RECORDS');
+        let added = 0;
+        for(const r of rows){
+          if(!r) continue;
+          const hasCore = (r.carrier || r.pol || r.pod || r.fpod || r.por || r.dv20 || r.hc40 || r.remarks);
+          if(!hasCore) continue;
+          const payload = {
+            seq: r.seq || (typeof generateSeq === 'function' ? generateSeq() : String(Date.now())),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            carrier: r.carrier || '',
+            por: r.por || '',
+            pol: r.pol || '',
+            pod: r.pod || '',
+            fpod: r.fpod || '',
+            dv20: r.dv20 || '',
+            container20Type: r.container20Type || '',
+            hc40: r.hc40 || '',
+            container40Type: r.container40Type || '',
+            ft: r.ft || '',
+            validity: r.validity || '',
+            type: r.type || 'V',
+            tt: r.tt || '',
+            via: r.via || '',
+            remarks: r.remarks || '',
+            localCharges: Array.isArray(r.localCharges) ? r.localCharges : [],
+            charges20dv: Array.isArray(r.charges20dv) ? r.charges20dv : [],
+            charges40hc: Array.isArray(r.charges40hc) ? r.charges40hc : []
+          };
+          if('commodityType' in r && r.commodityType) payload.commodityType = r.commodityType;
+          await addDoc(collection(db,'rates'), payload);
+          added += 1;
+        }
+        if($('clearImportPreviewAfterApply') && $('clearImportPreviewAfterApply').checked){
+          uploadRows = [];
+          if(typeof selectedUploadRows !== 'undefined' && selectedUploadRows.clear) selectedUploadRows.clear();
+          if(typeof renderUpload === 'function') renderUpload();
+        }
+        if($('clearEditorAfterImport') && $('clearEditorAfterImport').checked && typeof clearForm === 'function'){
+          clearForm(true);
+        }
+        if(typeof closeUpload === 'function') closeUpload();
+        if(typeof load === 'function') await load();
+        if(typeof showCopyToast === 'function') showCopyToast(added ? `${added} RECORD(S) IMPORTED` : 'NO VALID RECORDS FOUND');
+      }catch(err){
+        console.error('IMPORT APPLY FAILED', err);
+        if(typeof showCopyToast === 'function') showCopyToast('IMPORT APPLY FAILED');
+      }finally{
+        if(typeof hideLoader === 'function') hideLoader();
+      }
+    };
+  }
+  ready(function(){
+    bindApplyImport();
+    setTimeout(bindApplyImport, 500);
+    setTimeout(bindApplyImport, 1500);
+  });
+})();
+</script>
+
 </body>
 </html>
 <!-- trigger artifact -->
