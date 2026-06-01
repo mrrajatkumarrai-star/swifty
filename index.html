@@ -5536,6 +5536,108 @@ img,table,iframe,canvas,svg{
 })();
 </script>
 
+
+<style id="remove-commodity-table-v7">
+#sectionRates table colgroup col.col-commodity,
+#sectionRates table th.commodity-col,
+#sectionRates table td.commodity-col,
+#sectionRates table [data-col="commodityType"],
+#sectionRates table .commodity-sort,
+#sectionRates table .commodity-filter,
+#sectionRates .commodity-col,
+#uploadOverlay table .commodity-col,
+#uploadOverlay table [data-col="commodityType"]{
+  display:none !important;
+}
+</style>
+<script id="remove-commodity-table-v7-script">
+(function(){
+  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function cleanCommodityHeaders(){
+    const tables = document.querySelectorAll('#sectionRates table, #uploadOverlay table');
+    tables.forEach(table => {
+      const headRows = table.querySelectorAll('thead tr');
+      headRows.forEach(row => {
+        Array.from(row.children).forEach(cell => {
+          const txt = (cell.textContent || '').replace(/\s+/g,' ').trim().toUpperCase();
+          if(txt === 'COMMODITY' || txt === 'COMMODITY TYPE') cell.remove();
+          const input = cell.querySelector('input[data-col="commodityType"]');
+          if(input) cell.remove();
+          const btn = cell.querySelector('.sort-btn[data-sort="commodityType"]');
+          if(btn) cell.remove();
+        });
+      });
+    });
+  }
+  function patchRenderers(){
+    try{
+      if(typeof renderDesktopRows === 'function'){
+        renderDesktopRows = function(rows){
+          return rows.map((r,i) => `
+            <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? 'active-row' : ''} ${editId === r.id ? 'editing-row' : ''}">
+              <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}></td>
+              ${desktopCell(r.id, r.seq || i+1, 'seq', 'SEQ', r.seq || i+1, 14)}
+              ${desktopCell(r.id, r.seq || i+1, 'carrier', 'CARRIER', r.carrier, 16)}
+              ${desktopCell(r.id, r.seq || i+1, 'por', 'POR', r.por, 12)}
+              ${desktopCell(r.id, r.seq || i+1, 'pol', 'POL', r.pol, 12)}
+              ${desktopCell(r.id, r.seq || i+1, 'pod', 'POD', r.pod, 12)}
+              ${desktopCell(r.id, r.seq || i+1, 'fpod', 'FPOD', r.fpod, 12)}
+              ${desktopCell(r.id, r.seq || i+1, 'dv20', '20DV', r.dv20, 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'container20Type', '20 TYPE', r.container20Type, 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'hc40', '40HC', r.hc40, 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'container40Type', '40 TYPE', r.container40Type, 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'ft', 'FT', r.ft, 8)}
+              ${desktopCell(r.id, r.seq || i+1, 'validity', 'DATE', fmtDate(r.validity), 18)}
+              ${desktopCell(r.id, r.seq || i+1, 'type', 'TYPE', displayType(r.type), 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'tt', 'TT', r.tt, 10)}
+              ${desktopCell(r.id, r.seq || i+1, 'via', 'ROUTING', r.via, 16)}
+              ${desktopCell(r.id, r.seq || i+1, 'remarks', 'REMARKS', r.remarks, 18)}
+              <td class="actions"><button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button><button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button><button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button><button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button></td>
+            </tr>`).join('');
+        };
+      }
+      if(typeof renderMobileRows === 'function'){
+        renderMobileRows = function(rows){
+          return rows.map(r => `
+            <div class="mobile-card ${activeCellState.id === r.id ? 'active-row' : ''}" data-rowid="${escapeHtml(r.id)}">
+              <div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}> SELECT</label></div>
+              <div class="mobile-grid">
+                ${mobileItem(r.id, r.seq, 'por', 'POR', r.por)}
+                ${mobileItem(r.id, r.seq, 'pol', 'POL', r.pol)}
+                ${mobileItem(r.id, r.seq, 'pod', 'POD', r.pod)}
+                ${mobileItem(r.id, r.seq, 'fpod', 'FPOD', r.fpod)}
+                ${mobileItem(r.id, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}
+                ${mobileItem(r.id, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}
+                ${mobileItem(r.id, r.seq, 'ft', 'FT', r.ft)}
+                ${mobileItem(r.id, r.seq, 'validity', 'DATE', fmtDate(r.validity))}
+                ${mobileItem(r.id, r.seq, 'type', 'TYPE', displayType(r.type))}
+                ${mobileItem(r.id, r.seq, 'tt', 'TT', r.tt)}
+                ${mobileItem(r.id, r.seq, 'via', 'ROUTING', r.via)}
+                ${mobileItem(r.id, r.seq, 'remarks', 'REMARKS', r.remarks)}
+              </div>
+              <div class="mobile-actions"><button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button><button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button><button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button><button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button></div>
+            </div>`).join('');
+        };
+      }
+      if(typeof renderUpload === 'function'){
+        renderUpload = function(){
+          $('uploadBody').innerHTML = uploadRows.map((r,i)=>`<tr><td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}></td><td>${escapeHtml(r.seq || i+1)}</td><td>${escapeHtml(r.carrier || '')}</td><td>${escapeHtml(r.por || '')}</td><td>${escapeHtml(r.pol || '')}</td><td>${escapeHtml(r.pod || '')}</td><td>${escapeHtml(r.fpod || '')}</td><td>${escapeHtml(r.dv20 || '')}</td><td>${escapeHtml(r.container20Type || '')}</td><td>${escapeHtml(r.hc40 || '')}</td><td>${escapeHtml(r.container40Type || '')}</td><td>${escapeHtml(r.ft || '')}</td><td>${escapeHtml(fmtDate(r.validity))}</td><td>${escapeHtml(displayType(r.type))}</td><td>${escapeHtml(r.tt || '')}</td><td>${escapeHtml(r.via || '')}</td><td>${escapeHtml(r.remarks || '')}</td></tr>`).join('');
+          $('uploadMobile').innerHTML = uploadRows.map((r,i)=>`<div class="mobile-card"><div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}> SELECT</label></div><div class="mobile-grid">${mobileItem('upload-'+i, r.seq, 'por', 'POR', r.por)}${mobileItem('upload-'+i, r.seq, 'pol', 'POL', r.pol)}${mobileItem('upload-'+i, r.seq, 'pod', 'POD', r.pod)}${mobileItem('upload-'+i, r.seq, 'fpod', 'FPOD', r.fpod)}${mobileItem('upload-'+i, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'ft', 'FT', r.ft)}${mobileItem('upload-'+i, r.seq, 'validity', 'DATE', fmtDate(r.validity))}${mobileItem('upload-'+i, r.seq, 'type', 'TYPE', displayType(r.type))}${mobileItem('upload-'+i, r.seq, 'tt', 'TT', r.tt)}${mobileItem('upload-'+i, r.seq, 'via', 'ROUTING', r.via)}${mobileItem('upload-'+i, r.seq, 'remarks', 'REMARKS', r.remarks)}</div></div>`).join('');
+        };
+      }
+    }catch(err){ console.error('commodity remove patch failed', err); }
+  }
+  ready(function(){
+    cleanCommodityHeaders();
+    patchRenderers();
+    try{ if(typeof render === 'function') render(); }catch(e){}
+    try{ if(typeof renderUpload === 'function') renderUpload(); }catch(e){}
+    setTimeout(cleanCommodityHeaders, 300);
+    setTimeout(cleanCommodityHeaders, 1000);
+  });
+})();
+</script>
+
 </body>
 </html>
 <!-- trigger artifact -->
