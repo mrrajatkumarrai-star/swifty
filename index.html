@@ -862,43 +862,7 @@ col.col-act{width:140px!important}
 }
 .fx-conv-pill .c{color:var(--muted);font-size:10px;margin-right:3px}
 
-
-/* Make table stretch exactly to parent */
-.table-wrap.desktop-table {
-   width: 100% !important;
-   max-width: 100% !important;
-   display: block !important;
-}
-table {
-   width: 100% !important;
-   table-layout: auto !important;
-}
-th, td {
-   white-space: nowrap !important;
-}
-#sectionRates .table-wrap.desktop-table {
-   overflow-x: hidden !important; 
-}
-@media (min-width: 900px) {
-  #sectionRates table { table-layout: fixed !important; }
-}
-
-
-/* Pure white data cells and checkboxes */
-td { background: #ffffff !important; }
-tr:hover td { background: #f0f0f0 !important; }
-input[type="checkbox"] { 
-  background: #ffffff !important; 
-  border: 1px solid var(--classic-line-dark) !important; 
-}
-#sectionRates .table-wrap.desktop-table {
-   overflow-x: auto !important; /* Allow scroll if absolutely needed, but force fit above */
-}
-/* Ensure the action column matches the red box boundary visually */
-col.col-act { width: 140px !important; }
-
 </style>
-
 <style>
 /* Locals Section Visibility */
 #sectionLocals{display:none}
@@ -1212,7 +1176,18 @@ body:has(#sectionLocals.active) .container {
   flex-direction: column;
 }
 </style>
-</head>
+<style>
+/* Visibility isolation fix */
+#rightPanel > .section { display: none !important; }
+#rightPanel > .section.active { display: block !important; }
+#sectionLocals { display: none !important; width: 100%; max-width: 100%; }
+#sectionLocals.active { display: block !important; }
+#localsEmbeddedRoot { width: 100%; max-width: 100%; }
+body:not(:has(#sectionLocals.active)) #sectionLocals * { visibility: hidden; }
+body:has(#sectionLocals.active) #sectionLocals * { visibility: visible; }
+body:has(#sectionLocals.active) .layout-grid { grid-template-columns: 1fr !important; }
+body:not(:has(#sectionLocals.active)) .layout-grid { grid-template-columns: var(--editor-w) minmax(0,1fr) !important; }
+</style></head>
 <body>
 <div class="loader" id="loader">
 <div class="loader-box">
@@ -1231,14 +1206,11 @@ body:has(#sectionLocals.active) .container {
 <input class="pin-input" id="pin4" inputmode="numeric" maxlength="1" type="password"/>
 </div>
 <div class="toolbar">
-    <button class="primary" id="unlockBtn"
-            style="flex:1; background-color: rgb(172, 221, 222);">
-        <i class="bi bi-shield-lock-fill"></i> UNLOCK
+<button class="primary" id="unlockBtn" style="flex:1; background-color: rgb(172, 221, 222);">
+<i class="bi bi-shield-lock-fill"></i> UNLOCK
     </button>
-
-    <button class="ghost" id="clearPinBtn"
-            style="flex:1; background-color: rgb(172, 221, 222);">
-        <i class="bi bi-eraser-fill"></i> CLEAR
+<button class="ghost" id="clearPinBtn" style="flex:1; background-color: rgb(172, 221, 222);">
+<i class="bi bi-eraser-fill"></i> CLEAR
     </button>
 </div>
 </div>
@@ -1268,7 +1240,7 @@ body:has(#sectionLocals.active) .container {
 <button class="ghost" id="exportSelectedBtn"><i class="bi bi-file-earmark-excel"></i> EXPORT SELECTED</button>
 <button class="ghost" id="applyImportBtn"><i class="bi bi-check2-circle"></i> APPLY IMPORT</button>
 </div>
-<input accept=".csv,.txt" class="file-input" id="fileInput" type="file">
+<input accept=".csv,.txt" class="file-input" id="fileInput" type="file"/>
 <div class="table-wrap desktop-table">
 <table>
 <colgroup>
@@ -1304,7 +1276,7 @@ body:has(#sectionLocals.active) .container {
 </table>
 </div>
 <div class="mobile-list" id="uploadMobile"></div>
-</input></div>
+</div>
 </div>
 <div class="hidden" id="appShell">
 <div class="header">
@@ -1341,9 +1313,8 @@ body:has(#sectionLocals.active) .container {
 <button data-view="all" id="tabAllBtn">ALL RATES</button>
 <button data-view="dimensions" id="tabDimBtn">DIMENSIONS</button>
 <button data-view="markups" id="tabMarkupBtn">MARKUP</button>
-
-      <button data-view="locals" id="tabLocalsBtn">LOCALS</button>
-    </div>
+<button data-view="locals" id="tabLocalsBtn">LOCALS</button>
+</div>
 <div class="layout-grid">
 <div class="panel" id="editorPanel">
 <div class="section-head">
@@ -1436,19 +1407,16 @@ body:has(#sectionLocals.active) .container {
 </div>
 <div class="editor-actions span12">
 <button class="primary" id="save" style="background-color: rgb(172, 221, 222);">
-    <i class="bi bi-floppy-fill"></i> SAVE
+<i class="bi bi-floppy-fill"></i> SAVE
 </button>
-
 <button class="success" id="update" style="background-color: rgb(172, 221, 222);">
-    <i class="bi bi-file-arrow-up-fill"></i> UPDATE
+<i class="bi bi-file-arrow-up-fill"></i> UPDATE
 </button>
-
 <button class="danger" id="clear" style="background-color: rgb(172, 221, 222);">
-    <i class="bi bi-x-octagon-fill"></i> CLEAR
+<i class="bi bi-x-octagon-fill"></i> CLEAR
 </button>
-
 <button class="ghost" id="duplicateBtn" style="background-color: rgb(172, 221, 222);">
-    <i class="bi bi-copy"></i> DUPLICATE
+<i class="bi bi-copy"></i> DUPLICATE
 </button>
 </div>
 </div>
@@ -1691,8 +1659,7 @@ body:has(#sectionLocals.active) .container {
 </div>
 </div>
 </div>
-
-      <div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot"><header>
+<div class="panel section" id="sectionLocals"><div id="localsEmbeddedRoot"><header>
 <div style="display:flex; align-items:center; gap:8px;">
 <i class="bi bi-shield-shaded" style="font-size:16px;"></i>
 <span class="dark-heading" style="font-size:12px;">FR8X LOCALS</span>
@@ -2525,7 +2492,7 @@ window.listenToFirebaseMasters = function() {
 window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
 </script></div></div>
-    </div>
+</div>
 </div>
 </div>
 </div>
@@ -3960,7 +3927,6 @@ $('closeFxBtn').onclick   = () => tahoeClose($('fxPopup'));
     background:#acddde;
   }
 </style>
-
 <div id="dbmsPopupOverlay">
 <div class="dbms-popup-window">
 <div class="dbms-popup-header">
@@ -4736,1029 +4702,52 @@ window.listenToFirebaseMasters();
 window.listenToFirebaseRates();
 </script>
 
-
-
-
-<style id="architect-unified-theme-v2">
-@import url('https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700&display=swap');
-:root{
-  --app-white:#ffffff !important;
-  --app-black:#000000 !important;
-  --app-blue:#0f3d5e !important;
-  --app-line:#8c8f93 !important;
-  --app-matcha:#7fbf7f !important;
-  --app-mint:#98ff98 !important;
-  --app-tab:#bfc1c5 !important;
-  --shadow:none !important;
-  --shadow-soft:none !important;
-  --glass:#ffffff !important;
-  --bg1:#ffffff !important;
-  --bg2:#ffffff !important;
-  --bg3:#ffffff !important;
-  --border:#8c8f93 !important;
-  --text:#000000 !important;
-  --muted:#000000 !important;
-  --primary:#7fbf7f !important;
-  --success:#7fbf7f !important;
-  --danger:#7fbf7f !important;
-  --warning:#7fbf7f !important;
-}
-html,body{margin:0 !important; min-height:100% !important; width:100% !important; overflow-x:hidden !important;}
-body,body::before,
-.glass,.panel,.card,.badge,.bulk-bar,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card,
-.header,.container,.topbar,.toolbar,.table-wrap,.table-scroll-container,.workspace-container,
-.glass-card,.popup-window,.popup-overlay .popup-window,.draggable-popup,.loader-box,
-#sectionLocals,#sectionLocals *,.overlay,.card.narrow,.section,.applied-markups,.mobile-item,.option-chip{
-  background:#ffffff !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  text-shadow:none !important;
-  filter:none !important;
-}
-
-@font-face {
-  font-family: 'ALFAQIX';
-  src: local('Arial'), local('Helvetica'); 
-  /* fallback to arial since custom font files aren't provided, but map name to ALFAQIX */
-}
-*,*::before,*::after{
-  font-family:'ALFAQIX', system-ui, sans-serif !important;
-  font-size:11px !important;
-  color:var(--classic-text);
-  box-shadow:none !important;
-  text-shadow:none !important;
-}
-th,td,input,select,textarea,button,.feedable-input{font-size:11px !important;}
-
-body,div,span,p,label,th,.note,.badge,.title,.subtitle,.brand,.dark-heading,.dim-note,.dim-label,.dim-value{ color:#000000 !important; }
-input,select,textarea,.feedable-input,.feedable-input::placeholder,#sectionLocals input,#sectionLocals select,#sectionLocals textarea{
-  color:#0f3d5e !important; background:#ffffff !important; border:1px solid #8c8f93 !important; outline:none !important;
-}
-input::placeholder,textarea::placeholder{ color:#0f3d5e !important; opacity:1 !important; }
-table,th,td,colgroup,.table-wrap,.table-scroll-container,#sectionLocals table,#sectionLocals th,#sectionLocals td{ border-color:#8c8f93 !important; }
-th,td{ border-bottom:1px solid #8c8f93 !important; color:#000000 !important; }
-tr,thead,tbody{ background:#ffffff !important; }
-button,.btn,.btn-primary,.btn-success,.btn-warning,.btn-danger,.btn-neutral,.primary,.success,.danger,.warning,.ghost,.yellow-master-trigger,.icon-btn,.grid-btn-icon,.btn-icon-action,.section-tabs button,.ios-btn,.option-chip,.fit-pill,.copy-toast{
-  background:#7fbf7f !important; color:#000000 !important; border:1px solid #8c8f93 !important; box-shadow:none !important;
-}
-button:hover,.btn:hover,.btn-primary:hover,.btn-success:hover,.btn-warning:hover,.btn-danger:hover,.btn-neutral:hover,.primary:hover,.success:hover,.danger:hover,.warning:hover,.ghost:hover,.yellow-master-trigger:hover,.icon-btn:hover,.grid-btn-icon:hover,.btn-icon-action:hover,.section-tabs button:hover,.ios-btn:hover,.option-chip:hover{
-  background:#98ff98 !important; color:#000000 !important; transform:none !important;
-}
-.section-tabs button.active,.sort-btn.active{ background:#bfc1c5 !important; color:#000000 !important; border-color:#8c8f93 !important; }
-.sort-btn,.icon-only{ background:#7fbf7f !important; color:#000000 !important; }
-.header,.panel,.card,.table-wrap,.table-scroll-container,.glass-card,.popup-window,.badge,input,select,textarea,button{ border-radius:8px !important; }
-.loader,.overlay,.popup-overlay{ background:rgba(255,255,255,.96) !important; }
-#sectionLocals .workspace-container,#sectionLocals .right-workspace-panel,#sectionLocals .glass-card,#sectionLocals #localsEmbeddedRoot{ width:100% !important; max-width:100% !important; }
-/* isolate locals section */
-#rightPanel > .section{display:none !important;}
-#rightPanel > .section.active{display:block !important;}
-#sectionLocals{display:none !important; width:100% !important; max-width:100% !important; overflow:hidden !important;}
-#sectionLocals.active{display:block !important;}
-body:not(:has(#sectionLocals.active)) #sectionLocals{display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; pointer-events:none !important;}
-body:has(#sectionLocals.active) .layout-grid{grid-template-columns:1fr !important;}
-body:not(:has(#sectionLocals.active)) .layout-grid{grid-template-columns:var(--editor-w) minmax(0,1fr) !important;}
-body:has(#sectionLocals.active) #editorPanel{display:none !important;}
-/* responsive */
-.container{width:100% !important; max-width:100% !important; padding:8px 10px 12px !important; box-sizing:border-box !important;}
-.layout-grid{display:grid !important; grid-template-columns:var(--editor-w) minmax(0,1fr) !important; gap:10px !important; align-items:start !important; min-width:0 !important;}
-#editorPanel,#rightPanel,.panel,.table-wrap,.table-scroll-container,.workspace-container,.left-workspace-panel,.right-workspace-panel{min-width:0 !important; max-width:100% !important; box-sizing:border-box !important;}
-.table-wrap,.table-scroll-container{overflow:auto !important; -webkit-overflow-scrolling:touch !important;}
-#sectionLocals .workspace-container{display:flex !important; flex-wrap:nowrap !important; gap:10px !important; min-height:calc(100vh - 140px) !important; height:auto !important; overflow:hidden !important;}
-#sectionLocals .left-workspace-panel{width:40% !important; min-width:280px !important;}
-#sectionLocals .right-workspace-panel{flex:1 1 auto !important; min-width:0 !important;}
-@media (max-width: 1180px){
-  .layout-grid{grid-template-columns:1fr !important;}
-  #editorPanel{position:static !important; max-height:none !important;}
-}
-@media (max-width: 900px){
-  .header{padding:8px 10px !important; margin:0 !important; border-radius:0 !important;}
-  .section-tabs{display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important;}
-  .section-tabs button{width:100% !important; min-width:0 !important;}
-  .topbar,.toolbar,.bulk-bar,.section-head,.editor-actions{display:flex !important; flex-direction:column !important; align-items:stretch !important;}
-  .editor-actions button,.toolbar button,.bulk-actions button{width:100% !important;}
-  #sectionLocals .workspace-container{flex-direction:column !important; min-height:auto !important; overflow:visible !important;}
-  #sectionLocals .left-workspace-panel,#sectionLocals .right-workspace-panel{width:100% !important; min-width:0 !important;}
-  #sectionLocals .ui-drag-splitter{display:none !important;}
-}
-@media (max-width: 760px){
-  html,body{font-size:12px !important;}
-  .container{padding:8px !important;}
-  .panel,.card,.glass-card{padding:8px !important;}
-  .table-wrap.desktop-table{display:none !important;}
-  .mobile-list{display:flex !important; flex-direction:column !important; gap:8px !important;}
-  .mobile-grid{grid-template-columns:1fr !important;}
-  .section-tabs{grid-template-columns:1fr 1fr !important;}
-  input,select,textarea,button{min-height:38px !important;}
-}
-@media (max-width: 480px){
-  .section-tabs{grid-template-columns:1fr !important;}
-  .header-right{display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:6px !important; width:100% !important;}
-  .badge{width:100% !important; text-align:center !important;}
-}
-</style>
-<script id="architect-patch-script-v2">
+<script>
 (function(){
-  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function $(id){ return document.getElementById(id); }
-  function escapeHtml(v){ return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-  function inputDateValue(v){ if(!v) return ''; if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v; const d=new Date(v); if(isNaN(d)) return ''; const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
-  function fmtDate(v){ if(!v) return ''; const d = /^\d{4}-\d{2}-\d{2}$/.test(v) ? new Date(v+'T00:00:00') : new Date(v); if(isNaN(d)) return ''; return d.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase(); }
-  function upper(v){ return (v ?? '').toString().trim().toUpperCase(); }
-  function calc(v){ v=(v??'').toString().trim(); if(!v) return ''; if(/^\d+(\+\d+)+$/.test(v)){ const sum=v.split('+').map(Number).reduce((a,b)=>a+(isNaN(b)?0:b),0); return sum?String(sum):''; } return v; }
-  function displayType(v){ return v === 'V' ? 'HANDOVER' : v === 'S' ? 'SAILING' : (v || ''); }
-  function appendDays(v){ const s = upper(v); if(!s) return ''; return /DAY/.test(s) ? s : s+' DAYS'; }
-
-  function removeMainCommodityEditor(){
-    const fld = $('commodityType')?.closest('.field');
-    if(fld) fld.remove();
-  }
-
-  function ensureMainHeaders(){
-    const ratesTable = document.querySelector('#sectionRates table');
-    if(ratesTable){
-      const headRow = ratesTable.querySelector('thead tr');
-      const filterRow = ratesTable.querySelector('thead .filter-row');
-      if(headRow && !headRow.innerHTML.includes('COMMODITY')){
-        const actionTh = Array.from(headRow.children).find(th => th.textContent.trim() === 'ACTION');
-        const th = document.createElement('th');
-        th.innerHTML = '<div class="sort-head"><span>COMMODITY</span><button class="sort-btn" data-sort="commodityType"><i class="bi bi-caret-down-fill"></i></button></div>';
-        if(actionTh) headRow.insertBefore(th, actionTh); else headRow.appendChild(th);
-      }
-      if(filterRow && !filterRow.innerHTML.includes('data-col="commodityType"')){
-        const lastTh = filterRow.lastElementChild;
-        const th = document.createElement('th');
-        th.innerHTML = '<input data-col="commodityType" placeholder="FILTER">';
-        if(lastTh) filterRow.insertBefore(th, lastTh); else filterRow.appendChild(th);
-      }
-    }
-    const uploadTable = document.querySelector('#uploadOverlay table');
-    if(uploadTable){
-      const headRows = uploadTable.querySelectorAll('thead tr');
-      const first = headRows[0];
-      if(first && !first.innerHTML.includes('COMMODITY')){
-        const remarksTh = Array.from(first.children).find(th => th.textContent.trim() === 'REMARKS');
-        const th = document.createElement('th'); th.textContent = 'COMMODITY';
-        if(remarksTh) first.insertBefore(th, remarksTh); else first.appendChild(th);
-      }
-    }
-  }
-
-  function ensureLocalsFormFields(){
-    if(!$('formPolInput')) return;
-    const polBlock = $('formPolInput').closest('div[style*="margin-bottom:10px"]') || $('formPolInput').closest('div[style*="margin-bottom:8px"]') || $('formPolInput').parentElement.parentElement;
-    if(polBlock && !$('formPorInput')){
-      const porBlock = document.createElement('div');
-      porBlock.style.marginBottom = '8px';
-      porBlock.innerHTML = '<label class="dark-heading" style="display:block; margin-bottom:2px;">POR PLACE OF RECEIPT</label><div class="combobox-root"><input class="feedable-input" id="formPorInput" onfocus="displayMenuOptions(\'por\')" oninput="filterMenuOptions(\'por\')" placeholder="TYPE TO SEARCH PORT MASTER OR ENTER ANY POR..." type="text"><div class="suggestions-dropdown-wrapper" id="porOptionsWrapper"></div></div>';
-      polBlock.insertAdjacentElement('beforebegin', porBlock);
-    }
-    if(polBlock && !$('formCommodityTypeSelect')){
-      const commodityBlock = document.createElement('div');
-      commodityBlock.style.marginBottom = '10px';
-      commodityBlock.innerHTML = '<label class="dark-heading" style="display:block; margin-bottom:2px;">COMMODITY TYPE</label><select class="feedable-input" id="formCommodityTypeSelect"><option value="GENERAL">GENERAL</option><option value="DG">DG</option><option value="OOG">OOG</option><option value="SPECIAL">SPECIAL</option></select>';
-      polBlock.insertAdjacentElement('afterend', commodityBlock);
-    }
-  }
-
-  function ensureLocalsGridHeaders(){
-    const tbl = document.querySelector('#sectionLocals #recordsGridBody')?.closest('table');
-    if(!tbl) return;
-    const row = tbl.querySelector('thead tr');
-    if(row && !row.innerHTML.includes('POR')){
-      const actionsTh = Array.from(row.children).find(th => th.textContent.replace(/\s+/g,' ').trim() === 'ACTIONS');
-      const por = document.createElement('th'); por.className='dark-heading'; por.textContent='POR';
-      const pol = Array.from(row.children).find(th => th.textContent.replace(/\s+/g,' ').trim() === 'POL/POD');
-      if(pol) row.insertBefore(por, pol);
-      const comm = document.createElement('th'); comm.className='dark-heading'; comm.textContent='COMMODITY';
-      if(actionsTh) row.insertBefore(comm, actionsTh); else row.appendChild(comm);
-      if(pol) pol.textContent = 'POL';
-    }
-  }
-
   function enforceSections(mode){
-    const map = { active:'sectionRates', expired:'sectionRates', all:'sectionRates', dimensions:'sectionDim', markups:'sectionMarkup', locals:'sectionLocals' };
-    ['sectionRates','sectionDim','sectionMarkup','sectionLocals'].forEach(id => { const el=$(id); if(el) el.classList.remove('active'); });
-    const target = $(map[mode] || 'sectionRates'); if(target) target.classList.add('active');
-    const editor = $('editorPanel');
-    if(editor){ if(mode === 'dimensions' || mode === 'markups' || mode === 'locals') editor.classList.add('hidden'); else editor.classList.remove('hidden'); }
-  }
-
-  function patchMainAppFunctions(){
-    try{
-      if(typeof filterMap === 'object' && !('commodityType' in filterMap)) filterMap.commodityType = '';
-      renderDesktopRows = function(rows){
-        return rows.map((r,i) => `
-          <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? 'active-row' : ''} ${editId === r.id ? 'editing-row' : ''}">
-            <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}></td>
-            ${desktopCell(r.id, r.seq || i+1, 'seq', 'SEQ', r.seq || i+1, 14)}
-            ${desktopCell(r.id, r.seq || i+1, 'carrier', 'CARRIER', r.carrier, 16)}
-            ${desktopCell(r.id, r.seq || i+1, 'por', 'POR', r.por, 12)}
-            ${desktopCell(r.id, r.seq || i+1, 'pol', 'POL', r.pol, 12)}
-            ${desktopCell(r.id, r.seq || i+1, 'pod', 'POD', r.pod, 12)}
-            ${desktopCell(r.id, r.seq || i+1, 'fpod', 'FPOD', r.fpod, 12)}
-            ${desktopCell(r.id, r.seq || i+1, 'commodityType', 'COMMODITY', r.commodityType || 'GENERAL', 14)}
-            ${desktopCell(r.id, r.seq || i+1, 'dv20', '20DV', r.dv20, 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'container20Type', '20 TYPE', r.container20Type, 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'hc40', '40HC', r.hc40, 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'container40Type', '40 TYPE', r.container40Type, 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'ft', 'FT', r.ft, 8)}
-            ${desktopCell(r.id, r.seq || i+1, 'validity', 'DATE', fmtDate(r.validity), 18)}
-            ${desktopCell(r.id, r.seq || i+1, 'type', 'TYPE', displayType(r.type), 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'tt', 'TT', r.tt, 10)}
-            ${desktopCell(r.id, r.seq || i+1, 'via', 'ROUTING', r.via, 16)}
-            ${desktopCell(r.id, r.seq || i+1, 'remarks', 'REMARKS', r.remarks, 18)}
-            <td class="actions"><button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button><button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button><button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button><button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button></td>
-          </tr>`).join('');
-      };
-      renderMobileRows = function(rows){
-        return rows.map(r => `
-          <div class="mobile-card ${activeCellState.id === r.id ? 'active-row' : ''}" data-rowid="${escapeHtml(r.id)}">
-            <div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}> SELECT</label></div>
-            <div class="mobile-grid">
-              ${mobileItem(r.id, r.seq, 'por', 'POR', r.por)}
-              ${mobileItem(r.id, r.seq, 'pol', 'POL', r.pol)}
-              ${mobileItem(r.id, r.seq, 'pod', 'POD', r.pod)}
-              ${mobileItem(r.id, r.seq, 'fpod', 'FPOD', r.fpod)}
-              ${mobileItem(r.id, r.seq, 'commodityType', 'COMMODITY', r.commodityType || 'GENERAL')}
-              ${mobileItem(r.id, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}
-              ${mobileItem(r.id, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}
-              ${mobileItem(r.id, r.seq, 'ft', 'FT', r.ft)}
-              ${mobileItem(r.id, r.seq, 'validity', 'DATE', fmtDate(r.validity))}
-              ${mobileItem(r.id, r.seq, 'type', 'TYPE', displayType(r.type))}
-              ${mobileItem(r.id, r.seq, 'tt', 'TT', r.tt)}
-              ${mobileItem(r.id, r.seq, 'via', 'ROUTING', r.via)}
-              ${mobileItem(r.id, r.seq, 'remarks', 'REMARKS', r.remarks)}
-            </div>
-            <div class="mobile-actions"><button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button><button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button><button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button><button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button></div>
-          </div>`).join('');
-      };
-      clearForm = function(resetEdit=true){
-        ['carrier','por','pol','pod','fpod','dv20','hc40','ft','validity','tt','via','remarks','container20Type','container40Type'].forEach(id => $(id) && ($(id).value=''));
-        $('rateType').value = 'V';
-        if(resetEdit) editId = null;
-        setEditorState('CREATE OR UPDATE RATE');
-        render();
-      };
-      editorPayload = function(existing={}){
-        return { seq: existing.seq || generateSeq(), createdAt: existing.createdAt || new Date().toISOString(), updatedAt: new Date().toISOString(), carrier: upper($('carrier').value), por: upper($('por').value), pol: upper($('pol').value), pod: upper($('pod').value), fpod: upper($('fpod').value), commodityType: upper(existing.commodityType || 'GENERAL') || 'GENERAL', dv20: calc($('dv20').value), container20Type: upper($('container20Type').value), hc40: calc($('hc40').value), container40Type: upper($('container40Type').value), ft: upper($('ft').value), validity: inputDateValue($('validity').value), tt: upper($('tt').value), via: upper($('via').value), remarks: upper($('remarks').value), type: $('rateType').value, localCharges: existing.localCharges || [], charges20dv: existing.charges20dv || [], charges40hc: existing.charges40hc || [] };
-      };
-      window.editRate = id => {
-        const r = data.find(x => x.id === id); if(!r) return; editId = id; setEditorState(`EDITING ${r.seq} · SELECTED RATE`); $('carrier').value = r.carrier || ''; $('por').value = r.por || ''; $('pol').value = r.pol || ''; $('pod').value = r.pod || ''; $('fpod').value = r.fpod || ''; $('dv20').value = r.dv20 || ''; $('container20Type').value = r.container20Type || ''; $('hc40').value = r.hc40 || ''; $('container40Type').value = r.container40Type || ''; $('ft').value = r.ft || ''; $('validity').value = inputDateValue(r.validity); $('tt').value = r.tt || ''; $('via').value = r.via || ''; $('remarks').value = r.remarks || ''; $('rateType').value = r.type === 'S' ? 'S' : 'V'; render();
-      };
-      buildRateCopyText = function(r){
-        const lines=[]; if(r.carrier) lines.push(`CARRIER ${r.carrier}`); if(r.por) lines.push(`POR ${r.por}`); if(r.pol) lines.push(`POL ${r.pol}`); if(r.pod) lines.push(`POD ${r.pod}`); if(r.fpod) lines.push(`FPOD ${r.fpod}`); if(r.commodityType) lines.push(`COMMODITY ${r.commodityType}`); const routeFrom = r.pol || r.por || ''; const routeTo = r.pod || ''; const base20 = parseFloat(r.dv20 || 0); const base40 = parseFloat(r.hc40 || 0); const final20 = base20 ? Math.round(base20 * (1 + effectiveMarkup20()/100)) : 0; const final40 = base40 ? Math.round(base40 * (1 + effectiveMarkup40()/100)) : 0; const part20 = final20 ? `USD ${final20} 20DV ${r.container20Type || ''}`.replace(/\s+/g,' ').trim() : ''; const part40 = final40 ? `USD ${final40} 40HC ${r.container40Type || ''}`.replace(/\s+/g,' ').trim() : ''; if(routeFrom || routeTo || part20 || part40) lines.push(`OF FM ${routeFrom} TO ${routeTo} ${[part20,part40].filter(Boolean).join(' / ')}`.replace(/\s+/g,' ').trim()); if(r.ft) lines.push(`FT ${appendDays(r.ft)}`); if(r.validity) lines.push(`VALIDITY ${fmtDate(r.validity)} ${displayType(r.type)}`.trim()); if(r.tt) lines.push(`TT ${appendDays(r.tt)}`); if(r.via) lines.push(`ROUTING ${r.via}`); if(r.remarks) lines.push(`REMARKS ${r.remarks}`); return lines.join('\n');
-      };
-      toCSV = function(rows){ const head=['SEQ','CARRIER','POR','POL','POD','FPOD','COMMODITY TYPE','20DV','20TYPE','40HC','40TYPE','F/T','DATE','TYPE','TT','ROUTING','REMARKS']; const esc=v=>`"${String(v ?? '').replace(/"/g,'""')}"`; return [head.join(','), ...rows.map((r,i)=>[esc(r.seq||i+1),esc(r.carrier),esc(r.por),esc(r.pol),esc(r.pod),esc(r.fpod),esc(r.commodityType||'GENERAL'),esc(r.dv20),esc(r.container20Type),esc(r.hc40),esc(r.container40Type),esc(r.ft),esc(inputDateValue(r.validity)),esc(r.type),esc(r.tt),esc(r.via),esc(r.remarks)].join(','))].join('\n'); };
-      normalizeUploadRow = function(r){ const rawType=upper(r.type || r.vtype || r.stype || ''); const typeCode = rawType === 'S' || rawType === 'SAILING' ? 'S' : 'V'; return { seq:r.seq || r.sequence || '', carrier:upper(r.carrier), por:upper(r.por), pol:upper(r.pol), pod:upper(r.pod), fpod:upper(r.fpod), commodityType:upper(r['commodity type'] || r.commoditytype || r.commodity || 'GENERAL') || 'GENERAL', dv20:calc(r.dv20 || r['20dv'] || ''), container20Type:upper(r['20type'] || r.container20type || ''), hc40:calc(r.hc40 || r['40hc'] || ''), container40Type:upper(r['40type'] || r.container40type || ''), ft:upper(r['f/t'] || r.ft || ''), validity:inputDateValue(r.validity || r.date || ''), type:typeCode, tt:upper(r.tt || r['transit time'] || ''), via:upper(r.routing || r.via || r.route || ''), remarks:upper(r.remarks) }; };
-      renderUpload = function(){ $('uploadBody').innerHTML = uploadRows.map((r,i)=>`<tr><td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}></td><td>${escapeHtml(r.seq || i+1)}</td><td>${escapeHtml(r.carrier || '')}</td><td>${escapeHtml(r.por || '')}</td><td>${escapeHtml(r.pol || '')}</td><td>${escapeHtml(r.pod || '')}</td><td>${escapeHtml(r.fpod || '')}</td><td>${escapeHtml(r.dv20 || '')}</td><td>${escapeHtml(r.container20Type || '')}</td><td>${escapeHtml(r.hc40 || '')}</td><td>${escapeHtml(r.container40Type || '')}</td><td>${escapeHtml(r.ft || '')}</td><td>${escapeHtml(fmtDate(r.validity))}</td><td>${escapeHtml(displayType(r.type))}</td><td>${escapeHtml(r.tt || '')}</td><td>${escapeHtml(r.via || '')}</td><td>${escapeHtml(r.commodityType || 'GENERAL')}</td><td>${escapeHtml(r.remarks || '')}</td></tr>`).join(''); $('uploadMobile').innerHTML = uploadRows.map((r,i)=>`<div class="mobile-card"><div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}> SELECT</label></div><div class="mobile-grid">${mobileItem('upload-'+i, r.seq, 'por', 'POR', r.por)}${mobileItem('upload-'+i, r.seq, 'pol', 'POL', r.pol)}${mobileItem('upload-'+i, r.seq, 'pod', 'POD', r.pod)}${mobileItem('upload-'+i, r.seq, 'fpod', 'FPOD', r.fpod)}${mobileItem('upload-'+i, r.seq, 'commodityType', 'COMMODITY', r.commodityType || 'GENERAL')}${mobileItem('upload-'+i, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'ft', 'FT', r.ft)}${mobileItem('upload-'+i, r.seq, 'validity', 'DATE', fmtDate(r.validity))}${mobileItem('upload-'+i, r.seq, 'type', 'TYPE', displayType(r.type))}${mobileItem('upload-'+i, r.seq, 'tt', 'TT', r.tt)}${mobileItem('upload-'+i, r.seq, 'via', 'ROUTING', r.via)}${mobileItem('upload-'+i, r.seq, 'remarks', 'REMARKS', r.remarks)}</div></div>`).join(''); };
-      if($('downloadTemplateBtn')) $('downloadTemplateBtn').onclick = () => { const templateRows=[{seq:'',carrier:'MSC',por:'DELHI',pol:'NHAVA SHEVA',pod:'JEBEL ALI',fpod:'DUBAI',commodityType:'GENERAL',dv20:'1000',container20Type:'',hc40:'1800',container40Type:'',ft:'14',validity:inputDateValue(new Date()),type:'V',tt:'7',via:'DIRECT',remarks:'SAMPLE'}]; download('fr8xtemplate.csv', toCSV(templateRows)); };
-      if($('applyImportBtn')) $('applyImportBtn').onclick = async () => { const rows = selectedUploadRows.size ? uploadRows.filter((_,i)=>selectedUploadRows.has(i)) : uploadRows; if(!rows.length) return alert('NO DATA TO IMPORT.'); showLoader('IMPORTING','ADDING RECORDS'); try{ for(const r of rows){ if(!r.carrier || !r.pod || !r.fpod || !r.pol) continue; await addDoc(collection(db,'rates'), { seq:r.seq || generateSeq(), createdAt:new Date().toISOString(), updatedAt:new Date().toISOString(), carrier:r.carrier, por:r.por, pol:r.pol, pod:r.pod, fpod:r.fpod, commodityType:r.commodityType || 'GENERAL', dv20:r.dv20, container20Type:r.container20Type, hc40:r.hc40, container40Type:r.container40Type, ft:r.ft, validity:r.validity, type:r.type, tt:r.tt, via:r.via, remarks:r.remarks, localCharges:[], charges20dv:[], charges40hc:[] }); } if($('clearImportPreviewAfterApply')?.checked){ uploadRows=[]; selectedUploadRows.clear(); renderUpload(); } if($('clearEditorAfterImport')?.checked) clearForm(true); closeUpload(); await load(); }catch(err){ alert('IMPORT APPLY FAILED'); console.error(err); } finally{ hideLoader(); } };
-    }catch(err){ console.error('Main app patch failed', err); }
-  }
-
-  function patchLocalsFunctions(){
-    try{
-      if(window.LocalDBMS && Array.isArray(LocalDBMS.records)) LocalDBMS.records.forEach(r => { if(!r.commodityType) r.commodityType='GENERAL'; if(!('por' in r)) r.por=''; });
-      displayMenuOptions = function(type){ const fieldInput = type === 'carrier' ? $('formCarrierInput') : (type === 'por' ? $('formPorInput') : $('formPolInput')); const popupMenu = type === 'carrier' ? $('carrierOptionsWrapper') : (type === 'por' ? $('porOptionsWrapper') : $('polOptionsWrapper')); const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols; populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, chosen => { fieldInput.value = chosen; popupMenu.style.display = 'none'; }); };
-      filterMenuOptions = function(type){ const fieldInput = type === 'carrier' ? $('formCarrierInput') : (type === 'por' ? $('formPorInput') : $('formPolInput')); const popupMenu = type === 'carrier' ? $('carrierOptionsWrapper') : (type === 'por' ? $('porOptionsWrapper') : $('polOptionsWrapper')); const datasetSrc = type === 'carrier' ? LocalDBMS.carriers : LocalDBMS.pols; populateMenuFilter(fieldInput.value, popupMenu, datasetSrc, chosen => { fieldInput.value = chosen; popupMenu.style.display = 'none'; }); };
-      refreshRecordsGrid = function(filterQuery){ const tbody = $('recordsGridBody'); if(!tbody) return; tbody.innerHTML=''; let filteredSet=[...LocalDBMS.records]; filterQuery=(filterQuery||'').trim().toUpperCase(); if(filterQuery){ filteredSet=filteredSet.filter(r => (r.seqNo||'').includes(filterQuery) || (r.carrier||'').includes(filterQuery) || (r.por||'').includes(filterQuery) || (r.pol||'').includes(filterQuery) || (r.commodityType||'GENERAL').includes(filterQuery)); } if(!filteredSet.length){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center; padding:16px; color:#000000;">NO ACTIVE RATES FOUND</td></tr>'; return; } filteredSet.forEach(item=>{ const row=document.createElement('tr'); row.innerHTML=`<td style="font-weight:700;">${escapeHtml(item.seqNo || 'NA')}</td><td style="font-weight:700;">${escapeHtml(item.carrier || '')}</td><td>${escapeHtml(item.por || '')}</td><td>${escapeHtml(item.pol || '')}</td><td>${escapeHtml(item.commodityType || 'GENERAL')}</td><td style="text-align:center; white-space:nowrap;"><button class="grid-btn-icon grid-btn-edit" onclick="loadRecordToWorkspaceEditor('${item.id}', false)" title="EDIT RATE"><i class="bi bi-pencil"></i></button><button class="grid-btn-icon grid-btn-duplicate" onclick="loadRecordToWorkspaceEditor('${item.id}', true)" title="DUPLICATE RATE"><i class="bi bi-ui-checks"></i></button><button class="grid-btn-icon grid-btn-copy" onclick="exportRowToWhatsAppFriendly('${item.id}')" title="COPY AS WHATSAPP DATA TEMPLATE"><i class="bi bi-whatsapp"></i></button><button class="grid-btn-icon grid-btn-delete" onclick="removeRecordFromDatabase('${item.id}')" title="REMOVE RATE"><i class="bi bi-trash"></i></button></td>`; tbody.appendChild(row); }); };
-      exportRowToWhatsAppFriendly = function(id){ const record=LocalDBMS.records.find(r=>r.id===id); if(!record) return; const messageLines=[]; messageLines.push(`SEQ NO ${record.seqNo || 'NA'}`); messageLines.push(`CARRIER ${record.carrier || ''}`); if(record.por) messageLines.push(`POR ${record.por}`); messageLines.push(`POL ${record.pol || ''}`); messageLines.push(`COMMODITY ${record.commodityType || 'GENERAL'}`); messageLines.push(`TYPE ${record.shipmentType || 'EXPORT'}`); messageLines.push(''); messageLines.push('CHARGES'); (record.charges||[]).forEach(ch=>{ let mappedBasis='CONTAINER'; if(ch.basis === 'BL') mappedBasis='DOCS'; if(ch.basis === 'SHPMT') mappedBasis='SHIPMENT'; messageLines.push(`${ch.head} ${ch.currency} ${ch.amount} ${mappedBasis}`); }); const finalStringTextFormat=messageLines.join('\n'); navigator.clipboard.writeText(finalStringTextFormat).then(()=>alert('WHATSAPP TEXT TEMPLATE COPIED TO SYSTEM CLIPBOARD')).catch(()=>alert('CLIPBOARD WRITING OPERATION INTERRUPTED.')); };
-      resetFormEditorState = function(){ $('activeWorkingId').value=''; $('formEditorHeader').innerText='NEW RATES'; $('formCarrierInput').value=''; if($('formPorInput')) $('formPorInput').value=''; $('formPolInput').value=''; if($('formCommodityTypeSelect')) $('formCommodityTypeSelect').value='GENERAL'; $('formShipmentTypeSelect').value='EXPORT'; onShipmentTypeToggleChange(); $('nestedChargesLinesContainer').innerHTML=''; injectBlankChargeRowLine(); };
-      loadRecordToWorkspaceEditor = function(id, runDuplicateExtraction = false){ const foundItem=LocalDBMS.records.find(r=>r.id===id); if(!foundItem) return; if(runDuplicateExtraction){ $('activeWorkingId').value=''; $('formEditorHeader').innerText='DUPLICATE RATE'; } else { $('activeWorkingId').value=foundItem.id; $('formEditorHeader').innerText=`EDIT RATE SEQ ${foundItem.seqNo || 'NA'}`; } $('formCarrierInput').value=foundItem.carrier || ''; if($('formPorInput')) $('formPorInput').value=foundItem.por || ''; $('formPolInput').value=foundItem.pol || ''; if($('formCommodityTypeSelect')) $('formCommodityTypeSelect').value=foundItem.commodityType || 'GENERAL'; $('formShipmentTypeSelect').value=foundItem.shipmentType || 'EXPORT'; onShipmentTypeToggleChange(); const targetBox=$('nestedChargesLinesContainer'); targetBox.innerHTML=''; (foundItem.charges || []).forEach(chItem => injectBlankChargeRowLine(chItem)); if(!targetBox.children.length) injectBlankChargeRowLine(); };
-      commitEditorToDatabase = async function(){ const currentId=$('activeWorkingId').value; const carrierVal=upper($('formCarrierInput').value); const porVal=upper($('formPorInput')?.value || ''); const polVal=upper($('formPolInput').value); const commodityTypeVal=upper($('formCommodityTypeSelect')?.value || 'GENERAL') || 'GENERAL'; const shipmentTypeVal=$('formShipmentTypeSelect').value; if(!carrierVal || !polVal){ alert('VALIDATION FAULT CARRIER AND POL MUST BE SET.'); return; } if(!LocalDBMS.carriers.includes(carrierVal)){ alert('DIRECTORY FAULT CARRIER NOT FOUND IN MASTER.'); return; } if(!LocalDBMS.pols.includes(polVal)){ alert('DIRECTORY FAULT POL NOT FOUND IN PORT MASTER.'); return; } const linesRows=document.querySelectorAll('#nestedChargesLinesContainer .charge-row-item'); const aggregatedCharges=[]; let brokenLineDetected=false; linesRows.forEach(el=>{ const head=upper(el.querySelector('.txt-charge-row-head').value); const curr=el.querySelector('.sel-charge-row-currency').value; const amt=parseFloat(el.querySelector('.num-charge-row-amount').value); const bas=el.querySelector('.sel-charge-row-basis').value; if(!head || isNaN(amt)){ brokenLineDetected=true; return; } if(!LocalDBMS.chargeHeads.includes(head)){ alert(`VALIDATION FAULT ${head} HAS NOT BEEN PROVISIONED IN CHARGE MASTER.`); brokenLineDetected=true; return; } aggregatedCharges.push({head, currency:curr, amount:amt, basis:bas}); }); if(brokenLineDetected || !aggregatedCharges.length){ alert('PROCESSING REJECTED. VERIFY ALL CHARGE LINES.'); return; } let seqNoToSave; const existingRec=LocalDBMS.records.find(r=>r.id===currentId); if(existingRec && existingRec.seqNo && !currentId.includes('duplicate')) seqNoToSave=existingRec.seqNo; else { const carCode=carrierVal.replace(/[^A-Z]/ig,'').padEnd(3,'X').substring(0,3).toUpperCase(); const polCode=polVal.replace(/[^A-Z]/ig,'').padEnd(3,'X').substring(0,3).toUpperCase(); const now=new Date(); const dd=String(now.getDate()).padStart(2,'0'); const hh=String(now.getHours()).padStart(2,'0'); seqNoToSave=`${carCode}${polCode}${dd}${hh}`; } const payload={ seqNo:seqNoToSave, carrier:carrierVal, por:porVal, shipmentType:shipmentTypeVal, pol:polVal, commodityType:commodityTypeVal, charges:aggregatedCharges }; try{ if(currentId){ payload.id=currentId; await window.saveRecordToFirebase(payload); } else { const newId=await window.saveRecordToFirebase(payload); payload.id=newId; } resetFormEditorState(); await loadRecordsFromFirebase(); }catch(error){ console.error('Record save failed', error); } };
-      editMasterDataEntry = async function(value){ const nextVal=prompt('EDIT MASTER VALUE', value || ''); if(nextVal === null) return; const clean=upper(nextVal); if(!clean || clean === upper(value)) return; try{ await window.saveMasterToFirebase(currentScopeMasterType, clean); await window.deleteMasterFromFirebase(currentScopeMasterType, value); generatePopupDataViewItems(); }catch(error){ console.error('Master edit failed', error); } };
-      generatePopupDataViewItems = function(){ const container=$('popupMasterItemsListView'); const queryStr=$('txtMasterDirectorySearch').value.toLowerCase(); container.innerHTML=''; let targetSrc=[]; if(currentScopeMasterType === 'carrier') targetSrc=LocalDBMS.carriers; if(currentScopeMasterType === 'pol') targetSrc=LocalDBMS.pols; if(currentScopeMasterType === 'chargeHead') targetSrc=LocalDBMS.chargeHeads; const filteredDataset=targetSrc.filter(item => item.toLowerCase().includes(queryStr)); if(!filteredDataset.length){ container.innerHTML='<div style="padding:12px; text-align:center;">NO COMPATIBLE DATA RECORDS MATCH FOUND</div>'; return; } filteredDataset.forEach(item => { const listRow=document.createElement('div'); listRow.style.padding='6px 10px'; listRow.style.borderBottom='1px solid #8c8f93'; listRow.style.display='flex'; listRow.style.justifyContent='space-between'; listRow.style.alignItems='center'; listRow.innerHTML=`<span style="font-weight:700;">${escapeHtml(item)}</span><span style="display:flex; gap:6px;"><button class="btn-icon-action" onclick="editMasterDataEntry(${JSON.stringify(item)})" title="EDIT"><i class="bi bi-pencil"></i></button><button class="btn-icon-action remove" onclick="evictMasterDataEntry(${JSON.stringify(item)})" title="DELETE"><i class="bi bi-trash"></i></button></span>`; container.appendChild(listRow); }); };
-    }catch(err){ console.error('Locals patch failed', err); }
-  }
-
-  function wireTabs(){
-    ['tabActiveBtn','tabExpiredBtn','tabAllBtn','tabDimBtn','tabMarkupBtn','tabLocalsBtn'].forEach(id => {
-      const btn = $(id);
-      if(btn && !btn.dataset.architectTabBound){
-        btn.dataset.architectTabBound = '1';
-        btn.addEventListener('click', function(){
-          const mode = this.dataset.view || (id === 'tabDimBtn' ? 'dimensions' : id === 'tabMarkupBtn' ? 'markups' : id === 'tabLocalsBtn' ? 'locals' : 'active');
-          setTimeout(() => enforceSections(mode), 0);
-        });
-      }
-    });
-    enforceSections('active');
-  }
-
-  function init(){
-    removeMainCommodityEditor();
-    ensureMainHeaders();
-    ensureLocalsFormFields();
-    ensureLocalsGridHeaders();
-    patchMainAppFunctions();
-    patchLocalsFunctions();
-    wireTabs();
-    try{ if(typeof render === 'function') render(); }catch(e){}
-    try{ if(typeof refreshRecordsGrid === 'function') refreshRecordsGrid(($('gridSearchFilter')||{}).value || ''); }catch(e){}
-    document.querySelectorAll('.filter-row input').forEach(inp => {
-      if(!inp.dataset.patchedCommodity){ inp.dataset.patchedCommodity='1'; inp.addEventListener('input', e => { if(typeof filterMap === 'object') filterMap[e.target.dataset.col] = e.target.value; if(typeof render === 'function') render(); }); }
-    });
-    document.querySelectorAll('.sort-btn[data-sort="commodityType"]').forEach(btn => {
-      if(!btn.dataset.patchedSort){ btn.dataset.patchedSort='1'; btn.addEventListener('click', e => { e.stopPropagation(); const key=btn.dataset.sort; if(sortState.key !== key) sortState={key, dir:'asc'}; else if(sortState.dir === 'asc') sortState={key, dir:'desc'}; else sortState={key:'', dir:''}; if(typeof render === 'function') render(); }); }
-    });
-  }
-  ready(init);
-})();
-</script>
-
-
-<script id="architect-edit-fix-v3">
-(function(){
-  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function $(id){ return document.getElementById(id); }
-  function inputDateValue(v){ if(!v) return ''; if(/^\d{4}-\d{2}-\d{2}$/.test(v)) return v; const d=new Date(v); if(isNaN(d)) return ''; const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
-
-  function activateActiveRates(){
-    try{
-      ['tabActiveBtn','tabExpiredBtn','tabAllBtn','tabDimBtn','tabMarkupBtn','tabLocalsBtn'].forEach(id => { const el=$(id); if(el) el.classList.remove('active'); });
-      const activeBtn = $('tabActiveBtn'); if(activeBtn) activeBtn.classList.add('active');
-      ['sectionRates','sectionDim','sectionMarkup','sectionLocals'].forEach(id => { const el=$(id); if(el) el.classList.remove('active'); });
-      const rates = $('sectionRates'); if(rates) rates.classList.add('active');
-      const editor = $('editorPanel'); if(editor) editor.classList.remove('hidden');
-      if(typeof viewMode !== 'undefined') viewMode = 'active';
-    } catch(e) {}
-  }
-
-  function populateRateEditor(id){
-    try{
-      if(typeof data === 'undefined' || !Array.isArray(data)) return false;
-      const r = data.find(x => x.id === id);
-      if(!r) return false;
-      activateActiveRates();
-      if(typeof editId !== 'undefined') editId = id;
-      if(typeof setEditorState === 'function') setEditorState(`EDITING ${r.seq || ''} · SELECTED RATE`);
-      if($('carrier')) $('carrier').value = r.carrier || '';
-      if($('por')) $('por').value = r.por || '';
-      if($('pol')) $('pol').value = r.pol || '';
-      if($('pod')) $('pod').value = r.pod || '';
-      if($('fpod')) $('fpod').value = r.fpod || '';
-      if($('dv20')) $('dv20').value = r.dv20 || '';
-      if($('container20Type')) $('container20Type').value = r.container20Type || '';
-      if($('hc40')) $('hc40').value = r.hc40 || '';
-      if($('container40Type')) $('container40Type').value = r.container40Type || '';
-      if($('ft')) $('ft').value = r.ft || '';
-      if($('validity')) $('validity').value = inputDateValue(r.validity);
-      if($('tt')) $('tt').value = r.tt || '';
-      if($('via')) $('via').value = r.via || '';
-      if($('remarks')) $('remarks').value = r.remarks || '';
-      if($('rateType')) $('rateType').value = r.type === 'S' ? 'S' : 'V';
-      if(typeof render === 'function') render();
-      return true;
-    } catch(err) {
-      console.error('Edit populate failed', err);
-      return false;
-    }
-  }
-
-  ready(function(){
-    window.editRate = populateRateEditor;
-    window.delRate = typeof window.delRate === 'function' ? window.delRate : (typeof deleteRate === 'function' ? deleteRate : undefined);
-
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button[data-action="edit"]');
-      if(!btn) return;
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-      populateRateEditor(btn.dataset.id);
-    }, true);
-
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button[data-action="copy"]');
-      if(!btn) return;
-      if(typeof window.copyRate === 'function') { e.preventDefault(); e.stopPropagation(); window.copyRate(btn.dataset.id); }
-    }, true);
-
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button[data-action="duplicate"]');
-      if(!btn) return;
-      if(typeof duplicateRate === 'function') { e.preventDefault(); e.stopPropagation(); duplicateRate(btn.dataset.id); }
-    }, true);
-
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('button[data-action="delete"]');
-      if(!btn) return;
-      if(typeof deleteRate === 'function') { e.preventDefault(); e.stopPropagation(); deleteRate(btn.dataset.id); }
-    }, true);
-  });
-})();
-</script>
-
-
-<style id="attached-classic-theme-v4">
-:root{
-  --classic-bg:#d8d8d8 !important;
-  --classic-panel:#dcdcdc !important;
-  --classic-cell:#ffffff !important;
-  --classic-line:#74c6cf !important;
-  --classic-line-dark:#4eaab4 !important;
-  --classic-head:#cfcfcf !important;
-  --classic-tab:#c7c9cc !important;
-  --classic-tab-active:#b9bbbe !important;
-  --classic-text:#1f1f1f !important;
-  --classic-button:#e7ecec !important;
-  --classic-button-hover:#dceff1 !important;
-}
-html,body{
-  background:#8c8f93 !important;
-  color:var(--classic-text) !important;
-  overflow-x:hidden !important;
-}
-body::before{display:none !important;}
-
-@font-face {
-  font-family: 'ALFAQIX';
-  src: local('Arial'), local('Helvetica'); 
-  /* fallback to arial since custom font files aren't provided, but map name to ALFAQIX */
-}
-*,*::before,*::after{
-  font-family:'ALFAQIX', system-ui, sans-serif !important;
-  font-size:11px !important;
-  color:var(--classic-text);
-  box-shadow:none !important;
-  text-shadow:none !important;
-}
-th,td,input,select,textarea,button,.feedable-input{font-size:11px !important;}
-
-.glass,.panel,.card,.badge,.bulk-bar,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card,.header,.container,.topbar,.toolbar,.table-wrap,.table-scroll-container,.workspace-container,.glass-card,.popup-window,.popup-overlay .popup-window,.draggable-popup,.loader-box,.section,.overlay{
-  background:#8c8f93 !important;
-  background-image:none !important;
-  border-color:var(--classic-line) !important;
-  box-shadow:none !important;
-}
-.header{
-  background:#8c8f93 !important;
-  border:1px solid var(--classic-line-dark) !important;
-  border-radius:0 !important;
-  min-height:52px !important;
-}
-.brand,.title,.subtitle,.note,.badge,.dim-label,.dim-value,.dark-heading,label,th,td,span,div,p{ color:var(--classic-text) !important; }
-.container{ padding:8px !important; }
-.layout-grid{ gap:8px !important; }
-.panel,.card,.glass-card,.table-wrap,.table-scroll-container,.popup-window,.draggable-popup,.badge,input,select,textarea,button{ border-radius:2px !important; }
-input,select,textarea,.feedable-input{
-  background:linear-gradient(#ffffff,#f6f6f6) !important;
-  border:1px solid var(--classic-line-dark) !important;
-  border-top-color:#99d8de !important;
-  border-left-color:#99d8de !important;
-  color:#111 !important;
-  min-height:28px !important;
-  padding:4px 6px !important;
-}
-input:focus,select:focus,textarea:focus,.feedable-input:focus{
-  outline:none !important;
-  border-color:var(--classic-line-dark) !important;
-  box-shadow:0 0 0 1px #bde8ec inset !important;
-}
-input::placeholder,textarea::placeholder{ color:#666 !important; }
-button,.btn,.btn-primary,.btn-success,.btn-warning,.btn-danger,.btn-neutral,.primary,.success,.danger,.warning,.ghost,.yellow-master-trigger,.icon-btn,.grid-btn-icon,.btn-icon-action,.section-tabs button,.ios-btn,.option-chip,.fit-pill,.copy-toast,.dbms-btn{
-  background:linear-gradient(#f8f8f8,#dfe6e7) !important;
-  border:1px solid var(--classic-line-dark) !important;
-  color:#111 !important;
-  min-height:28px !important;
-  padding:0 10px !important;
-}
-button:hover,.btn:hover,.btn-primary:hover,.btn-success:hover,.btn-warning:hover,.btn-danger:hover,.btn-neutral:hover,.primary:hover,.success:hover,.danger:hover,.warning:hover,.ghost:hover,.yellow-master-trigger:hover,.icon-btn:hover,.grid-btn-icon:hover,.btn-icon-action:hover,.section-tabs button:hover,.ios-btn:hover,.option-chip:hover,.dbms-btn:hover{
-  background:linear-gradient(#ffffff,#dceff1) !important;
-  transform:none !important;
-}
-.section-tabs{
-  gap:3px !important;
-  margin:6px 0 8px !important;
-}
-.section-tabs button{
-  background:linear-gradient(#d8d8d8,#c7c9cc) !important;
-  border:1px solid var(--classic-line-dark) !important;
-  min-height:28px !important;
-}
-.section-tabs button.active,.sort-btn.active{
-  background:linear-gradient(#d7d9db,#b9bbbe) !important;
-  border-color:var(--classic-line-dark) !important;
-  color:#111 !important;
-  font-weight:700 !important;
-}
-.table-wrap,.table-scroll-container{
-  border:1px solid var(--classic-line-dark) !important;
-  background:#e0e0e0 !important;
-}
-table{
-  border-collapse:separate !important;
-  border-spacing:0 !important;
-  background:#efefef !important;
-}
-th{
-  background:linear-gradient(#d8d8d8,#c6c6c6) !important;
-  border-top:1px solid #f4f4f4 !important;
-  border-bottom:1px solid var(--classic-line-dark) !important;
-  border-right:1px solid var(--classic-line) !important;
-  color:#111 !important;
-  font-weight:700 !important;
-}
-.filter-row th{ background:#d5d5d5 !important; }
-td{
-  background:#f8f8f8 !important;
-  border-bottom:1px solid var(--classic-line) !important;
-  border-right:1px solid var(--classic-line) !important;
-  color:#111 !important;
-  padding:3px 4px !important;
-}
-tr:hover td{ background:#eef9fb !important; }
-.reflect-cell.active-cell,.mobile-item.active-cell{ background:#dff4f6 !important; box-shadow:inset 0 0 0 1px var(--classic-line-dark) !important; }
-tr.active-row td,.mobile-card.active-row{ background:#edf8fa !important; }
-.mobile-card,.mobile-item,.fit-pill,.applied-markups,.option-chip{ border:1px solid var(--classic-line) !important; background:#f7f7f7 !important; }
-.badge{ background:#ededed !important; border:1px solid var(--classic-line-dark) !important; }
-.overlay,.loader{ background:rgba(120,120,120,.25) !important; }
-.spinner{ border-color:#c6e8ec !important; border-top-color:var(--classic-line-dark) !important; }
-#sectionLocals header{
-  background:#8c8f93 !important;
-  border-bottom:1px solid var(--classic-line-dark) !important;
-}
-#sectionLocals .glass-card,#sectionLocals .table-scroll-container,#sectionLocals .popup-window{ background:#dddddd !important; border:1px solid var(--classic-line-dark) !important; }
-#sectionLocals table{ background:#efefef !important; }
-#sectionLocals th{ background:linear-gradient(#d8d8d8,#c6c6c6) !important; }
-#sectionLocals td{ background:#f8f8f8 !important; }
-#sectionLocals .suggestions-dropdown-wrapper{ background:#f8f8f8 !important; border:1px solid var(--classic-line-dark) !important; }
-#sectionLocals .suggestions-dropdown-wrapper div:hover{ background:#def3f6 !important; }
-@media (max-width:760px){
-  .header{margin:0 !important;}
-  .container{padding:6px !important;}
-  .panel,.card,.glass-card{padding:6px !important;}
-  th,td,input,select,textarea,button{font-size:11px !important;}
-}
-</style>
-
-
-<style id="ultra-responsive-v5">
-html,body{
-  width:100% !important;
-  max-width:100% !important;
-  overflow-x:hidden !important;
-  -webkit-text-size-adjust:100% !important;
-}
-body{
-  touch-action:manipulation;
-}
-img,table,iframe,canvas,svg{
-  max-width:100% !important;
-}
-#appShell,.container,.layout-grid,#rightPanel,#editorPanel,.panel,.card,.glass-card,.table-wrap,.table-scroll-container,.workspace-container,.left-workspace-panel,.right-workspace-panel{
-  min-width:0 !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
-}
-.table-wrap,.table-scroll-container{
-  width:100% !important;
-  overflow:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-  overscroll-behavior:contain !important;
-}
-#sectionLocals,
-#sectionLocals #localsEmbeddedRoot,
-#sectionLocals .workspace-container,
-#sectionLocals .left-workspace-panel,
-#sectionLocals .right-workspace-panel,
-#sectionLocals .glass-card{
-  min-width:0 !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
-}
-#sectionLocals .workspace-container{
-  display:flex !important;
-  gap:8px !important;
-  align-items:stretch !important;
-}
-#sectionLocals .left-workspace-panel{flex:0 0 34% !important; min-width:280px !important;}
-#sectionLocals .right-workspace-panel{flex:1 1 auto !important; min-width:0 !important;}
-.header-right,.toolbar,.topbar,.bulk-bar,.bulk-info,.bulk-actions,.editor-actions,.section-head{
-  min-width:0 !important;
-}
-#globalSearch,.toolbar input,.topbar input,.feedable-input,input,select,textarea{
-  max-width:100% !important;
-}
-@media (max-width: 1280px){
-  .layout-grid{grid-template-columns:minmax(300px,360px) minmax(0,1fr) !important;}
-  #sectionLocals .left-workspace-panel{flex-basis:38% !important;}
-}
-@media (max-width: 1100px){
-  .layout-grid{grid-template-columns:1fr !important;}
-  #editorPanel{position:static !important; top:auto !important; max-height:none !important; order:1 !important;}
-  #rightPanel{order:2 !important;}
-  #sectionLocals .workspace-container{flex-direction:column !important; overflow:visible !important;}
-  #sectionLocals .left-workspace-panel,
-  #sectionLocals .right-workspace-panel{flex:1 1 100% !important; width:100% !important; min-width:0 !important;}
-  #sectionLocals .ui-drag-splitter{display:none !important;}
-}
-@media (max-width: 900px){
-  .header{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:8px !important;
-    padding:8px !important;
-  }
-  .brand{width:100% !important; text-align:center !important;}
-  .header-right{
-    display:grid !important;
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    gap:6px !important;
-    width:100% !important;
-  }
-  .header-right > *{min-width:0 !important; width:100% !important; justify-content:center !important;}
-  .container{padding:8px !important;}
-  .topbar,.toolbar,.bulk-bar,.bulk-info,.bulk-actions,.editor-actions,.section-head{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:8px !important;
-  }
-  .section-tabs{
-    display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:6px !important;
-  }
-  .section-tabs button,
-  .editor-actions button,
-  .toolbar button,
-  .bulk-actions button{
-    width:100% !important;
-    min-width:0 !important;
-  }
-  .form,
-  .inline-pair,
-  .fit-grid,
-  .dim-grid,
-  .markup-row,
-  #sectionLocals .charge-row-item,
-  #sectionLocals [style*="grid-template-columns"],
-  #sectionLocals .fx-conv-grid,
-  #sectionLocals .fx-rate-grid{
-    display:grid !important;
-    grid-template-columns:1fr !important;
-  }
-  .span6,.span12,.field{grid-column:span 12 !important;}
-  .mobile-list{display:flex !important; flex-direction:column !important; gap:8px !important;}
-  .table-wrap.desktop-table{display:none !important;}
-  .mobile-grid{display:grid !important; grid-template-columns:1fr !important;}
-  .mobile-actions{display:grid !important; grid-template-columns:1fr 1fr !important; gap:6px !important;}
-}
-@media (max-width: 700px){
-  html,body{font-size:12px !important;}
-  .panel,.card,.glass-card,.fit-card,.dim-card,.markup-card,.info-strip,.mobile-card{padding:8px !important;}
-  input,select,textarea,button,.feedable-input{min-height:38px !important; font-size:12px !important;}
-  th,td{font-size:11px !important; padding:4px !important;}
-  .badge{white-space:normal !important; text-align:center !important;}
-  .header-right{grid-template-columns:repeat(3,minmax(0,1fr)) !important;}
-  #sectionLocals .popup-window,
-  .popup-window,
-  .card{
-    width:min(100vw - 16px, 100%) !important;
-    max-width:min(100vw - 16px, 100%) !important;
-    max-height:88vh !important;
-    overflow:auto !important;
-  }
-}
-@media (max-width: 560px){
-  .header-right{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
-  .section-tabs{grid-template-columns:1fr !important;}
-  .mobile-actions{grid-template-columns:1fr !important;}
-  .toolbar,.topbar,.bulk-bar{gap:6px !important;}
-  #globalSearch{max-width:100% !important; width:100% !important;}
-  .badge{padding:6px 4px !important;}
-  .icon-only,.icon-btn,.grid-btn-icon,.btn-icon-action{min-width:38px !important; width:38px !important; height:38px !important;}
-}
-@media (max-width: 420px){
-  .container{padding:6px !important;}
-  .panel,.card,.glass-card{padding:6px !important;}
-  .header{padding:6px !important;}
-  .header-right{grid-template-columns:1fr 1fr !important; gap:4px !important;}
-  th,td{font-size:10px !important;}
-  input,select,textarea,button,.feedable-input{min-height:36px !important;}
-}
-</style>
-<script id="ultra-responsive-v5-script">
-(function(){
-  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function setViewportHeight(){
-    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
-  }
-  function compactLocalsForSmallScreens(){
-    var mq = window.matchMedia('(max-width: 1100px)').matches;
-    var splitter = document.getElementById('uiSplitter');
-    var left = document.getElementById('leftPanel');
-    if(mq){
-      if(splitter) splitter.style.display = 'none';
-      if(left) left.style.width = '100%';
-    } else {
-      if(splitter) splitter.style.display = '';
-      if(left && !left.style.width) left.style.width = '';
-    }
-  }
-  function normalizePopups(){
-    document.querySelectorAll('.popup-window,.card,.draggable-popup').forEach(function(el){
-      if(window.innerWidth <= 700){
-        el.style.maxWidth = 'calc(100vw - 16px)';
-        el.style.width = 'calc(100vw - 16px)';
-      } else {
-        el.style.maxWidth = '';
-      }
-    });
-  }
-  function run(){
-    setViewportHeight();
-    compactLocalsForSmallScreens();
-    normalizePopups();
-  }
-  ready(run);
-  window.addEventListener('resize', run, {passive:true});
-  window.addEventListener('orientationchange', run, {passive:true});
-})();
-</script>
-
-
-<script id="whatsapp-copy-fix">
-(function(){
-  // override the showCopyToast to just a brief non-intrusive indicator or console log
-  window.showCopyToast = function(msg) {
-    console.log("Copied:", msg);
-    var el = document.getElementById("selectedCountInfo");
-    if(el) {
-       var old = el.innerText;
-       el.innerText = msg;
-       setTimeout(()=>el.innerText=old, 2000);
-    }
-  };
-
-  // Override LOCALS whatsapp format
-  if(window.exportRowToWhatsAppFriendly) {
-    window.exportRowToWhatsAppFriendly = function(id) {
-       if(!window.LocalDBMS || !window.LocalDBMS.records) return;
-       const record = window.LocalDBMS.records.find(r => r.id === id); 
-       if(!record) return; 
-       const messageLines = []; 
-       const car = record.carrier || '';
-       const pol = record.pol || '';
-       messageLines.push(`LOCAL'S (${car} - ${pol})`);
-
-       (record.charges||[]).forEach(ch => { 
-         let mappedBasis = 'CONTAINER'; 
-         if(ch.basis === 'BL') mappedBasis = 'DOCS'; 
-         if(ch.basis === 'SHPMT') mappedBasis = 'SHIPMENT'; 
-         messageLines.push(`${ch.head} : ${ch.currency} ${ch.amount} / ${mappedBasis}`); 
-       }); 
-
-       const finalStringTextFormat = messageLines.join('\n'); 
-       navigator.clipboard.writeText(finalStringTextFormat).then(() => {
-          console.log("LOCALS WHATSAPP COPIED");
-          // small UI feedback instead of alert
-          var btn = document.querySelector(`button[onclick*="${id}"] i.bi-whatsapp`);
-          if(btn) {
-              btn.className = 'bi bi-check';
-              setTimeout(()=>btn.className = 'bi bi-whatsapp', 2000);
-          }
-       }).catch(() => console.error('CLIPBOARD FAILED')); 
+    const map = {
+      active:'sectionRates',
+      expired:'sectionRates',
+      all:'sectionRates',
+      dimensions:'sectionDim',
+      markups:'sectionMarkup',
+      locals:'sectionLocals'
     };
-  }
-
-  // Override Active Rates Alert
-  window.alert = function(msg) {
-      if(String(msg).includes("COPIED") || String(msg).includes("TEMPLATE")) {
-         console.log("Suppressed Alert:", msg);
-         return;
-      }
-      // fallback for actual errors
-      console.warn("ALERT:", msg);
-  };
-})();
-</script>
-
-
-<style id="remove-commodity-table-v7">
-#sectionRates table colgroup col.col-commodity,
-#sectionRates table th.commodity-col,
-#sectionRates table td.commodity-col,
-#sectionRates table [data-col="commodityType"],
-#sectionRates table .commodity-sort,
-#sectionRates table .commodity-filter,
-#sectionRates .commodity-col,
-#uploadOverlay table .commodity-col,
-#uploadOverlay table [data-col="commodityType"]{
-  display:none !important;
-}
-</style>
-<script id="remove-commodity-table-v7-script">
-(function(){
-  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function cleanCommodityHeaders(){
-    const tables = document.querySelectorAll('#sectionRates table, #uploadOverlay table');
-    tables.forEach(table => {
-      const headRows = table.querySelectorAll('thead tr');
-      headRows.forEach(row => {
-        Array.from(row.children).forEach(cell => {
-          const txt = (cell.textContent || '').replace(/\s+/g,' ').trim().toUpperCase();
-          if(txt === 'COMMODITY' || txt === 'COMMODITY TYPE') cell.remove();
-          const input = cell.querySelector('input[data-col="commodityType"]');
-          if(input) cell.remove();
-          const btn = cell.querySelector('.sort-btn[data-sort="commodityType"]');
-          if(btn) cell.remove();
-        });
-      });
+    ['sectionRates','sectionDim','sectionMarkup','sectionLocals'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.remove('active');
     });
-  }
-  function patchRenderers(){
-    try{
-      if(typeof renderDesktopRows === 'function'){
-        renderDesktopRows = function(rows){
-          return rows.map((r,i) => `
-            <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? 'active-row' : ''} ${editId === r.id ? 'editing-row' : ''}">
-              <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}></td>
-              ${desktopCell(r.id, r.seq || i+1, 'seq', 'SEQ', r.seq || i+1, 14)}
-              ${desktopCell(r.id, r.seq || i+1, 'carrier', 'CARRIER', r.carrier, 16)}
-              ${desktopCell(r.id, r.seq || i+1, 'por', 'POR', r.por, 12)}
-              ${desktopCell(r.id, r.seq || i+1, 'pol', 'POL', r.pol, 12)}
-              ${desktopCell(r.id, r.seq || i+1, 'pod', 'POD', r.pod, 12)}
-              ${desktopCell(r.id, r.seq || i+1, 'fpod', 'FPOD', r.fpod, 12)}
-              ${desktopCell(r.id, r.seq || i+1, 'dv20', '20DV', r.dv20, 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'container20Type', '20 TYPE', r.container20Type, 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'hc40', '40HC', r.hc40, 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'container40Type', '40 TYPE', r.container40Type, 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'ft', 'FT', r.ft, 8)}
-              ${desktopCell(r.id, r.seq || i+1, 'validity', 'DATE', fmtDate(r.validity), 18)}
-              ${desktopCell(r.id, r.seq || i+1, 'type', 'TYPE', displayType(r.type), 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'tt', 'TT', r.tt, 10)}
-              ${desktopCell(r.id, r.seq || i+1, 'via', 'ROUTING', r.via, 16)}
-              ${desktopCell(r.id, r.seq || i+1, 'remarks', 'REMARKS', r.remarks, 18)}
-              <td class="actions"><button class="icon-btn" data-action="copy" data-id="${r.id}" title="Copy Rate"><i class="bi bi-clipboard"></i></button><button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button><button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button><button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button></td>
-            </tr>`).join('');
-        };
-      }
-      if(typeof renderMobileRows === 'function'){
-        renderMobileRows = function(rows){
-          return rows.map(r => `
-            <div class="mobile-card ${activeCellState.id === r.id ? 'active-row' : ''}" data-rowid="${escapeHtml(r.id)}">
-              <div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? 'checked' : ''}> SELECT</label></div>
-              <div class="mobile-grid">
-                ${mobileItem(r.id, r.seq, 'por', 'POR', r.por)}
-                ${mobileItem(r.id, r.seq, 'pol', 'POL', r.pol)}
-                ${mobileItem(r.id, r.seq, 'pod', 'POD', r.pod)}
-                ${mobileItem(r.id, r.seq, 'fpod', 'FPOD', r.fpod)}
-                ${mobileItem(r.id, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}
-                ${mobileItem(r.id, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}
-                ${mobileItem(r.id, r.seq, 'ft', 'FT', r.ft)}
-                ${mobileItem(r.id, r.seq, 'validity', 'DATE', fmtDate(r.validity))}
-                ${mobileItem(r.id, r.seq, 'type', 'TYPE', displayType(r.type))}
-                ${mobileItem(r.id, r.seq, 'tt', 'TT', r.tt)}
-                ${mobileItem(r.id, r.seq, 'via', 'ROUTING', r.via)}
-                ${mobileItem(r.id, r.seq, 'remarks', 'REMARKS', r.remarks)}
-              </div>
-              <div class="mobile-actions"><button data-action="copy" data-id="${r.id}"><i class="bi bi-clipboard"></i> COPY</button><button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button><button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button><button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button></div>
-            </div>`).join('');
-        };
-      }
-      if(typeof renderUpload === 'function'){
-        renderUpload = function(){
-          $('uploadBody').innerHTML = uploadRows.map((r,i)=>`<tr><td><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}></td><td>${escapeHtml(r.seq || i+1)}</td><td>${escapeHtml(r.carrier || '')}</td><td>${escapeHtml(r.por || '')}</td><td>${escapeHtml(r.pol || '')}</td><td>${escapeHtml(r.pod || '')}</td><td>${escapeHtml(r.fpod || '')}</td><td>${escapeHtml(r.dv20 || '')}</td><td>${escapeHtml(r.container20Type || '')}</td><td>${escapeHtml(r.hc40 || '')}</td><td>${escapeHtml(r.container40Type || '')}</td><td>${escapeHtml(r.ft || '')}</td><td>${escapeHtml(fmtDate(r.validity))}</td><td>${escapeHtml(displayType(r.type))}</td><td>${escapeHtml(r.tt || '')}</td><td>${escapeHtml(r.via || '')}</td><td>${escapeHtml(r.remarks || '')}</td></tr>`).join('');
-          $('uploadMobile').innerHTML = uploadRows.map((r,i)=>`<div class="mobile-card"><div class="mobile-card-head"><div><div class="mobile-card-title">${escapeHtml(r.carrier || 'NO CARRIER')}</div><div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || '')}</div></div><label><input type="checkbox" class="row-check" data-ui="${i}" ${selectedUploadRows.has(i) ? 'checked' : ''}> SELECT</label></div><div class="mobile-grid">${mobileItem('upload-'+i, r.seq, 'por', 'POR', r.por)}${mobileItem('upload-'+i, r.seq, 'pol', 'POL', r.pol)}${mobileItem('upload-'+i, r.seq, 'pod', 'POD', r.pod)}${mobileItem('upload-'+i, r.seq, 'fpod', 'FPOD', r.fpod)}${mobileItem('upload-'+i, r.seq, 'dv20', '20DV', `${r.dv20 || ''} ${r.container20Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'hc40', '40HC', `${r.hc40 || ''} ${r.container40Type || ''}`.trim())}${mobileItem('upload-'+i, r.seq, 'ft', 'FT', r.ft)}${mobileItem('upload-'+i, r.seq, 'validity', 'DATE', fmtDate(r.validity))}${mobileItem('upload-'+i, r.seq, 'type', 'TYPE', displayType(r.type))}${mobileItem('upload-'+i, r.seq, 'tt', 'TT', r.tt)}${mobileItem('upload-'+i, r.seq, 'via', 'ROUTING', r.via)}${mobileItem('upload-'+i, r.seq, 'remarks', 'REMARKS', r.remarks)}</div></div>`).join('');
-        };
-      }
-    }catch(err){ console.error('commodity remove patch failed', err); }
-  }
-  ready(function(){
-    cleanCommodityHeaders();
-    patchRenderers();
-    try{ if(typeof render === 'function') render(); }catch(e){}
-    try{ if(typeof renderUpload === 'function') renderUpload(); }catch(e){}
-    setTimeout(cleanCommodityHeaders, 300);
-    setTimeout(cleanCommodityHeaders, 1000);
-  });
-})();
-</script>
-
-
-<script id="fix-apply-import-v8">
-(function(){
-  // Restore native alert for real errors only — keep copy suppression
-  var _nativeAlert = window._origAlert || window.alert;
-  window._origAlert = _nativeAlert;
-  window.alert = function(msg) {
-    var s = String(msg || '').toUpperCase();
-    // suppress only clipboard copy notifications
-    if(s.includes('COPIED') || s.includes('TEMPLATE') || s.includes('WHATSAPP TEXT')) {
-      console.log('[SUPPRESSED ALERT]', msg);
-      return;
+    const target = document.getElementById(map[mode] || 'sectionRates');
+    if(target) target.classList.add('active');
+    const editor = document.getElementById('editorPanel');
+    if(editor){
+      if(mode === 'dimensions' || mode === 'markups' || mode === 'locals') editor.classList.add('hidden');
+      else editor.classList.remove('hidden');
     }
-    _nativeAlert(msg);
+  }
+
+  const oldSwitchView = window.switchView;
+  window.switchView = function(mode){
+    if(typeof oldSwitchView === 'function') oldSwitchView(mode);
+    enforceSections(mode);
   };
 
-  function ready(fn){ if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-
-  ready(function(){
-    var btn = document.getElementById('applyImportBtn');
-    if(!btn) return;
-
-    // Remove ALL existing onclick listeners by cloning
-    var fresh = btn.cloneNode(true);
-    btn.parentNode.replaceChild(fresh, btn);
-
-    fresh.addEventListener('click', async function(){
-      try {
-        if(typeof uploadRows === 'undefined' || !Array.isArray(uploadRows)) {
-          window._origAlert('NO IMPORT DATA LOADED. PLEASE IMPORT A FILE FIRST.');
-          return;
-        }
-        var rows = (typeof selectedUploadRows !== 'undefined' && selectedUploadRows.size > 0)
-          ? uploadRows.filter(function(_,i){ return selectedUploadRows.has(i); })
-          : uploadRows;
-
-        if(!rows.length) {
-          window._origAlert('NO DATA TO IMPORT.');
-          return;
-        }
-
-        if(typeof showLoader === 'function') showLoader('IMPORTING','ADDING RECORDS');
-
-        var dbRef = window.db;
-        var _collection = window.collection;
-        var _addDoc = window.addDoc;
-
-        if(!dbRef || !_collection || !_addDoc) {
-          if(typeof hideLoader === 'function') hideLoader();
-          window._origAlert('FIREBASE NOT READY. PLEASE WAIT AND TRY AGAIN.');
-          return;
-        }
-
-        var generateSeqFn = typeof generateSeq === 'function' ? generateSeq : function(){ return Date.now().toString(); };
-
-        var failed = 0;
-        for(var i = 0; i < rows.length; i++){
-          var r = rows[i];
-          if(!r.carrier && !r.pod && !r.fpod && !r.pol) continue;
-          try {
-            await _addDoc(_collection(dbRef, 'rates'), {
-              seq: r.seq || generateSeqFn(),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-              carrier: r.carrier || '',
-              por: r.por || '',
-              pol: r.pol || '',
-              pod: r.pod || '',
-              fpod: r.fpod || '',
-              dv20: r.dv20 || '',
-              container20Type: r.container20Type || '',
-              hc40: r.hc40 || '',
-              container40Type: r.container40Type || '',
-              ft: r.ft || '',
-              validity: r.validity || '',
-              type: r.type || 'V',
-              tt: r.tt || '',
-              via: r.via || '',
-              remarks: r.remarks || '',
-              commodityType: r.commodityType || '',
-              localCharges: [],
-              charges20dv: [],
-              charges40hc: []
-            });
-          } catch(rowErr) {
-            console.error('Row import failed:', rowErr, r);
-            failed++;
-          }
-        }
-
-        var clearPreview = document.getElementById('clearImportPreviewAfterApply');
-        if(clearPreview && clearPreview.checked){
-          uploadRows = [];
-          if(typeof selectedUploadRows !== 'undefined') selectedUploadRows.clear();
-          if(typeof renderUpload === 'function') renderUpload();
-        }
-
-        var clearEditor = document.getElementById('clearEditorAfterImport');
-        if(clearEditor && clearEditor.checked){
-          if(typeof clearForm === 'function') clearForm(true);
-        }
-
-        if(typeof closeUpload === 'function') closeUpload();
-        if(typeof load === 'function') await load();
-
-        if(failed > 0) {
-          window._origAlert(failed + ' ROW(S) FAILED TO IMPORT. REST WERE APPLIED.');
-        }
-
-      } catch(err) {
-        console.error('APPLY IMPORT ERROR:', err);
-        if(typeof hideLoader === 'function') hideLoader();
-        window._origAlert('IMPORT APPLY FAILED: ' + (err.message || err));
-      } finally {
-        if(typeof hideLoader === 'function') hideLoader();
-      }
+  document.addEventListener('DOMContentLoaded', function(){
+    const localsBtn = document.getElementById('tabLocalsBtn');
+    if(localsBtn){
+      localsBtn.addEventListener('click', function(){ enforceSections('locals'); });
+    }
+    ['tabActiveBtn','tabExpiredBtn','tabAllBtn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if(btn) btn.addEventListener('click', function(){ enforceSections(this.dataset.view || 'active'); });
     });
+    const dimBtn = document.getElementById('tabDimBtn');
+    if(dimBtn) dimBtn.addEventListener('click', function(){ enforceSections('dimensions'); });
+    const markupBtn = document.getElementById('tabMarkupBtn');
+    if(markupBtn) markupBtn.addEventListener('click', function(){ enforceSections('markups'); });
+    enforceSections('active');
   });
 })();
 </script>
-
 </body>
 </html>
-<!-- trigger artifact -->
