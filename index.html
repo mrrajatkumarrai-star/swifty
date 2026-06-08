@@ -1381,6 +1381,174 @@ tr.editing-row td{background:rgba(148,163,184,.07) !important}
 }
 </style>
 
+
+<style id="rap-styles">
+/* ── VIEW DETAILS BUTTON ── */
+.rap-open-btn {
+  min-height:26px !important; height:26px !important;
+  padding:0 10px !important; border-radius:999px !important;
+  font-size:11px !important; font-weight:900 !important;
+  color:#4338ca !important;
+  background:linear-gradient(135deg,rgba(129,140,248,.20),rgba(196,181,253,.28)) !important;
+  border:1.5px solid rgba(99,102,241,.32) !important;
+  box-shadow:0 4px 14px rgba(99,102,241,.16), inset 0 1px 0 rgba(255,255,255,.9) !important;
+  display:inline-flex !important; align-items:center !important; gap:5px !important;
+  letter-spacing:.02em !important;
+}
+.rap-open-btn:hover { background:linear-gradient(135deg,rgba(99,102,241,.30),rgba(139,92,246,.22)) !important; transform:translateY(-1px); }
+.rap-mobile-open-btn {
+  width:100% !important; min-height:42px !important; font-size:13px !important; font-weight:900 !important;
+  color:#4338ca !important; letter-spacing:.04em !important;
+  background:linear-gradient(135deg,rgba(129,140,248,.18),rgba(196,181,253,.26)) !important;
+  border:1.5px solid rgba(99,102,241,.28) !important;
+  box-shadow:0 8px 20px rgba(99,102,241,.14), inset 0 1px 0 rgba(255,255,255,.88) !important;
+}
+
+/* ── OVERLAY ── */
+#rapOverlay {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(10,15,30,.52);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  align-items:center; justify-content:center; padding:20px;
+}
+#rapOverlay.rapShow { display:flex; animation:rapFadeBg .25s ease; }
+@keyframes rapFadeBg { from{opacity:0} to{opacity:1} }
+
+/* ── MODAL WINDOW ── */
+#rapModal {
+  width:min(860px,96vw); max-height:92vh; overflow-y:auto; overflow-x:hidden;
+  border-radius:36px;
+  background:linear-gradient(175deg,rgba(255,255,255,.98) 0%,rgba(245,248,255,.96) 60%,rgba(238,242,255,.94) 100%);
+  border:1px solid rgba(255,255,255,.90);
+  box-shadow:0 48px 120px rgba(10,15,40,.26), 0 2px 0 rgba(255,255,255,.96) inset, 0 -1px 0 rgba(148,163,184,.10) inset;
+  animation:rapModalPop .32s cubic-bezier(.22,1.2,.36,1);
+}
+@keyframes rapModalPop { from{opacity:0;transform:translateY(28px) scale(.93)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+/* ── MODAL HEADER ── */
+.rap-head {
+  padding:26px 28px 22px;
+  background:linear-gradient(145deg,rgba(129,140,248,.10),rgba(191,219,254,.20),rgba(255,255,255,.50));
+  border-bottom:1px solid rgba(148,163,184,.12);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+}
+.rap-head-icon {
+  width:72px; height:72px; flex:0 0 72px; border-radius:24px;
+  background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(139,92,246,.10));
+  border:1px solid rgba(99,102,241,.18);
+  box-shadow:0 14px 32px rgba(99,102,241,.14), inset 0 1px 0 rgba(255,255,255,.90);
+  display:flex; align-items:center; justify-content:center;
+  color:#4338ca; font-size:32px;
+}
+.rap-head-text { flex:1; min-width:0; }
+.rap-head-kicker { font-size:12px; font-weight:900; letter-spacing:.16em; color:#94a3b8; text-transform:uppercase; margin-bottom:7px; }
+.rap-head-title { font-size:32px; line-height:1.1; font-weight:900; color:#0f172a; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rap-head-sub { font-size:16px; color:#64748b; font-weight:700; margin-top:9px; line-height:1.5; }
+.rap-head-close {
+  width:50px !important; height:50px !important; min-height:50px !important; flex:0 0 50px;
+  border-radius:18px !important; padding:0 !important; font-size:20px !important;
+  color:#dc2626 !important;
+  background:rgba(254,242,242,.88) !important; border:1.5px solid rgba(220,38,38,.18) !important;
+  box-shadow:0 8px 20px rgba(220,38,38,.10), inset 0 1px 0 rgba(255,255,255,.90) !important;
+}
+.rap-head-close:hover { background:rgba(254,226,226,.96) !important; transform:translateY(-1px); }
+
+/* ── BODY ── */
+.rap-body { padding:24px 28px 28px; }
+
+/* ── ROUTE STRIP ── */
+.rap-route {
+  display:flex; align-items:center; flex-wrap:wrap; gap:10px;
+  padding:14px 18px; border-radius:20px; margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(99,102,241,.07),rgba(191,219,254,.14));
+  border:1px solid rgba(99,102,241,.12);
+  box-shadow:0 6px 18px rgba(99,102,241,.06), inset 0 1px 0 rgba(255,255,255,.80);
+}
+.rap-rnode {
+  padding:10px 16px; border-radius:999px;
+  background:rgba(255,255,255,.92); border:1px solid rgba(148,163,184,.18);
+  box-shadow:0 4px 12px rgba(15,23,42,.06);
+}
+.rap-rnode .k { display:block; font-size:11px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase; margin-bottom:3px; }
+.rap-rnode .v { display:block; font-size:18px; font-weight:900; color:#0f172a; }
+.rap-rarrow { font-size:22px; color:#a5b4fc; }
+
+/* ── CARD GRID ── */
+.rap-cg3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:16px; }
+.rap-cg2 { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:20px; }
+.rap-c {
+  padding:18px 16px 16px; border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(248,250,252,.94));
+  border:1px solid rgba(148,163,184,.14);
+  box-shadow:0 12px 28px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.96);
+}
+.rap-c .k { font-size:11px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase; margin-bottom:10px; }
+.rap-c .v { font-size:26px; line-height:1.1; font-weight:900; color:#111827; }
+.rap-c .s { font-size:14px; color:#64748b; font-weight:700; margin-top:6px; }
+
+/* ── REMARKS ── */
+.rap-remarks {
+  padding:18px 20px; border-radius:22px; margin-bottom:20px;
+  background:linear-gradient(180deg,rgba(255,251,235,.98),rgba(254,243,199,.80));
+  border:1px solid rgba(245,158,11,.18);
+  box-shadow:0 10px 24px rgba(245,158,11,.08);
+}
+.rap-remarks .k { font-size:11px; font-weight:900; letter-spacing:.12em; color:#b45309; text-transform:uppercase; margin-bottom:10px; }
+.rap-remarks .v { font-size:16px; line-height:1.8; color:#78350f; font-weight:700; }
+
+/* ── ACTION BUTTONS ── */
+.rap-actions { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.rap-ab {
+  min-height:116px !important; border-radius:26px !important;
+  padding:16px 10px !important; display:flex !important;
+  flex-direction:column !important; gap:10px !important;
+  align-items:center !important; justify-content:center !important;
+  text-align:center !important;
+  font-size:15px !important; font-weight:900 !important; letter-spacing:.03em !important;
+  background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(241,245,249,.94)) !important;
+  border:1px solid rgba(148,163,184,.16) !important;
+  box-shadow:0 16px 32px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.96) !important;
+  transition:.2s ease !important;
+}
+.rap-ab:hover { transform:translateY(-3px) !important; box-shadow:0 24px 44px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.96) !important; }
+.rap-ab i { font-size:30px !important; }
+.rap-ab-copy i { color:#0891b2 !important; }
+.rap-ab-dup i { color:#7c3aed !important; }
+.rap-ab-edit i { color:#059669 !important; }
+.rap-ab-del {
+  background:linear-gradient(180deg,rgba(254,242,242,.99),rgba(254,226,226,.90)) !important;
+  border-color:rgba(220,38,38,.16) !important; color:#b91c1c !important;
+}
+.rap-ab-del i { color:#dc2626 !important; }
+
+/* ── SECTION LABEL ── */
+.rap-section-title {
+  font-size:12px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase;
+  margin:0 0 10px 2px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .rap-cg3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rap-cg2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rap-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rap-head-title{font-size:26px}
+}
+@media(max-width:560px){
+  #rapModal{border-radius:28px}
+  .rap-head,.rap-body{padding:18px}
+  .rap-head-icon{width:58px;height:58px;flex-basis:58px;font-size:26px;border-radius:20px}
+  .rap-head-title{font-size:22px}
+  .rap-head-sub{font-size:14px}
+  .rap-cg3,.rap-cg2{grid-template-columns:1fr}
+  .rap-c .v{font-size:22px}
+  .rap-actions{grid-template-columns:1fr 1fr}
+  .rap-ab{min-height:96px !important;font-size:13px !important}
+  .rap-ab i{font-size:26px !important}
+}
+</style>
+
 </head>
 <body>
 <div class="loader" id="loader">
@@ -2705,6 +2873,9 @@ const PIN = "2710";
 
 let sessionUntil = 0;
 let data = [];
+window.getRateById = function(id){ return data.find(function(x){ return String(x.id)===String(id); }); };
+window._fmtDate = function(v){ return (typeof fmtDate === 'function') ? fmtDate(v) : (v||''); };
+window._displayType = function(v){ return v==='V'?'HANDOVER':v==='S'?'SAILING':(v||''); };
 let editId = null;
 let viewMode = "active";
 let uploadRows = [];
@@ -3076,6 +3247,7 @@ function renderDesktopRows(rows){
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
         <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
         <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
+        <button class="rap-open-btn" onclick="openRateActionPopup('${r.id}');event.stopPropagation();" title="Open details &amp; actions"><i class="bi bi-stars"></i></button>
       </td>
     </tr>
   `).join("");
@@ -3109,6 +3281,7 @@ function renderMobileRows(rows){
         <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
         <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
         <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
+        <button class="rap-mobile-open-btn" onclick="openRateActionPopup('${r.id}');event.stopPropagation();"><i class="bi bi-stars"></i> VIEW DETAILS</button>
       </div>
     </div>
   `).join("");
@@ -4943,5 +5116,161 @@ window.listenToFirebaseRates();
   });
 })();
 </script>
+
+<!-- ════════════════════════════════════════════════
+     RATE ACTION POPUP  –  v3 (scope-fixed)
+════════════════════════════════════════════════ -->
+<div id="rapOverlay" onclick="if(event.target===this)closeRateActionPopup()">
+  <div id="rapModal">
+
+    <!-- HEADER -->
+    <div class="rap-head">
+      <div class="rap-head-icon"><i class="bi bi-stars"></i></div>
+      <div class="rap-head-text">
+        <div class="rap-head-kicker">Rate Details &amp; Actions</div>
+        <div class="rap-head-title" id="rapHdTitle">—</div>
+        <div class="rap-head-sub" id="rapHdSub">—</div>
+      </div>
+      <button class="rap-head-close" onclick="closeRateActionPopup()" title="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <!-- BODY -->
+    <div class="rap-body">
+
+      <!-- ROUTE -->
+      <p class="rap-section-title">Route</p>
+      <div class="rap-route" id="rapRoute"></div>
+
+      <!-- RATES -->
+      <p class="rap-section-title">Rates &amp; Charges</p>
+      <div class="rap-cg3" id="rapRatesGrid"></div>
+
+      <!-- DETAILS -->
+      <p class="rap-section-title">Details</p>
+      <div class="rap-cg2" id="rapDetailsGrid"></div>
+
+      <!-- REMARKS -->
+      <div class="rap-remarks" id="rapRemarksBox" style="display:none">
+        <div class="k">Remarks</div>
+        <div class="v" id="rapRemarksVal"></div>
+      </div>
+
+      <!-- ACTIONS -->
+      <p class="rap-section-title">Quick Actions</p>
+      <div class="rap-actions">
+        <button class="rap-ab rap-ab-copy" onclick="rapRun('copy')">
+          <i class="bi bi-clipboard2-check-fill"></i><span>Copy Rate</span>
+        </button>
+        <button class="rap-ab rap-ab-dup" onclick="rapRun('duplicate')">
+          <i class="bi bi-copy"></i><span>Duplicate</span>
+        </button>
+        <button class="rap-ab rap-ab-edit" onclick="rapRun('edit')">
+          <i class="bi bi-pencil-square"></i><span>Edit Rate</span>
+        </button>
+        <button class="rap-ab rap-ab-del" onclick="rapRun('delete')">
+          <i class="bi bi-trash3-fill"></i><span>Delete</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── Rate Action Popup (scope-fixed) ─── */
+var _rapId = null;
+
+function openRateActionPopup(id) {
+  try {
+    var r = window.getRateById ? window.getRateById(id) : null;
+    if (!r) { alert('Rate record not found (id: ' + id + ')'); return; }
+    _rapId = id;
+
+    /* header */
+    document.getElementById('rapHdTitle').textContent = r.carrier || '—';
+    document.getElementById('rapHdSub').textContent =
+      'SEQ: ' + (r.seq || '—') +
+      '  ·  ' + window._displayType(r.type) +
+      '  ·  ' + (window._fmtDate(r.validity) || 'No date');
+
+    /* route strip */
+    var nodes = [
+      {k:'POR', v:r.por}, {k:'POL', v:r.pol},
+      {k:'POD', v:r.pod}, {k:'FPOD', v:r.fpod}
+    ].filter(function(n){ return n.v; });
+    document.getElementById('rapRoute').innerHTML = nodes.map(function(n, i){
+      var arrow = (i < nodes.length-1)
+        ? '<div class="rap-rarrow"><i class="bi bi-arrow-right-circle-fill"></i></div>' : '';
+      return '<div class="rap-rnode"><span class="k">' + n.k + '</span><span class="v">' + n.v + '</span></div>' + arrow;
+    }).join('');
+
+    /* rates grid */
+    function card(k, v, s){
+      return '<div class="rap-c"><div class="k">' + k + '</div>' +
+        '<div class="v">' + (v||'—') + '</div>' +
+        (s ? '<div class="s">' + s + '</div>' : '') + '</div>';
+    }
+    var mu20 = 0, mu40 = 0;
+    try { mu20 = Number(typeof userMarkup20 !== 'undefined' ? userMarkup20 : 0) || 0; } catch(e){}
+    try { mu40 = Number(typeof userMarkup40 !== 'undefined' ? userMarkup40 : 0) || 0; } catch(e){}
+    var dv20raw = Number(r.dv20 || 0);
+    var hc40raw = Number(r.hc40 || 0);
+    var dv20 = dv20raw ? Math.round(dv20raw * (1 + mu20/100)) : 0;
+    var hc40 = hc40raw ? Math.round(hc40raw * (1 + mu40/100)) : 0;
+    document.getElementById('rapRatesGrid').innerHTML =
+      card('20DV', dv20 ? 'USD ' + dv20 : (r.dv20 || '—'), r.container20Type || 'STANDARD') +
+      card('40HC', hc40 ? 'USD ' + hc40 : (r.hc40 || '—'), r.container40Type || 'STANDARD') +
+      card('F / T', r.ft || '—', 'Freight ton') +
+      card('Transit', (r.tt || '—') + (r.tt ? ' DAYS' : ''), 'Transit time') +
+      card('Routing', r.via || 'DIRECT', 'Via') +
+      card('Rate Type', window._displayType(r.type), 'Mode');
+
+    /* details grid */
+    document.getElementById('rapDetailsGrid').innerHTML =
+      card('Port of Receipt', r.por || '—', '') +
+      card('Port of Loading', r.pol || '—', '') +
+      card('Port of Discharge', r.pod || '—', '') +
+      card('Final Dest.', r.fpod || '—', '') ;
+
+    /* remarks */
+    var rb = document.getElementById('rapRemarksBox');
+    var rv = document.getElementById('rapRemarksVal');
+    if (r.remarks && String(r.remarks).trim()) {
+      rv.textContent = r.remarks;
+      rb.style.display = 'block';
+    } else {
+      rb.style.display = 'none';
+    }
+
+    /* show */
+    document.getElementById('rapOverlay').classList.add('rapShow');
+    document.body.style.overflow = 'hidden';
+  } catch(err) {
+    console.error('openRateActionPopup error:', err);
+    alert('Popup error: ' + err.message);
+  }
+}
+
+function closeRateActionPopup() {
+  document.getElementById('rapOverlay').classList.remove('rapShow');
+  document.body.style.overflow = '';
+}
+
+function rapRun(action) {
+  var id = _rapId;
+  closeRateActionPopup();
+  setTimeout(function(){
+    if (action === 'copy'      && window.copyRate)      window.copyRate(id);
+    if (action === 'duplicate' && window.duplicateRate) window.duplicateRate(id);
+    if (action === 'edit'      && window.editRate)      window.editRate(id);
+    if (action === 'delete'    && window.delRate)       window.delRate(id);
+  }, 160);
+}
+
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeRateActionPopup();
+});
+</script>
+
 </body>
 </html>
