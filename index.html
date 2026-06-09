@@ -1382,170 +1382,153 @@ tr.editing-row td{background:rgba(148,163,184,.07) !important}
 </style>
 
 
-<style id="rap-styles">
-/* ── VIEW DETAILS BUTTON ── */
-.rap-open-btn {
-  min-height:26px !important; height:26px !important;
-  padding:0 10px !important; border-radius:999px !important;
-  font-size:11px !important; font-weight:900 !important;
-  color:#4338ca !important;
-  background:linear-gradient(135deg,rgba(129,140,248,.20),rgba(196,181,253,.28)) !important;
-  border:1.5px solid rgba(99,102,241,.32) !important;
-  box-shadow:0 4px 14px rgba(99,102,241,.16), inset 0 1px 0 rgba(255,255,255,.9) !important;
-  display:inline-flex !important; align-items:center !important; gap:5px !important;
-  letter-spacing:.02em !important;
+<style id="seq-popup-theme">
+.seq-popup-cell{padding:4px 6px !important;text-align:center !important;}
+.seq-popup-link{
+  min-height:28px !important;
+  height:28px !important;
+  padding:0 10px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(96,165,250,.22) !important;
+  background:linear-gradient(180deg, rgba(239,246,255,.96), rgba(219,234,254,.82)) !important;
+  color:#1d4ed8 !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  letter-spacing:.03em !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  box-shadow:0 6px 16px rgba(37,99,235,.10), inset 0 1px 0 rgba(255,255,255,.92) !important;
 }
-.rap-open-btn:hover { background:linear-gradient(135deg,rgba(99,102,241,.30),rgba(139,92,246,.22)) !important; transform:translateY(-1px); }
-.rap-mobile-open-btn {
-  width:100% !important; min-height:42px !important; font-size:13px !important; font-weight:900 !important;
-  color:#4338ca !important; letter-spacing:.04em !important;
-  background:linear-gradient(135deg,rgba(129,140,248,.18),rgba(196,181,253,.26)) !important;
-  border:1.5px solid rgba(99,102,241,.28) !important;
-  box-shadow:0 8px 20px rgba(99,102,241,.14), inset 0 1px 0 rgba(255,255,255,.88) !important;
+.seq-popup-link:hover{transform:translateY(-1px);background:linear-gradient(180deg, rgba(219,234,254,.98), rgba(191,219,254,.88)) !important;}
+.seq-popup-link i{font-size:10px !important;opacity:.8;}
+.mobile-seq-link{
+  min-height:auto !important;
+  height:auto !important;
+  padding:0 !important;
+  border:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#2563eb !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  text-decoration:underline !important;
+  text-underline-offset:2px;
 }
+.mobile-seq-link:hover{transform:none !important;color:#1d4ed8 !important;}
 
-/* ── OVERLAY ── */
-#rapOverlay {
-  display:none; position:fixed; inset:0; z-index:9000;
-  background:rgba(10,15,30,.52);
-  backdrop-filter:blur(18px) saturate(160%);
-  -webkit-backdrop-filter:blur(18px) saturate(160%);
-  align-items:center; justify-content:center; padding:20px;
+#rateDetailOverlay{
+  position:fixed;
+  inset:0;
+  z-index:8500;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(15,23,42,.30);
+  backdrop-filter:blur(12px) saturate(140%);
+  -webkit-backdrop-filter:blur(12px) saturate(140%);
 }
-#rapOverlay.rapShow { display:flex; animation:rapFadeBg .25s ease; }
-@keyframes rapFadeBg { from{opacity:0} to{opacity:1} }
-
-/* ── MODAL WINDOW ── */
-#rapModal {
-  width:min(860px,96vw); max-height:92vh; overflow-y:auto; overflow-x:hidden;
-  border-radius:36px;
-  background:linear-gradient(175deg,rgba(255,255,255,.98) 0%,rgba(245,248,255,.96) 60%,rgba(238,242,255,.94) 100%);
-  border:1px solid rgba(255,255,255,.90);
-  box-shadow:0 48px 120px rgba(10,15,40,.26), 0 2px 0 rgba(255,255,255,.96) inset, 0 -1px 0 rgba(148,163,184,.10) inset;
-  animation:rapModalPop .32s cubic-bezier(.22,1.2,.36,1);
+#rateDetailOverlay.show{display:flex;animation:rdFade .22s ease;}
+@keyframes rdFade{from{opacity:0}to{opacity:1}}
+@keyframes rdPop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+#rateDetailModal{
+  width:min(760px,96vw);
+  max-height:90vh;
+  overflow:auto;
+  border-radius:30px;
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(245,249,255,.93));
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:0 32px 84px rgba(15,23,42,.18), inset 0 1px 0 rgba(255,255,255,.94);
+  animation:rdPop .28s cubic-bezier(.22,1,.36,1);
 }
-@keyframes rapModalPop { from{opacity:0;transform:translateY(28px) scale(.93)} to{opacity:1;transform:translateY(0) scale(1)} }
-
-/* ── MODAL HEADER ── */
-.rap-head {
-  padding:26px 28px 22px;
-  background:linear-gradient(145deg,rgba(129,140,248,.10),rgba(191,219,254,.20),rgba(255,255,255,.50));
-  border-bottom:1px solid rgba(148,163,184,.12);
-  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+.rd-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px 18px;
+  background:linear-gradient(135deg, rgba(219,234,254,.82), rgba(255,255,255,.50), rgba(224,242,254,.72));
+  border-bottom:1px solid rgba(148,163,184,.14);
 }
-.rap-head-icon {
-  width:72px; height:72px; flex:0 0 72px; border-radius:24px;
-  background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(139,92,246,.10));
-  border:1px solid rgba(99,102,241,.18);
-  box-shadow:0 14px 32px rgba(99,102,241,.14), inset 0 1px 0 rgba(255,255,255,.90);
-  display:flex; align-items:center; justify-content:center;
-  color:#4338ca; font-size:32px;
+.rd-badge{
+  width:52px;height:52px;flex:0 0 52px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg, rgba(59,130,246,.14), rgba(34,211,238,.14));
+  color:#2563eb;font-size:22px;
+  border:1px solid rgba(59,130,246,.16);
+  box-shadow:0 10px 22px rgba(37,99,235,.10), inset 0 1px 0 rgba(255,255,255,.9);
 }
-.rap-head-text { flex:1; min-width:0; }
-.rap-head-kicker { font-size:12px; font-weight:900; letter-spacing:.16em; color:#94a3b8; text-transform:uppercase; margin-bottom:7px; }
-.rap-head-title { font-size:32px; line-height:1.1; font-weight:900; color:#0f172a; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rap-head-sub { font-size:16px; color:#64748b; font-weight:700; margin-top:9px; line-height:1.5; }
-.rap-head-close {
-  width:50px !important; height:50px !important; min-height:50px !important; flex:0 0 50px;
-  border-radius:18px !important; padding:0 !important; font-size:20px !important;
-  color:#dc2626 !important;
-  background:rgba(254,242,242,.88) !important; border:1.5px solid rgba(220,38,38,.18) !important;
-  box-shadow:0 8px 20px rgba(220,38,38,.10), inset 0 1px 0 rgba(255,255,255,.90) !important;
+.rd-head-main{display:flex;gap:14px;align-items:flex-start;min-width:0;}
+.rd-kicker{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#64748b;margin-bottom:5px;}
+.rd-title{font-size:20px;line-height:1.2;font-weight:800;color:#0f172a;word-break:break-word;}
+.rd-sub{font-size:12px;line-height:1.5;color:#64748b;font-weight:700;margin-top:6px;}
+.rd-close{
+  width:38px !important;height:38px !important;min-height:38px !important;padding:0 !important;
+  border-radius:14px !important;background:rgba(255,255,255,.82) !important;
+  border:1px solid rgba(148,163,184,.20) !important;color:#475569 !important;
+  box-shadow:0 6px 14px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.92) !important;
 }
-.rap-head-close:hover { background:rgba(254,226,226,.96) !important; transform:translateY(-1px); }
-
-/* ── BODY ── */
-.rap-body { padding:24px 28px 28px; }
-
-/* ── ROUTE STRIP ── */
-.rap-route {
-  display:flex; align-items:center; flex-wrap:wrap; gap:10px;
-  padding:14px 18px; border-radius:20px; margin-bottom:20px;
-  background:linear-gradient(135deg,rgba(99,102,241,.07),rgba(191,219,254,.14));
-  border:1px solid rgba(99,102,241,.12);
-  box-shadow:0 6px 18px rgba(99,102,241,.06), inset 0 1px 0 rgba(255,255,255,.80);
+.rd-body{padding:20px 24px 24px;}
+.rd-route{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;
+  padding:12px 14px;border-radius:18px;
+  background:linear-gradient(180deg, rgba(239,246,255,.88), rgba(248,250,252,.76));
+  border:1px solid rgba(147,197,253,.18);
 }
-.rap-rnode {
-  padding:10px 16px; border-radius:999px;
-  background:rgba(255,255,255,.92); border:1px solid rgba(148,163,184,.18);
-  box-shadow:0 4px 12px rgba(15,23,42,.06);
+.rd-route-node{
+  padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.86);
+  border:1px solid rgba(148,163,184,.14);box-shadow:0 4px 12px rgba(15,23,42,.04);
 }
-.rap-rnode .k { display:block; font-size:11px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase; margin-bottom:3px; }
-.rap-rnode .v { display:block; font-size:18px; font-weight:900; color:#0f172a; }
-.rap-rarrow { font-size:22px; color:#a5b4fc; }
-
-/* ── CARD GRID ── */
-.rap-cg3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-bottom:16px; }
-.rap-cg2 { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:20px; }
-.rap-c {
-  padding:18px 16px 16px; border-radius:24px;
-  background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(248,250,252,.94));
-  border:1px solid rgba(148,163,184,.14);
-  box-shadow:0 12px 28px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.96);
+.rd-route-node .k{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:3px;}
+.rd-route-node .v{font-size:13px;font-weight:800;color:#0f172a;}
+.rd-route-arrow{color:#93c5fd;font-size:14px;}
+.rd-section-title{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#64748b;margin:0 0 9px 2px;}
+.rd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px;}
+.rd-grid.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+.rd-card{
+  padding:13px 14px;border-radius:18px;
+  background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.92));
+  border:1px solid rgba(148,163,184,.13);
+  box-shadow:0 8px 18px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.94);
 }
-.rap-c .k { font-size:11px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase; margin-bottom:10px; }
-.rap-c .v { font-size:26px; line-height:1.1; font-weight:900; color:#111827; }
-.rap-c .s { font-size:14px; color:#64748b; font-weight:700; margin-top:6px; }
-
-/* ── REMARKS ── */
-.rap-remarks {
-  padding:18px 20px; border-radius:22px; margin-bottom:20px;
-  background:linear-gradient(180deg,rgba(255,251,235,.98),rgba(254,243,199,.80));
+.rd-card .k{font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;}
+.rd-card .v{font-size:17px;line-height:1.2;font-weight:800;color:#111827;}
+.rd-card .s{font-size:11px;line-height:1.45;color:#64748b;font-weight:700;margin-top:4px;}
+.rd-remarks{
+  margin-bottom:16px;padding:14px 15px;border-radius:18px;
+  background:linear-gradient(180deg, rgba(255,251,235,.95), rgba(254,243,199,.72));
   border:1px solid rgba(245,158,11,.18);
-  box-shadow:0 10px 24px rgba(245,158,11,.08);
 }
-.rap-remarks .k { font-size:11px; font-weight:900; letter-spacing:.12em; color:#b45309; text-transform:uppercase; margin-bottom:10px; }
-.rap-remarks .v { font-size:16px; line-height:1.8; color:#78350f; font-weight:700; }
-
-/* ── ACTION BUTTONS ── */
-.rap-actions { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
-.rap-ab {
-  min-height:116px !important; border-radius:26px !important;
-  padding:16px 10px !important; display:flex !important;
-  flex-direction:column !important; gap:10px !important;
-  align-items:center !important; justify-content:center !important;
-  text-align:center !important;
-  font-size:15px !important; font-weight:900 !important; letter-spacing:.03em !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.99),rgba(241,245,249,.94)) !important;
+.rd-remarks .k{font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#b45309;margin-bottom:6px;}
+.rd-remarks .v{font-size:12px;line-height:1.65;color:#78350f;font-weight:700;white-space:pre-wrap;word-break:break-word;}
+.rd-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.rd-btn{
+  min-height:74px !important;padding:10px 8px !important;border-radius:18px !important;
+  display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:center !important;gap:6px !important;
+  font-size:12px !important;font-weight:800 !important;letter-spacing:.02em !important;text-align:center !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(241,245,249,.92)) !important;
   border:1px solid rgba(148,163,184,.16) !important;
-  box-shadow:0 16px 32px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.96) !important;
-  transition:.2s ease !important;
+  box-shadow:0 10px 22px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.94) !important;
 }
-.rap-ab:hover { transform:translateY(-3px) !important; box-shadow:0 24px 44px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.96) !important; }
-.rap-ab i { font-size:30px !important; }
-.rap-ab-copy i { color:#0891b2 !important; }
-.rap-ab-dup i { color:#7c3aed !important; }
-.rap-ab-edit i { color:#059669 !important; }
-.rap-ab-del {
-  background:linear-gradient(180deg,rgba(254,242,242,.99),rgba(254,226,226,.90)) !important;
-  border-color:rgba(220,38,38,.16) !important; color:#b91c1c !important;
+.rd-btn i{font-size:18px !important;}
+.rd-btn.copy i{color:#0284c7 !important;}
+.rd-btn.duplicate i{color:#7c3aed !important;}
+.rd-btn.edit i{color:#059669 !important;}
+.rd-btn.delete{background:linear-gradient(180deg, rgba(254,242,242,.98), rgba(254,226,226,.88)) !important;border-color:rgba(220,38,38,.16) !important;color:#b91c1c !important;}
+.rd-btn.delete i{color:#dc2626 !important;}
+@media (max-width:760px){
+  .rd-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .rd-actions{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
-.rap-ab-del i { color:#dc2626 !important; }
-
-/* ── SECTION LABEL ── */
-.rap-section-title {
-  font-size:12px; font-weight:900; letter-spacing:.12em; color:#94a3b8; text-transform:uppercase;
-  margin:0 0 10px 2px;
-}
-
-/* ── RESPONSIVE ── */
-@media(max-width:860px){
-  .rap-cg3{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .rap-cg2{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .rap-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .rap-head-title{font-size:26px}
-}
-@media(max-width:560px){
-  #rapModal{border-radius:28px}
-  .rap-head,.rap-body{padding:18px}
-  .rap-head-icon{width:58px;height:58px;flex-basis:58px;font-size:26px;border-radius:20px}
-  .rap-head-title{font-size:22px}
-  .rap-head-sub{font-size:14px}
-  .rap-cg3,.rap-cg2{grid-template-columns:1fr}
-  .rap-c .v{font-size:22px}
-  .rap-actions{grid-template-columns:1fr 1fr}
-  .rap-ab{min-height:96px !important;font-size:13px !important}
-  .rap-ab i{font-size:26px !important}
+@media (max-width:560px){
+  #rateDetailModal{width:min(96vw,96vw);border-radius:24px;}
+  .rd-head,.rd-body{padding:16px;}
+  .rd-title{font-size:18px;}
+  .rd-grid,.rd-grid.two,.rd-actions{grid-template-columns:1fr;}
+  .rd-route-node .v{font-size:12px;}
+  .rd-card .v{font-size:16px;}
 }
 </style>
 
@@ -2873,9 +2856,7 @@ const PIN = "2710";
 
 let sessionUntil = 0;
 let data = [];
-window.getRateById = function(id){ return data.find(function(x){ return String(x.id)===String(id); }); };
-window._fmtDate = function(v){ return (typeof fmtDate === 'function') ? fmtDate(v) : (v||''); };
-window._displayType = function(v){ return v==='V'?'HANDOVER':v==='S'?'SAILING':(v||''); };
+window.getRateById = function(id){ return data.find(r => String(r.id) === String(id)); };
 let editId = null;
 let viewMode = "active";
 let uploadRows = [];
@@ -3190,6 +3171,18 @@ function popupField(label, value, shortLen=14){
   const clip = full ? truncate(full, shortLen) : "-";
   return `<div class="pop-field" data-label="${escapeHtml(label)}" data-value="${escapeHtml(full)}"><span class="cell-clip">${escapeHtml(clip)}</span></div>`;
 }
+function seqPopupCell(id, seq){
+  const seqText = escapeHtml(seq || "-");
+  return `
+    <td class="seq-popup-cell" data-rowid="${escapeHtml(id)}">
+      <button class="seq-popup-link" type="button" onclick="openRateActionPopup('${safeAttr(id)}')" title="Open rate details">
+        <span class="seq-popup-text">${seqText}</span>
+        <i class="bi bi-box-arrow-up-right"></i>
+      </button>
+    </td>
+  `;
+}
+
 function desktopCell(id, seq, fieldKey, label, value, shortLen=14){
   return `
     <td
@@ -3226,7 +3219,7 @@ function renderDesktopRows(rows){
   return rows.map((r,i) => `
     <tr data-rowid="${escapeHtml(r.id)}" class="${activeCellState.id === r.id ? "active-row" : ""} ${editId === r.id ? "editing-row" : ""}">
       <td><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}></td>
-      ${desktopCell(r.id, r.seq || i+1, "seq", "SEQ", r.seq || i+1, 14)}
+      ${seqPopupCell(r.id, r.seq || i+1)}
       ${desktopCell(r.id, r.seq || i+1, "carrier", "CARRIER", r.carrier, 16)}
       ${desktopCell(r.id, r.seq || i+1, "por", "POR", r.por, 12)}
       ${desktopCell(r.id, r.seq || i+1, "pol", "POL", r.pol, 12)}
@@ -3247,7 +3240,6 @@ function renderDesktopRows(rows){
         <button class="icon-btn" data-action="duplicate" data-id="${r.id}" title="Duplicate"><i class="bi bi-copy"></i></button>
         <button class="icon-btn" data-action="edit" data-id="${r.id}" title="Edit"><i class="bi bi-pencil-square"></i></button>
         <button class="icon-btn danger" data-action="delete" data-id="${r.id}" title="Delete"><i class="bi bi-x-square"></i></button>
-        <button class="rap-open-btn" onclick="openRateActionPopup('${r.id}');event.stopPropagation();" title="Open details &amp; actions"><i class="bi bi-stars"></i></button>
       </td>
     </tr>
   `).join("");
@@ -3258,7 +3250,7 @@ function renderMobileRows(rows){
       <div class="mobile-card-head">
         <div>
           <div class="mobile-card-title">${escapeHtml(r.carrier || "NO CARRIER")}</div>
-          <div class="mobile-card-sub">SEQ ${escapeHtml(r.seq || "")}</div>
+          <div class="mobile-card-sub">SEQ <button type="button" class="mobile-seq-link" onclick="openRateActionPopup('${safeAttr(r.id)}')">${escapeHtml(r.seq || "")}</button></div>
         </div>
         <label><input class="row-check" type="checkbox" data-id="${escapeHtml(r.id)}" ${selectedIds.has(r.id) ? "checked" : ""}> SELECT</label>
       </div>
@@ -3281,7 +3273,6 @@ function renderMobileRows(rows){
         <button data-action="duplicate" data-id="${r.id}"><i class="bi bi-copy"></i> DUP</button>
         <button data-action="edit" data-id="${r.id}"><i class="bi bi-pencil-square"></i> EDIT</button>
         <button class="danger" data-action="delete" data-id="${r.id}"><i class="bi bi-trash3"></i> DELETE</button>
-        <button class="rap-mobile-open-btn" onclick="openRateActionPopup('${r.id}');event.stopPropagation();"><i class="bi bi-stars"></i> VIEW DETAILS</button>
       </div>
     </div>
   `).join("");
@@ -5117,159 +5108,124 @@ window.listenToFirebaseRates();
 })();
 </script>
 
-<!-- ════════════════════════════════════════════════
-     RATE ACTION POPUP  –  v3 (scope-fixed)
-════════════════════════════════════════════════ -->
-<div id="rapOverlay" onclick="if(event.target===this)closeRateActionPopup()">
-  <div id="rapModal">
-
-    <!-- HEADER -->
-    <div class="rap-head">
-      <div class="rap-head-icon"><i class="bi bi-stars"></i></div>
-      <div class="rap-head-text">
-        <div class="rap-head-kicker">Rate Details &amp; Actions</div>
-        <div class="rap-head-title" id="rapHdTitle">—</div>
-        <div class="rap-head-sub" id="rapHdSub">—</div>
+<div id="rateDetailOverlay" onclick="if(event.target===this)closeRateActionPopup()">
+  <div id="rateDetailModal">
+    <div class="rd-head">
+      <div class="rd-head-main">
+        <div class="rd-badge"><i class="bi bi-grid-1x2-fill"></i></div>
+        <div>
+          <div class="rd-kicker">Rate details</div>
+          <div class="rd-title" id="rdTitle">—</div>
+          <div class="rd-sub" id="rdSub">—</div>
+        </div>
       </div>
-      <button class="rap-head-close" onclick="closeRateActionPopup()" title="Close"><i class="bi bi-x-lg"></i></button>
+      <button class="rd-close" type="button" onclick="closeRateActionPopup()" title="Close"><i class="bi bi-x-lg"></i></button>
     </div>
+    <div class="rd-body">
+      <div class="rd-section-title">Route</div>
+      <div class="rd-route" id="rdRoute"></div>
 
-    <!-- BODY -->
-    <div class="rap-body">
+      <div class="rd-section-title">Rates</div>
+      <div class="rd-grid" id="rdRates"></div>
 
-      <!-- ROUTE -->
-      <p class="rap-section-title">Route</p>
-      <div class="rap-route" id="rapRoute"></div>
+      <div class="rd-section-title">Details</div>
+      <div class="rd-grid two" id="rdDetails"></div>
 
-      <!-- RATES -->
-      <p class="rap-section-title">Rates &amp; Charges</p>
-      <div class="rap-cg3" id="rapRatesGrid"></div>
-
-      <!-- DETAILS -->
-      <p class="rap-section-title">Details</p>
-      <div class="rap-cg2" id="rapDetailsGrid"></div>
-
-      <!-- REMARKS -->
-      <div class="rap-remarks" id="rapRemarksBox" style="display:none">
+      <div class="rd-remarks" id="rdRemarks" style="display:none;">
         <div class="k">Remarks</div>
-        <div class="v" id="rapRemarksVal"></div>
+        <div class="v" id="rdRemarksVal"></div>
       </div>
 
-      <!-- ACTIONS -->
-      <p class="rap-section-title">Quick Actions</p>
-      <div class="rap-actions">
-        <button class="rap-ab rap-ab-copy" onclick="rapRun('copy')">
-          <i class="bi bi-clipboard2-check-fill"></i><span>Copy Rate</span>
-        </button>
-        <button class="rap-ab rap-ab-dup" onclick="rapRun('duplicate')">
-          <i class="bi bi-copy"></i><span>Duplicate</span>
-        </button>
-        <button class="rap-ab rap-ab-edit" onclick="rapRun('edit')">
-          <i class="bi bi-pencil-square"></i><span>Edit Rate</span>
-        </button>
-        <button class="rap-ab rap-ab-del" onclick="rapRun('delete')">
-          <i class="bi bi-trash3-fill"></i><span>Delete</span>
-        </button>
+      <div class="rd-section-title">Actions</div>
+      <div class="rd-actions">
+        <button class="rd-btn copy" type="button" onclick="runRatePopupAction('copy')"><i class="bi bi-clipboard2-check-fill"></i><span>Copy Rate</span></button>
+        <button class="rd-btn duplicate" type="button" onclick="runRatePopupAction('duplicate')"><i class="bi bi-copy"></i><span>Duplicate</span></button>
+        <button class="rd-btn edit" type="button" onclick="runRatePopupAction('edit')"><i class="bi bi-pencil-square"></i><span>Edit Rate</span></button>
+        <button class="rd-btn delete" type="button" onclick="runRatePopupAction('delete')"><i class="bi bi-trash3-fill"></i><span>Delete</span></button>
       </div>
-
     </div>
   </div>
 </div>
-
 <script>
-/* ─── Rate Action Popup (scope-fixed) ─── */
-var _rapId = null;
-
-function openRateActionPopup(id) {
-  try {
-    var r = window.getRateById ? window.getRateById(id) : null;
-    if (!r) { alert('Rate record not found (id: ' + id + ')'); return; }
-    _rapId = id;
-
-    /* header */
-    document.getElementById('rapHdTitle').textContent = r.carrier || '—';
-    document.getElementById('rapHdSub').textContent =
-      'SEQ: ' + (r.seq || '—') +
-      '  ·  ' + window._displayType(r.type) +
-      '  ·  ' + (window._fmtDate(r.validity) || 'No date');
-
-    /* route strip */
-    var nodes = [
-      {k:'POR', v:r.por}, {k:'POL', v:r.pol},
-      {k:'POD', v:r.pod}, {k:'FPOD', v:r.fpod}
-    ].filter(function(n){ return n.v; });
-    document.getElementById('rapRoute').innerHTML = nodes.map(function(n, i){
-      var arrow = (i < nodes.length-1)
-        ? '<div class="rap-rarrow"><i class="bi bi-arrow-right-circle-fill"></i></div>' : '';
-      return '<div class="rap-rnode"><span class="k">' + n.k + '</span><span class="v">' + n.v + '</span></div>' + arrow;
-    }).join('');
-
-    /* rates grid */
-    function card(k, v, s){
-      return '<div class="rap-c"><div class="k">' + k + '</div>' +
-        '<div class="v">' + (v||'—') + '</div>' +
-        (s ? '<div class="s">' + s + '</div>' : '') + '</div>';
-    }
-    var mu20 = 0, mu40 = 0;
-    try { mu20 = Number(typeof userMarkup20 !== 'undefined' ? userMarkup20 : 0) || 0; } catch(e){}
-    try { mu40 = Number(typeof userMarkup40 !== 'undefined' ? userMarkup40 : 0) || 0; } catch(e){}
-    var dv20raw = Number(r.dv20 || 0);
-    var hc40raw = Number(r.hc40 || 0);
-    var dv20 = dv20raw ? Math.round(dv20raw * (1 + mu20/100)) : 0;
-    var hc40 = hc40raw ? Math.round(hc40raw * (1 + mu40/100)) : 0;
-    document.getElementById('rapRatesGrid').innerHTML =
-      card('20DV', dv20 ? 'USD ' + dv20 : (r.dv20 || '—'), r.container20Type || 'STANDARD') +
-      card('40HC', hc40 ? 'USD ' + hc40 : (r.hc40 || '—'), r.container40Type || 'STANDARD') +
-      card('F / T', r.ft || '—', 'Freight ton') +
-      card('Transit', (r.tt || '—') + (r.tt ? ' DAYS' : ''), 'Transit time') +
-      card('Routing', r.via || 'DIRECT', 'Via') +
-      card('Rate Type', window._displayType(r.type), 'Mode');
-
-    /* details grid */
-    document.getElementById('rapDetailsGrid').innerHTML =
-      card('Port of Receipt', r.por || '—', '') +
-      card('Port of Loading', r.pol || '—', '') +
-      card('Port of Discharge', r.pod || '—', '') +
-      card('Final Dest.', r.fpod || '—', '') ;
-
-    /* remarks */
-    var rb = document.getElementById('rapRemarksBox');
-    var rv = document.getElementById('rapRemarksVal');
-    if (r.remarks && String(r.remarks).trim()) {
-      rv.textContent = r.remarks;
-      rb.style.display = 'block';
-    } else {
-      rb.style.display = 'none';
-    }
-
-    /* show */
-    document.getElementById('rapOverlay').classList.add('rapShow');
-    document.body.style.overflow = 'hidden';
-  } catch(err) {
-    console.error('openRateActionPopup error:', err);
-    alert('Popup error: ' + err.message);
+(function(){
+  let currentPopupRateId = null;
+  function safe(v, d='—'){ return (v===undefined || v===null || String(v).trim()==='') ? d : String(v); }
+  function displayTypeLite(v){ return v === 'V' ? 'HANDOVER' : v === 'S' ? 'SAILING' : safe(v); }
+  function card(label, value, sub){
+    return '<div class="rd-card"><div class="k">'+label+'</div><div class="v">'+safe(value)+'</div>' + (sub ? '<div class="s">'+sub+'</div>' : '') + '</div>';
   }
-}
+  function routeNode(label, value){
+    if(!value) return '';
+    return '<div class="rd-route-node"><div class="k">'+label+'</div><div class="v">'+safe(value)+'</div></div>';
+  }
+  window.openRateActionPopup = function(id){
+    const r = window.getRateById ? window.getRateById(id) : null;
+    if(!r) return;
+    currentPopupRateId = id;
 
-function closeRateActionPopup() {
-  document.getElementById('rapOverlay').classList.remove('rapShow');
-  document.body.style.overflow = '';
-}
+    document.getElementById('rdTitle').textContent = safe(r.carrier, 'RATE DETAILS');
+    document.getElementById('rdSub').textContent = 'SEQ ' + safe(r.seq) + ' • ' + displayTypeLite(r.type) + ' • ' + (typeof fmtDate === 'function' ? safe(fmtDate(r.validity), 'NO DATE') : safe(r.validity, 'NO DATE'));
 
-function rapRun(action) {
-  var id = _rapId;
-  closeRateActionPopup();
-  setTimeout(function(){
-    if (action === 'copy'      && window.copyRate)      window.copyRate(id);
-    if (action === 'duplicate' && window.duplicateRate) window.duplicateRate(id);
-    if (action === 'edit'      && window.editRate)      window.editRate(id);
-    if (action === 'delete'    && window.delRate)       window.delRate(id);
-  }, 160);
-}
+    const routeNodes = [
+      routeNode('POR', r.por),
+      routeNode('POL', r.pol),
+      routeNode('POD', r.pod),
+      routeNode('FPOD', r.fpod)
+    ].filter(Boolean);
+    document.getElementById('rdRoute').innerHTML = routeNodes.map((node, i) => node + (i < routeNodes.length - 1 ? '<div class="rd-route-arrow"><i class="bi bi-arrow-right"></i></div>' : '')).join('');
 
-document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') closeRateActionPopup();
-});
+    const mu20 = Number(typeof userMu20 !== 'undefined' ? userMu20 : 0) || 0;
+    const mu40 = Number(typeof userMu40 !== 'undefined' ? userMu40 : 0) || 0;
+    const dv20Raw = Number(r.dv20 || 0);
+    const hc40Raw = Number(r.hc40 || 0);
+    const dv20View = dv20Raw ? Math.round(dv20Raw * (1 + mu20 / 100)) : '';
+    const hc40View = hc40Raw ? Math.round(hc40Raw * (1 + mu40 / 100)) : '';
+
+    document.getElementById('rdRates').innerHTML = [
+      card('20DV', dv20View ? 'USD ' + dv20View : safe(r.dv20), safe(r.container20Type, 'STANDARD')),
+      card('40HC', hc40View ? 'USD ' + hc40View : safe(r.hc40), safe(r.container40Type, 'STANDARD')),
+      card('F / T', safe(r.ft), 'Freight ton'),
+      card('Transit Time', r.tt ? safe(r.tt) + ' DAYS' : '—', ''),
+      card('Routing', safe(r.via, 'DIRECT'), 'Via / Service'),
+      card('Rate Type', displayTypeLite(r.type), 'Rate mode')
+    ].join('');
+
+    document.getElementById('rdDetails').innerHTML = [
+      card('Port of Receipt', safe(r.por), ''),
+      card('Port of Loading', safe(r.pol), ''),
+      card('Port of Discharge', safe(r.pod), ''),
+      card('Final Port', safe(r.fpod), '')
+    ].join('');
+
+    const remarksWrap = document.getElementById('rdRemarks');
+    const remarksVal = document.getElementById('rdRemarksVal');
+    if(r.remarks && String(r.remarks).trim()){
+      remarksVal.textContent = r.remarks;
+      remarksWrap.style.display = 'block';
+    }else{
+      remarksWrap.style.display = 'none';
+      remarksVal.textContent = '';
+    }
+
+    document.getElementById('rateDetailOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeRateActionPopup = function(){
+    document.getElementById('rateDetailOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+  };
+  window.runRatePopupAction = function(action){
+    const id = currentPopupRateId;
+    closeRateActionPopup();
+    setTimeout(function(){
+      if(action === 'copy' && window.copyRate) window.copyRate(id);
+      if(action === 'duplicate' && typeof duplicateRate === 'function') duplicateRate(id);
+      if(action === 'edit' && window.editRate) window.editRate(id);
+      if(action === 'delete' && window.delRate) window.delRate(id);
+    }, 140);
+  };
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeRateActionPopup(); });
+})();
 </script>
 
 </body>
